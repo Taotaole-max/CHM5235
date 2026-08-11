@@ -1,0 +1,64 @@
+# --- scratch / local-only ---
+scratch/
+*.tmp
+*~
+.DS_Store
+Thumbs.db
+
+# --- editor / OS ---
+.vscode/
+.idea/
+
+# --- Gaussian ---
+*.chk
+*.rwf
+*.d2e
+*.int
+*.skr
+Gau-*.inp
+Gau-*.chk
+
+# --- ORCA ---
+*.gbw
+*.densities
+*.tmp.*
+*_property.txt.bak
+
+# --- Psi4 ---
+timer.dat
+psi.*.clean
+*.32
+*.180
+
+# --- VASP ---
+WAVECAR
+CHG
+CHGCAR
+CHGCAR.*
+PROCAR
+DOSCAR
+vasprun.xml
+EIGENVAL
+OSZICAR
+XDATCAR
+WAVEDER
+
+# --- GROMACS ---
+*.trr
+*.xtc
+*.edr
+*.cpt
+*.tpr
+step*.pdb
+\#*\#
+
+# --- general large / binary outputs ---
+*.dcd
+*.nc
+*.h5
+*.npz
+
+# --- Python (if scripting analysis) ---
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
