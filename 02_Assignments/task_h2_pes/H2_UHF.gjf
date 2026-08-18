@@ -1,0 +1,11 @@
+%mem=2GB
+%nprocshared=4
+#p UHF/6-31G(d,p) guess=mix nosymm
+
+H2 PES scan at UHF, R = DISTANCE Angstrom
+guess=mix 混合 HOMO/LUMO 破坏 alpha/beta 对称性 -- 不加这个 UHF 会塌回 RHF 解
+
+0 1
+H   0.000000   0.000000   0.000000
+H   0.000000   0.000000   DISTANCE
+

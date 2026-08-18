@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -P 你的project_code
+#PBS -q parallel
+#PBS -N h2_pes
+#PBS -l select=1:ncpus=4:mem=4GB
+#PBS -l walltime=04:00:00
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load gaussian          # ⚠️ 用 module avail 查到的实际名字替换
+
+export GAUSS_SCRDIR=${SCRATCH:-/tmp}/$PBS_JOBID
+mkdir -p $GAUSS_SCRDIR
+
+bash run_pes.sh
+bash extract.sh
+
+rm -rf $GAUSS_SCRDIR

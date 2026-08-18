@@ -1,7 +1,7 @@
 # CHM5235 学习路线与进度看板
 
 > 这是工作台的**总入口**。每次开工先看这里，做完一件事回来勾一个框。
-> 最后更新：2026-08-18
+> 最后更新：2026-08-19
 
 ## 一句话策略
 
@@ -19,7 +19,7 @@
 | 周次 | 日期 | 主线 | 目标 |
 |---|---|---|---|
 | W1 | 8/10–8/16 | — | 已过。讲义 `wk01_intro_slides.pdf` 已入库 |
-| **W2** | **8/17–8/23** | **HPC 打通** | 登录 → 建目录 → 提交第一个测试作业并拿到输出（见 `00_Course_Info/HPC快速上手.md`） |
+| **W2** | **8/17–8/23** | **HPC 打通** | 登录 → 建目录 → 提交第一个测试作业并拿到输出（见 `00_Course_Info/HPC快速上手.md`）<br>📌 **Lecture 02 布置了 H₂ 势能面任务**，见 `02_Assignments/task_h2_pes/` |
 | W3 | 8/24–8/30 | Gaussian | 单分子 opt+freq 跑通；GaussView 看轨道/频率动画 |
 | W4 | 8/31–9/6 | Gaussian → **HW1** | TD-DFT 激发态 + BS-DFT 磁交换；写报告 |
 | W5 | 9/7–9/13 | ORCA | 同样任务换 ORCA 做一遍，对比结果；Avogadro/Chemcraft 可视化 |
@@ -38,6 +38,8 @@
 
 - [x] 申请 HPC 账号
 - [x] 首次 SSH 登录成功
+- [ ] **确认到底用哪个集群**：Lecture 02 p.92 写的是 **NSCC**，但课程大纲写的是 **HPC@NUS**。
+      两个是不同的机构，账号也不通用 —— 这件事没确认，后面全白做
 - [ ] 确认自己所属的 **project code**（`-P` 参数要用），记进 `00_Course_Info/HPC快速上手.md`
 - [ ] `module avail` 查清四个软件的模块名，回填到各自 `notes.md`
 - [ ] 确认可用队列和资源上限（`qstat -Q`）
@@ -45,6 +47,18 @@
 - [ ] **提交第一个测试作业并成功拿到输出**（里程碑）
 - [ ] 打通本地 ↔ 集群文件传输（WinSCP / `scp`）
 - [ ] 会用 `qstat` 查状态、`qdel` 撤作业、看 `.o`/`.e` 日志定位失败原因
+
+### A2. Lecture 02 布置的任务：H₂ 势能面 RHF vs UHF
+
+📁 `02_Assignments/task_h2_pes/`（模板、扫描脚本、提取脚本都已备好）
+
+- [ ] 读讲义笔记第十一节，搞懂 RHF 为什么在解离时失败
+- [ ] 从 Canvas 下载老师给的原始输入文件，对照本目录的模板
+- [ ] 跑 RHF 扫描（25 个点，0.5–10 Å）
+- [ ] 跑 UHF 扫描（**必须加 `guess=mix`**，否则会塌回 RHF 解，整个任务白做）
+- [ ] 提取能量和 ⟨S²⟩，画两条 PES 曲线 + ⟨S²⟩ 曲线
+- [ ] 标出 Coulson–Fischer 点，与实验 Dₑ ≈ 4.75 eV 对比
+- [ ] 写清"为什么结果不同"
 
 ### B. Gaussian + GaussView（HW1，15%）
 
@@ -59,7 +73,8 @@
 ### C. ORCA + Avogadro/Chemcraft（HW2，15%）
 
 - [ ] 注册 ORCA Forum 账号（即使集群已装，本地看文档要用）
-- [ ] 确认集群上 ORCA 6 模块名与**可执行文件绝对路径**（并行必须用全路径，见 `pitfalls.md`）
+- [ ] 确认集群上 ORCA 模块名与**可执行文件绝对路径**（并行必须用全路径，见 `pitfalls.md`）
+      ⚠️ Lecture 02 p.95 用的是 **ORCA 5.0.3 + OpenMPI 4.1.1**，不是大纲写的 ORCA 6
 - [ ] opt+freq 跑通并与 Gaussian 结果对比
 - [ ] TD-DFT、BS-DFT（ORCA 会直接输出 J，注意用的是哪个公式）
 - [ ] Avogadro 或 Chemcraft 可视化
@@ -86,6 +101,9 @@
 - [ ] 报告成稿 → `02_Assignments/hw4_vasp/`
 
 ### F. 理论（考试用，占 40%）
+
+> Lecture 02 笔记：`01_Lecture_Notes/wk02_量子力学基础到HF理论.md`（含自测清单）
+
 
 - [ ] 力场方法（原子级 / 粗粒化）
 - [ ] 量子力学基础与 Hartree-Fock、Roothaan-Hall 方程

@@ -1,0 +1,10 @@
+%mem=2GB
+%nprocshared=4
+#p RHF/6-31G(d,p) nosymm
+
+H2 PES scan at RHF, R = DISTANCE Angstrom
+
+0 1
+H   0.000000   0.000000   0.000000
+H   0.000000   0.000000   DISTANCE
+
