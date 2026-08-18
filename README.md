@@ -3,6 +3,15 @@
 个人课程工作台：讲义、作业、软件/方法笔记、项目与文献的统一管理仓库。
 课程：CM5235 Applied Computational Chemistry（NUS，授课教师 Liviu Ungur）。
 
+## 从哪开始
+
+👉 **[`PLAN.md`](PLAN.md) 是工作台的总入口** —— 学习路线、时间线、进度看板都在那里，每次开工先看它。
+
+👉 还没跑通集群？看 **[`00_Course_Info/HPC快速上手.md`](00_Course_Info/HPC快速上手.md)**，
+从登录到第一个作业成功返回的完整步骤。
+
+👉 四个软件的可直接改用的输入模板和 PBS 脚本在 `03_Software_Methods/<软件>/templates/`。
+
 ## 目录结构
 
 | 目录 | 用途 |
@@ -13,7 +22,7 @@
 | `03_Software_Methods/` | 按软件分类的学习笔记、输入模板、常见坑：`Gaussian` / `ORCA` / `OpenMOLCAS` / `VASP` / `_others` |
 | `04_Projects/` | 课程项目或课题相关计算 |
 | `05_Papers_References/` | 相关文献、综述、方法论文的笔记与 PDF（大文件建议不入库，见下） |
-| `06_Cheatsheets/` | 命令速查、可视化工具清单、单位换算等 |
+| `06_Cheatsheets/` | 命令速查（`pbs.md` PBS 调度、`tools.md` 工具清单）、单位换算等 |
 | `scratch/` | 临时计算文件（已在 .gitignore 中忽略，不会提交） |
 
 `03_Software_Methods/` 下四个软件目录对应课程四次作业，每个目录建议包含：

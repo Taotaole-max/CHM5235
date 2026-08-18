@@ -39,7 +39,6 @@ PROCAR
 DOSCAR
 vasprun.xml
 EIGENVAL
-OSZICAR
 XDATCAR
 WAVEDER
 
@@ -62,3 +61,18 @@ step*.pdb
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# --- OpenMOLCAS ---
+*.JobIph
+*.OneInt
+*.OrdInt
+*.RunFile
+*.ChDiag
+*.ChVec*
+*.LoProp
+molcas_workdir/
+
+# --- 说明 ---
+# OSZICAR 故意【不】忽略：只有几 KB，是收敛过程的记录，值得留档。
+# 大文件（WAVECAR/CHGCAR/CHK/JobIph 等）一律留在集群 scratch 或本地 scratch/。
+# 报告 PDF、输入文件、关键的小体积输出可以入库。

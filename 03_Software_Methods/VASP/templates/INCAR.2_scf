@@ -1,0 +1,22 @@
+SYSTEM = static SCF on the relaxed structure
+
+# 把上一步弛豫好的 CONTCAR 复制成 POSCAR 再跑这一步！
+
+ISTART = 0
+ICHARG = 2
+
+PREC   = Accurate
+ENCUT  = 520
+EDIFF  = 1E-8       # 比弛豫更严，因为后面能带/DOS 要用这里产生的电荷密度
+LREAL  = .FALSE.    # 静态计算追求精度，关掉实空间投影
+
+IBRION = -1         # 不动原子
+NSW    = 0          # 0 个离子步
+
+ISMEAR = 0
+SIGMA  = 0.05
+
+LWAVE  = .TRUE.     # ★ 保留 WAVECAR
+LCHARG = .TRUE.     # ★ 保留 CHGCAR —— 能带和 DOS 都要读它
+
+NCORE  = 4

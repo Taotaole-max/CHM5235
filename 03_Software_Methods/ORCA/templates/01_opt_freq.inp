@@ -1,0 +1,14 @@
+# ORCA: 几何优化 + 频率分析
+# 与 Gaussian 的 01_opt_freq.gjf 对应，可直接对比两者结果
+
+! B3LYP def2-SVP D4 Opt Freq TightSCF
+! RIJCOSX def2/J          # RI 近似加速，杂化泛函配 RIJCOSX 是 ORCA 的标准做法
+
+%pal nprocs 8 end         # 必须 = PBS 里的 ncpus
+%maxcore 3000             # 每个核 3000 MB → 总共 8*3000 = 24GB，要小于 PBS 申请的 mem
+
+* xyz 0 1
+O   0.00000000   0.00000000   0.11730000
+H   0.00000000   0.75720000  -0.46920000
+H   0.00000000  -0.75720000  -0.46920000
+*

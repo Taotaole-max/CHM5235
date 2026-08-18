@@ -1,0 +1,21 @@
+#!/bin/bash
+#PBS -P 你的project_code
+#PBS -q parallel
+#PBS -N vasp_job
+#PBS -l select=1:ncpus=24:mem=48GB
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load vasp          # ⚠️ 用 module avail 查到的实际名字替换
+# module load intel-mpi   # ⚠️ VASP 通常依赖特定 MPI，一起 load
+
+NP=$(cat $PBS_NODEFILE | wc -l)
+echo "分到 $NP 个核"
+
+# vasp_std : 常规周期性计算（绝大多数情况用这个）
+# vasp_gam : 只用 Gamma 点，大晶胞/分子体系可省一半内存和时间
+# vasp_ncl : 非共线磁性 / 自旋轨道耦合
+mpirun -np $NP vasp_std > vasp.out 2>&1

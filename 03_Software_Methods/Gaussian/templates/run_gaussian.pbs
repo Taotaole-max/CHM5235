@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -P 你的project_code
+#PBS -q parallel
+#PBS -N g16_job
+#PBS -l select=1:ncpus=8:mem=8GB
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+# ---- 改这里 ----
+INPUT=mol.gjf
+# ----------------
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load gaussian          # ⚠️ 模块名用 module avail 查到的实际名字替换
+
+# Gaussian 的临时文件（.rwf 可以非常大）放 scratch，不要放家目录
+export GAUSS_SCRDIR=${SCRATCH:-/tmp}/$PBS_JOBID
+mkdir -p $GAUSS_SCRDIR
+
+g16 < $INPUT > ${INPUT%.gjf}.log      # ⚠️ 若集群装的是 g09 就换成 g09
+
+rm -rf $GAUSS_SCRDIR                  # 清理，否则 scratch 很快被塞满

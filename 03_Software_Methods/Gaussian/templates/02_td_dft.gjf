@@ -1,0 +1,10 @@
+%oldchk=mol.chk
+%chk=mol_td.chk
+%mem=6GB
+%nprocshared=8
+#p TD(NStates=10,Singlets) B3LYP/6-311+G(d,p) geom=check guess=read
+
+mol: TD-DFT vertical excitations on the optimized geometry
+
+0 1
+

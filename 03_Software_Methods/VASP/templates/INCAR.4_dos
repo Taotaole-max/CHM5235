@@ -1,0 +1,28 @@
+SYSTEM = density of states (non-self-consistent)
+
+# 前置：SCF 的 CHGCAR 留在当前目录
+# KPOINTS 用【比 SCF 更密】的 Gamma 网格
+
+ISTART = 1
+ICHARG = 11         # 读 CHGCAR，非自洽
+
+PREC   = Accurate
+ENCUT  = 520
+EDIFF  = 1E-6
+LREAL  = .FALSE.
+
+IBRION = -1
+NSW    = 0
+
+ISMEAR = -5         # ★ 四面体法+Blöchl 校正，DOS 最准（但要求 k 点 ≥ 4 且不能用于弛豫）
+                    #   若体系是金属或 k 点少，退回 ISMEAR = 0
+
+LORBIT = 11         # 输出 PDOS（分原子、分轨道的态密度）
+NEDOS  = 3001       # DOS 能量格点数，画图想平滑就调大
+# EMIN = -20        # 可选：手动指定能量窗口
+# EMAX =  10
+
+LWAVE  = .FALSE.
+LCHARG = .FALSE.
+
+NCORE  = 4

@@ -1,0 +1,33 @@
+// OpenMOLCAS: CASSCF -> CASPT2 标准流程
+// 模块用 & 开头，按【书写顺序依次执行】，像流水线一样把数据传给下一个模块
+// 注释用 // 或 *
+
+&GATEWAY
+  COORD  = mol.xyz          // 也可以直接内联写坐标
+  BASIS  = ANO-RCC-VDZP     // ANO-RCC 是 MOLCAS 的标配基组，含标量相对论收缩
+  GROUP  = NoSym            // 不用对称性。用对称性能大幅省时，但活性空间要按不可约表示分配，先别碰
+  RICD                      // Cholesky 分解近似双电子积分，显著提速，精度损失可忽略
+
+&SEWARD
+  // 算积分。通常什么都不用写
+
+&SCF
+  // 先做一个 HF 单点，给 RASSCF 提供初始轨道
+  // 开壳层体系可加 UHF / CHARGE / SPIN
+
+&RASSCF
+  Spin    = 6               // 自旋多重度 2S+1（Mn(II) d5 高自旋 → 6）
+  Charge  = 0
+  nActEl  = 5 0 0           // 活性空间里的【电子数】，后两个 0 是 RAS1 空穴数 / RAS3 电子数
+                            // 后两个都是 0 = 纯 CASSCF；非零则是 RASSCF
+  Ras2    = 5               // 活性【轨道数】（CAS 空间）
+                            // 所以这里是 CAS(5,5)：5 个电子放进 5 个 3d 轨道
+  CIRoot  = 5 5 1           // 态平均：算 5 个态、在前 5 个里取、权重相等
+                            // 单个基态就写 CIRoot = 1 1 1
+  LumOrb                    // 从上一步 (&SCF) 的轨道出发
+
+&CASPT2
+  IPEA  = 0.0               // IPEA 位移。MOLCAS 默认 0.25，但对过渡金属
+                            // 文献普遍推荐 0.0——【报告里必须写明你用了哪个值】
+  IMAG  = 0.1               // 虚位移，消除 intruder state（入侵态）问题的标准手段
+  MULTistate = 5 1 2 3 4 5  // 多态 CASPT2：对上面 5 个态做耦合处理

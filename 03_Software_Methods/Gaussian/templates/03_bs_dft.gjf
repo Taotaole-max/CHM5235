@@ -1,0 +1,27 @@
+%chk=dimer_hs.chk
+%mem=8GB
+%nprocshared=8
+#p UB3LYP/6-31G(d) guess=(fragment=2) pop=full
+
+Step 1 of 2 -- HIGH SPIN reference (two local spins aligned parallel)
+
+0,11 0,6 0,6
+Mn(Fragment=1)    0.000000   0.000000   0.000000
+Mn(Fragment=2)    3.500000   0.000000   0.000000
+O(Fragment=1)     1.750000   1.200000   0.000000
+O(Fragment=2)     1.750000  -1.200000   0.000000
+
+--Link1--
+%chk=dimer_bs.chk
+%mem=8GB
+%nprocshared=8
+#p UB3LYP/6-31G(d) guess=(fragment=2) pop=full
+
+Step 2 of 2 -- BROKEN SYMMETRY (fragment 2 spin flipped: note the MINUS)
+
+0,1 0,6 0,-6
+Mn(Fragment=1)    0.000000   0.000000   0.000000
+Mn(Fragment=2)    3.500000   0.000000   0.000000
+O(Fragment=1)     1.750000   1.200000   0.000000
+O(Fragment=2)     1.750000  -1.200000   0.000000
+

@@ -1,0 +1,33 @@
+#!/bin/bash
+#PBS -P 你的project_code
+#PBS -q parallel
+#PBS -N molcas_job
+#PBS -l select=1:ncpus=8:mem=32GB
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+# ---- 改这里 ----
+INPUT=mol.input
+PROJECT=mol            # 决定所有输出文件的前缀
+# ----------------
+
+cd $PBS_O_WORKDIR
+
+module purge
+# ⚠️ 课程通过 Canvas 分发预编译的可执行文件和运行脚本，
+#    如果老师给了脚本，【优先用老师的】，下面这段是通用写法作参考
+
+export MOLCAS=/路径/到/OpenMolcas        # ⚠️ 待确认
+export MOLCAS_MEM=3000                    # 每进程内存 MB
+export Project=$PROJECT
+
+# WorkDir 放中间文件，会非常大（尤其 CASPT2），必须放 scratch
+export MOLCAS_WORKDIR=${SCRATCH:-/tmp}/molcas_$PBS_JOBID
+mkdir -p $MOLCAS_WORKDIR
+
+$MOLCAS/bin/pymolcas $INPUT > ${INPUT%.input}.out
+
+# 需要保留的 JobIph / 轨道文件先拷回来，再清理
+cp $MOLCAS_WORKDIR/$PROJECT.{JobIph,RasOrb,ScfOrb} . 2>/dev/null
+
+rm -rf $MOLCAS_WORKDIR

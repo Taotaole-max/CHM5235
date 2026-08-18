@@ -1,0 +1,47 @@
+// OpenMOLCAS: RASSI —— 把不同自旋多重度的态放在一起做自旋轨道耦合 (SOC)
+// 过渡金属和镧系化合物的激发态/磁性质必须做这一步，因为 SOC 会混合不同自旋的态
+//
+// 前置：需要先跑【多个不同 Spin 的 RASSCF+CASPT2】，各自存下 JobIph 文件
+
+// ---- 第一步：算高自旋态，把 JobIph 存成 JOB001 ----
+&GATEWAY
+  COORD = mol.xyz
+  BASIS = ANO-RCC-VDZP
+  GROUP = NoSym
+  AMFI                      // 开启原子平均场自旋轨道积分，做 SOC 必须有
+  RICD
+
+&SEWARD
+
+&RASSCF
+  Spin   = 6
+  nActEl = 5 0 0
+  Ras2   = 5
+  CIRoot = 5 5 1
+
+>> COPY $Project.JobIph JOB001      // EMIL 命令：>> 开头，做文件操作
+
+// ---- 第二步：换一个自旋多重度再算一遍 ----
+&RASSCF
+  Spin   = 4
+  nActEl = 5 0 0
+  Ras2   = 5
+  CIRoot = 10 10 1
+
+>> COPY $Project.JobIph JOB002
+
+// ---- 第三步：RASSI 把两组态放一起对角化自旋轨道哈密顿量 ----
+&RASSI
+  NROFjobiphs = 2  5 10     // 2 个 JobIph 文件，分别取 5 个态和 10 个态
+   1 2 3 4 5                // 从 JOB001 取哪几个态
+   1 2 3 4 5 6 7 8 9 10     // 从 JOB002 取哪几个态
+  SPIN                      // 做自旋轨道耦合
+  MEES                      // 输出多极矩，磁性质分析要用
+
+// ---- 第四步（可选）：单分子磁体的磁性质 ----
+// SINGLE_ANISO 是本课程老师 Liviu Ungur 本人（与 Chibotaru）开发的模块，
+// 用来从 RASSI 结果抽出 g 张量、零场分裂 D/E、磁化率等。
+// 如果作业涉及镧系单分子磁体，这个模块几乎一定会用到。
+&SINGLE_ANISO
+  MLTP = 1
+   6                        // 处理最低的一个多重态，维度 6（S=5/2）

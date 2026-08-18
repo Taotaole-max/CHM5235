@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -P 你的project_code
+#PBS -q parallel
+#PBS -N orca_job
+#PBS -l select=1:ncpus=8:mem=32GB
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+# ---- 改这里 ----
+INPUT=mol.inp
+# ----------------
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load orca          # ⚠️ 用 module avail 查到的实际名字替换
+# module load openmpi     # ⚠️ ORCA 并行依赖特定版本的 OpenMPI，通常要一起 load
+
+# ★★★ 关键：并行运行 ORCA 必须用【可执行文件的绝对路径】★★★
+# 直接写 "orca mol.inp" 在 nprocs > 1 时会失败或悄悄退化成串行
+ORCA_EXE=$(which orca)
+echo "使用的 ORCA 路径: $ORCA_EXE"
+
+$ORCA_EXE $INPUT > ${INPUT%.inp}.out

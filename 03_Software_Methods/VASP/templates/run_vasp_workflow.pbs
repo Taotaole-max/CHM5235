@@ -1,0 +1,47 @@
+#!/bin/bash
+#PBS -P 你的project_code
+#PBS -q parallel
+#PBS -N vasp_workflow
+#PBS -l select=1:ncpus=24:mem=48GB
+#PBS -l walltime=48:00:00
+#PBS -j oe
+
+# 一次提交跑完【弛豫 → 静态 SCF → 能带 + DOS】整条流程
+# 前提：当前目录已有 POSCAR / POTCAR，以及模板里的 INCAR.* 和 KPOINTS.*
+
+cd $PBS_O_WORKDIR
+module purge
+module load vasp
+NP=$(cat $PBS_NODEFILE | wc -l)
+run() { mpirun -np $NP vasp_std > $1 2>&1; }
+
+# ---- 1. 结构弛豫 ----
+mkdir -p 1_relax && cd 1_relax
+cp ../POSCAR ../POTCAR . && cp ../INCAR.1_relax INCAR && cp ../KPOINTS.gamma KPOINTS
+run relax.out
+# ★ 弛豫的产物是 CONTCAR，它才是优化好的结构
+cd ..
+
+# ---- 2. 静态 SCF（用弛豫后的结构）----
+mkdir -p 2_scf && cd 2_scf
+cp ../1_relax/CONTCAR POSCAR          # ★ CONTCAR → POSCAR，最容易忘的一步
+cp ../POTCAR . && cp ../INCAR.2_scf INCAR && cp ../KPOINTS.gamma KPOINTS
+run scf.out
+cd ..
+
+# ---- 3. 能带（非自洽，读 SCF 的 CHGCAR）----
+mkdir -p 3_band && cd 3_band
+cp ../2_scf/{POSCAR,POTCAR,CHGCAR} .
+cp ../INCAR.3_band INCAR && cp ../KPOINTS.line KPOINTS
+run band.out
+cd ..
+
+# ---- 4. DOS（非自洽，更密的 k 网格）----
+mkdir -p 4_dos && cd 4_dos
+cp ../2_scf/{POSCAR,POTCAR,CHGCAR} .
+cp ../INCAR.4_dos INCAR
+printf 'dense mesh for DOS\n0\nGamma\n 15 15 15\n 0 0 0\n' > KPOINTS
+run dos.out
+cd ..
+
+echo "全部完成。结果在 1_relax / 2_scf / 3_band / 4_dos"

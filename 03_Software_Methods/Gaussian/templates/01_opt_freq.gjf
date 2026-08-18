@@ -1,0 +1,12 @@
+%chk=mol.chk
+%mem=6GB
+%nprocshared=8
+#p B3LYP/6-31G(d) opt freq=noraman
+
+mol: geometry optimization + frequency analysis
+
+0 1
+O   0.00000000   0.00000000   0.11730000
+H   0.00000000   0.75720000  -0.46920000
+H   0.00000000  -0.75720000  -0.46920000
+

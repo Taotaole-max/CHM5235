@@ -1,0 +1,21 @@
+# 本机 core.autocrlf=true，checkout 时会把文本文件转成 CRLF。
+# 但这些文件是要传到 Linux 集群上执行/解析的，带 CRLF 会导致
+# "bad interpreter: /bin/bash^M" 或输入文件解析失败。
+# 下面强制它们在工作区也保持 LF。
+
+*.pbs        text eol=lf
+*.sh         text eol=lf
+*.gjf        text eol=lf
+*.com        text eol=lf
+*.inp        text eol=lf
+*.input      text eol=lf
+*.xyz        text eol=lf
+INCAR*       text eol=lf
+KPOINTS*     text eol=lf
+POSCAR*      text eol=lf
+POTCAR*      text eol=lf
+
+# 二进制，不要碰
+*.pdf        binary
+*.chk        binary
+*.gbw        binary

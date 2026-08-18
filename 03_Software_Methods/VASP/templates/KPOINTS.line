@@ -1,0 +1,12 @@
+Band structure along high-symmetry path (hexagonal example)
+40                      ! 每段路径上取 40 个点
+Line-mode
+Reciprocal
+  0.000 0.000 0.000     ! Gamma
+  0.500 0.000 0.000     ! M
+
+  0.500 0.000 0.000     ! M
+  0.333 0.333 0.000     ! K
+
+  0.333 0.333 0.000     ! K
+  0.000 0.000 0.000     ! Gamma

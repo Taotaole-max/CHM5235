@@ -1,0 +1,17 @@
+# ORCA: TD-DFT 垂直激发（在优化好的几何上做）
+# 电荷转移态请把 B3LYP 换成 CAM-B3LYP 或 wB97X-D4
+
+! B3LYP def2-TZVP TightSCF
+! RIJCOSX def2/J
+
+%pal nprocs 8 end
+%maxcore 3000
+
+%tddft
+  NRoots    10        # 算多少个激发态
+  MaxDim    5         # Davidson 展开空间 = 5*NRoots，难收敛时调大
+  Triplets  false     # 只要单重态激发；要三重态改成 true
+  TDA       true      # Tamm-Dancoff 近似，默认开，关掉是完整 TD-DFT
+end
+
+* xyzfile 0 1 mol_opt.xyz     # 直接读优化后的 xyz，比粘贴坐标省事
