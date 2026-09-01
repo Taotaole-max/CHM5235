@@ -13,3 +13,12 @@
 | `wk04_电子相关方法.md` | `slides/CM5235_Lecture_04.pdf` | 相关能、静态/动态相关、CI、CASSCF、Coupled Cluster、MPn、BSSE、标度表 |
 
 每份笔记末尾都有**自测清单**和**与作业/后续课程的连接表**。
+
+## 关于公式显示
+
+笔记里的公式用 LaTeX（`$...$` / `$$...$$`）。GitHub 网页版一般能渲染，
+但**手机 App、部分浏览器、单行 `$$` 有时会显示成原始代码**。
+
+- wk03 / wk04 的每个块级公式下面都加了一行 `*读法：…*` 中文解释，**不渲染也能看懂**
+- 想看渲染效果：用 **VS Code + Markdown Preview Enhanced**、**Typora** 或 **Obsidian** 打开
+- 或直接看 `slides/` 里的原始讲义 PDF

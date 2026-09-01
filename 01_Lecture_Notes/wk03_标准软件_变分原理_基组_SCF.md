@@ -87,6 +87,8 @@ ONETEP（线性标度 DFT，大体系）。
 
 $$E_{\text{trial}} = \frac{\langle \psi_{\text{trial}}|\hat H|\psi_{\text{trial}}\rangle}{\langle \psi_{\text{trial}}|\psi_{\text{trial}}\rangle} \ge E_{\text{exact}}$$
 
+*读法：拿任何一个近似（试探）波函数算出来的能量期望值，永远 ≥ 真实基态能量。所以"能量越低 = 波函数越好"，可以拿能量当打分标准去优化参数。*
+
 ### 证明思路（p.26–27）
 
 把试探函数在哈密顿量的精确本征态里展开 $\psi_{\text{trial}} = \sum_k c_k \varphi_k$，则
@@ -122,6 +124,8 @@ $E_{\text{trial}} = \sum_k |c_k|^2 \varepsilon_k$，而 $E_{\text{exact}} = \var
 
 $$E = \sum_i h_{ii} + \sum_{i}\sum_{j>i}(J_{ij} - K_{ij}) + V_{nn}$$
 
+*读法：总能量 = Σ 单电子项（动能 + 电子-核吸引，记作 $h_{ii}$）+ Σ 电子对之间的（库仑排斥 $J_{ij}$ − 交换 $K_{ij}$）+ 核-核排斥 $V_{nn}$。*
+
 - $J_{ij}$（Coulomb）：**对所有电子对都非零**，不管自旋
 - $K_{ij}$（Exchange）：**只对同自旋电子对非零**，无经典对应
 
@@ -131,6 +135,8 @@ $$E = \sum_i h_{ii} + \sum_{i}\sum_{j>i}(J_{ij} - K_{ij}) + V_{nn}$$
 ### Fock 算符与轨道（p.46）
 
 $$\hat F_i = \hat h_i + \sum_{j\ne i}(\hat J_j - \hat K_j), \qquad \hat F_i \varphi_i = \varepsilon_i \varphi_i$$
+
+*读法：Fock 算符 = 单电子项 + 其他所有电子产生的平均（库仑 − 交换）场。它作用在轨道 $\varphi_i$ 上得到 $\varepsilon_i \varphi_i$ —— 即轨道是 Fock 算符的本征函数，轨道能 $\varepsilon_i$ 是本征值。*
 
 - HF 轨道能 = Fock 算符的本征值
 - 收敛后的轨道叫**正则分子轨道（canonical MO）**，此时 Fock 矩阵对角
@@ -143,6 +149,8 @@ $$\hat F_i = \hat h_i + \sum_{j\ne i}(\hat J_j - \hat K_j), \qquad \hat F_i \var
 
 $$E_N - E_{N-1} = \varepsilon_i \quad(\text{从轨道 } i \text{ 电离所需能量} = -\varepsilon_i)$$
 $$E_{N+1} - E_N = \varepsilon_a \quad(\text{往空轨道 } a \text{ 加电子})$$
+
+*读法：假设加/减一个电子时其他轨道纹丝不动，那么"从占据轨道 i 拔走一个电子"要付出的能量正好等于 $-\varepsilon_i$；"往空轨道 a 塞一个电子"释放/吸收的能量等于 $\varepsilon_a$。*
 
 即 **HOMO 轨道能 ≈ −电离能，LUMO 轨道能 ≈ −电子亲和能**（冻结轨道近似下）。
 
@@ -163,6 +171,9 @@ B 基态组态 $1s^2 2s^2 2p^1$，2p 三重简并 → **三个 Slater 行列式�
 - RHF 更快（积分少），但**断键过程失败**（H₂ 解离给出离子对而非两个自由基）
 - UHF 断键对，但有**自旋污染**：波函数不是总自旋算符的本征态
   $$\langle \hat S^2\rangle_{\text{UHF}} \ge S(S+1) = \frac{n_{\text{unpair}}}{2}\left(\frac{n_{\text{unpair}}}{2}+1\right)$$
+
+  *读法：理想情况下 $\langle \hat S^2\rangle$ 应等于 $S(S+1)$（S = 未成对电子数的一半）。UHF 算出来的值总是**偏大**，多出来的部分就是自旋污染的量。软件在 SCF 结束时会打印这个值，用来判断污染严重不严重。*
+
 - 处理自旋污染：annihilation（SCF 后投掉）/ projection（SCF 内投掉）/ spin constraint（拉格朗日约束）
 - **HF 里大的自旋污染 = 单行列式是坏近似的信号 → 该上 MCSCF**
 
@@ -171,6 +182,8 @@ B 基态组态 $1s^2 2s^2 2p^1$，2p 三重简并 → **三个 Slater 行列式�
 MO 写成原子轨道的线性组合 $\varphi_i = \sum_\alpha c_{i\alpha}\chi_\alpha$，HF 方程变矩阵形式：
 
 $$\mathbf{FC} = \mathbf{SC}\varepsilon$$
+
+*读法：把"解微分方程求轨道"变成"解矩阵方程求系数"。F 是 Fock 矩阵，S 是基函数的重叠矩阵，C 是要求的展开系数（每一列一个 MO），ε 是对角的轨道能矩阵。这是个广义本征值问题，计算机拿手。*
 
 - $F_{\alpha\beta} = \langle\chi_\alpha|\hat F|\chi_\beta\rangle$ Fock 矩阵，$S_{\alpha\beta} = \langle\chi_\alpha|\chi_\beta\rangle$ 重叠矩阵
 - 密度矩阵 $D_{\gamma\delta} = \sum_j^{\text{occ}} c_{\gamma j} c_{\delta j}$
@@ -242,6 +255,8 @@ GTO 缺点：远处衰减太快（大距离渐近行为错）、原点处导数�
 ### 精确波函数 = Full CI（p.77–80）→ 引出 Lecture 04
 
 $$\Psi = a_0\psi_{HF} + \sum_{ia} a_i^a \psi_i^a + \sum_{ijab} a_{ij}^{ab}\psi_{ij}^{ab} + \cdots$$
+
+*读法：精确波函数 = HF 行列式 + 所有单激发行列式（各配系数）+ 所有双激发行列式 + …（详见 wk04 同一公式的展开说明）。*
 
 加进激发 Slater 行列式 → 电子开始"感受并躲避"彼此 → **动态相关**。
 两大类：单参考（MP2/MP3/MP4、CCSD/CCSDT、CISD/CISDT）、多参考（CASPT2、NEVPT2、MRCI、CASSCF、RASSCF）。
