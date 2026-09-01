@@ -1,7 +1,10 @@
 # Lecture 02：从量子力学基础到 Hartree-Fock-Roothaan
 
 > CM5235 · Liviu Ungur · 102 页
-> 讲义原件：`slides/CM5235_Lecture_02.pptx`
+> 讲义原件：`slides/CM5235_Lecture_02.pptx` / `slides/CM5235_Lecture_02.pdf`
+>
+> ⚠️ 公式用 LaTeX 写，GitHub 网页/手机端有时不渲染。每个块级公式下面都有一行
+> `*读法：…*` 中文解释，不渲染也能看懂。想看渲染效果用 VS Code / Typora / Obsidian。
 
 ## 这一讲到底在干什么（先抓主线）
 
@@ -41,6 +44,8 @@ de Broglie 1924 年的推理很简单：光既是波又是粒子，那物质凭�
 
 $$\lambda = \frac{h}{p}$$
 
+*读法：一个粒子的"物质波"波长 λ = 普朗克常数 h ÷ 动量 p。动量越大，波长越短，波动性越不明显 —— 所以宏观物体没有可观测的波动性，电子有。*
+
 他断言这对**粒子和光子都成立**。1925 Davisson-Germer、1927 Thompson 的电子衍射实验证实了这一点。
 电子显微镜就是这条关系的应用——用电压控制电子波长，比光学显微镜精细得多，
 而且电子束还能用电磁场聚焦，这是同波长的电磁辐射做不到的。
@@ -50,6 +55,8 @@ $$\lambda = \frac{h}{p}$$
 这是**全课最实用的一个判断**，Ungur 用 Boltzmann 分布给出定量标准：
 
 $$\frac{n_i}{n_j} = \frac{g_i}{g_j}\, e^{-\Delta E / k_B T}$$
+
+*读法：两个能级上的粒子数之比 = 简并度之比 × 指数因子 exp(−能级差 ÷ 热能 $k_BT$)。能级差比热能大很多时，指数因子趋于零 → 高能级几乎没粒子 → 能谱"离散"。*
 
 | 情况 | 结论 |
 |---|---|
@@ -76,6 +83,8 @@ Ungur 走的是**"经典波动方程 + de Broglie"**这条路，不是直接扔�
 
 $$\frac{\partial^2 \Psi}{\partial x^2} = \frac{1}{v^2}\frac{\partial^2 \Psi}{\partial t^2}$$
 
+*读法：波函数对空间的二阶导 = (1/波速²) × 对时间的二阶导。这是任何经典波（绳波、声波、光波）都满足的方程。*
+
 （p.11 的练习就是验证 $\Psi = A\sin(kx - \omega t + \phi)$ 是它的解，条件是 $k = \omega/v$。）
 
 **第 2 步**：取驻波解 $\Psi(x,t) = \psi(x)\cos\omega t$。
@@ -83,14 +92,20 @@ $$\frac{\partial^2 \Psi}{\partial x^2} = \frac{1}{v^2}\frac{\partial^2 \Psi}{\pa
 
 $$\frac{\partial^2 \psi}{\partial x^2} + \frac{4\pi^2}{\lambda^2}\psi = 0$$
 
+*读法：把时间部分分离出去后，只剩下空间波形 ψ(x) 要满足的方程 —— 空间二阶导 + (2π/λ)² × ψ = 0。这是驻波的形状方程。*
+
 **第 3 步**：这还是"经典"的。现在插入物理——经典总能量 $E = \frac{p^2}{2m} + V(x)$，
 所以 $p^2 = 2m[E - V(x)]$。再用 de Broglie $\lambda = h/p$ 把 $\lambda$ 换掉：
 
 $$\frac{\partial^2 \psi}{\partial x^2} + \frac{8\pi^2 m}{h^2}\left[E - V(x)\right]\psi = 0$$
 
+*读法：把上一步里的 1/λ² 用 de Broglie 关系换成含能量的表达式，(总能量 E − 势能 V) 就进来了。这一步是"经典波 → 量子"的关键插入。*
+
 **第 4 步**：引入约化 Planck 常数 $\hbar = h/2\pi$，整理：
 
 $$\boxed{-\frac{\hbar^2}{2m}\frac{\partial^2 \psi}{\partial x^2} + V(x)\psi = E\psi}$$
+
+*读法：（动能算符）ψ +（势能）ψ =（总能量 E）ψ。左边第一项 $-\frac{\hbar^2}{2m}\partial^2/\partial x^2$ 是动能算符，第二项是势能。这就是定态薛定谔方程。*
 
 **这就是定态（time-independent）薛定谔方程**，用来研究量子体系的定态。
 氢原子的 1s、2pz 轨道就是它的解。
@@ -101,13 +116,19 @@ $$\boxed{-\frac{\hbar^2}{2m}\frac{\partial^2 \psi}{\partial x^2} + V(x)\psi = E\
 
 $$-\frac{\hbar^2}{2m}\frac{\partial^2 \Psi}{\partial x^2} + V(x,t)\Psi = i\hbar\frac{\partial \Psi}{\partial t}$$
 
+*读法：和定态方程左边一样，但右边不是 Eψ，而是 iℏ ×（波函数对时间的一阶导）。势能含时（如外加光场）时必须用这个。*
+
 定态时两个方程同时满足，于是 $i\hbar\frac{\partial\Psi}{\partial t} = E\Psi$，波函数可分离变量：
 
 $$\Psi(x,t) = \psi(x)\, e^{-iEt/\hbar}$$
 
+*读法：定态波函数 = 空间部分 ψ(x) × 一个只含时间的相位因子 $e^{-iEt/\hbar}$。时间部分只是个转动的相位，不影响任何可观测量。*
+
 **为什么叫"定态"**：概率密度
 
 $$\Psi^*\Psi = \psi^* e^{+iEt/\hbar}\, \psi\, e^{-iEt/\hbar} = \psi^*\psi$$
+
+*读法：算概率密度时，$e^{+iEt/\hbar}$ 和 $e^{-iEt/\hbar}$ 相乘 = 1，时间完全消失。所以概率密度不随时间变 —— 这就是"定态"的意思。*
 
 **时间相位完全抵消了**——概率密度不随时间变。
 所以电子"绕核运动"却不辐射能量，玻尔模型里硬塞进去的那条假设，在这里自然出现了。
@@ -120,10 +141,14 @@ $$\Psi^*\Psi = \psi^* e^{+iEt/\hbar}\, \psi\, e^{-iEt/\hbar} = \psi^*\psi$$
 
 $$\hat{H}\psi_n = E_n \psi_n$$
 
+*读法：哈密顿（总能量）算符 $\hat H$ 作用在第 n 个波函数上，等于一个数 $E_n$ 乘回同一个波函数。ψ 不变、只被缩放，这样的 ψ 叫本征函数，缩放系数 $E_n$ 叫本征值（这里就是能量）。*
+
 $\hat{H}$ 是总能量算符（**Hamiltonian**），$E_n$ 是第 n 个本征值，$\psi_n$ 是第 n 个本征函数。
 这是**本征值方程**的一个例子，一般形式是：
 
 $$\text{算符} \times \text{本征函数} = \text{本征值（实标量）} \times \text{同一个本征函数}$$
+
+*读法：本征值方程的通用模式 —— 算符作用后，函数形状不变，只乘上一个实数。*
 
 **每个可观测量对应一个厄米算符**（p.16）：坐标 $\hat{r}$、动量 $\hat{p}$、角动量 $\hat{L}=\hat{r}\times\hat{p}$、
 势能 $\hat{V}$、动能 $\hat{K}$、总能量 $\hat{H}$、电偶极矩和磁偶极矩。
@@ -137,6 +162,8 @@ p.17 的练习值得自己动手：验证 $\psi(x) = Ae^{ikx} + Be^{-ikx}$
 
 $$\int \psi_i^* \psi_j \, dx = 0 \quad (i \ne j), \qquad \int \psi_i^* \psi_i \, dx = 1$$
 
+*读法：两个不同本征函数的重叠积分 = 0（正交，彼此完全独立）；同一个本征函数和自己的重叠积分 = 1（归一，全空间找到电子的概率是 100%）。*
+
 - **正交**：保证各本征态彼此"完全不同"
 - **归一**：保证在全空间找到电子的概率是 1（100% 确定它在某处）
 
@@ -145,6 +172,8 @@ $$\int \psi_i^* \psi_j \, dx = 0 \quad (i \ne j), \qquad \int \psi_i^* \psi_i \,
 一个量子力学算符的**全部**本征函数构成**完备集**，任意函数都能用它们展开：
 
 $$\psi(x) = \sum_{n=1}^{\infty} b_n \psi_n(x)$$
+
+*读法：任意函数 ψ 都能写成"一堆本征函数 $\psi_n$ 各乘一个系数 $b_n$ 再加起来"。就像任意向量能拆成 x/y/z 三个方向的分量。$\psi_n$ 就是"基函数"，$b_n$ 是混合系数。*
 
 Ungur 的类比很到位：就像三维空间里任何向量都能写成 x、y、z 三个正交单位向量的线性组合，
 这三个单位向量构成一个完备集。这里的 $\psi_n$ 也叫**基函数 (basis functions)**，
@@ -157,6 +186,8 @@ $b_n$ 是**混合系数**。完备集可以是无限的，但不必然无限。
 **3. 厄米性（p.22）**
 
 $$\int \psi_i^* \hat{O}\psi_j \, dx = \left[\int \psi_j^* \hat{O}\psi_i \, dx\right]^*$$
+
+*读法：把算符 $\hat O$ 夹在 i、j 两个函数之间积分，交换 i 和 j 的位置后再取复共轭，结果不变 —— 这就是"厄米"的定义。厄米算符的本征值一定是实数（测量结果必须是实数）。*
 
 厄米算符的**本征值全是实数**。所有对应物理可观测量的算符都必须是厄米的——
 因为测量结果必须是实数。薛定谔方程的本征值是能量，所以 Hamiltonian 矩阵是厄米矩阵。
@@ -176,11 +207,17 @@ $$\int \psi_i^* \hat{O}\psi_j \, dx = \left[\int \psi_j^* \hat{O}\psi_i \, dx\ri
 
 $$\hat{A}\hat{B}\psi = -i\hbar\, x\frac{\partial \psi}{\partial x}$$
 
+*读法：先对 ψ 求导（动量算符），再乘 x。*
+
 $$\hat{B}\hat{A}\psi = -i\hbar\frac{\partial}{\partial x}(x\psi) = -i\hbar\psi - i\hbar\, x\frac{\partial \psi}{\partial x}$$
+
+*读法：先乘 x（位置算符），再求导。用乘积求导法则展开，比上一个式子多出来一项 $-i\hbar\psi$ —— 顺序不同结果不同。*
 
 相减：
 
 $$\boxed{[\hat{x}, \hat{p}] = \hat{x}\hat{p} - \hat{p}\hat{x} = i\hbar = i\frac{h}{2\pi}}$$
+
+*读法：位置算符和动量算符"先后作用之差"（对易子）= $i\hbar$，不是零。这条 = 位置和动量不能同时精确确定（海森堡不确定性原理的算符形式）。*
 
 **这是量子力学最重要的一条关系**（Heisenberg 提出，Born 和 Jordan 形式化）。
 它的含义是：**算符作用的顺序有物理意义**——先测位置再测动量，和反过来，结果不同。
@@ -201,6 +238,8 @@ $O_{ij} = \int\psi_i^*\hat{O}\psi_j\,dx$——这正是后面 Fock 矩阵的来�
 
 $$[\hat{A},\hat{B}] = \hat{A}\hat{B} - \hat{B}\hat{A} \quad(\text{对易子}), \qquad \{\hat{A},\hat{B}\} = \hat{A}\hat{B} + \hat{B}\hat{A}\quad(\text{反对易子})$$
 
+*读法：对易子 = 两算符先后作用之差；反对易子 = 之和。对易子为零 = 两个算符"兼容"，可以同时精确测量。*
+
 **最重要的一条推论**：
 
 > 若 $[\hat{A},\hat{B}] = 0$，则 $\hat{A}$ 的所有本征函数**同时也是** $\hat{B}$ 的本征函数，反之亦然。
@@ -212,6 +251,8 @@ $$[\hat{A},\hat{B}] = \hat{A}\hat{B} - \hat{B}\hat{A} \quad(\text{对易子}), \
 $$[\hat{A},\hat{B}] = -[\hat{B},\hat{A}], \qquad [\hat{A},\hat{A}^n] = 0$$
 $$[\hat{A},\hat{B}+\hat{C}] = [\hat{A},\hat{B}] + [\hat{A},\hat{C}]$$
 $$[\hat{A},\hat{B}\hat{C}] = [\hat{A},\hat{B}]\hat{C} + \hat{B}[\hat{A},\hat{C}]$$
+
+*读法：对易子的运算规则 —— 交换两个算符要变号；任何算符和自己（的幂）对易；对加法可拆开；对乘法像求导的乘积法则一样展开。*
 
 p.31 给出几个有用的结果：$[\hat{x},\hat{H}] = \frac{i\hbar}{m}\hat{p}$、
 $[\hat{p},\hat{H}] = -i\hbar\frac{\partial V}{\partial x}$、$[\hat{x},\hat{p}_y] = [\hat{x},\hat{p}_z] = 0$。
@@ -232,6 +273,8 @@ $\Psi$ 本身可以是复函数，是它和自己共轭的乘积才给出真实�
 量子粒子的状态由波函数 $\Psi(x,t)$ **完全确定**。$t_0$ 时刻在 $x_0$ 处宽度 $dx$ 内找到粒子的概率是
 
 $$P(x_0,t_0)\,dx = \Psi^*(x_0,t_0)\Psi(x_0,t_0)\,dx = |\Psi(x_0,t_0)|^2 dx$$
+
+*读法：在某点某时刻、宽度 dx 的小区间里找到粒子的概率 = |波函数|² × dx。波函数模的平方 = 概率密度。*
 
 **对 Ψ 的要求**（p.34–35）：
 
@@ -259,6 +302,8 @@ $$P(x_0,t_0)\,dx = \Psi^*(x_0,t_0)\Psi(x_0,t_0)\,dx = |\Psi(x_0,t_0)|^2 dx$$
 
 $$\langle a \rangle = \frac{\int_{-\infty}^{+\infty} \Psi^* \hat{A}\Psi\, dx}{\int_{-\infty}^{+\infty} \Psi^* \Psi\, dx}$$
 
+*读法：可观测量 A 的平均值 =（把 $\hat A$ 夹在 Ψ 中间积分）÷（Ψ 的归一化积分）。Ψ 已归一时分母 = 1。*
+
 Ψ 归一时分母为 1。分两种情况：
 
 **情况 1（p.39）**：Ψ 就是 $\hat{A}$ 的归一化本征态，$\hat{A}\varphi_i = a_i\varphi_i$。
@@ -268,6 +313,8 @@ $$\langle a \rangle = \frac{\int_{-\infty}^{+\infty} \Psi^* \hat{A}\Psi\, dx}{\i
 利用正交归一性，交叉项全部消失：
 
 $$\langle a \rangle = \sum_n |b_n|^2 a_n$$
+
+*读法：平均值 = Σ（每个本征值 $a_n$ × 它的权重 $|b_n|^2$）。$|b_n|^2$ 正好是"单次测量测到 $a_n$ 的概率"。所以期望值是个概率加权平均。*
 
 **期望值是加权平均，权重 $|b_n|^2$ 就是测到本征值 $a_n$ 的概率。**
 
@@ -288,6 +335,8 @@ Schrödinger 的猫：箱子里有猫和一瓶随机释放的毒气，开箱前�
 
 $$\hat{H}\Psi_n(x,t) = i\hbar \frac{\partial \Psi_n(x,t)}{\partial t}$$
 
+*读法：体系怎么随时间演化，由含时薛定谔方程决定 —— $\hat H$ 作用在波函数上 = iℏ ×（波函数对时间的导数）。*
+
 ---
 
 ## 六、氢原子：唯一能精确解的体系（p.44–55）
@@ -295,6 +344,8 @@ $$\hat{H}\Psi_n(x,t) = i\hbar \frac{\partial \Psi_n(x,t)}{\partial t}$$
 ### 库仑相互作用与球坐标（p.44–45）
 
 $$V = \frac{1}{4\pi\varepsilon_0}\frac{Q_1 Q_2}{|\vec{r}_1 - \vec{r}_2|}$$
+
+*读法：两个电荷之间的库仑势能 = 常数 ×（电荷乘积 ÷ 两者距离）。同号为正（排斥），异号为负（吸引）。*
 
 球坐标：$x = r\sin\theta\cos\varphi$，$y = r\sin\theta\sin\varphi$，$z = r\cos\theta$。
 
@@ -304,9 +355,13 @@ $$V = \frac{1}{4\pi\varepsilon_0}\frac{Q_1 Q_2}{|\vec{r}_1 - \vec{r}_2|}$$
 
 $$\frac{\partial V}{\partial x} = \frac{\partial V}{\partial r}\frac{\partial r}{\partial x} = \frac{x}{r}\frac{\partial V}{\partial r}$$
 
+*读法：势能只依赖距离 r 时，它对 x 的偏导 = (对 r 的导数) ×(x/r)。链式法则的直接结果。*
+
 （y、z 同理）代入 $\vec{F} = -\nabla V$：
 
 $$\vec{F} = -\frac{1}{r}\frac{\partial V}{\partial r}(x\mathbf{i} + y\mathbf{j} + z\mathbf{k}) = -\frac{dV(r)}{dr}\cdot\frac{\vec{r}}{r}$$
+
+*读法：把三个方向的分量合起来，力 = −(dV/dr) × 单位径向矢量。即力只沿"连接原点和粒子"的方向 —— 这就是"中心力"。*
 
 **力沿径向。** 这是能解出来的根本原因。
 
@@ -316,17 +371,25 @@ $$\vec{F} = -\frac{1}{r}\frac{\partial V}{\partial r}(x\mathbf{i} + y\mathbf{j} 
 
 $$\nabla^2 = \frac{\partial^2}{\partial r^2} + \frac{2}{r}\frac{\partial}{\partial r} + \frac{1}{r^2}\left[\frac{\partial^2}{\partial\theta^2} + \cot\theta\frac{\partial}{\partial\theta} + \frac{1}{\sin^2\theta}\frac{\partial^2}{\partial\varphi^2}\right]$$
 
+*读法：拉普拉斯算符 ∇²（动能里的那个）在球坐标下分成两块：前两项只含 r（径向部分），方括号里只含角度 θ、φ（角向部分）。*
+
 而角动量平方算符恰好是
 
 $$\hat{L}^2 = -\hbar^2\left[\frac{\partial^2}{\partial\theta^2} + \cot\theta\frac{\partial}{\partial\theta} + \frac{1}{\sin^2\theta}\frac{\partial^2}{\partial\varphi^2}\right]$$
+
+*读法：角动量平方算符 $\hat L^2$ = −ℏ² ×（一个只含角度的微分表达式）。注意方括号里和上一式的角向部分一模一样。*
 
 **方括号里一模一样！** 所以
 
 $$\nabla^2 = \frac{\partial^2}{\partial r^2} + \frac{2}{r}\frac{\partial}{\partial r} - \frac{1}{r^2\hbar^2}\hat{L}^2$$
 
+*读法：把角向部分整体换成 $\hat L^2$，∇² 就干净地写成"纯径向微分 − $\hat L^2$/(r²ℏ²)"。角度自由度全打包进 $\hat L^2$ 了。*
+
 Hamiltonian 变成
 
 $$\hat{H} = -\frac{\hbar^2}{2m_e}\left(\frac{\partial^2}{\partial r^2} + \frac{2}{r}\frac{\partial}{\partial r}\right) + \frac{1}{2m_e r^2}\hat{L}^2 + V(r)$$
+
+*读法：氢原子哈密顿量 = 径向动能项 + 角动量项（$\hat L^2$/2m$_e$r²，相当于"离心势"）+ 势能 V(r)。径向和角向彻底分开。*
 
 **径向和角向被彻底分开了。**
 
@@ -336,10 +399,14 @@ $$\hat{H} = -\frac{\hbar^2}{2m_e}\left(\frac{\partial^2}{\partial r^2} + \frac{2
 
 $$[\hat{H}, \hat{L}^2] = 0, \qquad [\hat{H}, \hat{L}_z] = 0, \qquad \hat{L}_z = -i\hbar\frac{\partial}{\partial\varphi}$$
 
+*读法：$\hat H$ 和 $\hat L^2$、$\hat L_z$ 两两对易（前提是 V 只依赖 r）。$\hat L_z$（角动量 z 分量）= −iℏ ×(∂/∂φ)。*
+
 由第四节那条推论，三个算符**共享同一套本征函数**，于是同时有：
 
 $$\hat{L}^2\Psi = l(l+1)\hbar^2\Psi, \qquad l = 0,1,2,3,\dots$$
 $$\hat{L}_z\Psi = m\hbar\Psi, \qquad m = -l, -l+1, \dots, l-1, l$$
+
+*读法：同一个 Ψ 同时是这三个算符的本征函数。$\hat L^2$ 的本征值 = l(l+1)ℏ²（l 只能取 0,1,2,…，就是 s/p/d/f）；$\hat L_z$ 的本征值 = mℏ（m 从 −l 到 +l）。l、m 这两个量子数不是硬塞的，是对易关系逼出来的。*
 
 > **$l$ 和 $m$ 不是硬塞进去的，是对易关系逼出来的。**
 > 这是"量子数从哪来"这个问题最干净的回答。
@@ -351,9 +418,13 @@ $\hat{L}^2$ 的本征函数是**球谐函数** $Y_l^m(\theta,\varphi)$。
 
 $$\Psi = R(r)\, Y_l^m(\theta,\varphi) = R(r)\sqrt{\frac{2l+1}{4\pi}\frac{(l-m)!}{(l+m)!}}\,P_l^m(\cos\theta)\,e^{im\varphi}$$
 
+*读法：总波函数 = 径向函数 R(r) × 球谐函数 $Y_l^m$(θ,φ)。球谐函数又 = 归一化系数 × 连带勒让德多项式 $P_l^m$(cosθ) × 相位 $e^{imφ}$。s/p/d 轨道的"形状"就是球谐函数部分。*
+
 代入后角向部分约掉，剩下**径向方程**：
 
 $$-\frac{\hbar^2}{2m_e}\left[\frac{\partial^2}{\partial r^2} + \frac{2}{r}\frac{\partial}{\partial r} - \frac{l(l+1)}{r^2}\right]R(r) + V(r)R(r) = E R(r)$$
+
+*读法：把角向部分消掉后，只剩下径向函数 R(r) 要满足的一维方程。l 以"离心势 l(l+1)/r²"的形式留在里面。给定 l，解这个方程得到能量 E 和 R(r)。*
 
 > **结论**：对任何球对称势下的单粒子问题，定态波函数都是 $R(r)Y_l^m(\theta,\varphi)$ 的形式。
 > p.53 展示了 L=0 到 L=5 各个 m 的球谐函数形状——**这就是 s、p、d、f 轨道的角向部分**。
@@ -374,6 +445,8 @@ $$-\frac{\hbar^2}{2m_e}\left[\frac{\partial^2}{\partial r^2} + \frac{2}{r}\frac{
 
 $$\hat{H} = \left(-\tfrac{1}{2}\nabla_1^2 - \tfrac{2}{r_1}\right) + \left(-\tfrac{1}{2}\nabla_2^2 - \tfrac{2}{r_2}\right) + \frac{1}{r_{12}}$$
 
+*读法：氦原子哈密顿量 = 电子 1 的（动能 + 核吸引）+ 电子 2 的（动能 + 核吸引）+ 两电子之间的排斥 $1/r_{12}$。前两个括号各自可解，第三项把两个电子的坐标绑死，于是无精确解。*
+
 前两个括号各自是可解的类氢问题，**第三项把两个电子的坐标耦合在一起**，从此无精确解。
 
 > **超过一个电子的体系，都不可能得到精确波函数**，但数值解可以做到任意精度。
@@ -387,7 +460,11 @@ $$\hat{H} = \left(-\tfrac{1}{2}\nabla_1^2 - \tfrac{2}{r_1}\right) + \left(-\tfra
 
 $$\vec{L} = \sum_i^N \vec{l}_i, \qquad \vec{S} = \sum_i^N \vec{s}_i$$
 
+*读法：总轨道角动量 $\vec L$ = 所有电子的轨道角动量之和；总自旋 $\vec S$ = 所有电子自旋之和。单个电子的 $l_i$ 不守恒了，但总和守恒。*
+
 $$L_z = \sum_i m_i = M_L, \qquad S_z = \sum_i m_{s_i} = M_S$$
+
+*读法：总角动量的 z 分量 = 各电子 z 分量的直接相加（当普通数加）。记作 $M_L$、$M_S$。*
 
   注意：**z 分量像普通数一样相加**（标量相加），而矢量本身要按角动量耦合规则相加。
 - 电子**不可区分**——不能给它们贴标签 1 和 2
@@ -425,6 +502,8 @@ $(n_i, l_i, m_i, m_{s_i})$。**这套单电子近似 + Pauli 原理，解释了�
 
 $$\hat{s}^2\alpha = s(s+1)\alpha, \qquad \hat{s}_z\alpha = +\tfrac{1}{2}\alpha, \qquad \hat{s}_z\beta = -\tfrac{1}{2}\beta$$
 
+*读法：自旋态 α（自旋朝上）、β（自旋朝下）是自旋算符的本征函数。$\hat s_z$ 作用在 α 上给 +1/2、作用在 β 上给 −1/2（单位 ℏ）。*
+
 正交归一：$\int\alpha^*\alpha\,d\sigma = \int\beta^*\beta\,d\sigma = 1$，$\int\alpha^*\beta\,d\sigma = 0$。
 
 电子 $s = 1/2$，所以 $m_s = \pm 1/2$。
@@ -434,6 +513,8 @@ $$\hat{s}^2\alpha = s(s+1)\alpha, \qquad \hat{s}_z\alpha = +\tfrac{1}{2}\alpha, 
 
 > 电子波函数对**任意两个电子的交换**是**反对称**的：
 > $$\hat{P}_{12}\,\psi(1,2,\dots) = \psi(2,1,\dots) = -\psi(1,2,\dots)$$
+
+*读法：交换算符 $\hat P_{12}$ 把电子 1 和 2 对调，结果 = 原波函数的相反数（变号）。这才是 Pauli 原理的本质；"两个电子不能在同一状态"只是推论。*
 
 注意概率密度 $\psi^*\psi$ 在交换下**不变**——因为它是可观测量，而电子确实完全不可区分。
 
@@ -445,11 +526,15 @@ $$\hat{s}^2\alpha = s(s+1)\alpha, \qquad \hat{s}_z\alpha = +\tfrac{1}{2}\alpha, 
 
 $$\Psi_\pm = 1s(r_1)\alpha(1)\,1s(r_2)\beta(2) \pm 1s(r_2)\alpha(2)\,1s(r_1)\beta(1)$$
 
+*读法：构造两个候选波函数 —— "电子 1 是 1s↑、电子 2 是 1s↓" 加上/减去 "两个电子标号对调" 的版本。加号得到对称组合 $\Psi_+$，减号得到反对称组合 $\Psi_-$。*
+
 交换算符作用：$\hat{P}_{12}\Psi_+ = +\Psi_+$（对称），$\hat{P}_{12}\Psi_- = -\Psi_-$（反对称）。
 
 **只有 $\Psi_-$ 满足 Pauli 原理**。所以氦基态（$L=0, S=0, J=0$，记作 $^1S_0$）是
 
 $$\Psi(^1S_0) = \frac{1}{\sqrt{2}}\, 1s(r_1)\,1s(r_2)\left[\alpha(1)\beta(2) - \alpha(2)\beta(1)\right]$$
+
+*读法：氦基态 = 空间部分（两个电子都在 1s，对称）× 自旋部分（[↑↓ − ↓↑]，反对称）。空间对称 × 自旋反对称 = 总波函数反对称，满足 Pauli。*
 
 ### 氦激发态与交换积分（p.67–71）⭐⭐ 本讲最精彩的一段
 
@@ -458,6 +543,8 @@ $$\Psi(^1S_0) = \frac{1}{\sqrt{2}}\, 1s(r_1)\,1s(r_2)\left[\alpha(1)\beta(2) - \
 
 $$\Psi^{sym}_{space} = \tfrac{1}{\sqrt2}\left[1s(r_1)2s(r_2) + 1s(r_2)2s(r_1)\right]$$
 $$\Psi^{anti}_{space} = \tfrac{1}{\sqrt2}\left[1s(r_1)2s(r_2) - 1s(r_2)2s(r_1)\right]$$
+
+*读法：一个电子在 1s、一个在 2s，但不知道谁是谁 → 写成两种排法的和（空间对称）或差（空间反对称）。*
 
 自旋部分有四个函数（p.68）：
 
@@ -479,13 +566,21 @@ $$\Psi^{anti}_{space} = \tfrac{1}{\sqrt2}\left[1s(r_1)2s(r_2) - 1s(r_2)2s(r_1)\r
 $$E(^3S_1) = E_{1s} + E_{2s} + J - K$$
 $$E(2\,^1S_0) = E_{1s} + E_{2s} + J + K$$
 
+*读法：两个态的能量都 = 两个单轨道能量之和 + 库仑积分 J，区别只在交换积分 K 的符号：三重态是 −K，单重态是 +K。*
+
 $$\boxed{\Delta E = E(^3S_1) - E(2\,^1S_0) = -2K}$$
+
+*读法：三重态减单重态 = −2K。因为 K > 0，所以三重态比单重态低 2K —— 这就是 Hund 第一定则（自旋平行的态能量更低）的来源。*
 
 其中（p.71）：
 
 $$J = \iint 1s^*(r_1)\,2s^*(r_2)\,\frac{1}{r_{12}}\,1s(r_1)\,2s(r_2)\,d\tau \qquad \textbf{库仑积分}$$
 
+*读法：库仑积分 J = 把"1s 电子云"和"2s 电子云"当两团静电荷，算它们之间的排斥能。有经典对应。*
+
 $$K = \iint 1s^*(r_1)\,2s^*(r_2)\,\frac{1}{r_{12}}\,\underline{1s(r_2)\,2s(r_1)}\,d\tau \qquad \textbf{交换积分}$$
+
+*读法：交换积分 K 长得像 J，但右半边两个轨道的电子标号被对调了（下划线处）。它没有任何经典图像，纯粹来自波函数反对称的要求。*
 
 **物理意义（这是要理解的核心）**：
 
@@ -519,6 +614,8 @@ $$\Psi(1,2,\dots,N) = \frac{1}{\sqrt{N!}}
 \phi_a(N) & \phi_b(N) & \cdots & \phi_N(N)
 \end{vmatrix}$$
 
+*读法：把 N 个电子的波函数排成一个 N×N 行列式 —— 每一行是一个电子、每一列是一个自旋轨道。前面 $1/\sqrt{N!}$ 是归一化系数。行列式的数学性质自动保证 Pauli 反对称。*
+
 **行列式的两条性质恰好对应 Pauli 原理**：
 
 1. **交换任意两行（或两列），行列式变号** → 反对称性 ✅
@@ -535,6 +632,8 @@ $$\Psi(1,2,\dots,N) = \frac{1}{\sqrt{N!}}
 但实际上电子-电子排斥**破坏了球对称性**，导致能量强烈依赖角量子数：
 
 $$E_{ns} < E_{np} < E_{nd} < E_{nf}$$
+
+*读法：同一个主量子数 n 下，s 轨道能量最低，往 p、d、f 依次升高。因为 s 电子更能"钻"到核附近（穿透效应强），感受到的核吸引更强。*
 
 原因是**外层电子对核的穿透能力**按 $s > p > d > f$ 递减。
 （单电子原子里没有这个效应，能量对同一 $n$ 的所有 $l$ 都简并。）
@@ -558,17 +657,25 @@ BO 近似后：核动能项 $\sum_\alpha \nabla_\alpha^2 = 0$，核-核排斥 $V
 
 $$\hat{H} = \sum_i^{N_{elec}} \hat{h}_i + \frac{1}{2}\sum_i^{N_{elec}}\sum_{j\ne i}^{N_{elec}} \hat{g}_{ij} + V_{NN}$$
 
+*读法：电子哈密顿量 = Σ 单电子算符 $\hat h_i$ + ½ ΣΣ 双电子排斥 $\hat g_{ij}$（½ 是因为每对电子被数了两次）+ 核-核排斥常数 $V_{NN}$。*
+
 其中（p.80）
 
 $$\hat{h}_i = -\nabla_i^2 - \sum_\alpha^{N_{nuc}} \frac{Z_\alpha}{|\vec{r}_i - \vec{r}_\alpha|} \qquad \text{（单电子：动能 + 核吸引）}$$
 
+*读法：单电子算符 $\hat h_i$ = 电子 i 的动能（−∇²）+ 它被所有原子核吸引的势能（Σ −Z$_\alpha$/距离）。*
+
 $$\hat{g}_{ij} = \frac{1}{|\vec{r}_i - \vec{r}_j|} \qquad \text{（双电子：电子排斥）}$$
+
+*读法：双电子算符 $\hat g_{ij}$ = 电子 i 和 j 之间的库仑排斥 = 1/距离。就是它让方程解不动。*
 
 ### 能量表达式（p.82–83）⭐ 闭壳层
 
 对 $E = \langle\Psi|\hat{H}|\Psi\rangle$ 展开、化简后（闭壳层）：
 
 $$\boxed{E = 2\sum_i^{N/2} H_i + \sum_i^{N/2}\sum_j^{N/2}\left(2J_{ij} - K_{ij}\right) + V_{NN}}$$
+
+*读法：闭壳层 HF 总能量 = Σ 各占据轨道的单电子能量（×2，因为每个轨道两个电子）+ ΣΣ 轨道对之间的（2× 库仑 − 交换）+ 核-核排斥。这就是 `SCF Done` 那行算出来的数。*
 
 | 符号 | 名称 | 表达式 |
 |---|---|---|
@@ -589,7 +696,11 @@ $\phi_i$ 的具体形式还没定。按**变分原理**对分子轨道系数求�
 
 $$\hat{F}\phi_i(1) = \varepsilon_i \phi_i(1)$$
 
+*读法：最优的分子轨道 $\phi_i$ 是 Fock 算符 $\hat F$ 的本征函数，本征值 $\varepsilon_i$ 就是该轨道的能量。形式上和薛定谔方程一样，只是 $\hat H$ 换成了 $\hat F$。*
+
 $$\hat{F} = -\nabla_1^2 - \sum_\alpha \frac{Z_\alpha}{|\vec{r}_1 - \vec{r}_\alpha|} + \sum_j^{N/2}\left[2\hat{J}_j(1) - \hat{K}_j(1)\right]$$
+
+*读法：Fock 算符 = 单电子部分（动能 + 核吸引）+ 其他所有占据轨道产生的平均场（2×库仑算符 − 交换算符）。关键：右边的 $\hat J_j$、$\hat K_j$ 依赖于 $\phi_j$，而 $\phi_j$ 正是要求的东西 → 必须迭代。*
 
 $\varepsilon_i$ 是轨道能量，$\hat{F}$ 叫 **Fock 算符**。
 
@@ -609,17 +720,25 @@ Roothaan（1955）的贡献：**用 LCAO 把它变成矩阵方程**。
 
 $$\phi_i = \sum_s^N c_{si}\,\chi_s \qquad \text{（分子轨道 = 原子轨道的线性组合）}$$
 
+*读法：把每个分子轨道 $\phi_i$ 写成"一堆原子轨道基函数 $\chi_s$ 各乘一个系数 $c_{si}$"。这样未知量从"函数"变成"一组数 $c_{si}$"。*
+
 代入 $\hat{F}\phi_i = \varepsilon_i\phi_i$，左乘 $\chi_t^*$ 并积分：
 
 $$\boxed{\sum_s^N c_{si}\left(F_{ts} - \varepsilon_i S_{ts}\right) = 0, \qquad t = 1,2,\dots,N}$$
+
+*读法：代入展开、投影到每个基函数上，得到一组线性方程组。$F_{ts}$ 是 Fock 矩阵元，$S_{ts}$ 是基函数重叠，$\varepsilon_i$ 是轨道能。这就是 Roothaan-Hall 方程，矩阵写法是 FC = SCε。*
 
 其中
 
 $$F_{ts} = \langle\chi_t|\hat{F}|\chi_s\rangle \quad \textbf{(Fock 矩阵)}, \qquad S_{ts} = \langle\chi_t|\chi_s\rangle \quad \textbf{(重叠矩阵)}$$
 
+*读法：Fock 矩阵元 = 把 Fock 算符夹在两个基函数中间积分；重叠矩阵元 = 两个基函数直接的重叠积分（基函数不正交，所以 S 不是单位矩阵）。*
+
 要有非平凡解，**久期行列式 (secular determinant) 必须为零**：
 
 $$\left|F_{ts} - \varepsilon_i S_{ts}\right| = 0$$
+
+*读法：这个行列式 = 0 的条件，解出来就是一组轨道能 $\varepsilon_i$（本征值），对应的系数向量就是各个分子轨道。*
 
 > Ungur 的原话：**这些方程用自洽场 (SCF) 迭代求解，使总能量收敛到容许的阈值。
 > 这些方程构成了现代量子化学与计算化学的基础。**
@@ -673,6 +792,8 @@ $$\left|F_{ts} - \varepsilon_i S_{ts}\right| = 0$$
 $\sigma_g = \frac{1}{\sqrt2}(1s_A + 1s_B)$，双占据。展开 $\sigma_g(1)\sigma_g(2)$：
 
 $$\sigma_g(1)\sigma_g(2) \propto \underbrace{A(1)B(2) + B(1)A(2)}_{\text{共价：H}\cdot + \cdot\text{H}} + \underbrace{A(1)A(2) + B(1)B(2)}_{\text{离子：H}^-\text{H}^+}$$
+
+*读法：把双占据的 $\sigma_g$ 轨道展开，出现四项：前两项是"一个电子在 A、一个在 B"（共价，两个中性 H 原子），后两项是"两个电子都在 A 或都在 B"（离子，H⁻ + H⁺）。RHF 强制这两类各占 50%，不管原子分得多开。*
 
 **共价项和离子项永远各占 50%，与核间距 R 无关。**
 
