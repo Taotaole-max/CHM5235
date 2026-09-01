@@ -1,7 +1,7 @@
 # CHM5235 学习路线与进度看板
 
 > 这是工作台的**总入口**。每次开工先看这里，做完一件事回来勾一个框。
-> 最后更新：2026-08-19
+> 最后更新：2026-09-01
 
 ## 一句话策略
 
@@ -18,10 +18,10 @@
 
 | 周次 | 日期 | 主线 | 目标 |
 |---|---|---|---|
-| W1 | 8/10–8/16 | — | 已过。讲义 `wk01_intro_slides.pdf` 已入库 |
-| **W2** | **8/17–8/23** | **HPC 打通** | 登录 → 建目录 → 提交第一个测试作业并拿到输出（见 `00_Course_Info/HPC快速上手.md`）<br>📌 **Lecture 02 布置了 H₂ 势能面任务**，见 `02_Assignments/task_h2_pes/` |
-| W3 | 8/24–8/30 | Gaussian | 单分子 opt+freq 跑通；GaussView 看轨道/频率动画 |
-| W4 | 8/31–9/6 | Gaussian → **HW1** | TD-DFT 激发态 + BS-DFT 磁交换；写报告 |
+| W1 | 8/10–8/16 | — | 已过。讲义笔记 `wk01_计算化学概览与HPC入门.md` 已整理 |
+| **W2** | **8/17–8/23** | **HPC 打通** | 登录 → 建目录 → 提交第一个测试作业并拿到输出（见 `00_Course_Info/HPC快速上手.md`）<br>📌 **Lecture 02 布置了 H₂ 势能面任务**，见 `02_Assignments/task_h2_pes/`。笔记 `wk02_量子力学基础到HF理论.md` |
+| W3 | 8/24–8/30 | Gaussian | 单分子 opt+freq 跑通；GaussView 看轨道/频率动画。笔记 `wk03_标准软件_变分原理_基组_SCF.md`（Lecture 03 练习：o-Cresol opt+freq+PBE） |
+| W4 | 8/31–9/6 | Gaussian → **HW1** | TD-DFT 激发态 + BS-DFT 磁交换；写报告。笔记 `wk04_电子相关方法.md`（Lecture 04 练习：乙烷/乙烯 相关方法对比 + counterpoise） |
 | W5 | 9/7–9/13 | ORCA | 同样任务换 ORCA 做一遍，对比结果；Avogadro/Chemcraft 可视化 |
 | W6 | 9/14–9/20 | ORCA → **HW2** | 提交 HW2 |
 | — | 9/21–9/27 | Recess | 复习理论：HF/Roothaan-Hall、电子相关、波函数分析 |
@@ -102,14 +102,15 @@
 
 ### F. 理论（考试用，占 40%）
 
-> Lecture 02 笔记：`01_Lecture_Notes/wk02_量子力学基础到HF理论.md`（含自测清单）
+> 讲义笔记都在 `01_Lecture_Notes/`，每份含自测清单。索引见该目录 `README.md`。
 
-
-- [ ] 力场方法（原子级 / 粗粒化）
-- [ ] 量子力学基础与 Hartree-Fock、Roothaan-Hall 方程
-- [ ] 波函数分析：原子电荷、电子密度、轨道局域化
-- [ ] 电子相关：MP2 / CCSD，与 DFT 的关系
-- [ ] 分子动力学（DFT / 半经验）
+- [x] Lecture 01：计算化学概览 + 硬件/HPC（`wk01_计算化学概览与HPC入门.md`）
+- [x] Lecture 02：量子力学基础 → Hartree-Fock、Roothaan-Hall 方程（`wk02_量子力学基础到HF理论.md`）
+- [x] Lecture 03：软件对照 + 变分原理 + Koopmans + RHF/UHF + 双电子积分/RI/DIIS + 基组（`wk03_标准软件_变分原理_基组_SCF.md`）
+- [x] Lecture 04：电子相关 —— CI / CASSCF / Coupled Cluster / MPn / BSSE / 标度（`wk04_电子相关方法.md`）
+- [ ] 力场方法（原子级 / 粗粒化）—— 还没讲到
+- [ ] 波函数分析：原子电荷、电子密度、轨道局域化 —— 待后续课
+- [ ] 分子动力学（DFT / 半经验）—— 待后续课
 - [ ] 每周课后在 `01_Lecture_Notes/wkNN_topic.md` 留一份自己的话复述
 
 ## 每周固定动作
