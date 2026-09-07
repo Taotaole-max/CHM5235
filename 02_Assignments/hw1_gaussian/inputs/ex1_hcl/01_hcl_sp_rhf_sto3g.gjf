@@ -1,5 +1,5 @@
 %chk=hcl_sp_sto3g.chk
-%mem=6MW
+%mem=1GB
 %nproc=1
 #p hf/sto-3g guess=save geom=connectivity scf=tight
 
