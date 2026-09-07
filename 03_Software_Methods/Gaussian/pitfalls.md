@@ -22,3 +22,13 @@
 ## 我自己遇到的
 
 （往这里加，记清楚：现象 / 排查过程 / 根因 / 解决）
+
+### 2026-09-08 · HW1 Ex1 单点秒退，log 里没有 "SCF Done"
+
+- 现象：`grep -c "SCF Done" 01_...log` 返回 0；`tail` 显示
+  `Out-of-memory error in routine RdGeom-1 ... Use %mem=11MW`，`Error termination via Lnk1e`。
+- 根因：作业 PDF 给的示意输入写的是 `%mem=6MW`（≈48 MB），atlas9 的 g16 RevC.02
+  连读几何结构都不够。题目模板只是示意，实际跑要自己调大内存。
+- 解决：`%mem=6MW` → `%mem=1GB`。`sed -i 's/%mem=6MW/%mem=1GB/' 文件` 一行搞定。
+- 顺带确认：atlas9 上 Gaussian 模块 = `Gaussian/g16`；serial 队列 1 核足够跑双原子；
+  scratch 它自己用 `/scratch/<jobid>/`（PBS 设的 TMPDIR），`GAUSS_SCRDIR` 可不设。
