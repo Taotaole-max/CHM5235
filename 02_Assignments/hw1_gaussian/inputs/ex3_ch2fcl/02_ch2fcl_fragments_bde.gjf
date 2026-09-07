@@ -1,0 +1,49 @@
+%chk=chfcl_rad.chk
+%mem=8GB
+%nprocshared=8
+#p ub3lyp/cc-pVDZ opt=tight freq pop=full int=ultrafine
+
+CHFCl radical (CH2FCl minus one H)  UB3LYP/cc-pVDZ   -- 用于 C-H BDE
+
+0 2
+C
+F   1  1.34
+Cl  1  1.72   2  116.0
+H   1  1.08   2  114.0   3  150.0
+
+--Link1--
+%chk=ch2cl_rad.chk
+%mem=8GB
+%nprocshared=8
+#p ub3lyp/cc-pVDZ opt=tight freq pop=full int=ultrafine
+
+CH2Cl radical (CH2FCl minus F)  UB3LYP/cc-pVDZ   -- 用于 C-F BDE
+
+0 2
+C
+Cl  1  1.69
+H   1  1.08   2  118.0
+H   1  1.08   2  118.0   3  150.0
+
+--Link1--
+%chk=h_atom.chk
+%mem=2GB
+%nprocshared=1
+#p ub3lyp/cc-pVDZ int=ultrafine
+
+H atom  UB3LYP/cc-pVDZ
+
+0 2
+H
+
+--Link1--
+%chk=f_atom.chk
+%mem=2GB
+%nprocshared=1
+#p ub3lyp/cc-pVDZ int=ultrafine
+
+F atom  UB3LYP/cc-pVDZ
+
+0 2
+F
+

@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -P <<<PROJECT>>>
+#PBS -q <<<QUEUE>>>
+#PBS -N hw1_ex6_ch2foh
+#PBS -l select=1:ncpus=16:mpiprocs=16:mem=32gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+source /app1/ebenv 2>/dev/null || true
+module load <<<GAUSSIAN_MODULE>>>
+
+export GAUSS_SCRDIR=<<<SCRATCH>>>/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+g16 < ch2foh_excited.gjf > ch2foh_excited.log 2>&1
+
+rm -rf "$GAUSS_SCRDIR"

@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -P <<<PROJECT>>>
+#PBS -q <<<QUEUE>>>
+#PBS -N hw1_ex1_hcl
+#PBS -l select=1:ncpus=8:mpiprocs=8:mem=16gb
+#PBS -l walltime=06:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+source /app1/ebenv 2>/dev/null || true
+module load <<<GAUSSIAN_MODULE>>>          # 例：Gaussian/16.C.02-AVX2
+
+export GAUSS_SCRDIR=<<<SCRATCH>>>/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+# 1) 题目给的单点
+g16 < 01_hcl_sp_rhf_sto3g.gjf > 01_hcl_sp_rhf_sto3g.log 2>&1
+
+# 2) 六个基组 opt+freq（单文件内 --Link1-- 串联）
+g16 < 02_hcl_optfreq_all_basis.gjf > 02_hcl_optfreq_all_basis.log 2>&1
+
+# 取回 .chk 里做轨道图的那个，转成文本 fchk
+formchk hcl_6311pgd.chk hcl_6311pgd.fchk
+
+rm -rf "$GAUSS_SCRDIR"

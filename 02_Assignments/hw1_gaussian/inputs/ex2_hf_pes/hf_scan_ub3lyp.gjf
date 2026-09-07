@@ -1,0 +1,13 @@
+%chk=hf_scan_ub3lyp.chk
+%mem=16GB
+%nprocshared=16
+#p ub3lyp/cc-pVTZ scan guess=mix scf=(xqc,tight) int=ultrafine pop=none
+
+HF diatomic rigid PES scan  UB3LYP/cc-pVTZ  R=0.50..10.00 step 0.01
+
+0 1
+F
+H  1  R
+
+R  0.50  950  0.01
+

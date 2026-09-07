@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -P <<<PROJECT>>>
+#PBS -q <<<QUEUE>>>
+#PBS -N hw1_ex2_hfpes
+#PBS -l select=1:ncpus=16:mpiprocs=16:mem=32gb
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+source /app1/ebenv 2>/dev/null || true
+module load <<<GAUSSIAN_MODULE>>>
+
+export GAUSS_SCRDIR=<<<SCRATCH>>>/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+# 从快到慢。UHF / B3LYP 分钟级；CCSD 约 1 h；CCSD(T) 约 2-5 h（951 个点）。
+for job in hf_scan_uhf hf_scan_ub3lyp hf_scan_uccsd hf_scan_uccsdt; do
+    echo ">>> $job  $(date)"
+    g16 < ${job}.gjf > ${job}.log 2>&1
+done
+
+rm -rf "$GAUSS_SCRDIR"

@@ -1,0 +1,16 @@
+%chk=hcl_sp_sto3g.chk
+%mem=6MW
+%nproc=1
+#p hf/sto-3g guess=save geom=connectivity scf=tight
+
+Calculation of the ground state energy with STO-3G basis set
+
+0 1
+Cl
+H 1 B1
+
+B1 1.275000000
+
+1 2 3.0
+2
+

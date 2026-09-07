@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -P <<<PROJECT>>>
+#PBS -q <<<QUEUE>>>
+#PBS -N hw1_ex3_ch2fcl
+#PBS -l select=1:ncpus=8:mpiprocs=8:mem=32gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+source /app1/ebenv 2>/dev/null || true
+module load <<<GAUSSIAN_MODULE>>>
+
+export GAUSS_SCRDIR=<<<SCRATCH>>>/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+g16 < 01_ch2fcl_parent.gjf        > 01_ch2fcl_parent.log        2>&1
+g16 < 02_ch2fcl_fragments_bde.gjf > 02_ch2fcl_fragments_bde.log 2>&1
+
+# 密度 + 静电势用的 fchk
+formchk ch2fcl_b3lyp_ccpvdz.chk ch2fcl_b3lyp_ccpvdz.fchk
+
+rm -rf "$GAUSS_SCRDIR"
