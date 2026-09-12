@@ -1,6 +1,6 @@
 %chk=chfcl_rad.chk
-%mem=8GB
-%nprocshared=8
+%mem=4GB
+%nprocshared=1
 #p ub3lyp/cc-pVDZ opt=tight freq pop=full int=ultrafine
 
 CHFCl radical (CH2FCl minus one H)  UB3LYP/cc-pVDZ   -- 用于 C-H BDE
@@ -13,8 +13,8 @@ H   1  1.08   2  114.0   3  150.0
 
 --Link1--
 %chk=ch2cl_rad.chk
-%mem=8GB
-%nprocshared=8
+%mem=4GB
+%nprocshared=1
 #p ub3lyp/cc-pVDZ opt=tight freq pop=full int=ultrafine
 
 CH2Cl radical (CH2FCl minus F)  UB3LYP/cc-pVDZ   -- 用于 C-F BDE

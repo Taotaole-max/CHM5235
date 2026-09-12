@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N hw1_ex3_frags
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=6gb
+#PBS -l walltime=06:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load Gaussian/g16
+
+export GAUSS_SCRDIR=/hpctmp/zhangxubo/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+g16 < 02_ch2fcl_fragments_bde.gjf > 02_ch2fcl_fragments_bde.log 2>&1
+
+rm -rf "$GAUSS_SCRDIR"
