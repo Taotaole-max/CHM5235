@@ -27,10 +27,24 @@ H–F 均裂解离成 **两个开壳层原子（H· + F·）**。限制波函数
   预期：**CCSD(T) ≈ CCSD > B3LYP > UHF**；UHF 严重低估（缺动态相关），
   且 UHF 在中等键长有非物理的“肩膀”（自旋污染 + Coulson–Fischer 点）。
 
-## 跑法
+## 跑法（4 个独立任务，同时排队，别用一个脚本顺序跑）
+
+HF 是双原子、cc-pVTZ 只有 44 个基函数，1 核足够，不需要占多核队列。
+四个方法各自提一个任务，**并发跑**，总耗时 ≈ 最慢的那个（UCCSD(T)），
+比一个脚本里顺序跑快 3-4 倍——这点对赶 9/13 截止很关键。
 
 ```bash
-qsub submit_ex2.pbs
-# 回本地后：
+qsub submit_ex2_uhf.pbs
+qsub submit_ex2_ub3lyp.pbs
+qsub submit_ex2_uccsd.pbs
+qsub submit_ex2_uccsdt.pbs
+qstat -u $USER      # 应该看到 4 个任务号
+```
+
+预估：UHF/UB3LYP 几十分钟；UCCSD 几小时；UCCSD(T) 可能 10+ 小时——**尽早提交**。
+
+跑完（4 个 .log 都在）：
+```bash
 bash extract_pes.sh && python plot_pes.py
 ```
+（在本地跑 `plot_pes.py`，先把 4 个 .log 用 FileZilla 下载回来。）

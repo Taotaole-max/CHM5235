@@ -1,6 +1,6 @@
 %chk=hf_scan_uhf.chk
-%mem=16GB
-%nprocshared=16
+%mem=8GB
+%nprocshared=1
 #p uhf/cc-pVTZ scan guess=mix scf=(xqc,tight) pop=none
 
 HF diatomic rigid PES scan  UHF/cc-pVTZ  R=0.50..10.00 step 0.01
