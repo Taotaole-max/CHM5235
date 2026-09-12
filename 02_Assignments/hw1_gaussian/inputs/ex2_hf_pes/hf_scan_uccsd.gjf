@@ -1,7 +1,7 @@
 %chk=hf_scan_uccsd.chk
 %mem=8GB
 %nprocshared=1
-#p uccsd/cc-pVTZ scan guess=mix scf=(xqc,tight) pop=none
+#p uccsd/cc-pVTZ CC(MaxCyc=128) scan guess=mix stable=opt scf=(xqc,tight) pop=none
 
 HF diatomic rigid PES scan  UCCSD/cc-pVTZ  R=0.50..10.00 step 0.01
 
