@@ -1,6 +1,6 @@
 %chk=ch2foh.chk
-%mem=16GB
-%nprocshared=16
+%mem=6GB
+%nprocshared=1
 #p b3lyp/cc-pVTZ opt=tight freq int=ultrafine
 
 CFH2-OH (fluoromethanol) ground-state opt+freq  /  B3LYP/cc-pVTZ
@@ -16,8 +16,8 @@ H   3  0.96   1  108.0   2   180.0
 --Link1--
 %oldchk=ch2foh.chk
 %chk=ch2foh_tda.chk
-%mem=16GB
-%nprocshared=16
+%mem=6GB
+%nprocshared=1
 #p tda(nstates=5) b3lyp/cc-pVTZ geom=check guess=read int=ultrafine
 
 CFH2-OH  first 5 excited states  /  TD-DFT + Tamm-Dancoff (TDA)  B3LYP/cc-pVTZ
@@ -27,8 +27,8 @@ CFH2-OH  first 5 excited states  /  TD-DFT + Tamm-Dancoff (TDA)  B3LYP/cc-pVTZ
 --Link1--
 %oldchk=ch2foh.chk
 %chk=ch2foh_cis.chk
-%mem=16GB
-%nprocshared=16
+%mem=6GB
+%nprocshared=1
 #p cis(nstates=5)/cc-pVTZ geom=check guess=read
 
 CFH2-OH  first 5 excited states  /  CIS/cc-pVTZ
