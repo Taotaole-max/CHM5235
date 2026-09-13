@@ -1,7 +1,7 @@
 # CHM5235 学习路线与进度看板
 
 > 这是工作台的**总入口**。每次开工先看这里，做完一件事回来勾一个框。
-> 最后更新：2026-09-07
+> 最后更新：2026-09-13
 
 ## ⚠️ 真实截止日期（2026-09-07 从 Canvas 作业页核对，覆盖下面推算的时间线）
 
@@ -13,8 +13,14 @@
 | HW4 | VASP | 10-11 开放 | 2026-11-08 | 30 分 |
 | 期中考 | 理论，无实操 | — | **2026-10-05** | 38 分 |
 
-HW1 工作包已建好：`02_Assignments/hw1_gaussian/`（6 题输入文件 + PBS + 两道理论题成稿）。
-集群 = **HPC@NUS，atlas9.nus.edu.sg**（PBS Pro）。开跑前先做 `hw1_gaussian/RECON.md`。
+**2026-09-13：HW1 六题全部跑完、报告写完、合并成一份 PDF，已经在 Canvas 截止日当天准备提交。**
+最终产出在桌面 `CM5235 作业文件\CM5235_HW1_Zhang_Xubo.docx`(+ 对应 .pdf)，不在仓库里（学号/声明要本人填，
+仓库里 `02_Assignments/hw1_gaussian/` 保留的是输入文件和过程记录）。
+
+集群 = **HPC@NUS，atlas9.nus.edu.sg**（PBS Pro，登录节点名 `atlas9-c01`，实际跑的计算节点显示为 `venus01`）。
+确认过的固定值：队列 `serial`（1 核，最多 15GB 内存，无 walltime 下限，`parallel` 队列没查，多数题目
+1 核够用）；Gaussian 模块名 `Gaussian/g16`；scratch 目录 `/hpctmp/$USER`；**不需要 `-P` project code**
+（默认 project 能跑）。以后 HW2/3/4 的 PBS 脚本可以直接照抄 `hw1_gaussian/inputs/*/submit_*.pbs` 的骨架。
 
 ## 一句话策略
 
@@ -52,13 +58,13 @@ HW1 工作包已建好：`02_Assignments/hw1_gaussian/`（6 题输入文件 + PB
 - [x] 申请 HPC 账号
 - [x] 首次 SSH 登录成功
 - [x] **确认到底用哪个集群**：是 **HPC@NUS**，登录节点 `atlas9.nus.edu.sg`（PBS Pro）。用户账号已能登录。
-- [ ] 确认自己所属的 **project code**（`-P` 参数要用），记进 `00_Course_Info/HPC快速上手.md`
-- [ ] `module avail` 查清四个软件的模块名，回填到各自 `notes.md`
-- [ ] 确认可用队列和资源上限（`qstat -Q`）
-- [ ] 规划目录：家目录放输入/脚本，scratch 放计算中间文件
-- [ ] **提交第一个测试作业并成功拿到输出**（里程碑）
-- [ ] 打通本地 ↔ 集群文件传输（WinSCP / `scp`）
-- [ ] 会用 `qstat` 查状态、`qdel` 撤作业、看 `.o`/`.e` 日志定位失败原因
+- [x] 确认自己所属的 **project code**：不需要，默认 project 就能跑（`-P` 不加也行）
+- [x] `module avail` 查清 Gaussian 模块名：`Gaussian/g16`（ORCA/MOLCAS/VASP 的还没查）
+- [x] 确认可用队列和资源上限：`serial`（1 核 / ≤15GB / 无 walltime 下限），已够 HW1 全部用
+- [x] 规划目录：`~/CHM5235/hw1/exN/` 放输入脚本，scratch 用 `/hpctmp/$USER/`
+- [x] **提交第一个测试作业并成功拿到输出**（里程碑，2026-09-08 达成）
+- [x] 打通本地 ↔ 集群文件传输：FileZilla（SFTP），用户已经很熟练
+- [x] 会用 `qstat` 查状态、看 `.o` 日志和 `.log` 里的 `Normal termination`/`Error termination` 定位失败原因
 
 ### A2. Lecture 02 布置的任务：H₂ 势能面 RHF vs UHF
 
@@ -72,15 +78,18 @@ HW1 工作包已建好：`02_Assignments/hw1_gaussian/`（6 题输入文件 + PB
 - [ ] 标出 Coulson–Fischer 点，与实验 Dₑ ≈ 4.75 eV 对比
 - [ ] 写清"为什么结果不同"
 
-### B. Gaussian + GaussView（HW1，15%）
+### B. Gaussian + GaussView（HW1，15%）—— ✅ 2026-09-13 全部完成并提交
 
-- [ ] 拿到 Gaussian 模块名与 `g16`/`g09` 版本
-- [ ] 跑通 opt+freq（用 `templates/01_opt_freq.gjf`）
-- [ ] 会判断优化是否收敛、频率有无虚频
-- [ ] GaussView 看分子轨道、电子密度、自旋密度、振动模式
-- [ ] TD-DFT 激发态（`templates/02_td_dft.gjf`）
-- [ ] BS-DFT 磁交换常数 J（`templates/03_bs_dft.gjf`）
-- [ ] 报告成稿 → `02_Assignments/hw1_gaussian/`
+实际 HW1 六题跟这里原来猜的模板不一样（真题是 HCl 多基组 / H-F 解离曲线 / CH2FCl 键能 /
+两道理论题 / CH2F-OH 激发态），细节和踩过的坑见 `02_Assignments/hw1_gaussian/`
+和 `03_Software_Methods/Gaussian/pitfalls.md`（**最大的坑**：`guess=mix` 对异核双原子
+不一定生效，扫描全程 ⟨S²⟩=0 都不代表对，要查一遍再用 `stable=opt` 校正）。
+- [x] Gaussian 模块名 `Gaussian/g16`
+- [x] opt+freq 跑通，会判断收敛/虚频
+- [x] GaussView 看分子轨道（MOs 对话框）、电子密度+静电势叠加图（Surfaces and Contours →
+      Cube Actions 生成 Density/ESP 立方体 → 选中立方体 → Surface Actions → **New Mapped Surface**）
+- [x] TD-DFT / CIS 激发态对比（Ex6）
+- [x] 报告成稿 → 桌面 `CM5235 作业文件\CM5235_HW1_Zhang_Xubo.docx`
 
 ### C. ORCA + Avogadro/Chemcraft（HW2，15%）
 
