@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 第1讲 · 课程概览与计算平台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>第 1 讲　课程概览与计算平台</h1>
+  <div class="sub">对应讲义 <code>CM5235_Lecture_01.pdf</code>（42 页）· 逐页翻译 + 零基础讲解 + 拓展</div>
+</header>
+
+<nav class="toc">
+<b>本讲导航</b>
+<a href="#p1">p1 封面</a><a href="#p2">p2 理论课大纲</a><a href="#p3">p3–4 实践课大纲</a>
+<a href="#p5">p5 考核方式</a><a href="#p6">p6 参考书</a><a href="#p7">p7 什么是计算化学</a>
+<a href="#p8">p8–9 重要人物与诺奖</a><a href="#p10">p10 高引论文</a><a href="#p11">p11 学科简史</a>
+<a href="#p12">p12 未来方向</a><a href="#p13">p13–14 计算机结构</a><a href="#p15">p15–17 集群</a>
+<a href="#p18">p18 共享内存超算</a><a href="#p19">p19 内存延迟与带宽</a><a href="#p20">p20 GIPS 与 GFLOPS</a>
+<a href="#p21">p21 摩尔定律</a><a href="#p22">p22–24 网络互联</a><a href="#p25">p25 文件系统</a>
+<a href="#p26">p26 矩阵运算标度</a><a href="#p27">p27 Linux</a><a href="#p28">p28–38 环境搭建</a>
+<a href="#p39">p39–40 命令行练习</a><a href="#p41">p41 PBS 脚本详解</a><a href="#p42">p42 环境变量</a>
+<a href="#sum">本讲小结</a>
+</nav>
+
+<div class="warn"><span class="lab">先读这段</span>
+<p><b>这一讲不考公式，但它决定你后面三讲能不能"读懂算出来的东西"。</b>第 1 讲讲的是<b>"计算化学到底在算什么、用什么机器算、为什么算得慢"</b>。这三个问题的答案，会在第 2–4 讲反复以公式的形式回来找你。比如这里说"矩阵对角化是 O(<i>n</i>³) 且难并行"，到第 3 讲就变成"SCF 每一轮都要对角化 Fock 矩阵，所以基组一大就慢得要死"。所以别跳过。</p>
+</div>
+
+<section class="slide" id="p1">
+<h2><span class="pno">p1</span>封面：Applied Computational Chemistry</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>应用计算化学（Applied Computational Chemistry），主讲：Liviu Ungur，课程代码 CM5235。</p>
+</div>
+<h3>讲解 · 课名里的 "Applied" 是什么意思</h3>
+<p>"Applied（应用）"这个词是有信息量的。计算化学大致分两支：</p>
+<ul>
+<li><b>Method development（方法开发）</b>：发明新的近似、新的泛函、新的算法。做这个要写代码、推公式。</li>
+<li><b>Applied / production（应用）</b>：用现成的软件包（Gaussian、ORCA、VASP…）去回答一个真实的化学问题。</li>
+</ul>
+<p>这门课是后者。<span class="key">所以理论部分的目标不是让你能自己写一个量化程序，而是让你在看到 <code>#p opt b3lyp/6-31G(d)</code> 这一行输入时，知道每一个关键词背后省略了什么近似、这个近似在什么情况下会崩。</span></p>
+</section>
+
+<section class="slide" id="p2">
+<h2><span class="pno">p2</span>课程计划：理论课</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li>"计算化学"总览及其与其他研究领域的关系</li>
+<li>原子级与粗粒化力场方法：背景与方法局限</li>
+<li>量子力学原理与基础知识：算符、本征值方程、量子化、由氢原子薛定谔方程得到的原子轨道</li>
+<li>Hartree–Fock 理论与 Roothaan–Hall 方程</li>
+<li>波函数分析：原子电荷、电子密度、轨道定域化等</li>
+<li>电子相关方法：MP2、CCSD 等</li>
+<li>分子动力学：DFT 与半经验计算</li>
+</ul>
+</div>
+<h3>讲解 · 这七条其实是一条主线</h3>
+<p>初学者看这个大纲会觉得是七个互不相干的题目。其实它是<b>一条精度阶梯</b>，从最粗糙爬到最精确，每爬一级就把上一级的一个近似去掉：</p>
+<table>
+<tr><th style="width:130px">层级</th><th>做了什么近似</th><th>典型体系规模</th></tr>
+<tr><td><b>力场 (MM)</b></td><td>完全放弃电子，把分子当成弹簧连起来的小球</td><td>10⁵–10⁷ 原子（蛋白质、聚合物）</td></tr>
+<tr><td><b>半经验</b></td><td>保留电子，但双电子积分大部分靠参数拟合</td><td>10³ 原子</td></tr>
+<tr><td><b>Hartree–Fock</b></td><td>保留电子，双电子积分全算，但用<b>平均场</b>：每个电子只感受到其他电子的"平均云"</td><td>10² 原子</td></tr>
+<tr><td><b>DFT</b></td><td>与 HF 同形式，但用近似泛函把"相关能"补回来一部分</td><td>10²–10³ 原子</td></tr>
+<tr><td><b>MP2 / CCSD</b></td><td>显式地把电子的<b>瞬时躲避</b>（相关运动）算进来</td><td>20–100 原子</td></tr>
+<tr><td><b>Full CI</b></td><td>不做任何波函数近似（只剩基组不完备）</td><td>3–4 个原子</td></tr>
+</table>
+<p><span class="key">整门课的核心情节就是："电子相关（electron correlation）"这四个字。</span>HF 把它丢掉了，后面所有方法都是在想办法把它捡回来，代价是计算量爆炸。第 4 讲整讲都在讲这件事。</p>
+<div class="ext"><span class="lab">拓展 · "粗粒化 (Coarse-Grained)" 是什么</span>
+<p>全原子力场里，一个 CH₂ 是 3 个粒子（1 个 C + 2 个 H）。粗粒化力场把整个 CH₂ 当成<b>1 个粒子（bead，珠子）</b>，参数重新拟合。粒子数少了 3 倍，但更关键的是：粒子重了、相互作用软了，积分步长可以从 1 fs 拉到 20–40 fs，于是能模拟的时间尺度直接跳两三个数量级（从 ns 到 μs–ms）。代表是 MARTINI 力场，做膜蛋白、脂质体、聚合物自组装的标配。代价是丢掉了化学细节——粗粒化模型里没有"键的断裂"这回事。</p>
+</div>
+</section>
+
+<section class="slide" id="p3">
+<h2><span class="pno">p3–4</span>课程计划：实践课</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>p3：</b>实践课包含一些直接的任务，用来熟悉 Linux 操作系统、脚本、输入文件与作业的准备和提交。我们将熟悉并使用以下量子化学软件包：Gaussian、ORCA、OpenMOLCAS 和 VASP。Gaussian 与 ORCA 将用于：几何优化与振动频率计算、轨道与电子密度/自旋密度的可视化、磁交换（BS-DFT）、以及通过 TD-DFT 计算激发态。</p>
+<p><b>p4：</b>我们将用 OpenMOLCAS 做多组态方法 RASSCF/CASPT2/RASSI，计算过渡金属与镧系化合物的电子激发态。最后，用 VASP 研究固态周期性材料、二维周期层、以及分子在表面的沉积。上述每个软件包都有一整套结果处理工具（用 python、bash 等写成）。</p>
+</div>
+<h3>讲解 · 四个软件的分工，一句话记住</h3>
+<table>
+<tr><th style="width:120px">软件</th><th>擅长什么</th><th>为什么用它</th></tr>
+<tr><td><b>Gaussian</b></td><td>有机分子的常规活：优化、频率、DFT、溶剂化</td><td>输入语法最宽容，配 GaussView 图形界面，上手最快</td></tr>
+<tr><td><b>ORCA</b></td><td>光谱性质：NMR、EPR、零场分裂 ZFS、磁交换</td><td>对学术界免费，光谱模块业界第一</td></tr>
+<tr><td><b>OpenMOLCAS</b></td><td>多组态：CASSCF / CASPT2 / RASSI</td><td>开源，处理"单个 Slater 行列式不够用"的体系（过渡金属、镧系、双自由基）</td></tr>
+<tr><td><b>VASP</b></td><td>固体、周期性体系、表面吸附</td><td>平面波 + 赝势，能带、态密度、声子</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 名词解释（这些词后面会一直出现）</span>
+<ul>
+<li><b>几何优化 (geometry optimization)</b>：在势能面上找一个梯度为零的点（能量最低点）。你给一个初始结构，程序反复挪原子直到力≈0。</li>
+<li><b>振动频率 (vibrational frequency)</b>：算能量对坐标的<b>二阶导数</b>（Hessian 矩阵），对角化后得到简正模式。<span class="key">它的用途不只是模拟红外光谱——更重要的是判断你优化到的到底是极小点还是过渡态</span>：全是正频率 = 真极小点；有 1 个虚频（程序打印成负数）= 一阶鞍点 = 过渡态。</li>
+<li><b>BS-DFT (Broken-Symmetry DFT，破缺对称 DFT)</b>：算双核金属配合物里两个未成对电子是铁磁（平行）还是反铁磁（反平行）耦合的技巧。第 3 讲 p45 会提到它和交换积分 <span class="m">K</span> 的关系。</li>
+<li><b>TD-DFT (Time-Dependent DFT，含时密度泛函)</b>：算激发态能量（→ UV-Vis 光谱）最常用的方法。</li>
+<li><b>赝势 (pseudopotential) / ECP (Effective Core Potential，有效核势)</b>：把重原子的内层电子换成一个等效势函数，不再显式计算。既省钱，又顺手把相对论效应塞进去了。</li>
+</ul>
+</div>
+</section>
+
+<section class="slide" id="p5">
+<h2><span class="pno">p5</span>考核方式</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>四次作业，都是在 HPC@NUS 集群上做的实际计算练习：</p>
+<ul>
+<li>GAUSSIAN / GAUSSVIEW（占 15%）</li>
+<li>ORCA / Avogadro / Chemcraft（占 15%）</li>
+<li>OpenMOLCAS / Luscus（占 15%）</li>
+<li>VASP / VESTA / vaspkit / py4vasp（占 15%）</li>
+</ul>
+<p>请按时提交报告，每人一个 PDF 文件。手写文件也可以——但请确保我能看懂你的字！</p>
+<p>期中测验（9 月 29 日周二 19:00–20:00，占 15%）；期末考试（占 25%）。<b>期中与期末主要是理论与概念题，不需要做实际计算。</b></p>
+</div>
+<div class="warn"><span class="lab">划重点</span>
+<p><b>"mostly theoretical and conceptual questions. No practical calculations will be needed."</b></p>
+<p>这句话直接定义了你的复习策略：<span class="key">考的是"为什么"和"什么时候会失败"，不是"算出数字"。</span>典型考法是——</p>
+<ul>
+<li>"RHF 和 UHF 在 H₂ 解离时给出的曲线为什么不同？" </li>
+<li>"为什么截断 CI（如 CISD）不是 size-consistent，而 CCSD 是？"</li>
+<li>"什么情况下必须用 CASSCF 而不能用 HF/DFT？"</li>
+<li>"给一个 Slater 行列式的占据图，写出它的能量表达式（用 <span class="m">h</span>、<span class="m">J</span>、<span class="m">K</span>）。"</li>
+</ul>
+<p>最后一类是唯一需要"动笔算"的，但只用加加减减——第 3 讲 p44–45 有原题。</p>
+</div>
+</section>
+
+<section class="slide" id="p6">
+<h2><span class="pno">p6</span>推荐读物</h2>
+<div class="tr"><span class="lab">原文翻译</span><p>值得读的书（幻灯片只放了封面图）。</p></div>
+<h3>讲解 · 这个领域的标准书单</h3>
+<table>
+<tr><th style="width:230px">书</th><th>定位</th></tr>
+<tr><td><b>Jensen, <i>Introduction to Computational Chemistry</i></b></td><td><span class="key">这门课的最佳配套</span>。覆盖面和本课大纲几乎一一对应，公式不多但把"为什么"讲透了。第 3–5 章正好是本课第 2–4 讲。</td></tr>
+<tr><td><b>Szabo &amp; Ostlund, <i>Modern Quantum Chemistry</i></b></td><td>HF 和后 HF 的圣经，Dover 平装很便宜。所有推导都写全了。如果你想真正搞懂 Fock 算符是怎么从变分法里蹦出来的，看这本第 3 章。</td></tr>
+<tr><td><b>Cramer, <i>Essentials of Computational Chemistry</i></b></td><td>比 Jensen 更偏"实用"，讲了大量方法的实际表现和陷阱。</td></tr>
+<tr><td><b>Levine, <i>Quantum Chemistry</i></b></td><td>本科教材风格，最基础。第 2 讲的氢原子部分（p44–55）基本就是这本书第 6 章。讲义里 p54 那张径向波函数表格就是从 Levine 抄的（Table 6.1）。</td></tr>
+</table>
+</section>
+
+<section class="slide" id="p7">
+<h2><span class="pno">p7</span>什么是计算化学？</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>计算化学是一个（相对新的）研究领域，其目标是通过使用<b>计算机</b>和<b>粒子间相互作用的基本定律</b>来回答化学问题。</p>
+<p>例子：一个典型的化学反应有很多未知量：</p>
+<ul>
+<li>找到最合适的反应物</li>
+<li>找到最合适的催化剂</li>
+<li>反应条件（温度、压力、溶剂等）</li>
+<li>把新化合物从反应混合物中分离出来</li>
+<li>找出它的物理性质：分子结构与晶体结构、势能面、熔点、EPR 谱、UV-VIS、IR、NMR 和拉曼谱等</li>
+<li>建立反应机理，获得新的理解/洞察</li>
+<li>理解反应动力学，使其能放大到工业应用</li>
+</ul>
+<p>示意图：A + B + 催化剂 → 产物 + C + D + E + …</p>
+</div>
+<h3>讲解 · "基本定律"具体指哪一条</h3>
+<p>这里说的 "fundamental laws of interaction between particles"，在整门课里其实<b>只有一条</b>：<b>库仑定律</b>（带电粒子之间的静电作用）。加上量子力学的运动学（薛定谔方程）和费米子的反对称性（泡利原理），整个分子的行为原则上就完全确定了。</p>
+<div class="fml"><span class="tag">分子体系的完整非相对论哈密顿量（第 2 讲 p77 会正式给出）</span>
+<i>Ĥ</i> = <i>T̂</i><sub>核</sub> + <i>T̂</i><sub>电子</sub> + <i>V̂</i><sub>核-核</sub> + <i>V̂</i><sub>核-电</sub> + <i>V̂</i><sub>电-电</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>物理含义</th></tr>
+<tr><td><i>Ĥ</i></td><td>哈密顿算符</td><td>体系的<b>总能量算符</b>。头上那个尖帽子 "^" 表示这是一个"算符"（operator，一个作用在函数上的操作），不是普通的数。</td></tr>
+<tr><td><i>T̂</i></td><td>动能算符</td><td>粒子运动带来的能量</td></tr>
+<tr><td><i>V̂</i></td><td>势能算符</td><td>粒子之间的静电相互作用能，全部来自库仑定律</td></tr>
+</table>
+<p>为什么这么简单的东西会难？<span class="key">因为最后那一项 <i>V̂</i><sub>电-电</sub>（电子之间的排斥）把所有电子的坐标纠缠在一起，方程无法分离变量。</span>整个量子化学的历史，就是想尽办法处理这一项的历史。第 2 讲 p61 会正式说这件事。</p>
+<div class="ext"><span class="lab">拓展 · 计算化学在真实科研里的三种用法</span>
+<ol>
+<li><b>解释 (interpretation)</b>：实验做出来了但不知道为什么，算一下轨道/电荷/过渡态来解释。这是目前多数论文的用法。</li>
+<li><b>预测 (prediction)</b>：实验还没做，先算一遍决定该不该做。要求精度高得多，风险也高。</li>
+<li><b>反推 (assignment)</b>：谱图上有个峰不知道归属，算几个候选结构的理论谱去对。NMR 化学位移、IR 频率、UV-Vis 跃迁都常这么干。</li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p8">
+<h2><span class="pno">p8–9</span>领域中的重要人物与诺贝尔奖</h2>
+<div class="tr"><span class="lab">原文翻译（p9 诺奖部分）</span>
+<ul>
+<li><b>Walter Kohn（1998）</b>："因其发展了密度泛函理论"</li>
+<li><b>John Pople（1998）</b>："因其发展了量子化学中的计算方法"</li>
+<li><b>Martin Karplus、Michael Levitt、Arieh Warshel（2013）</b>："因其为复杂化学体系发展了多尺度模型"</li>
+</ul>
+<p>p8 还列出了 Enrico Clementi 的贡献（1961 年开创从头算在小分子和大分子体系的应用、免费分发 Hartree–Fock 程序、首次系统估算原子和分子的相关能、1963 年开创密度泛函方法、1983 年开创并行架构 LCAP 等）以及一长串人名：Einstein、Schrödinger、Dirac、Fock、Pople、Kohn、Hartree、Parr、Dewar、Car、Parrinello、Warshel、Mulliken、Löwdin、Helgaker、Neese、Head-Gordon、Hohenberg、Pulay 等。</p>
+</div>
+<h3>讲解 · 三个诺奖对应本课的三块内容</h3>
+<ul>
+<li><b>Pople（1998）</b> → 你要用的 <b>Gaussian</b> 就是他 1970 年写的。他真正的贡献是"把量子化学变成一个人人可用的工具"：定义了 Pople 基组（6-31G 那一套，第 3 讲 p76）、定义了"model chemistry"这个概念（<span class="key">方法/基组 这个写法，比如 B3LYP/6-31G(d)，就是他推广的记法</span>）。</li>
+<li><b>Kohn（1998）</b> → DFT。Hohenberg–Kohn 定理证明了：<b>基态的一切性质都由电子密度 ρ(<b>r</b>) 唯一决定</b>。这是个惊人的降维——把 3<i>N</i> 个变量的波函数换成 3 个变量的密度函数。</li>
+<li><b>Karplus / Levitt / Warshel（2013）</b> → 多尺度 QM/MM。<b>把反应中心用量子力学算，把周围的蛋白质/溶剂用经典力场算</b>，两者拼起来。酶催化机理研究的标准做法。</li>
+</ul>
+<div class="ext"><span class="lab">拓展 · 名字要认，因为它们会变成关键词</span>
+<p>这个领域大量术语是人名，考试里会直接出现：</p>
+<table>
+<tr><td style="width:120px"><b>Hartree</b></td><td>自洽场方法（1927）；也是原子单位的能量单位（1 Hartree = 27.2114 eV = 627.5 kcal/mol）</td></tr>
+<tr><td><b>Fock</b></td><td>把反对称性（泡利原理）加进 Hartree 方法 → Hartree–Fock（1930）；Fock 算符、Fock 矩阵</td></tr>
+<tr><td><b>Slater</b></td><td>Slater 行列式（用行列式保证反对称）；Slater 型轨道 STO</td></tr>
+<tr><td><b>Roothaan</b></td><td>把 HF 微分方程变成矩阵方程（LCAO，1951）→ Roothaan–Hall 方程</td></tr>
+<tr><td><b>Koopmans</b></td><td>Koopmans 定理：轨道能 ≈ −电离能（第 3 讲 p47–48）</td></tr>
+<tr><td><b>Brillouin</b></td><td>Brillouin 定理：单激发态不与 HF 基态混合（第 4 讲 p18、p25 关键）</td></tr>
+<tr><td><b>Møller–Plesset</b></td><td>MP2/MP3/MP4，微扰论处理相关能（第 4 讲 p36）</td></tr>
+<tr><td><b>Löwdin</b></td><td>正交化方法；也是"电子相关"这个定义的提出者</td></tr>
+<tr><td><b>Mulliken</b></td><td>Mulliken 布居分析（算原子电荷，第 3 讲 p81 练习里用到）</td></tr>
+<tr><td><b>Pulay</b></td><td>DIIS 收敛加速算法（第 3 讲 p68）；解析梯度</td></tr>
+</table>
+</div>
+</section>
+
+<section class="slide" id="p10">
+<h2><span class="pno">p10</span>JACS 历史高引论文里的计算类文章</h2>
+<div class="tr"><span class="lab">原文翻译（节选）</span>
+<p>JACS 所有时期论文中被引最多的十篇计算类文章（[总排名]. 标题（引用数））：</p>
+<ul>
+<li>3. 量子力学分子模型的开发与使用 76. AM1：一个新的通用量子力学分子模型（14995）</li>
+<li>6. 用于蛋白质、核酸和有机分子模拟的第二代力场（10233）</li>
+<li>10. OPLS 全原子力场在有机液体构象能量与性质上的开发与测试（8377）</li>
+<li>17. 分子基态 38. MNDO 方法——近似与参数（6727）</li>
+<li>20. UFF：一个全周期表的分子力学与分子动力学力场（5977）</li>
+<li>24. GIAO 方法在 NMR 化学位移计算中的高效实现（5289）</li>
+<li>28. 自洽分子轨道方法 21. 第一行元素的小型劈裂价基组（4517）</li>
+<li>31. 构象分析 130. MM2——使用 V1 与 V2 扭转项的烃类力场（4257）</li>
+<li>36. 天然杂化轨道（3872）</li>
+</ul>
+</div>
+<h3>讲解 · 这张表在说一件事：引用数最高的不是"最深刻的理论"，而是"最好用的工具"</h3>
+<p>看这个榜单的构成：</p>
+<ul>
+<li><b>4 篇力场</b>（AMBER、OPLS、UFF、MM2）</li>
+<li><b>2 篇半经验方法</b>（AM1、MNDO）</li>
+<li><b>1 篇基组</b>（6-31G，就是 #28 那篇）</li>
+<li><b>1 篇性质计算方法</b>（GIAO 算 NMR）</li>
+<li><b>1 篇波函数分析</b>（NBO 天然杂化轨道）</li>
+</ul>
+<p><span class="key">全是"别人拿去用"的东西，没有一篇是纯理论。</span>这就是应用计算化学的生态：写一个别人天天要用的工具，比证明一个漂亮定理的引用高一个数量级。</p>
+<div class="ext"><span class="lab">拓展 · 榜单里几个词的意思</span>
+<ul>
+<li><b>AM1 / MNDO / PM6</b>：半经验方法家族。它们的共同思路是——保留 HF 的框架，但把最贵的双电子积分要么直接扔掉（NDDO 近似：只保留同一原子上的），要么用实验数据拟合的参数代替。速度比 HF 快几个数量级，代价是只对参数化过的元素/键型可靠。第 3 讲 p62 会提到"半经验方法基于对双电子积分的部分忽略"。</li>
+<li><b>GIAO (Gauge-Independent Atomic Orbital，规范不变原子轨道)</b>：算 NMR 屏蔽常数时，磁场的矢势有"规范自由度"，用有限基组会导致结果依赖于你把坐标原点放哪。GIAO 让每个基函数自带一个与位置相关的相因子，从而消除这个依赖。今天所有软件算 NMR 默认都是 GIAO。</li>
+<li><b>NBO (Natural Bond Orbital，天然键轨道)</b>：把离域的正则分子轨道（第 3 讲 p46、p61 会讲）转换成化学家熟悉的"孤对电子、σ 键、σ* 反键"的定域图像，从而能定量讨论"超共轭"、"负超共轭"这类概念。</li>
+</ul>
+</div>
+</section>
+
+<section class="slide" id="p11">
+<h2><span class="pno">p11</span>学科简史</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<table>
+<tr><td class="c" style="width:70px"><b>1925</b></td><td>海森堡、玻恩、约当发展矩阵力学；薛定谔发明波动力学与非相对论薛定谔方程；Heitler 与 London 发表第一个化学键计算</td></tr>
+<tr><td class="c"><b>1927</b></td><td>Douglas Hartree 发表自洽场方法</td></tr>
+<tr><td class="c"><b>1930</b></td><td>Vladimir Fock 提出 Hartree–Fock 理论</td></tr>
+<tr><td class="c"><b>1947</b></td><td>ENIAC——第一台通用计算机建成</td></tr>
+<tr><td class="c"><b>1950</b></td><td>Clemens Roothaan 发表 LCAO 理论</td></tr>
+<tr><td class="c"><b>1951</b></td><td>UNIVAC——第一台商用通用计算机</td></tr>
+<tr><td class="c"><b>1955</b></td><td>第一次对"大"分子 N₂ 的从头算</td></tr>
+<tr><td class="c"><b>1956</b></td><td>晶体管取代计算机中的真空管</td></tr>
+<tr><td class="c"><b>1964</b></td><td>Hohenberg 与 Kohn 提出密度泛函理论</td></tr>
+<tr><td class="c"><b>1970</b></td><td>John Pople 推出 Gaussian 软件</td></tr>
+<tr><td class="c"><b>1971</b></td><td>第一款商用微处理器（Intel 4004）</td></tr>
+<tr><td class="c"><b>1998</b></td><td>Chuang（LANL）与 Gershenfeld（MIT）造出第一个量子处理器（2 量子比特）</td></tr>
+<tr><td class="c"><b>2019</b></td><td>Google 用可编程超导量子处理器演示"量子优越性"</td></tr>
+<tr><td class="c"><b>2020</b></td><td>中科大团队宣布基于光子的量子处理器</td></tr>
+</table>
+</div>
+<h3>讲解 · 注意这条时间线的节奏</h3>
+<p>把它拆成两列你会看到一个很清楚的模式：</p>
+<table>
+<tr><th style="width:50%">理论就位的时间</th><th>能真正算的时间</th></tr>
+<tr><td>1926 薛定谔方程</td><td rowspan="4" style="vertical-align:middle"><b>1955</b>：才第一次算了 N₂（<b>两个原子</b>）<br><b>1970</b>：Gaussian 发布，普通化学家才用得上</td></tr>
+<tr><td>1927 Hartree SCF</td></tr>
+<tr><td>1930 Fock 反对称化</td></tr>
+<tr><td>1951 Roothaan LCAO</td></tr>
+</table>
+<p><span class="key">理论早在 1930 年就基本完备了，卡住这个学科 25 年的是算力。</span>Dirac 1929 年那句名言正是这个意思——大意是：物理和化学所需的基本定律已经完全知道了，困难只在于这些定律导出的方程太复杂而无法求解。</p>
+<p>这解释了为什么第 1 讲要花一半篇幅讲硬件（p13–27）：<b>在这个领域，硬件不是背景，是主线。</b></p>
+<div class="ext"><span class="lab">拓展 · Heitler–London（1927）为什么重要</span>
+<p>它是第一个用量子力学解释"化学键为什么存在"的计算。对 H₂，他们写的波函数是</p>
+<div class="fml" style="font-size:16px"><i>Ψ</i><sub>HL</sub> = <i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>χ</i><sub>A</sub></td><td>原子轨道</td><td>A 原子上的 1s 轨道（希腊字母 chi，念"卡伊"）</td></tr>
+<tr><td>(1)</td><td>电子编号</td><td>括号里的数字是<b>电子的编号</b>，代表这个函数以电子 1 的坐标为自变量</td></tr>
+</table>
+<p>意思是"电子 1 在 A 原子、电子 2 在 B 原子"和"反过来"这两种情形的叠加——纯共价，没有离子项。这就是<b>价键理论 (VB)</b> 的源头。</p>
+<p>而分子轨道理论 (MO) 给出的 <i>Ψ</i><sub>MO</sub> 展开后是 50% 共价 + 50% 离子（第 4 讲 p19 会精确地推这一步）。<span class="key">这两个理论的差别正是第 4 讲的核心情节：MO/HF 在解离极限下因为强行保留 50% 离子项而给出错误的能量，CI 通过混入双激发把离子项消掉，从而修复它。</span>所以这条 1927 年的记录不是历史花边，它是第 4 讲 p17–21 的伏笔。</p>
+</div>
+</section>
+
+<section class="slide" id="p12">
+<h2><span class="pno">p12</span>未来发展方向</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ol>
+<li><b>AI / 机器学习 / 深度学习 + 计算化学</b> → 有可能以比常规 DFT 快 10000 倍以上的速度得到 DFT 精度的结果 → 允许更充分地扫描相空间、快速预测新材料/现象/反应性/性质 → 加速新分子与新材料的合成与发现</li>
+<li><b>弱相互作用的准确描述</b>：如范德华力、色散、长程相关</li>
+<li><b>分子晶体的晶体结构与声子谱的准确预测</b></li>
+<li><b>非平衡量子动力学</b>，即同时求解电子与原子核的薛定谔方程（非 Born–Oppenheimer）</li>
+<li><b>面向量子处理器的计算方法及各类混合方法的发展</b></li>
+</ol>
+</div>
+<h3>讲解 · 逐条说清楚它在解决什么痛点</h3>
+<div class="step"><div class="sh">1. 机器学习势 (MLIP / NNP)</div>
+<p><b>痛点</b>：DFT 算一个 100 原子体系的单点能要几分钟；做分子动力学要算几百万步，根本跑不动。</p>
+<p><b>做法</b>：用几千个 DFT 算好的构型训练一个神经网络，输入是原子坐标，输出是能量和力。训练好之后，一次预测只要毫秒。代表工作：ANI、SchNet、NequIP、MACE，以及近年的通用势 M3GNet、MACE-MP-0、DPA。</p>
+<p><b>本质</b>：它没有解薛定谔方程，它是在<b>拟合势能面</b>。所以它对训练集覆盖不到的化学环境（比如没见过的元素组合、断键中间态）会给出不可靠的结果，而且往往不会报错。</p>
+</div>
+<div class="step"><div class="sh">2. 弱相互作用与色散</div>
+<p><b>痛点</b>：<span class="key">HF 和绝大多数常规 DFT 泛函从根本上算不出伦敦色散力。</span>原因是色散来自"两个分子的电子云瞬时涨落的关联"，而 HF 是平均场（没有瞬时涨落），常规 DFT 泛函是"局域/半局域"的（只看某一点及其附近的密度，看不到远处）。</p>
+<p><b>后果</b>：不加修正的 B3LYP 算不出 π–π 堆积、算不出石墨层间结合、算不准蛋白-配体结合能。</p>
+<p><b>做法</b>：Grimme 的 <b>DFT-D3 / D4</b> 经验修正——直接加一项 <i>E</i><sub>disp</sub> = −Σ <i>C</i><sub>6</sub>/<i>R</i>⁶（配一个阻尼函数防止短程发散）。你在第 3 讲 p5 的 Gaussian 输出里会看到 <code>Adding Grimme-D3(BJ) dispersion energy</code> 这一行，说的就是这个。</p>
+</div>
+<div class="step"><div class="sh">3. 晶体结构预测 (CSP) 与声子</div>
+<p><b>痛点</b>：同一个分子可以结晶成好几种晶型（多晶型 polymorphism），而不同晶型的溶解度、稳定性可以差很多——这在制药业是生死攸关的（Ritonavir 事件：药物上市后突然出现一个更稳定的晶型，导致全球召回）。而不同晶型之间的能量差常常小于 1 kJ/mol，比目前方法的误差还小。</p>
+</div>
+<div class="step"><div class="sh">4. 超越 Born–Oppenheimer</div>
+<p><b>痛点</b>：BO 近似（第 2 讲 p78 详解）假定电子瞬间跟上原子核。<span class="key">但在"锥形交叉 (conical intersection)"附近，两个电子态的势能面靠得极近甚至相交，BO 彻底失效。</span>而光化学、荧光、光合作用、视觉的第一步（视黄醛异构化）全都发生在这种地方。</p>
+</div>
+<div class="step"><div class="sh">5. 量子计算</div>
+<p><b>为什么量子计算机天生适合量子化学</b>：Full CI 的计算量随体系呈阶乘增长（第 4 讲 p40 标度表里写着 O(<i>n</i>!)），因为要在指数大的希尔伯特空间里做线性代数。而量子比特本身就存活在指数大的希尔伯特空间里——用量子系统模拟量子系统，是 Feynman 1982 年提出量子计算机的最初动机。代表算法：VQE（变分量子本征求解器）、量子相位估计。目前受限于噪声，还只能算 H₂、LiH 这个级别。</p>
+</div>
+</section>
+
+<section class="slide" id="p13">
+<h2><span class="pno">p13–14</span>计算机的结构</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>一块主板集成以下部件：</p>
+<ul>
+<li>CPU（一个或多个），包含：若干计算核心 (cores)、本地缓存 (cache) 内存（非常快）</li>
+<li>活动 RAM 内存（访问快）</li>
+<li>硬盘存储（访问慢）</li>
+<li>显卡（含自己的 GPU 和显存）</li>
+<li>外围部件</li>
+</ul>
+</div>
+<h3>讲解 · 一个从慢到快的金字塔</h3>
+<p>你只要记住一个概念：<span class="key">存储器是分层的，越快越小越贵。</span>数据必须一层层往上搬才能被 CPU 用到。</p>
+<figure>
+<svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+  <defs><style>.bx{stroke:#0b5ea8;stroke-width:1.4;} .t{font-size:12.5px;fill:#1c1c1e} .tt{font-size:11.5px;fill:#6b6b70} .hd{font-size:12px;fill:#0b5ea8;font-weight:700}</style></defs>
+  <text x="150" y="16" class="hd" text-anchor="middle">容量</text>
+  <text x="410" y="16" class="hd" text-anchor="middle">延迟 (时钟周期)</text>
+  <rect x="200" y="28" width="120" height="30" rx="4" class="bx" fill="#d6e6f7"/>
+  <text x="260" y="48" class="t" text-anchor="middle">CPU 寄存器</text>
+  <text x="150" y="48" class="tt" text-anchor="middle">~KB</text><text x="410" y="48" class="tt" text-anchor="middle">1</text>
+  <rect x="185" y="63" width="150" height="30" rx="4" class="bx" fill="#e0edf9"/>
+  <text x="260" y="83" class="t" text-anchor="middle">L1 缓存</text>
+  <text x="150" y="83" class="tt" text-anchor="middle">~64 KB</text><text x="410" y="83" class="tt" text-anchor="middle">1　(150 GB/s)</text>
+  <rect x="170" y="98" width="180" height="30" rx="4" class="bx" fill="#e9f2fb"/>
+  <text x="260" y="118" class="t" text-anchor="middle">L2 缓存</text>
+  <text x="150" y="118" class="tt" text-anchor="middle">~1 MB</text><text x="410" y="118" class="tt" text-anchor="middle">3　(50 GB/s)</text>
+  <rect x="155" y="133" width="210" height="30" rx="4" class="bx" fill="#f0f6fc"/>
+  <text x="260" y="153" class="t" text-anchor="middle">L3 / L4 缓存</text>
+  <text x="150" y="153" class="tt" text-anchor="middle">~32 MB</text><text x="410" y="153" class="tt" text-anchor="middle">10　(50 GB/s)</text>
+  <rect x="130" y="168" width="260" height="32" rx="4" class="bx" fill="#fff8ee" stroke="#b3541e"/>
+  <text x="260" y="189" class="t" text-anchor="middle">本机 RAM 内存</text>
+  <text x="150" y="189" class="tt" text-anchor="middle" fill="#b3541e">~256 GB</text><text x="410" y="189" class="tt" text-anchor="middle" fill="#b3541e">100　(10 GB/s)</text>
+  <rect x="105" y="205" width="310" height="30" rx="4" class="bx" fill="#fdf1e6" stroke="#b3541e"/>
+  <text x="260" y="225" class="t" text-anchor="middle">其他节点的 RAM（跨网络）</text>
+  <text x="150" y="225" class="tt" text-anchor="middle">—</text><text x="410" y="225" class="tt" text-anchor="middle">10 000　(1 GB/s)</text>
+  <rect x="80" y="240" width="360" height="30" rx="4" class="bx" fill="#fdeeee" stroke="#c0392b"/>
+  <text x="260" y="260" class="t" text-anchor="middle">闪存 SSD / 机械硬盘</text>
+  <text x="150" y="260" class="tt" text-anchor="middle">~TB</text><text x="410" y="260" class="tt" text-anchor="middle">10 000　(0.1–1 GB/s)</text>
+  <text x="260" y="290" class="tt" text-anchor="middle">越往下：越大、越慢、越便宜</text>
+</svg>
+<figcaption>存储层级金字塔（数据取自讲义 p19 的表格）</figcaption>
+</figure>
+<div class="ext"><span class="lab">拓展 · 为什么这跟量子化学有关</span>
+<p>因为量子化学最核心的数据结构——<b>双电子积分</b>（第 3 讲 p62）——数量是 <i>N</i>⁴/8 量级（<i>N</i> = 基函数个数）。一个中等分子，<i>N</i> = 500，就是约 8×10⁹ 个数，双精度存储要 <b>约 60 GB</b>。放不进缓存，勉强放进 RAM，一旦放不下就得往硬盘倒——速度立刻掉两个数量级。</p>
+<p>这就是为什么会有 "direct SCF"（第 3 讲 p63）：<span class="key">与其存下来再读，不如每次要用的时候现算。</span>因为现在 CPU 算得比内存搬得快。</p>
+</div>
+</section>
+
+<section class="slide" id="p15">
+<h2><span class="pno">p15–17</span>计算机集群 (Cluster) 的结构</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>结构：一个 HEAD NODE（头节点/登录节点）+ 一台 Interconnect switch（互联交换机）+ 若干 NODE-01…NODE-16（计算节点）。</p>
+<p>特点（以 NSCC 为例）：</p>
+<ul>
+<li><b>异构互联 (Heterogeneous interconnect)</b>：节点之间的数据传输慢，同一节点内处理器（核心）之间的数据传输快</li>
+<li><b>相当便宜</b>：集群的价格只比所有节点价格之和略高。可以做大规模部署</li>
+<li><b>容错</b>：如果一个节点没有响应，可以单独把它关掉，不需要关停整个集群</li>
+<li>通常运行 Linux 操作系统</li>
+</ul>
+</div>
+<h3>讲解 · 头节点 vs 计算节点：新手最常犯的错</h3>
+<figure>
+<svg viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#6b6b70"/></marker>
+<style>.t{font-size:12px;fill:#1c1c1e}.s{font-size:11px;fill:#6b6b70}.b{font-size:12px;font-weight:700;fill:#1c1c1e}</style></defs>
+<rect x="10" y="95" width="86" height="46" rx="6" fill="#fff" stroke="#6b6b70" stroke-width="1.3"/>
+<text x="53" y="114" class="b" text-anchor="middle">你的笔记本</text><text x="53" y="131" class="s" text-anchor="middle">PuTTY / ssh</text>
+<line x1="98" y1="118" x2="150" y2="118" stroke="#6b6b70" stroke-width="1.3" marker-end="url(#ar)"/>
+<text x="124" y="110" class="s" text-anchor="middle">ssh</text>
+<rect x="152" y="88" width="106" height="60" rx="6" fill="#fdeeee" stroke="#c0392b" stroke-width="1.6"/>
+<text x="205" y="108" class="b" text-anchor="middle" fill="#c0392b">HEAD NODE</text>
+<text x="205" y="124" class="s" text-anchor="middle">登录节点</text>
+<text x="205" y="140" class="s" text-anchor="middle" fill="#c0392b">不要在这跑计算!</text>
+<line x1="260" y1="118" x2="308" y2="118" stroke="#6b6b70" stroke-width="1.3" marker-end="url(#ar)"/>
+<text x="284" y="110" class="s" text-anchor="middle">qsub</text>
+<rect x="310" y="80" width="96" height="76" rx="6" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.5"/>
+<text x="358" y="105" class="b" text-anchor="middle" fill="#0b5ea8">调度器</text>
+<text x="358" y="121" class="s" text-anchor="middle">PBS / Slurm</text>
+<text x="358" y="137" class="s" text-anchor="middle">排队 + 分配</text>
+<line x1="408" y1="118" x2="448" y2="60" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#ar)"/>
+<line x1="408" y1="118" x2="448" y2="118" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#ar)"/>
+<line x1="408" y1="118" x2="448" y2="176" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#ar)"/>
+<rect x="450" y="36" width="150" height="42" rx="5" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.3"/>
+<text x="525" y="53" class="t" text-anchor="middle">NODE-01</text><text x="525" y="69" class="s" text-anchor="middle">24 cores · 96 GB RAM</text>
+<rect x="450" y="97" width="150" height="42" rx="5" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.3"/>
+<text x="525" y="114" class="t" text-anchor="middle">NODE-02</text><text x="525" y="130" class="s" text-anchor="middle">24 cores · 96 GB RAM</text>
+<rect x="450" y="158" width="150" height="42" rx="5" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.3"/>
+<text x="525" y="175" class="t" text-anchor="middle">NODE-n</text><text x="525" y="191" class="s" text-anchor="middle">…</text>
+<text x="525" y="222" class="s" text-anchor="middle">节点内：快（共享内存）　节点间：慢（走网络）</text>
+</svg>
+<figcaption>集群的工作方式：你只登录到头节点，真正的计算由调度器派发到计算节点</figcaption>
+</figure>
+<div class="warn"><span class="lab">这是最容易被骂的错误</span>
+<p><b>永远不要在头节点（登录节点）上直接跑计算。</b>头节点是全系几十上百个人共用的，你在上面直接敲 <code>g16 input.gjf</code>，会把所有人的登录卡住，管理员可能直接封你的账号。正确做法是写一个提交脚本（p41 有模板），用 <code>qsub</code> 交给调度器。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · "异构互联"对你的实际影响</span>
+<p>讲义反复强调节点内快、节点间慢。这直接决定了你申请资源时该怎么写：</p>
+<ul>
+<li><code>select=1:ncpus=24</code> —— 要 1 个节点的 24 核。<span class="key">对 Gaussian 来说这几乎总是正确的选择</span>，因为 Gaussian 的常规并行是共享内存（OpenMP/Linda），跨节点效率差（p2 的 Gaussian 表格明说"DFT 最多扩展到 32 核"）。</li>
+<li><code>select=4:ncpus=24</code> —— 要 4 个节点共 96 核。只有当程序用 MPI 且通信量小时才划算（VASP、NWChem 可以）。</li>
+</ul>
+<p>新手常见的心态是"多要核 = 算得快"。<b>实际上要多了往往更慢</b>：核多了通信开销上升，而且排队等待时间也变长（调度器要凑齐 4 个空闲节点比凑 1 个难得多）。</p>
+</div>
+</section>
+
+<section class="slide" id="p18">
+<h2><span class="pno">p18</span>共享内存超级计算机（如 IBM Blue Gene/Q）</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>商用超算（如 Blue Gene/Q）拥有专有的大规模主板，能够高效地容纳并集成大量处理器和 RAM 内存插槽。</p>
+<p>这类超算的价格远高于同等核数的普通集群。</p>
+<p>非常大的 RAM 内存和数千个节点的可用性，使得<b>在别处无法完成的独特任务</b>成为可能：<b>大矩阵对角化</b>。</p>
+<p>它们运行 UNIX 操作系统，配有一套内部优化的工具。</p>
+</div>
+<h3>讲解 · 为什么偏偏点名"大矩阵对角化"</h3>
+<p>这句话是给量子化学量身定制的。回想一下：<b>对角化一个 <i>n</i>×<i>n</i> 矩阵，计算量是 O(<i>n</i>³)，但内存需求是 O(<i>n</i>²)，而且它非常难并行</b>（p26 的表格明写 "Most matrix factorizations … Parallel execution: HARD"）。</p>
+<p>难并行的原因：对角化算法（如 Householder 变换 + QR 迭代）里，每一步都要用到上一步的<b>全部</b>结果，数据依赖是全局的。你可以把矩阵切开分给不同节点，但每一步都要在所有节点之间交换数据——而节点间通信慢得多。</p>
+<p><span class="key">所以：普通集群适合"能切成互不相干的小块"的任务（比如算几百万个双电子积分，每个积分互相独立）；共享内存超算适合"必须整体处理一个巨大对象"的任务（对角化一个巨大的 CI 矩阵）。</span></p>
+<div class="ext"><span class="lab">拓展 · CI 矩阵到底能有多大</span>
+<p>第 4 讲 p15 有张表：一个体系在某基组下，CISD 的组态数是 2 556，CISDTQ 是 391 126，Full CI 到 10 重激发是 30 046 752。矩阵是这个数的平方——3×10⁷ 的平方是 9×10¹⁴ 个元素，双精度要好几个 PB。所以 Full CI 从来不显式存矩阵，而是用 <b>Davidson 迭代法</b>：只求最低的几个本征值，只需要能计算"矩阵乘向量"而不需要存整个矩阵。</p>
+</div>
+</section>
+
+<section class="slide" id="p19">
+<h2><span class="pno">p19</span>内存的带宽与延迟</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>延迟 (Latency)</b>：从 CPU 发出数据请求，到数据<b>开始</b>到达所需的时间。</p>
+<p><b>带宽 (Bandwidth)</b>：数据到达的速度（速率）。</p>
+<table>
+<tr><th>位置</th><th>延迟</th><th>带宽</th></tr>
+<tr><td>CPU 寄存器</td><td>1 时钟周期</td><td>—</td></tr>
+<tr><td>L1 缓存</td><td>1 时钟周期</td><td>150 GB/s</td></tr>
+<tr><td>L2 缓存</td><td>3 时钟周期</td><td>50 GB/s</td></tr>
+<tr><td>L3/L4 缓存</td><td>10 时钟周期</td><td>50 GB/s</td></tr>
+<tr><td>本机 RAM</td><td>100 时钟周期</td><td>10 GB/s</td></tr>
+<tr><td>NUMA RAM</td><td>150 时钟周期</td><td>10 GB/s</td></tr>
+<tr><td>其他节点的 RAM</td><td>10 000 时钟周期</td><td>1 GB/s</td></tr>
+<tr><td>闪存</td><td>10 000 时钟周期</td><td>1 GB/s</td></tr>
+<tr><td>磁存储</td><td>10 000 时钟周期</td><td>0.1 GB/s</td></tr>
+</table>
+<p>较小的数据集和程序处理得更快，因为它们能装进更高层级的缓存（缓存更快）。<b>对主 RAM 的随机访问会让程序变得非常慢。</b></p>
+</div>
+<h3>讲解 · 延迟 vs 带宽，用一个比喻讲清楚</h3>
+<div class="step"><div class="sh">比喻：从新加坡往北京运货</div>
+<ul>
+<li><b>延迟</b> = 你下单之后，第一箱货到达北京要多久（比如 3 天）。</li>
+<li><b>带宽</b> = 之后每小时能到多少吨（比如 10 吨/小时）。</li>
+</ul>
+<p>关键：<span class="key">这两个是独立的。</span>一辆装满硬盘的卡车横穿大陆，<b>带宽极高</b>（几百 TB / 几天），但<b>延迟糟糕透顶</b>（几天）。反过来，一条光纤延迟只有几毫秒，但带宽可能只有 1 Gbps。</p>
+</div>
+<h3>讲解 · "随机访问会让程序非常慢"是什么意思</h3>
+<p>这是这一页最实用的一句话。CPU 从 RAM 取数据时，<b>不是一次取一个数，而是一次取一整条 "cache line"（通常 64 字节 = 8 个双精度数）</b>。所以：</p>
+<ul>
+<li><b>顺序访问</b>（<code>a[0], a[1], a[2]…</code>）：取一次 cache line 能用 8 次，只有 1/8 的访问真正付了 100 周期的代价。</li>
+<li><b>随机访问</b>（<code>a[7], a[913], a[42]…</code>）：每次都 miss，每次都付 100 周期。<b>慢 8 倍以上</b>（实际因为预取失效，往往慢几十倍）。</li>
+</ul>
+<div class="ext"><span class="lab">拓展 · NUMA 是什么</span>
+<p>表里出现的 <b>NUMA = Non-Uniform Memory Access（非一致内存访问）</b>。现代双路服务器有 2 个 CPU 插槽，每个插槽<b>直接连着自己的一半内存条</b>。CPU-0 访问自己的内存要 100 周期，访问 CPU-1 那半边要 150 周期（得绕道 CPU 间的总线）。</p>
+<p><b>实际影响</b>：如果你的进程被操作系统迁移到另一个插槽，而数据还在原来那半边内存里，性能会莫名其妙掉一大截。HPC 上跑大作业时常用 <code>numactl</code> 或调度器的 <code>place=scatter/pack</code> 选项来把进程钉在特定插槽上，就是为了避免这个。</p>
+</div>
+</section>
+
+<section class="slide" id="p20">
+<h2><span class="pno">p20</span>CPU 性能指标：GIPS 与 GFLOPS</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>CPU 常用的两个性能指标是：</p>
+<ul>
+<li><b>GIPS</b>（每秒十亿条指令）——处理器每秒能执行多少条机器码指令。这个指标非常依赖具体架构。</li>
+<li><b>GFLOPS</b>（每秒十亿次浮点运算）——处理器每秒能做多少次单精度或双精度乘法。<b>科学计算几乎总是用双精度。</b></li>
+</ul>
+<p>功耗对单台计算机/节点来说不太关键，平均 0.2 kWh。能耗对大型集群是个问题。</p>
+<p>新型 ARM 处理器（用于手机和平板）相比 Intel 处理器能耗显著更低（例如新的 Apple M1）。当前排名第一的超算——日本的富岳 (Fugaku)——用的就是基于 ARM 的 A64FX 处理器。</p>
+</div>
+<h3>讲解 · 为什么"科学计算几乎总是双精度"</h3>
+<table>
+<tr><th style="width:120px">精度</th><th>位数</th><th>有效数字</th><th>典型用途</th></tr>
+<tr><td><b>单精度 FP32</b></td><td>32 位</td><td>约 7 位十进制</td><td>图形、深度学习</td></tr>
+<tr><td><b>双精度 FP64</b></td><td>64 位</td><td>约 16 位十进制</td><td><b>量子化学</b></td></tr>
+</table>
+<p>为什么量化非要双精度？<span class="key">因为量化算的是"大数相减得小数"。</span>举个真实的例子：</p>
+<div class="fml" style="font-size:15px;line-height:1.9">
+一个中等有机分子的总能量 ≈ <b>−2692.659 129 53</b> Hartree（第 3 讲 p5 的真实输出）<br>
+而一个化学键的能量 ≈ 0.15 Hartree，一个氢键 ≈ 0.008 Hartree<br>
+反应的能垒差异要求精度 ≈ 0.0016 Hartree（约 1 kcal/mol，即"化学精度"）
+</div>
+<p>你要在 2692 这个量级上分辨 0.001 的差别，就需要 <b>约 7 位有效数字只用来抵消，剩下的才是有用信息</b>。单精度只有 7 位——全部吃光，一位不剩。所以必须用双精度。</p>
+<div class="ext"><span class="lab">拓展 · 这也是"GPU 在量化里没有想象中好用"的原因</span>
+<p>消费级显卡（RTX 40 系等）的 FP64 性能被厂商<b>故意限制</b>到 FP32 的几十分之一，因为游戏和 AI 都只需要 FP32/FP16。真正 FP64 强的是数据中心卡（A100/H100，FP64 大约是 FP32 的 1/2）。所以你不能拿游戏显卡加速 Gaussian。</p>
+<p>近年的进展是"混合精度"：用 FP32 甚至 FP16 算积分的<b>大部分贡献</b>，只对数值上重要的部分用 FP64。TeraChem、以及 ORCA 6 的部分模块走的是这条路。</p>
+</div>
+</section>
+
+<section class="slide" id="p21">
+<h2><span class="pno">p21</span>摩尔定律</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>集成电路上的晶体管数量大约每两年翻一番。</p>
+<p>现代计算机不断增长的算力，推动着计算化学扩展到<b>更复杂的体系</b>和<b>更精密的理论层次</b>。</p>
+</div>
+<h3>讲解 · 摩尔定律在这门课里的残酷含义</h3>
+<p>摩尔定律说算力每 2 年翻倍。听起来很好——但请对照第 4 讲 p40 的标度表：</p>
+<table>
+<tr><th style="width:130px">方法</th><th class="c">标度</th><th>算力翻倍后，能算的体系大多少？</th></tr>
+<tr><td>HF / DFT</td><td class="c">O(<i>N</i>⁴)</td><td>×2<sup>1/4</sup> = <b>+19%</b></td></tr>
+<tr><td>MP2</td><td class="c">O(<i>N</i>⁵)</td><td>×2<sup>1/5</sup> = <b>+15%</b></td></tr>
+<tr><td>CCSD</td><td class="c">O(<i>N</i>⁶)</td><td>×2<sup>1/6</sup> = <b>+12%</b></td></tr>
+<tr><td>CCSD(T)</td><td class="c">O(<i>N</i>⁷)</td><td>×2<sup>1/7</sup> = <b>+10%</b></td></tr>
+<tr><td>Full CI</td><td class="c">O(<i>N</i>!)</td><td>基本 <b>+0 个原子</b></td></tr>
+</table>
+<p><span class="key">摩尔定律给你的算力是指数增长，但方法的开销也是高次幂增长，两者相抵后，"能算多大"只是龟速爬行。</span>等 20 年（算力涨约 1000 倍），CCSD 能算的原子数也只涨到 3 倍。</p>
+<p>所以这个领域真正的进步来自<b>算法</b>而不是硬件：把 O(<i>N</i>⁴) 通过 RI 近似降到 O(<i>N</i>³)（第 3 讲 p64）、通过局域化降到接近 O(<i>N</i>)（线性标度方法，如 DLPNO-CCSD(T)）。<b>一个把标度降一阶的算法，抵得上几十年的摩尔定律。</b></p>
+<div class="ext"><span class="lab">拓展 · 摩尔定律其实已经改道了</span>
+<p>2005 年之后，<b>单核频率停止增长</b>（卡在 3–5 GHz，因为功耗随频率急剧上升，散热扛不住）。晶体管数还在涨，但涨出来的都用去堆核数了。后果：<span class="key">你的程序如果不会并行，那从 2005 年到现在它几乎没变快。</span>这就是为什么这门课要花时间教你写 <code>#PBS -l select=1:ncpus=12</code>。</p>
+</div>
+</section>
+
+<section class="slide" id="p22">
+<h2><span class="pno">p22–24</span>网络互联</h2>
+<div class="tr"><span class="lab">原文翻译（p22）</span>
+<p>这些协议可以在铜缆或光纤上实现。噪声和阻抗损耗意味着比特率越高，电缆的最大长度越短。延迟通常在 100 ns 量级。</p>
+<table>
+<tr><th>名称与年份</th><th>带宽</th></tr>
+<tr><td>10BASE 以太网 (1990)</td><td>10 Mbps</td></tr>
+<tr><td>100BASE 以太网 (1995)</td><td>100 Mbps</td></tr>
+<tr><td>1000BASE 以太网 (1999)</td><td>1 Gbps</td></tr>
+<tr><td>Myrinet-10G (2005)</td><td>10 Gbps</td></tr>
+<tr><td>10GBASE 以太网 (2006)</td><td>10 Gbit/s</td></tr>
+<tr><td>Infiniband 12X QDR (2009)</td><td>96 Gbit/s</td></tr>
+<tr><td>100GBASE 以太网 (2010)</td><td>100 Gbit/s</td></tr>
+</table>
+</div>
+<div class="tr"><span class="lab">原文翻译（p23）</span>
+<p><b>问题</b>：假设我们把一个计算任务分配给了 <i>N</i> 个不同的节点，<i>N</i> 很大。在计算的某个时刻，某些数据需要在特定节点之间交换或共享。<b>如何只在需要它的那些节点之间高效地共享/交换必要的数据？</b></p>
+<p>→ 设计一个高效的互联结构、能在节点间共享数据，是一个高度非平凡的问题。大多数顶尖方案都受商业专利和专用软件的保护。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p24）</span>
+<p>注意这里是<b>微秒级</b>的延迟——1 微秒相当于 Nehalem CPU 上约 2000 个时钟周期。带宽也远低于 RAM 或缓存的带宽。</p>
+<p>因此，<b>数据依赖很多的内存密集型计算往往难以在集群架构上运行</b>。把它们跑在单个节点上，可能比在多个节点上并行快得多。</p>
+</div>
+<h3>讲解 · 这三页在讲同一件事：并行不是免费的</h3>
+<p>把 p24 那句话翻译成人话：<span class="key">如果你的计算里各部分需要频繁交换数据，那么"分给更多节点"反而会更慢。</span></p>
+<p>粗略地看一个例子：假设一步计算要 1 μs，而每步之后要跟别的节点通信一次，通信延迟也是 1 μs。</p>
+<ul>
+<li>单节点跑 <i>n</i> 步：<i>n</i> × 1 μs = <i>n</i> μs</li>
+<li>2 节点各跑 <i>n</i>/2 步，但每步多付 1 μs 通信：(<i>n</i>/2) × (1 + 1) μs = <i>n</i> μs。<b>一点没快。</b></li>
+</ul>
+<p>通信开销不随节点数下降，而计算量随节点数下降——所以总有一个点，再加节点就开始变慢。</p>
+<div class="ext"><span class="lab">拓展 · Amdahl 定律（并行的天花板）</span>
+<p>这一页背后的正式定律。设你的程序里有比例 <i>p</i> 的部分可以并行，剩下 (1−<i>p</i>) 必须串行，用 <i>n</i> 个核，加速比是：</p>
+<div class="fml"><span class="tag">Amdahl 定律</span>
+<i>S</i>(<i>n</i>) = 1 ⁄ [ (1 − <i>p</i>) + <i>p</i>/<i>n</i> ]
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>S</i>(<i>n</i>)</td><td>加速比</td><td>用 <i>n</i> 个核比用 1 个核快多少倍</td></tr>
+<tr><td><i>n</i></td><td>核数</td><td>并行使用的处理器核心数</td></tr>
+<tr><td><i>p</i></td><td>并行比例</td><td>程序中可以并行的部分占的时间比例（0 到 1）</td></tr>
+<tr><td>1 − <i>p</i></td><td>串行比例</td><td>无论多少核都必须一个一个做的部分</td></tr>
+</table>
+<p><b>致命的推论</b>：令 <i>n</i> → ∞，得到 <i>S</i><sub>max</sub> = 1/(1−<i>p</i>)。</p>
+<p><span class="key">即使 95% 的代码能完美并行，用无限多个核，最多也只能快 20 倍。</span>而 SCF 里的 Fock 矩阵对角化就是那个难并行的部分。这就是为什么 p2 说 Gaussian "DFT 也只能扩展到 32 核"。</p>
+</div>
+</section>
+
+<section class="slide" id="p25">
+<h2><span class="pno">p25</span>文件系统的性能</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<table>
+<tr><th>名称</th><th>延迟</th><th>带宽</th><th>典型用途</th></tr>
+<tr><td>RAM disk</td><td>纳秒</td><td>10 GB/s</td><td>一段被伪装成文件系统的 RAM，不常用</td></tr>
+<tr><td>scratch / swap</td><td>微秒到毫秒</td><td>0.1–1 GB/s</td><td>专用文件系统，通常很快，用于存放<b>中间计算结果</b></td></tr>
+<tr><td>local filesystem</td><td>毫秒</td><td>0.1 GB/s</td><td>存放操作系统文件、可执行程序、系统日志等</td></tr>
+<tr><td>network filesystem</td><td>毫秒</td><td>0.1 GB/s</td><td>用户主目录，位于通过网络访问的外部硬件上</td></tr>
+<tr><td>backup filesystem</td><td>秒</td><td>0.1 GB/s</td><td>不常访问的增量备份区</td></tr>
+</table>
+<p><b>大量的输入输出（IO）操作会显著拖慢集群性能。请按集群管理员的指示，用 "scratch" 文件夹来运行计算。</b></p>
+</div>
+<div class="warn"><span class="lab">这是作业里必须做对的一件事</span>
+<p>你的 <code>$HOME</code> 是<b>网络文件系统</b>——它挂在另一台机器上，所有节点通过网络访问它。而 Gaussian 一次计算会往硬盘写大量临时文件（<code>.rwf</code>、<code>.int</code>、<code>.d2e</code>），几十 GB 很常见。</p>
+<p><span class="key">如果你在 $HOME 里跑，这几十 GB 的读写全部走网络，不但你的作业慢很多倍，还会拖累整个集群的文件系统，全系的人都受影响。</span></p>
+<p>正确做法：在提交脚本里把工作目录设成本地 scratch。典型写法：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:13px;overflow-x:auto">export GAUSS_SCRDIR=/scratch/$USER/$PBS_JOBID
+mkdir -p $GAUSS_SCRDIR
+cd $GAUSS_SCRDIR
+# ...跑计算...
+cp *.log *.chk $PBS_O_WORKDIR/    # 算完把结果拷回 $HOME
+rm -rf $GAUSS_SCRDIR              # 清理 scratch</pre>
+</div>
+<div class="ext"><span class="lab">拓展 · 各种"盘"的名字对应关系</span>
+<table>
+<tr><td style="width:150px"><b>$HOME</b></td><td>你的主目录，有配额（几十 GB），网络挂载，有备份。放代码、输入文件、最终结果。</td></tr>
+<tr><td><b>scratch</b></td><td>临时高速盘，容量大（TB 级），<b>没有备份，会被定期自动清空</b>（通常 7–30 天）。放中间文件。</td></tr>
+<tr><td><b>swap</b></td><td>严格说不是给用户的：当 RAM 不够时，操作系统把内存内容临时倒到硬盘上。<b>一旦你的计算开始用 swap，速度会掉两个数量级</b>——所以 <code>%Mem</code> 一定要设得小于节点实际可用 RAM。</td></tr>
+</table>
+</div>
+</section>
+
+<section class="slide" id="p26">
+<h2><span class="pno">p26</span>基本运算的标度（BLAS 与 LAPACK）</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>矩阵分解（SVD、LU、对角化、Householder 等）非常昂贵、难以并行，并且无法从稀疏存储中获益。</p>
+<table>
+<tr><th>运算</th><th>CPU 开销 / FLOPs</th><th>内存开销</th><th>稀疏时开销</th><th>并行执行</th></tr>
+<tr><td>矩阵×矩阵</td><td>O(<i>n</i>³)</td><td>O(nnz)</td><td>更低</td><td>容易</td></tr>
+<tr><td>矩阵×向量</td><td>O(<i>n</i>²)</td><td>O(nnz)</td><td>更低</td><td>容易</td></tr>
+<tr><td>exp(矩阵)×向量</td><td>O(<i>n</i>²)</td><td>O(nnz)</td><td>更低</td><td>容易</td></tr>
+<tr><td>矩阵求指数</td><td>O(<i>n</i>³)</td><td>O(nnz)</td><td>更低</td><td>容易</td></tr>
+<tr><td><b>大多数矩阵分解</b></td><td>O(<i>n</i>³)</td><td><b>O(<i>n</i>³)</b></td><td><b>相同</b></td><td><b>困难</b></td></tr>
+</table>
+</div>
+<h3 class="fm">公式解析 · 表里的符号是什么意思</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>n</i></td><td>矩阵维度</td><td>矩阵是 <i>n</i>×<i>n</i> 的。在量化里 <i>n</i> ≈ 基函数个数 <i>N</i><sub>basis</sub></td></tr>
+<tr><td>O(·)</td><td>大 O 记号</td><td>"渐近标度"。O(<i>n</i>³) 意思是：<i>n</i> 翻倍，时间变 8 倍。它只关心增长趋势，不关心前面的常数因子。</td></tr>
+<tr><td>nnz</td><td>非零元个数</td><td>number of non-zeros。稀疏矩阵里绝大部分元素是 0，只需存 nnz 个数而不是 <i>n</i>² 个。</td></tr>
+<tr><td>FLOPs</td><td>浮点运算次数</td><td>加、减、乘、除各算一次。注意区分 FLOPs（次数）和 FLOPS（每秒次数）。</td></tr>
+</table>
+<h3>讲解 · 最后一行为什么是灾难</h3>
+<p>前四行都很友好：矩阵乘法虽然是 O(<i>n</i>³) 的计算量，但<b>内存只要 O(nnz)</b>（稀疏时很小）、<b>而且极易并行</b>（把矩阵切成小块，各块独立算）。</p>
+<p>但矩阵分解（对角化就是其中之一）三样全占：</p>
+<ul>
+<li><b>内存也是 O(<i>n</i>³)</b>：因为分解过程中会产生大量新的非零元（"fill-in 填入"）——原本稀疏的矩阵，分解到一半就变稠密了。</li>
+<li><b>稀疏没用</b>：同上，稀疏结构在分解过程中被破坏。</li>
+<li><b>难并行</b>：数据依赖是全局的（见 p18 的解释）。</li>
+</ul>
+<div class="warn"><span class="lab">这一页是第 3 讲 SCF 循环的技术底座</span>
+<p>去看第 3 讲 p60 的 SCF 流程图：<b>每一轮迭代都要"对角化 Fock 矩阵"一次。</b>典型的 SCF 要迭代 10–30 轮。所以对角化的开销要乘以 30。</p>
+<p>这就是为什么"基组一大就慢得离谱"：<i>N</i> 从 100 增到 200，对角化时间 ×8，双电子积分数量 ×16。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · BLAS 和 LAPACK 是什么</span>
+<ul>
+<li><b>BLAS (Basic Linear Algebra Subprograms)</b>：底层线性代数例程的<b>标准接口</b>，分三级——Level 1（向量·向量，O(<i>n</i>)）、Level 2（矩阵·向量，O(<i>n</i>²)）、Level 3（矩阵·矩阵，O(<i>n</i>³)）。</li>
+<li><b>LAPACK</b>：建立在 BLAS 之上的高级例程——解线性方程组、最小二乘、<b>本征值问题（对角化）</b>、各种分解。</li>
+</ul>
+<p><b>为什么要有"标准接口"</b>：因为 Intel（MKL）、AMD（AOCL）、开源（OpenBLAS）各自写了针对自家 CPU 极致优化的实现，但都遵守同一套函数名和参数约定。<span class="key">于是 Gaussian/ORCA 只要链接不同的库，就能在不同硬件上跑出最优性能，源码一行不用改。</span>一个手写的矩阵乘法可能比 MKL 慢一到两个数量级——因为 MKL 用了向量指令 (AVX-512)、缓存分块、多线程。所以科学计算里"永远不要自己写矩阵乘法"。</p>
+</div>
+</section>
+
+<section class="slide" id="p27">
+<h2><span class="pno">p27</span>Linux 统治超算界</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>自 2018 年起，全球 TOP 500 超级计算机 100% 运行 Linux 操作系统。</b></p>
+</div>
+<h3>讲解 · 为什么是 100%，而不是 90%</h3>
+<ol>
+<li><b>免费且开源</b>：500 台机器 × 每台几万个节点，任何按核心收费的授权模式都是天文数字。更重要的是可以改内核——超算厂商都要为自己的网络硬件、文件系统写驱动。</li>
+<li><b>可以裁到极薄</b>：计算节点上不需要图形界面、不需要音频、不需要蓝牙。每个节点省下的内存和 CPU 中断，乘以几万个节点就很可观。</li>
+<li><b>科学软件的生态在这里</b>：MPI、编译器（Intel/GCC/NVIDIA）、调度器、所有量化软件包，主力开发平台都是 Linux。</li>
+<li><b>远程管理天生就在设计里</b>：ssh、脚本、批处理是 Unix 的原生思维方式。</li>
+</ol>
+<div class="ext"><span class="lab">拓展 · 你在 Windows 上怎么办</span>
+<p>三个选项，推荐程度从高到低：</p>
+<ol>
+<li><b>WSL2 (Windows Subsystem for Linux)</b>：Windows 自带，装个 Ubuntu，就有了完整的 Linux 命令行，<code>ssh</code>、<code>scp</code>、<code>vi</code>、<code>grep</code>、<code>awk</code> 全都有，还能直接访问 Windows 的文件。<span class="key">做 p39–41 那些练习最省事的方式。</span>安装：管理员权限打开 PowerShell，敲 <code>wsl --install</code>。</li>
+<li><b>PuTTY + WinSCP</b>：讲义推荐的传统方案。PuTTY 负责登录，WinSCP 负责拖文件。缺点是本地没有 Linux 环境，练不了本地命令。</li>
+<li><b>Windows 10/11 自带的 OpenSSH</b>：在 PowerShell 里直接 <code>ssh user@host</code> 就能用，不用装 PuTTY。</li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p28">
+<h2><span class="pno">p28–38</span>实践环节 #1：环境搭建</h2>
+<div class="tr"><span class="lab">原文翻译（要点汇总）</span>
+<ul>
+<li><b>任务 1</b>：下载并安装 NUS VPN 软件，登录 NUS VPN（<code>nusit.nus.edu.sg/eguides/</code>）</li>
+<li><b>任务 2</b>：申请 HPC@NUS 账号（<code>nusit.nus.edu.sg/hpc/get-an-hpc-account/</code>），然后尝试登录</li>
+<li><b>任务 3</b>：通过 ssh 连接到 NUS HPC 服务器上的账号。Windows 用 PuTTY；Mac OSX 直接开 Terminal 用 ssh 命令</li>
+<li><b>任务 5</b>：Windows 用户签署条款后可在自己笔记本上安装 Gaussian 和 GaussView；Mac 用户需要 Windows 模拟器。<b>在 HPC@NUS 上无需安装即可使用（已为所有用户装好）</b></li>
+<li><b>ORCA</b>：闭源，对学术界免费。可在 Windows 原生安装但无图形界面。ORCA 6 在 HPC@NUS 上作为 module 提供，无需安装</li>
+<li><b>OpenMOLCAS</b>：免费开源（GitLab）；<b>VASP</b>：商业闭源软件</li>
+<li><b>可视化软件</b>：Chemcraft（商业，150 天试用）、VMD（免费，分子动力学与生物大分子）、Multiwfn（免费，用计算出的波函数计算大量性质）、Avogadro（免费，分子可视化与编辑）、JMOL（免费）、MOLDEN（免费）、Material Studio（商业，NUS 可用但授权数不多）</li>
+<li><b>工具软件</b>：PuTTY（SSH 连接）、FileZilla / WinSCP（文件传输）、Notepad++（查看编辑文本文件）</li>
+<li><b>必读</b>：HPC 新用户入门指南；如何运行批处理作业</li>
+</ul>
+</div>
+<h3>讲解 · 这些工具各自解决什么问题</h3>
+<table>
+<tr><th style="width:130px">工具</th><th>解决什么</th></tr>
+<tr><td><b>VPN</b></td><td>HPC 只对校园网开放。在校外必须先连 VPN，让你的电脑"看起来在校园里"。</td></tr>
+<tr><td><b>ssh</b></td><td>加密的远程登录。你在本地敲的每个字符加密后送到服务器，服务器的输出加密后送回来。</td></tr>
+<tr><td><b>scp / FileZilla / WinSCP</b></td><td>文件传输。scp 是命令行版（走 ssh 通道），后两个是图形界面版。</td></tr>
+<tr><td><b>Notepad++</b></td><td>专门为了处理<span class="key">换行符问题</span>——见下面的拓展。</td></tr>
+<tr><td><b>GaussView / Avogadro / Chemcraft</b></td><td>画分子（生成初始坐标）、看结果（轨道、密度、振动模式）。</td></tr>
+<tr><td><b>Multiwfn</b></td><td>波函数后处理的瑞士军刀：各种电荷分析、键级、ELF/LOL、约化密度梯度 (RDG) 弱相互作用分析等。中文文档非常详尽（<code>sobereva.com</code>）。</td></tr>
+</table>
+<div class="warn"><span class="lab">Windows 用户几乎一定会踩的坑：换行符</span>
+<p>Windows 的文本文件行末是 <code>\r\n</code>（回车+换行，CRLF），Linux 是 <code>\n</code>（LF）。你在 Windows 上用记事本写一个 <code>.sh</code> 脚本传到 Linux，运行时会报莫名其妙的错：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px">$ ./script.sh
+bash: ./script.sh: /bin/bash^M: bad interpreter: No such file or directory</pre>
+<p>那个 <code>^M</code> 就是多出来的 <code>\r</code>——Linux 以为解释器的名字叫 "bash&lt;回车&gt;"。</p>
+<p><b>三种解法</b>：① 在 Linux 上跑 <code>dos2unix script.sh</code>（p12 明确提到了）；② Notepad++ 里 <code>编辑 → 档案格式转换 → 转换为 UNIX 格式</code>；③ 直接在 Linux 上用 vi 写。</p>
+</div>
+</section>
+
+<section class="slide" id="p39">
+<h2><span class="pno">p39–40</span>进阶任务：命令行练习</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>1) 只用终端命令行完成：</b></p>
+<ol type="a">
+<li>新建一个文本文件并填入随机文本（约 1000 词，30+ 行，从网上复制粘贴）。可以用 <code>vi</code> 或 <code>nano</code></li>
+<li>新建一个文件夹并把文件移进去（用 <code>mkdir</code> 和 <code>mv</code>）</li>
+<li>复制一份该文件（用 <code>cp</code>）</li>
+<li>修改副本，删掉其中一个词（用 <code>vi</code> 或 <code>nano</code>）</li>
+<li>比较两个文件（用 <code>diff</code>）</li>
+<li>数一数文件里 "and" 出现了多少次（用 <code>cat</code>、<code>grep</code>、<code>wc</code> 三个命令拼接）：<br><code>cat file1 | grep ' and ' | wc -l</code></li>
+</ol>
+<p><b>2) 续：</b></p>
+<ol type="a">
+<li>用 <code>scp</code> 把两个文件传到 HPC 服务器：<code>scp file1 user@server:~/</code></li>
+<li>用 <code>ssh</code> 连接到 HPC：<code>ssh user@server</code></li>
+<li>在 HPC 的 $HOME 里新建并修改一个新文件 file3</li>
+<li>用 scp 或 FileZilla 把 file3 传回自己的笔记本</li>
+<li>阅读作业提交（#PBS 系统）的资料并照着例子执行、重复</li>
+</ol>
+</div>
+<h3>讲解 · 逐条把命令说清楚</h3>
+<table>
+<tr><th style="width:120px">命令</th><th style="width:190px">全称/来源</th><th>作用</th></tr>
+<tr><td><code>mkdir</code></td><td>make directory</td><td>建文件夹。<code>-p</code> 表示"连中间层一起建，已存在也不报错"</td></tr>
+<tr><td><code>mv</code></td><td>move</td><td>移动，也用来<b>重命名</b>（Linux 里改名就是移动到新名字）</td></tr>
+<tr><td><code>cp</code></td><td>copy</td><td>复制。复制文件夹要加 <code>-r</code>（recursive，递归）</td></tr>
+<tr><td><code>diff</code></td><td>difference</td><td>逐行比较两个文件，只打印不同的行</td></tr>
+<tr><td><code>cat</code></td><td>concatenate</td><td>把文件内容打印到屏幕（或送进管道）</td></tr>
+<tr><td><code>grep</code></td><td>global regular expression print</td><td><span class="key">只输出匹配某个模式的行</span>。这是你以后分析 log 文件用得最多的命令</td></tr>
+<tr><td><code>wc</code></td><td>word count</td><td>数数。<code>-l</code> 数行数，<code>-w</code> 数词数，<code>-c</code> 数字节数</td></tr>
+</table>
+<h3 class="fm">公式解析 · 管道 <code>|</code> 到底做了什么</h3>
+<div class="fml" style="font-family:var(--mono);font-size:15px"><span class="tag">Unix 管道</span>
+cat file1 &nbsp;|&nbsp; grep ' and ' &nbsp;|&nbsp; wc -l
+</div>
+<div class="step"><div class="sh">拆开看，数据是这样流动的：</div>
+<ol>
+<li><code>cat file1</code> → 把整个文件的内容吐出来（比如 40 行）</li>
+<li><code>|</code> → <b>管道符</b>：把左边命令的<b>标准输出</b>，接到右边命令的<b>标准输入</b>上。不经过磁盘，直接在内存里传</li>
+<li><code>grep ' and '</code> → 从这 40 行里，只留下包含 " and "（前后带空格）的行，比如剩 12 行</li>
+<li><code>|</code> → 这 12 行继续往右传</li>
+<li><code>wc -l</code> → 数一数收到了几行 → 打印 <code>12</code></li>
+</ol>
+</div>
+<div class="warn"><span class="lab">这条命令其实有个陷阱，值得想一想</span>
+<p><b>它数的是"包含 and 的行数"，不是"and 出现的次数"。</b>如果一行里有两个 "and"，只算 1。</p>
+<p>要真正数出现次数，得用：<code>grep -o ' and ' file1 | wc -l</code>（<code>-o</code> = only-matching，每个匹配单独输出一行）。</p>
+<p>另外 <code>' and '</code> 两边的空格是为了避免匹配到 "sand"、"android"、"standard"。更严谨的写法是 <code>grep -ow 'and'</code>（<code>-w</code> = word boundary，词边界）。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 这个技能后面直接变成生产力</span>
+<p>第 2 讲 p101 的作业里有这一行：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px">grep 'SCF Done' "$input"_*.log &gt; results.txt</pre>
+<p>意思是：从 20 多个 log 文件里，把每个文件中含 "SCF Done" 的那一行（即最终能量）全抓出来，写进一个文件。<span class="key">这就是你做势能面扫描时收集数据的标准手法</span>——手工从 20 个几万行的 log 里找能量要很久；这条命令瞬间完成。</p>
+<p>几个立刻能用的变体：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px;line-height:1.7">grep -c 'imaginary' job.log          # 数虚频个数(应该是 0)
+grep 'Normal termination' *.log      # 看哪些作业正常结束了
+grep -A5 'Mulliken charges' job.log  # 找到这行,并多打印后面 5 行 (After)
+grep -B2 'Error' job.log             # 找到报错行,并打印前面 2 行 (Before)
+tail -20 job.log                     # 看最后 20 行(排错第一步)
+grep 'SCF Done' job.log | tail -1    # 只要最后一次的 SCF 能量</pre>
+</div>
+</section>
+
+<section class="slide" id="p41">
+<h2><span class="pno">p41</span>PBS 作业提交脚本详解</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>3) 续：</b> c. 写一个生成文本文件的简单脚本（示例如下）；d. 提交它，检查 file4 是否被生成。</p>
+</div>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:14px;font-family:var(--mono);font-size:13.5px;line-height:1.7;overflow-x:auto">#!/bin/bash
+#PBS -P test_script
+#PBS -q parallel
+#PBS -l select=1:ncpus=12:mem=2GB
+#PBS -j oe
+cd $PBS_O_WORKDIR
+if [ -f file4 ]; then rm -rf file4; fi
+echo 'some random text'                    &gt;  file4
+echo 'PBS_O_WORKDIR    =' $PBS_O_WORKDIR   &gt;&gt; file4
+echo 'ncpus            =' $ncpus           &gt;&gt; file4
+exit</pre>
+<h3 class="fm">公式解析 · 逐行拆解这个脚本</h3>
+<table>
+<tr><th style="width:190px">这一行</th><th style="width:105px">叫什么</th><th>它到底做了什么</th></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">#!/bin/bash</td><td>shebang</td><td>文件的<b>第一个字节</b>必须是 <code>#!</code>。它告诉内核："用 /bin/bash 来解释这个文件"。这就是为什么多一个 <code>\r</code> 会导致 "bad interpreter" 报错。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">#PBS -P test_script</td><td>项目名</td><td><b>P</b>roject。用于计费和统计。注意：<span class="key"><code>#PBS</code> 对 bash 来说只是注释（<code>#</code> 开头），但 PBS 调度器会专门扫描这些行读取配置</span>——这是个巧妙的设计：同一个文件既是合法脚本，又是作业描述文件。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">#PBS -q parallel</td><td>队列</td><td><b>q</b>ueue。集群把节点分成若干队列：<code>serial</code>（单核，排队快）、<code>parallel</code>（多核）、<code>gpu</code>、<code>short</code>/<code>long</code>（按时限分）。选错队列 = 白排队。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">#PBS -l select=1:<br>ncpus=12:mem=2GB</td><td>资源申请</td><td><b>l</b>ist of resources。<code>select=1</code> = 要 1 个"节点块"；<code>ncpus=12</code> = 每块 12 核；<code>mem=2GB</code> = 每块 2 GB 内存。<b>超过申请的内存会被系统直接杀掉作业。</b></td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">#PBS -j oe</td><td>合并输出</td><td><b>j</b>oin <b>o</b>utput and <b>e</b>rror。把标准输出（stdout）和标准错误（stderr）合并到一个文件里，方便排错。不加的话会生成两个文件 <code>jobname.o12345</code> 和 <code>jobname.e12345</code>。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">cd $PBS_O_WORKDIR</td><td>切目录</td><td><span class="key">这一行不能省。</span>作业开始时，当前目录默认是你的 <code>$HOME</code>，不是你提交作业的那个目录。<code>$PBS_O_WORKDIR</code>（O = Original）是 PBS 自动设置的变量，记录了你敲 <code>qsub</code> 时所在的目录。不 cd 过去，程序就找不到你的输入文件。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">if [ -f file4 ];<br>then rm -rf file4; fi</td><td>条件判断</td><td><code>[ -f file4 ]</code> 测试 "file4 存在且是普通<b>f</b>ile"。存在就删掉——避免和上次运行的结果混在一起。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">echo 'xxx' &gt; file4</td><td>重定向</td><td><code>&gt;</code> = <b>覆盖</b>写入（原内容清空）；<code>&gt;&gt;</code> = <b>追加</b>写入。<b>把 <code>&gt;&gt;</code> 写成 <code>&gt;</code> 是最常见的手滑，会把前面写的全冲掉。</b></td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 一个真能用的 Gaussian 提交脚本</span>
+<p>把上面的骨架填成实际能跑的样子：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto">#!/bin/bash
+#PBS -N myjob                              # 作业名字(Name)
+#PBS -P personal-$USER
+#PBS -q parallel
+#PBS -l select=1:ncpus=8:mem=16GB
+#PBS -l walltime=24:00:00                  # 最长运行 24 小时,超时被杀
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+source /app1/ebenv                         # NUS HPC 加载环境的固定写法
+module load Gaussian/16.C.02-AVX2
+
+export GAUSS_SCRDIR=/scratch/$USER/$PBS_JOBID
+mkdir -p $GAUSS_SCRDIR
+
+g16 &lt; myjob.gjf &gt; myjob.log
+
+formchk myjob.chk myjob.fchk               # 把二进制 chk 转成文本 fchk
+rm -rf $GAUSS_SCRDIR</pre>
+<div class="warn"><span class="lab">三处必须自洽</span>
+<p><code>ncpus=8</code> 必须和 Gaussian 输入文件里的 <code>%NProcShared=8</code> <b>一致</b>；<code>mem=16GB</code> 必须<b>大于</b> <code>%Mem</code>（留 2–4 GB 给程序本身的开销，比如 <code>%Mem=12GB</code>）。</p>
+<p>不一致的后果：<code>%NProcShared</code> 大于 <code>ncpus</code> → 12 个线程挤在 8 个核上互相抢，比不并行还慢；<code>%Mem</code> 大于 <code>mem</code> → 作业被调度器直接 kill，log 文件里什么错误信息都没有，只是突然截断。</p>
+</div>
+</div>
+<h3>讲解 · 三个必备的 PBS 命令</h3>
+<table>
+<tr><td style="width:170px;font-family:var(--mono)">qsub script.sh</td><td>提交作业，返回一个 JOBID（如 <code>12345.wlm01</code>）</td></tr>
+<tr><td style="font-family:var(--mono)">qstat -u $USER</td><td>查看自己所有作业的状态。<code>Q</code>=排队中(Queued)，<code>R</code>=运行中(Running)，<code>E</code>=正在结束(Exiting)，<code>H</code>=被挂起(Held)</td></tr>
+<tr><td style="font-family:var(--mono)">qdel 12345</td><td>删除/取消作业</td></tr>
+</table>
+</section>
+
+<section class="slide" id="p42">
+<h2><span class="pno">p42</span>作业（不计分）：环境变量</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>尽可能熟悉以下内容：</p>
+<ul>
+<li><b>命令行</b>（vi、ssh、scp、qsub、cat、sed、awk、bash 脚本、正则表达式等）。你用得越多，在终端里的日子越好过</li>
+<li><b>Linux 系统</b>（环境变量、<code>$PATH</code>、<code>$LD_LIBRARY_PATH</code>、Linux 与 Windows 的文件换行符）</li>
+<li><b>在 HPC 和 NSCC 上提交作业</b>（两者类似，但有一些小差别要注意）</li>
+<li><b>在这些服务器与你的笔记本之间传输文件</b></li>
+</ul>
+</div>
+<h3>讲解 · <code>$PATH</code> 和 <code>$LD_LIBRARY_PATH</code>（第 2 讲 p95–96 会再讲一遍，这里先说透）</h3>
+<div class="step"><div class="sh"><code>$PATH</code>：操作系统去哪儿找"可执行程序"</div>
+<p>当你敲 <code>orca</code> 时，系统并不会搜遍整个硬盘。它只会依次检查 <code>$PATH</code> 里列出的那几个目录，找到第一个叫 <code>orca</code> 的可执行文件就运行。找不到就报 <code>command not found</code>。</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px;line-height:1.7">echo $PATH
+# /usr/local/bin:/usr/bin:/bin:/usr/games       &lt;- 冒号分隔的目录列表
+
+export PATH=$HOME/software/orca_6:$PATH         &lt;- 把 orca 目录加到最前面
+which orca                                      &lt;- 确认系统现在能找到它了</pre>
+<p><span class="key">注意 <code>$PATH</code> 写在末尾的写法 <code>新目录:$PATH</code>——意思是"新目录优先，但保留原有的所有目录"。</span>如果写成 <code>export PATH=新目录</code>（漏掉 <code>:$PATH</code>），你会把系统所有基本命令都弄丢，连 <code>ls</code> 都用不了。</p>
+</div>
+<div class="step"><div class="sh"><code>$LD_LIBRARY_PATH</code>：程序运行时去哪儿找"动态库"</div>
+<p>现代程序不会把所有代码都编进自己的可执行文件，而是运行时才去加载共享库（<code>.so</code> 文件，相当于 Windows 的 <code>.dll</code>）。<code>$LD_LIBRARY_PATH</code> 就是告诉动态链接器额外去哪些目录找这些 <code>.so</code>。</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px;line-height:1.7">ldd $ORCA/orca          &lt;- 列出 orca 需要的所有库,以及找到没有
+# libmpi.so.40 =&gt; not found        &lt;- 这就是问题所在
+
+export LD_LIBRARY_PATH=$HOME/software/openmpi/lib:$LD_LIBRARY_PATH
+ldd $ORCA/orca          &lt;- 再查一遍,应该全部指向具体路径了</pre>
+<p><b>典型症状</b>：程序一运行就报 <code>error while loading shared libraries: libXXX.so: cannot open shared object file</code>。<span class="key">讲义 p96 说得很准："这里没什么问题出错了，操作系统只是不知道去哪儿找需要的库。"</span></p>
+</div>
+<div class="ext"><span class="lab">拓展 · <code>module</code> 命令：HPC 上的标准解法</span>
+<p>手动设 <code>$PATH</code> 和 <code>$LD_LIBRARY_PATH</code> 又烦又容易出错，而且不同软件可能要求冲突的库版本。HPC 上的标准方案是 <b>Environment Modules</b>：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:13px;line-height:1.7">module avail                     # 看有哪些软件可用
+module load Gaussian/16.C.02     # 加载(自动设好所有环境变量)
+module list                      # 看当前加载了什么
+module unload Gaussian           # 卸载
+module purge                     # 全部清空</pre>
+<p><code>module load</code> 干的事就是执行一个脚本，帮你把该软件需要的 <code>$PATH</code>、<code>$LD_LIBRARY_PATH</code>、以及各种专有变量（<code>$GAUSS_EXEDIR</code> 等）一次设好。<span class="key">所以提交脚本里的 <code>module load</code> 一行都不能省——因为计算节点上的环境是全新的，不会自动继承你在登录节点上临时设的那些变量。</span></p>
+</div>
+</section>
+
+<section class="slide" id="sum">
+<h2>本讲小结：把第 1 讲的线索接到后面三讲</h2>
+<table>
+<tr><th style="width:32%">第 1 讲讲了什么</th><th>它在后面哪里回来</th></tr>
+<tr><td><b>精度阶梯</b>（p2）：MM → 半经验 → HF → DFT → MP2/CC → FCI</td><td>第 4 讲整讲。核心问题：HF 丢掉的"电子相关能"怎么补回来，代价多大</td></tr>
+<tr><td><b>电子-电子排斥项 1/<i>r</i><sub>12</sub> 是万恶之源</b>（p7）</td><td>第 2 讲 p56（He 原子）、p61（为什么必须近似）、p83（<i>J</i> 与 <i>K</i> 积分）</td></tr>
+<tr><td><b>存储层级：数据搬运比计算贵</b>（p19, p25）</td><td>第 3 讲 p62–63：双电子积分存不下 → conventional / direct / semi-direct SCF</td></tr>
+<tr><td><b>矩阵分解 O(<i>n</i>³)、难并行</b>（p26）</td><td>第 3 讲 p60：SCF 每轮都要对角化 Fock 矩阵，这是主要瓶颈之一</td></tr>
+<tr><td><b>并行有天花板</b>（p23–24, Amdahl）</td><td>第 3 讲 p2、p6、p9：各软件"不能扩展到超过 32 核"的原因</td></tr>
+<tr><td><b>摩尔定律 vs 高次幂标度</b>（p21）</td><td>第 4 讲 p40：从 O(<i>N</i>⁴) 到 O(<i>N</i>!) 的完整标度表</td></tr>
+<tr><td><b>Linux / PBS / $PATH</b>（p27–42）</td><td>第 2 讲 p92–101 会完整重复一遍，那里还有真实的 Gaussian 扫描脚本</td></tr>
+</table>
+<div class="warn"><span class="lab">期中考可能从这一讲出的概念题</span>
+<ul>
+<li>解释 latency 与 bandwidth 的区别，并说明为什么内存密集型计算在集群上并行反而可能更慢</li>
+<li>为什么科学计算必须使用双精度浮点数</li>
+<li>为什么矩阵对角化难以并行，而矩阵乘法容易</li>
+<li>讲义列出的"未来方向"各自在解决什么缺陷</li>
+<li>列出四个软件包各自的强项与适用体系</li>
+</ul>
+</div>
+</section>
+
+<footer>
+CM5235 复习解析 · 第 1 讲　|　源文件：<code>CM5235_Lecture_01.pdf</code>（42 页）<br>
+下一讲：<a href="L02-量子力学基础与HF理论.html">第 2 讲　量子力学基础与 Hartree–Fock 理论</a>
+</footer>
+
+</div>
+</body>
+</html>

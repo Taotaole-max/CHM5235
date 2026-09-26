@@ -1,0 +1,44 @@
+#!/bin/bash
+#PBS -N ex1_cubes
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=6gb
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+# Ex1 画图用的格点文件：在 B3LYP（气相）优化结构上重算一次单点，
+#   1) ORCA 按 %plots 直接写出 HOMO、LUMO、电子密度三个 cube 文件；
+#   2) orca_vpot 在 ex1_esp_grid_points_bohr.xyz 的 13 万个点上算静电势。
+# 提交（在集群 ~/CHM5235/as2 里）：
+#   cd Ex1_2Cl_phenol/ex1_figures/cube_job && qsub -o ex1_pbs_log_cube_job.txt ex1_make_cube_files.pbs
+# 全程非交互，不用 orca_plot（它读不到输入时会死循环刷屏）。
+
+cd "$PBS_O_WORKDIR" || exit 1
+source "$PBS_O_WORKDIR/../../../01_cluster_setup/orca_env_settings.sh" || exit 1
+
+INP=ex1_sp_for_plots_B3LYP_gas
+cp -f ../../B3LYP_gas/ex1_optimized_geometry_B3LYP_gas.xyz . || exit 1
+
+echo ">>> 单点 + cube 开始  $(date)"
+"$ORCA_EXE" "$INP.inp" > "$INP.out" 2>&1
+if ! grep -q 'ORCA TERMINATED NORMALLY' "$INP.out"; then
+    echo "!!! ORCA 没有正常结束，看 $INP.out 末尾"; exit 1
+fi
+grep 'FINAL SINGLE POINT ENERGY' "$INP.out"
+grep 'FINAL SINGLE POINT ENERGY' ../../B3LYP_gas/ex1_optfreq_B3LYP_gas.out | tail -1 | sed 's/^/   Ex1 里的最终能量：/'
+
+echo ">>> orca_vpot 静电势开始  $(date)"
+timeout 5400 orca_vpot "$INP.gbw" "$INP.scfp" ex1_esp_grid_points_bohr.xyz ex1_esp_values_on_grid_B3LYP_gas.txt \
+    > ex1_orca_vpot_screen.txt 2>&1
+tail -3 ex1_orca_vpot_screen.txt
+echo ">>> 静电势点数：$(head -1 ex1_esp_values_on_grid_B3LYP_gas.txt 2>/dev/null)"
+
+# 整理：cube 和静电势放 cube_files/，ORCA 中间文件放 orca_raw_files/
+mkdir -p cube_files orca_raw_files
+mv -f ex1_cube_*.cube ex1_esp_values_on_grid_B3LYP_gas.txt cube_files/ 2>/dev/null
+rm -f "$INP".*.tmp*
+for f in "$INP"*; do
+    case "$f" in "$INP.inp"|"$INP.out") ;; *) mv -f "$f" orca_raw_files/ ;; esac
+done
+mv -f ex1_orca_vpot_screen.txt orca_raw_files/
+ls -la cube_files
+echo ">>> 全部完成  $(date)"

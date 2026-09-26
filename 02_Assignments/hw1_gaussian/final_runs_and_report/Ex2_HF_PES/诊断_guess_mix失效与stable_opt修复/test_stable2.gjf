@@ -1,0 +1,23 @@
+%chk=test_stable_b3lyp.chk
+%mem=6GB
+%nprocshared=1
+#p ub3lyp/cc-pVTZ guess=mix stable=opt scf=(xqc,tight) int=ultrafine pop=none
+
+HF stability test at R=5.00 A, UB3LYP/cc-pVTZ, guess=mix + stable=opt
+
+0 1
+F
+H  1  5.00
+
+--Link1--
+%chk=test_stable_ccsdt.chk
+%mem=8GB
+%nprocshared=1
+#p uccsd(t)/cc-pVTZ CC(MaxCyc=128) guess=mix stable=opt scf=(xqc,tight) pop=none
+
+HF stability test at R=5.00 A, UCCSD(T)/cc-pVTZ, guess=mix + stable=opt
+
+0 1
+F
+H  1  5.00
+

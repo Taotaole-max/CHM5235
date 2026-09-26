@@ -1,0 +1,49 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> ex5_bsdft_DKH 开始  Sun Sep 20 00:35:02 +08 2026
+>>> ORCA 结束  Sun Sep 20 03:15:23 +08 2026
+BROKEN SYMMETRY MAGNETIC COUPLING ANALYSIS
+------------------------------------------
+
+S(High-Spin)      =   1.0    
+<S**2>(High-Spin) =   2.0041    
+<S**2>(BrokenSym) =   0.9989    
+E(High-Spin)      = -6107.249506 Eh
+E(BrokenSym)      = -6107.249605 Eh
+E(High-Spin)-E(BrokenSym)= 0.0027 eV     21.737 cm**-1 (ANTIFERROMAGNETIC coupling)
+
+          ---------------------------------------------------------
+          | Spin-Hamiltonian Analysis based on H(HDvV)= -2J*SA*SB |
+    -------                                                       -----------
+    | J(1) =     -21.74 cm**-1    (from -(E[HS]-E[BS])/Smax**2)             |
+    | J(2) =     -10.87 cm**-1    (from -(E[HS]-E[BS])/(Smax*(Smax+1))      |
+    | J(3) =     -21.62 cm**-1    (from -(E[HS]-E[BS])/(<S**2>HS-<S**2>BS)) |
+    -------------------------------------------------------------------------
+
+  J(1): (a) A.P. Ginsberg J. Am. Chem. Soc. 102 (1980), 111
+        (b) L. Noodleman J. Chem. Phys. 74 (1981), 5737
+        (c) L. Noodleman E.R. Davidson Chem. Phys. 109 (1986), 131
+  J(2)  (d) A. Bencini D. Gatteschi J. Am. Chem. Soc. 108 (1980), 5763
+  J(3)  (e) K. Yamaguchi Y. Takahara T. Fueno in: V.H. Smith (Ed.)
+            Applied Quantum Chemistry. Reidel, Dordrecht (1986), pp 155
+        (f) T.Soda et al. Chem. Phys. Lett., 319, (2000), 223
+
+-------
+TIMINGS
+-------
+
+Total SCF time: 0 days 2 hours 39 min 46 sec 
+>>> 全部完成  Sun Sep 20 03:15:24 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-20 03:15:24.625506:
+     JobId: 1009606.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 10gb 				 Memory Used: 1233108kb 
+     Vmem Used: 1527932kb
+     CPU Time Used: 02:34:10 
+     Walltime requested: 12:00:00 			 Walltime Used: 02:40:23
+     Submit Time:  Sun Sep 20 00:31:23 2026 		 Start Time: Sun Sep 20 00:35:01 2026 
+     End Time: Sun Sep 20 03:15:24 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=10485760kb)
+     ======================================================================================

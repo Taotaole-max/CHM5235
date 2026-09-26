@@ -1,0 +1,19 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> ex6b_md_XTB 开始  Sun Sep 20 01:26:41 +08 2026
+>>> ORCA 结束  Sun Sep 20 07:05:02 +08 2026
+>>> 轨迹 ex6b_trajectory_XTB.xyz：5001 帧（含第 0 步），每帧 384 个原子
+>>> 全部完成  Sun Sep 20 07:05:03 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-20 07:05:03.215401:
+     JobId: 1009612.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 4gb 				 Memory Used: 640844kb 
+     Vmem Used: 1440964kb
+     CPU Time Used: 04:45:07 
+     Walltime requested: 12:00:00 			 Walltime Used: 05:38:24
+     Submit Time:  Sun Sep 20 00:42:45 2026 		 Start Time: Sun Sep 20 01:26:39 2026 
+     End Time: Sun Sep 20 07:05:03 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=4194304kb)
+     ======================================================================================

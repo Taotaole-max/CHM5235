@@ -1,0 +1,9 @@
+# Ex1  2-chlorophenol  UKS B3LYP/def2-TZVP  CPCM water
+# Opt + analytic Freq. Charges, dipole, orbital energies and 298.15 K thermochemistry
+# (entropy) are all printed by default.
+# RIJCOSX: RI for Coulomb + chain-of-spheres for exchange (hybrid functional)
+! UKS B3LYP def2-TZVP def2/J RIJCOSX TightSCF TightOpt Opt Freq CPCM(Water)
+
+%maxcore 6000
+
+* xyzfile 0 1 ../2Cl_phenol_cis_start_geometry.xyz

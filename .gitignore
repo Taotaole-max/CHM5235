@@ -23,6 +23,9 @@ Gau-*.chk
 *.densities
 *.tmp.*
 *_property.txt.bak
+orca_raw_files/
+*.cube
+ex6b_trajectory_XTB.xyz
 
 # --- Psi4 ---
 timer.dat

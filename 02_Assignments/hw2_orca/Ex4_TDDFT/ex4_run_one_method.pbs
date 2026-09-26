@@ -1,0 +1,47 @@
+#!/bin/bash
+#PBS -N ex4
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=8gb
+#PBS -l walltime=04:00:00
+#PBS -j oe
+
+# Ex4：跑一个方法的 TD-DFT（前 5 个激发态）。由 ex4_submit_4_methods.sh 提交，
+# 通过 METHOD 指定子文件夹（PBE_gas / B3LYP_gas / PBE_water / B3LYP_water），输出都写进那个子文件夹。
+# 单点计算比 Ex1 的优化+频率快得多，walltime 只申请 4 小时：申请得短，调度器更容易把它塞进空档先跑。
+
+: "${METHOD:?没传 METHOD，用 ex4_submit_4_methods.sh 提交}"
+cd "$PBS_O_WORKDIR/$METHOD" || exit 1
+source "$PBS_O_WORKDIR/../01_cluster_setup/orca_env_settings.sh" || exit 1
+
+# 取 Ex1 同一方法的优化结构。Ex1 有虚频时不会生成这个文件，这里就停下，不在鞍点结构上算光谱
+SRC="$PBS_O_WORKDIR/../Ex1_2Cl_phenol/$METHOD/ex1_optimized_geometry_$METHOD.xyz"
+if [ ! -f "$SRC" ]; then
+    echo "!!! 找不到 $SRC —— Ex1 的 $METHOD 没算完，或者有虚频"
+    exit 1
+fi
+cp -f "$SRC" "ex4_input_geometry_from_ex1_$METHOD.xyz"
+
+INP="ex4_tddft_$METHOD"
+echo ">>> $INP 开始  $(date)"
+"$ORCA_EXE" "$INP.inp" > "$INP.out" 2>&1
+echo ">>> ORCA 结束  $(date)"
+
+if ! grep -q 'ORCA TERMINATED NORMALLY' "$INP.out"; then
+    echo "!!! ORCA 没有正常结束，看 $METHOD/$INP.out 末尾"
+    exit 1
+fi
+
+# 把激发态能量和振子强度那张表直接打到日志里，不用翻 .out
+grep -A 12 'ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS' "$INP.out"
+
+rm -f "$INP".*.tmp*
+
+# 整理：外层只留 .inp、.out、输入结构和日志，ORCA 的中间文件收进 orca_raw_files/
+mkdir -p orca_raw_files
+for f in "$INP"*; do
+    case "$f" in
+        "$INP.inp"|"$INP.out") ;;
+        *) mv -f "$f" orca_raw_files/ ;;
+    esac
+done
+echo ">>> 全部完成  $(date)"

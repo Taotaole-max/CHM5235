@@ -1,0 +1,21 @@
+#!/bin/bash
+#PBS -N hw1_ex3_b3lyp
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=10gb
+#PBS -l walltime=06:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load Gaussian/g16
+
+export GAUSS_SCRDIR=/hpctmp/zhangxubo/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+g16 < 01b_ch2fcl_b3lyp_ccpvdz.gjf > 01b_ch2fcl_b3lyp_ccpvdz.log 2>&1
+
+# fchk for the density / ESP map (GaussView) needed in Ex3 part 2
+formchk ch2fcl_b3lyp_ccpvdz.chk ch2fcl_b3lyp_ccpvdz.fchk
+
+rm -rf "$GAUSS_SCRDIR"

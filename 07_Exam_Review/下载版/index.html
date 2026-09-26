@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 复习解析 · 总目录</title>
+<style>:root{
+  --bg:#faf9f7; --card:#ffffff; --ink:#1c1c1e; --muted:#6b6b70;
+  --line:#e3e0da; --accent:#0b5ea8; --accent2:#b3541e; --accent3:#2c6e4f;
+  --box-tr:#eef4fb; --box-ex:#fff8ee; --box-warn:#fdeeee; --box-fml:#f5f8fc;
+  --mono:"Cascadia Mono",Consolas,Menlo,monospace;
+  --math:"Cambria Math","Latin Modern Math",Cambria,Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:16px;line-height:1.78;}
+.wrap{max-width:940px;margin:0 auto;padding:32px 22px 120px;}
+header.top{border-bottom:3px solid var(--accent);padding-bottom:18px;margin-bottom:8px}
+header.top .kicker{color:var(--accent);font-weight:700;letter-spacing:.14em;font-size:13px}
+header.top h1{margin:6px 0 4px;font-size:30px;line-height:1.3}
+header.top .sub{color:var(--muted);font-size:14px}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:14px 20px;margin:26px 0 40px;font-size:14px}
+nav.toc b{display:block;margin-bottom:8px;color:var(--accent)}
+nav.toc a{color:var(--ink);text-decoration:none;display:inline-block;margin:3px 14px 3px 0}
+nav.toc a:hover{color:var(--accent);text-decoration:underline}
+section.slide{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:24px 26px;margin:0 0 30px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+section.slide>h2{margin:0 0 4px;font-size:21px;line-height:1.4;color:var(--accent)}
+.pno{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;
+  font-size:12px;font-weight:700;padding:2px 9px;margin-right:10px;vertical-align:3px;
+  font-family:var(--mono)}
+.entitle{color:var(--muted);font-size:14px;font-style:italic;margin:0 0 16px}
+h3{font-size:15.5px;margin:24px 0 8px;padding-left:11px;border-left:4px solid var(--accent);
+  letter-spacing:.02em}
+h3.ex{border-left-color:var(--accent2)}
+h3.fm{border-left-color:var(--accent3)}
+h4{font-size:14.5px;margin:16px 0 6px;color:#333}
+p{margin:9px 0}
+ul,ol{margin:9px 0 9px 4px;padding-left:22px}
+li{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f2f4f7;font-weight:600}
+td.c,th.c{text-align:center}
+code,.f{font-family:var(--mono);background:#f2f2ef;padding:1px 5px;border-radius:4px;
+  font-size:.93em}
+.m{font-family:var(--math);font-size:1.06em;font-style:italic}
+.mn{font-family:var(--math);font-size:1.06em;font-style:normal}
+.tr{background:var(--box-tr);border-left:4px solid var(--accent);padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.tr .lab{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.ext{background:var(--box-ex);border-left:4px solid var(--accent2);padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.ext .lab{font-size:12px;color:var(--accent2);font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.warn{background:var(--box-warn);border-left:4px solid #c0392b;padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.warn .lab{font-size:12px;color:#c0392b;font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.fml{background:var(--box-fml);border:1px solid #dbe5f0;border-radius:8px;
+  padding:16px 18px;margin:14px 0;text-align:center;overflow-x:auto;
+  font-family:var(--math);font-size:18px;line-height:2.0}
+.fml .tag{display:block;font-family:var(--mono);font-size:11px;color:var(--accent);
+  letter-spacing:.08em;text-align:left;margin-bottom:8px;font-style:normal}
+.fml i{font-style:italic}
+table.vars{font-size:14px;margin:10px 0 16px}
+table.vars th{background:#eef3f8;font-size:13px}
+table.vars td:first-child{font-family:var(--math);font-size:16px;text-align:center;
+  width:74px;background:#fbfcfe;white-space:nowrap}
+table.vars td:nth-child(2){width:150px;font-weight:600}
+.step{background:#fbfbf9;border:1px dashed var(--line);border-radius:8px;
+  padding:12px 16px;margin:12px 0}
+.step .sh{font-weight:700;color:var(--accent3);font-size:14px;margin-bottom:4px}
+figure{margin:20px 0;text-align:center;overflow-x:auto}
+figure svg{max-width:100%;height:auto}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+.key{background:linear-gradient(transparent 62%,#ffe9a8 62%);font-weight:600}
+hr.sep{border:0;border-top:1px dashed var(--line);margin:26px 0}
+details{margin:10px 0;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
+  background:#fbfbf9}
+details summary{cursor:pointer;font-weight:600;color:var(--accent2);font-size:14.5px}
+details[open] summary{margin-bottom:8px}
+footer{color:var(--muted);font-size:13px;text-align:center;margin-top:50px;
+  border-top:1px solid var(--line);padding-top:20px}
+footer a{color:var(--accent)}
+@media print{body{background:#fff}section.slide{break-inside:avoid;box-shadow:none}}
+
+@page{size:A4;margin:11mm}@media print{body{background:#fff;font-size:13px}.wrap{max-width:none;padding:0}section.slide{break-inside:auto!important;box-shadow:none;padding:14px 16px}tr,figure,.fml,.kp,.tr,.step{break-inside:avoid}h2,h3{break-after:avoid}nav.toc{display:none}}</style>
+<style>
+.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:20px 24px;margin:0 0 18px;text-decoration:none;color:var(--ink);
+  box-shadow:0 1px 2px rgba(0,0,0,.03);transition:.15s}
+.card:hover{border-color:var(--accent);box-shadow:0 2px 10px rgba(11,94,168,.10);transform:translateY(-1px)}
+.card .no{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;
+  font-size:12px;font-weight:700;padding:3px 10px;margin-right:12px;font-family:var(--mono)}
+.card.sum{border-color:var(--accent2);background:#fffaf3}
+.card.sum .no{background:var(--accent2)}
+.card h3{display:inline;font-size:19px;margin:0;padding:0;border:0;color:var(--accent)}
+.card.sum h3{color:var(--accent2)}
+.card .meta{color:var(--muted);font-size:13px;margin:8px 0 10px}
+.card .pts{font-size:14px;color:#333;margin:0}
+.card .pts b{color:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>CM5235 复习解析　总目录</h1>
+  <div class="sub">Liviu Ungur · 六讲共 361 页 · 逐页翻译 + 零基础讲解 + 每个符号标注 + 拓展知识</div>
+</header>
+
+<div class="warn" style="margin-top:26px"><span class="lab">怎么用这份材料</span>
+<ul>
+<li><b>时间紧先看总汇总</b>：每讲一张必背表 + 关键讲义原图，每图一句话。</li>
+<li><b>每一页讲义都有对应的一节</b>，编号 <code>p12</code> 就是讲义第 12 页。第 5、6 讲每节开头直接放了讲义原图。</li>
+<li><b>蓝色框 = 原文翻译</b>　<b>橙色框 = 拓展知识</b>　<b>红色框 = 重点/陷阱/讲义订正</b>　<b>绿色框 = 考点</b>（第 5、6 讲）</li>
+<li><b>绿色边的"公式解析"</b>下面一定跟着一张<b>符号表</b>，把公式里每个字母的意思逐个标注。</li>
+<li>期中期末<b>只考理论与概念题，不需要实际计算</b>——每讲末尾的"最可能考的概念题"值得先看。</li>
+</ul>
+</div>
+
+<h3 style="margin-top:34px">先看这个</h3>
+
+<a class="card sum" href="00-总汇总-L1至L6.html">
+  <span class="no">汇总</span><h3>第 1–6 讲总汇总（精简版）</h3>
+  <div class="meta">一页看完全课 · 44 张关键讲义原图</div>
+  <p class="pts">全课主线图 · 每讲必背公式表 · <b>方法对比总表</b>（标度/变分/尺寸一致/静态与动态相关）· <b>符号撞车对照</b> · 高频概念题一句话答案</p>
+</a>
+
+<h3 style="margin-top:28px">六讲导航</h3>
+
+<a class="card" href="L01-课程概览与计算平台.html">
+  <span class="no">L01</span><h3>课程概览与计算平台</h3>
+  <div class="meta">42 页 · <code>CM5235_Lecture_01.pdf</code></div>
+  <p class="pts">计算化学是什么 · 学科简史与三个诺奖 · <b>存储层级与延迟/带宽</b> · GIPS 与 GFLOPS · 摩尔定律 vs 高次幂标度 · <b>矩阵分解为什么难并行</b> · Amdahl 定律 · Linux 与 PBS 脚本逐行详解 · <code>$PATH</code> 与 <code>$LD_LIBRARY_PATH</code></p>
+</a>
+
+<a class="card" href="L02-量子力学基础与HF理论.html">
+  <span class="no">L02</span><h3>量子力学基础与 Hartree–Fock 理论</h3>
+  <div class="meta">102 页 · <code>CM5235_Lecture_02.pdf</code> · <b>本课理论骨架</b></div>
+  <p class="pts">de Broglie 关系 · Boltzmann 判据 · <b>薛定谔方程的来历</b> · 算符/本征值/正交归一/完备性 · 对易关系与不确定性 · <b>五大公设</b> · 氢原子 · 氦原子与 1/<i>r</i><sub>12</sub> · 轨道近似与平均场 · 泡利原理与 Slater 行列式 · <b><i>J</i> 与 <i>K</i> 积分</b> · Born–Oppenheimer · <b>HF 能量与 Fock 算符</b> · <b>Roothaan 方程 FC=SCε</b> · SCF · RHF vs UHF</p>
+</a>
+
+<a class="card" href="L03-变分原理与SCF实现.html">
+  <span class="no">L03</span><h3>软件工具、变分原理、SCF 实现与基组</h3>
+  <div class="meta">81 页 · <code>CM5235_Lecture_03.pdf</code></div>
+  <p class="pts">Gaussian/ORCA/OpenMOLCAS/VASP 分工 · <b>输入输出文件逐行详解</b> · 变分原理与两道完整例题 · <b>Slater 行列式能量（唯一要动笔的题型）</b> · <b>Koopmans 定理</b> · B 原子与静态相关 · 自旋污染 · 密度矩阵 · direct SCF · <b>RI 近似</b> · DIIS · <b>STO vs GTO、基组命名与 BSSE</b></p>
+</a>
+
+<a class="card" href="L04-电子相关方法.html">
+  <span class="no">L04</span><h3>电子相关方法</h3>
+  <div class="meta">45 页 · <code>CM5235_Lecture_04.pdf</code></div>
+  <p class="pts">相关能 · <b>静态相关 vs 动态相关</b> · CI 与久期方程 · Brillouin 定理 · <b>CI 如何让电子分开（H₂ 完整推导）</b> · RHF/UHF/FCI 解离曲线 · <b>尺寸一致性</b> · <b>耦合簇与 CCSD(T)</b> · <b>MP2 公式</b> · BSSE 与 Counterpoise · 标度总表 · CBS 外推</p>
+</a>
+
+<a class="card" href="L05-密度泛函理论DFT.html">
+  <span class="no">L05</span><h3>密度泛函理论 (DFT)</h3>
+  <div class="meta">48 页 · <code>CM5235_Lecture_05.pdf</code> · <b>每节附讲义原图 + 考点框</b></div>
+  <p class="pts">密度矩阵 · <b>HK 第一定理及其证明</b> · 泛函 · <b>HK 第二定理</b> · <b>Kohn–Sham 方程</b> · LDA/GGA/meta-GGA · <b>B3LYP 与双杂化</b> · <b>自相互作用误差</b> · 范围分离 · D3 色散 · <b>Jacob 阶梯</b> · <b>磁耦合与 BS-DFT</b>（含讲义符号订正）· TD-DFT</p>
+</a>
+
+<a class="card" href="L06-波函数分析_相对论_溶剂化.html">
+  <span class="no">L06</span><h3>波函数分析、相对论效应与溶剂化模型</h3>
+  <div class="meta">43 页 · <code>CM5235_Lecture_06.pdf</code> · <b>每节附讲义原图 + 考点框</b></div>
+  <p class="pts"><b>Mulliken / Löwdin / Bader / Hirshfeld 电荷</b> · 键级 · <b>分子静电势与 σ-hole</b> · <b>轨道定域化</b>（Boys/ER/PM、香蕉键）· 局域相关 · <b>相对论效应</b>（金为何是黄色）· Dirac 方程 · <b>Pauli 哈密顿量</b> · DKH/ZORA · 收敛立方体 · 显式水模型 · <b>PCM</b> · Born/Onsager · Poisson–Boltzmann · 氢键 · <b>色散的微扰起源</b> · <b>UV/Vis 与 Franck–Condon</b> · 苯酚激发态实践（含 5 处讲义订正）</p>
+</a>
+
+<section class="slide" style="margin-top:34px">
+<h2>整门课的一条主线</h2>
+<p>如果只记一件事，记这个：<span class="key">从精确的薛定谔方程出发，一层层做近似把它变得可解；然后再把丢掉的东西补回来。</span></p>
+<table>
+<tr><th class="c" style="width:60px">步骤</th><th style="width:190px">近似</th><th style="width:190px">丢掉了什么</th><th>在哪讲</th></tr>
+<tr><td class="c">0</td><td>精确分子哈密顿量</td><td><b>相对论</b></td><td class="c">L02 p77 → 补回：L06</td></tr>
+<tr><td class="c">1</td><td><b>Born–Oppenheimer</b></td><td>核与电子的耦合运动</td><td class="c">L02 p78</td></tr>
+<tr><td class="c">2</td><td><b>轨道近似</b></td><td>波函数的复杂关联形式</td><td class="c">L02 p60</td></tr>
+<tr><td class="c">3</td><td><b>Slater 行列式</b></td><td>（不丢，是<b>加上</b>反对称性）</td><td class="c">L02 p72</td></tr>
+<tr><td class="c">4</td><td><b>平均场 (HF)</b></td><td><span class="key"><b>电子相关</b></span></td><td class="c">L02 p81 → 补回：L04、L05</td></tr>
+<tr><td class="c">5</td><td><b>有限基组 (LCAO)</b></td><td>基组不完备性</td><td class="c">L02 p86 → 改进：L03、L04 p43</td></tr>
+<tr><td class="c">6</td><td><b>孤立分子</b></td><td>溶剂与分子间环境</td><td class="c">补回：L06</td></tr>
+</table>
+<p style="margin-top:14px"><b>然后：</b></p>
+<ul>
+<li><b>第 3 讲</b>把第 4、5 步<b>做出来</b>（SCF、基组），并指出 HF 在哪些体系上原理性失效</li>
+<li><b>第 4 讲</b>走路线 A：用 CI / CC / MP2 / CASSCF <b>加行列式</b>把相关能补回来（贵，但可系统改进）</li>
+<li><b>第 5 讲</b>走路线 B：DFT <b>换掉</b> Fock 算符里的交换项，用近似 <i>V</i><sub>xc</sub> 同时处理交换与相关</li>
+<li><b>第 6 讲</b>补上第 0 步和第 6 步：<b>相对论</b>和<b>溶剂/环境</b>；并教怎么从算完的波函数里读出化学信息</li>
+<li><b>第 1 讲</b>解释了为什么这一切这么慢：<i>N</i>⁴ 到 <i>N</i>! 的标度墙</li>
+</ul>
+</section>
+
+<section class="slide">
+<h2>考前速查：最可能动笔的题</h2>
+<table>
+<tr><th style="width:190px">题型</th><th style="width:120px">在哪</th><th>核心工具</th></tr>
+<tr><td><b>给占据图，写能量表达式</b></td><td class="c"><a href="L03-变分原理与SCF实现.html#p44">L03 p44</a></td><td><i>E</i> = Σ<i>h</i><sub><i>ii</i></sub> + Σ<sub><i>i</i>&lt;<i>j</i></sub>(<i>J</i><sub><i>ij</i></sub>−<i>K</i><sub><i>ij</i></sub>)；<span class="key"><i>K</i> 只在自旋相同时出现</span></td></tr>
+<tr><td><b>变分法求参数</b></td><td class="c"><a href="L03-变分原理与SCF实现.html#p29">L03 p29–35</a></td><td>写 <i>E</i>(<i>α</i>) → 令 d<i>E</i>/d<i>α</i>=0 → 解出 <i>α</i> → 代回</td></tr>
+<tr><td><b>判断本征函数、算对易子</b></td><td class="c"><a href="L02-量子力学基础与HF理论.html#p17">L02 p17, p21</a></td><td>作用后能否写成"常数×原函数"；对易子必须作用在试探函数上算</td></tr>
+<tr><td><b>证明 HK 第一定理</b></td><td class="c"><a href="L05-密度泛函理论DFT.html#p15">L05 p15</a></td><td>反证：变分原理用两次，相加得 <i>E</i>+<i>E</i>′ &lt; <i>E</i>+<i>E</i>′</td></tr>
+<tr><td><b>Heisenberg 模型求 Δ<i>E</i><sub>ST</sub></b></td><td class="c"><a href="L05-密度泛函理论DFT.html#p39">L05 p39–41</a></td><td>2<i>Ŝ</i>₁·<i>Ŝ</i>₂ = <i>S</i><sub>T</sub>² − <i>S</i>₁² − <i>S</i>₂²，代 <i>S</i>(<i>S</i>+1)</td></tr>
+<tr><td><b>算 Mulliken 电荷（最小基组）</b></td><td class="c"><a href="L06-波函数分析_相对论_溶剂化.html#p5">L06 p5</a></td><td><i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub>(<b>PS</b>)<sub><i>μμ</i></sub>；检查总和 = 分子电荷</td></tr>
+</table>
+</section>
+
+<footer>
+CM5235 复习解析　·　源文件位于 <code>桌面\CM5235\</code>　·　共 6 讲 361 页<br>
+每讲内部有页码锚点，可从各讲顶部的导航条直接跳转
+</footer>
+
+</div>
+</body>
+</html>

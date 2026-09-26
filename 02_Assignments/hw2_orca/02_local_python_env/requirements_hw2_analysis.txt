@@ -1,0 +1,10 @@
+# HW2 本机分析用的 Python 依赖（画图、生成 Word）
+# 虚拟环境位置：D:\venvs\cm5235_hw2
+# 重建：python -m venv D:\venvs\cm5235_hw2
+#       D:\venvs\cm5235_hw2\Scripts\python -m pip install -r requirements_hw2_analysis.txt
+numpy
+matplotlib
+pillow
+pyvista
+python-docx
+docxcompose

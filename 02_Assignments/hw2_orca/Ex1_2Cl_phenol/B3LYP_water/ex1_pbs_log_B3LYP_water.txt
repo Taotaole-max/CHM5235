@@ -1,0 +1,19 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> ex1_optfreq_B3LYP_water 开始  Sat Sep 19 23:56:56 +08 2026
+>>> ORCA 结束  Sun Sep 20 00:50:29 +08 2026
+>>> 无虚频
+>>> 全部完成  Sun Sep 20 00:50:31 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-20 00:50:31.312914:
+     JobId: 1009581.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 10gb 				 Memory Used: 622072kb 
+     Vmem Used: 1748280kb
+     CPU Time Used: 00:46:31 
+     Walltime requested: 24:00:00 			 Walltime Used: 00:53:37
+     Submit Time:  Sat Sep 19 22:57:15 2026 		 Start Time: Sat Sep 19 23:56:54 2026 
+     End Time: Sun Sep 20 00:50:31 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=10485760kb)
+     ======================================================================================

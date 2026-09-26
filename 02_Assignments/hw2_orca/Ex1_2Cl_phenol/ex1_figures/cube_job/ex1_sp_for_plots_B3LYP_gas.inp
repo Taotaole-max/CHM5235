@@ -1,0 +1,25 @@
+# Ex1 figures: single point on the Ex1 B3LYP (gas) optimized geometry, only to write cube files.
+# Same method as Ex1 (UKS B3LYP/def2-TZVP), so the orbitals and density are those of Ex1.
+# The %plots box (bohr) is the same box as the ESP grid in ex1_esp_grid_points_bohr.xyz,
+# spacing about 0.3 bohr. HOMO = orbital 32, LUMO = orbital 33 (alpha, operator 0).
+! UKS B3LYP def2-TZVP def2/J RIJCOSX TightSCF
+
+%maxcore 4000
+
+%plots
+  dim1 64
+  dim2 97
+  dim3 94
+  min1 -9.5
+  max1  9.5
+  min2 -15.0
+  max2  14.0
+  min3 -13.5
+  max3  14.5
+  Format Gaussian_Cube
+  MO("ex1_cube_HOMO_B3LYP_gas.cube", 32, 0);
+  MO("ex1_cube_LUMO_B3LYP_gas.cube", 33, 0);
+  ElDens("ex1_cube_density_B3LYP_gas.cube");
+end
+
+* xyzfile 0 1 ex1_optimized_geometry_B3LYP_gas.xyz

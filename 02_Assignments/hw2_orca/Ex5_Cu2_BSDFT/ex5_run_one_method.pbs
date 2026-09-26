@@ -1,0 +1,49 @@
+#!/bin/bash
+#PBS -N ex5
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=10gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+# Ex5：跑一种相对论处理的 BS-DFT（高自旋 + 破缺对称两个 SCF），算 Cu–Cu 磁交换常数 J。
+# 由 ex5_submit_3_methods.sh 提交，通过 METHOD 指定子文件夹（nonrelativistic / DKH / ZORA）。
+# 66 个原子、单核，两个 SCF 都要收敛，预计 1–4 小时；walltime 申请 12 小时留足余量。
+#
+# 传 VERIFY=1 时跑的是加密格点的复核版：子文件夹 verify_<方法>，输入 ex5_bsdft_verify_<方法>.inp
+# （DefGrid3 + VeryTightSCF）。E(HS) − E(BS) 只有 1e-4 Eh 量级，和 RIJCOSX 的格点误差同量级，
+# 必须用更密的格点确认 J 的符号不是数值噪声。
+
+: "${METHOD:?没传 METHOD，用 ex5_submit_3_methods.sh 提交}"
+if [ "${VERIFY:-0}" = 1 ]; then
+    cd "$PBS_O_WORKDIR/verify_$METHOD" || exit 1
+    INP="ex5_bsdft_verify_$METHOD"
+else
+    cd "$PBS_O_WORKDIR/$METHOD" || exit 1
+    INP="ex5_bsdft_$METHOD"
+fi
+source "$PBS_O_WORKDIR/../01_cluster_setup/orca_env_settings.sh" || exit 1
+
+echo ">>> $INP 开始  $(date)"
+"$ORCA_EXE" "$INP.inp" > "$INP.out" 2>&1
+echo ">>> ORCA 结束  $(date)"
+
+if ! grep -q 'ORCA TERMINATED NORMALLY' "$INP.out"; then
+    echo "!!! ORCA 没有正常结束，看 $METHOD/$INP.out 末尾"
+    exit 1
+fi
+
+# 把 BS 分析那一段（E_HS、E_BS、<S²>、J）直接打到日志里，不用翻 .out
+grep -A 30 'BROKEN SYMMETRY MAGNETIC COUPLING ANALYSIS' "$INP.out" \
+    || echo "!!! 没找到 BS 分析段，检查破缺对称态是否收敛"
+
+rm -f "$INP".*.tmp*
+
+# 整理：外层只留 .inp、.out 和日志，ORCA 的中间文件收进 orca_raw_files/
+mkdir -p orca_raw_files
+for f in "$INP"*; do
+    case "$f" in
+        "$INP.inp"|"$INP.out") ;;
+        *) mv -f "$f" orca_raw_files/ ;;
+    esac
+done
+echo ">>> 全部完成  $(date)"

@@ -1,0 +1,49 @@
+#!/bin/bash
+#PBS -N ex6
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=10gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+# Ex6：跑一条 400 K 水团簇的分子动力学轨迹。由 ex6_submit_2_simulations.sh 提交，
+# 通过 SIM 指定子文件夹（6a_DFT_PBE / 6b_XTB），输出都写进那个子文件夹。
+#   6a：PBE/def2-SVP，20 个水，200 步，预计 1–3 小时
+#   6b：GFN2-xTB，128 个水，5000 步，预计 2–4 小时
+# 想中途干净地停掉：在对应子文件夹里 touch EXIT，ORCA 写完当前步就退出。
+
+: "${SIM:?没传 SIM，用 ex6_submit_2_simulations.sh 提交}"
+cd "$PBS_O_WORKDIR/$SIM" || exit 1
+source "$PBS_O_WORKDIR/../01_cluster_setup/orca_env_settings.sh" || exit 1
+
+case "$SIM" in
+    6a_DFT_PBE) INP=ex6a_md_DFT_PBE; TRAJ=ex6a_trajectory_DFT_PBE.xyz ;;
+    6b_XTB)     INP=ex6b_md_XTB;     TRAJ=ex6b_trajectory_XTB.xyz ;;
+    *) echo "!!! 不认识的 SIM=$SIM"; exit 1 ;;
+esac
+
+echo ">>> $INP 开始  $(date)"
+"$ORCA_EXE" "$INP.inp" > "$INP.out" 2>&1
+echo ">>> ORCA 结束  $(date)"
+
+if ! grep -q 'ORCA TERMINATED NORMALLY' "$INP.out"; then
+    echo "!!! ORCA 没有正常结束，看 $SIM/$INP.out 末尾"
+    exit 1
+fi
+if [ -f "$TRAJ" ]; then
+    natoms=$(head -n 1 "$TRAJ" | tr -d ' ')
+    echo ">>> 轨迹 $TRAJ：$(grep -c -x " *$natoms *" "$TRAJ") 帧（含第 0 步），每帧 $natoms 个原子"
+else
+    echo "!!! 没有生成轨迹文件 $TRAJ"
+fi
+
+rm -f "$INP".*.tmp* "$INP"*.tmp
+
+# 整理：外层只留 .inp、.out、轨迹和日志，ORCA 的中间文件（.gbw、.mdrestart 等）收进 orca_raw_files/
+mkdir -p orca_raw_files
+for f in "$INP"*; do
+    case "$f" in
+        "$INP.inp"|"$INP.out") ;;
+        *) mv -f "$f" orca_raw_files/ ;;
+    esac
+done
+echo ">>> 全部完成  $(date)"

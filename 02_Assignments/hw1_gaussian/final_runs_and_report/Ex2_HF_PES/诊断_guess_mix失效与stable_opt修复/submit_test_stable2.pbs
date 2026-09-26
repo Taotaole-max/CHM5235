@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N ex2_test_stable2
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=10gb
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load Gaussian/g16
+
+export GAUSS_SCRDIR=/hpctmp/zhangxubo/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+g16 < test_stable2.gjf > test_stable2.log 2>&1
+
+rm -rf "$GAUSS_SCRDIR"

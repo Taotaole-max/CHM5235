@@ -1,0 +1,20 @@
+# Ex5  Cu(II)-Cu(II) magnetic exchange J by broken-symmetry DFT  --  scalar-relativistic, zeroth-order regular approximation
+# All three Ex5 jobs use the same functional (B3LYP) and the same basis size (SVP),
+# so the only difference between them is the relativistic treatment.
+#
+# BrokenSym 1,1: ORCA first converges the high-spin state (Ms = 1, both Cu spins up), then flips
+# the unpaired electron on one Cu and converges the broken-symmetry state (Ms = 0). At the end it
+# prints E(HS), E(BS), <S**2> of both states and J from three formulas, with the convention
+# H = -2J S1.S2 (J < 0 = antiferromagnetic).
+# Charge -2 as given in the assignment; the coordinate line carries the HIGH-SPIN multiplicity
+# 2*(1/2 + 1/2) + 1 = 3.
+! UKS B3LYP ZORA ZORA-def2-SVP SARC/J RIJCOSX TightSCF SlowConv
+
+%maxcore 6000
+
+%scf
+  BrokenSym 1,1   # one unpaired electron on each Cu(II), d9
+  MaxIter   500
+end
+
+* xyzfile -2 3 ../ex5_Cu2_geometry_from_canvas.xyz

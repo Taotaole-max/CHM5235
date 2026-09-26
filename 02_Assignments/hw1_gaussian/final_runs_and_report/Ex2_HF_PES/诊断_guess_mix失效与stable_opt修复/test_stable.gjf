@@ -1,0 +1,11 @@
+%chk=test_stable.chk
+%mem=4GB
+%nprocshared=1
+#p uhf/cc-pVTZ guess=mix stable=opt scf=(xqc,tight) pop=none
+
+HF stability test at R=5.00 A, UHF/cc-pVTZ, guess=mix + stable=opt
+
+0 1
+F
+H  1  5.00
+

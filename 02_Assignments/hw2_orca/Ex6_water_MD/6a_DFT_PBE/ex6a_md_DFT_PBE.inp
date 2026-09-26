@@ -1,0 +1,23 @@
+# Ex6a  cluster of 20 water molecules cut from ice, 400 K, Nose-Hoover chain thermostat
+# (a) ab initio MD, PBE/def2-SVP, small cluster
+# 200 steps x 0.5 fs = 100 fs. The ORCA manual recommends a time step of at most 0.5 fs
+# for systems containing hydrogen.
+#
+# Cell Sphere cx, cy, cz, r: soft harmonic wall that keeps molecules evaporating from the hot cluster
+# from flying away. "Sphere of size 50 A" is read as diameter 50 A -> r = 25 A. The centre is the
+# geometric centre of the cluster (the xyz is not centred at the origin); the cluster itself has a
+# radius of only 6.4 A, so the wall acts only on molecules that leave the cluster.
+! MD PBE def2-SVP def2/J
+
+%maxcore 6000
+
+%md
+  Timestep   0.5_fs
+  Initvel    400_K
+  Thermostat NHC 400_K Timecon 10.0_fs
+  Cell       Sphere 1.901, 3.292, 3.750, 25.0
+  Dump       Position Stride 1 Filename "ex6a_trajectory_DFT_PBE.xyz"
+  Run        200
+end
+
+* xyzfile 0 1 ../ex6a_water_cluster_20H2O_for_DFT.xyz

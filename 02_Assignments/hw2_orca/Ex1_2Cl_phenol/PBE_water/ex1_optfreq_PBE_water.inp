@@ -1,0 +1,9 @@
+# Ex1  2-chlorophenol  UKS PBE/def2-TZVP  CPCM water
+# Opt + analytic Freq. Charges, dipole, orbital energies and 298.15 K thermochemistry
+# (entropy) are all printed by default.
+# PBE has no HF exchange, so only RI-J (def2/J) is needed
+! UKS PBE def2-TZVP def2/J TightSCF TightOpt Opt Freq CPCM(Water)
+
+%maxcore 6000
+
+* xyzfile 0 1 ../2Cl_phenol_cis_start_geometry.xyz

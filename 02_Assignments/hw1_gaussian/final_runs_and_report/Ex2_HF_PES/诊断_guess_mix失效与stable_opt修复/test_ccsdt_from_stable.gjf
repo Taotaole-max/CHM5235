@@ -1,0 +1,10 @@
+%oldchk=test_stable.chk
+%chk=test_ccsdt_from_stable.chk
+%mem=8GB
+%nprocshared=1
+#p uccsd(t)/cc-pVTZ CC(MaxCyc=128) guess=read geom=check scf=(xqc,tight) pop=none
+
+CCSD(T) at R=5.00 A, starting from the already-stable UHF orbitals in test_stable.chk
+
+0 1
+

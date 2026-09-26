@@ -1,0 +1,14 @@
+# Ex5 extra run -- basis-set sensitivity: ZORA-def2-TZVP instead of ZORA-def2-SVP.
+# Same BS-DFT setup as the three required calculations: charge -2, high-spin multiplicity 3,
+# BrokenSym 1,1. Only the functional (or the basis) is changed, so the effect can be separated
+# from the relativistic treatment.
+! UKS B3LYP ZORA ZORA-def2-TZVP SARC/J RIJCOSX TightSCF SlowConv
+
+%maxcore 6000
+
+%scf
+  BrokenSym 1,1
+  MaxIter   500
+end
+
+* xyzfile -2 3 ../ex5_Cu2_geometry_from_canvas.xyz

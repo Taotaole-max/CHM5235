@@ -1,0 +1,14 @@
+%chk=ch2fcl_ccsd_ccpvtz.chk
+%mem=8GB
+%nprocshared=1
+#p ccsd/cc-pVTZ opt scf=tight
+
+CH2FCl opt  /  CCSD/cc-pVTZ  (high accuracy)
+
+0 1
+C
+F   1  1.36
+Cl  1  1.76   2  110.0
+H   1  1.09   2  110.0   3   120.0
+H   1  1.09   2  110.0   3  -120.0
+

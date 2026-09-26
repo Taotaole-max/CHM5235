@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 第6讲 · 波函数分析、相对论效应与溶剂化模型</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.orig{margin:8px 0 16px;text-align:center}
+.orig img{max-width:100%;border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kp{background:#f1f7f3;border-left:4px solid var(--accent3);padding:10px 16px;border-radius:0 8px 8px 0;margin:14px 0 4px}
+.kp .lab{font-size:12px;color:var(--accent3);font-weight:700;letter-spacing:.1em;display:block;margin-bottom:4px}
+.kp ul{margin:4px 0 2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>第 6 讲　波函数分析、相对论效应与溶剂化模型</h1>
+  <div class="sub">对应讲义 <code>CM5235_Lecture_06.pdf</code>（43 页）· 每页：原图 → 原文翻译 → 讲解 → 公式与符号表 → 拓展 → 考点</div>
+</header>
+
+<nav class="toc">
+<b>本讲导航</b>
+<a href="#p1">p1–2 封面与提纲</a><a href="#p3">p3–4 密度划分（回顾）</a><a href="#p5">p5 ★Mulliken 电荷</a>
+<a href="#p6">p6 Löwdin 电荷</a><a href="#p7">p7 Bader (QTAIM)</a><a href="#p8">p8 Hirshfeld</a>
+<a href="#p9">p9 键级</a><a href="#p10">p10–11 ★静电势 MEP</a><a href="#p12">p12–13 ★轨道定域化</a>
+<a href="#p14">p14 局域相关方法</a><a href="#p15">p15 ★相对论效应</a><a href="#p16">p16 Dirac 方程</a>
+<a href="#p17">p17 Dirac 能谱</a><a href="#p18">p18 ★标量相对论与自旋-轨道</a><a href="#p19">p19 Breit 相互作用</a>
+<a href="#p20">p20–21 相对论修正项全表</a><a href="#p22">p22 ★收敛立方体</a><a href="#p23">p23 溶剂效应概览</a>
+<a href="#p24">p24–26 显式溶剂模型</a><a href="#p27">p27 ★连续介质模型</a><a href="#p28">p28 过时的空穴模型</a>
+<a href="#p29">p29 分子表面</a><a href="#p30">p30–32 ★PCM</a><a href="#p33">p33 显式 + PCM</a>
+<a href="#p34">p34–35 Poisson–Boltzmann</a><a href="#p36">p36 氢键</a><a href="#p37">p37–38 ★非共价作用</a>
+<a href="#p39">p39–40 ★UV/Vis 光谱</a><a href="#p41">p41–43 实践：苯酚激发态</a><a href="#sum">本讲小结</a>
+</nav>
+
+<div class="warn"><span class="lab">先读这段：第 6 讲讲的是三件"算完之后"和"算之前"的事</span>
+<p>讲义标题是"相对论效应与溶剂化模型"，但实际内容分三块，彼此相对独立：</p>
+<table>
+<tr><th style="width:100px">页码</th><th style="width:170px">主题</th><th>它回答的问题</th></tr>
+<tr><td class="c"><b>p3–p14</b></td><td><b>波函数分析</b></td><td>SCF 算完了，手里只有一堆系数和一个密度矩阵。<span class="key">怎么从里面读出化学家关心的东西：原子电荷、键级、静电势、"孤对电子/σ 键"？</span></td></tr>
+<tr><td class="c"><b>p15–p22</b></td><td><b>相对论效应</b></td><td>第 2 讲的薛定谔方程是非相对论的。<span class="key">重元素（Au、Pt、Hg、镧系）的内层电子速度接近光速，这时要怎么修正？</span></td></tr>
+<tr><td class="c"><b>p23–p40</b></td><td><b>环境效应</b></td><td>前五讲算的都是"真空里孤零零的一个分子"。<span class="key">真实化学发生在溶液里、分子之间有弱相互作用、实验测的是光谱——怎么把这些算进来？</span></td></tr>
+</table>
+<p>把它放回第 4 讲 p43 和本讲 p22 那张"收敛立方体"里看：前面几讲在"基组"和"电子相关"两个方向上收敛，<b>这一讲加上了第三个方向——相对论</b>，并额外处理了分子所处的环境。</p>
+</div>
+
+<section class="slide" id="p1">
+<h2><span class="pno">p1–2</span>封面与本讲提纲</h2>
+<figure class="orig"><img src="img/L06/p01.png" alt="讲义 p1" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p02.png" alt="讲义 p2" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>p1</b>：相对论效应与溶剂化模型，第 6 讲，Liviu Ungur。</p>
+<p><b>p2</b>：课程（约 1 小时）：波函数分析 · 原子电荷 · 相对论修正 · 溶剂化模型</p>
+</div>
+<h3>讲解 · 为什么"波函数分析"和"原子电荷"是两条</h3>
+<p>原子电荷是波函数分析里最常用的一种，但不是唯一一种。本讲的波函数分析还包括键级（p9）、静电势（p10）、轨道定域化（p12）。<span class="key">它们有一个共同点：都是把量子力学的结果"翻译"回化学家熟悉的语言</span>——化学家说"这个氧带负电""这是一根双键""这里有一对孤对电子"，这些说法在薛定谔方程里都不存在，需要额外定义。</p>
+</section>
+
+<section class="slide" id="p3">
+<h2><span class="pno">p3–4</span>电子密度分布与密度划分（回顾）</h2>
+<figure class="orig"><img src="img/L06/p03.png" alt="讲义 p3" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p04.png" alt="讲义 p4" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>p3</b>：总电子密度可作为每个电子概率分布之和得到：<i>ρ</i>(<b>r</b>) = Σ<sub><i>i</i></sub>|<i>χ</i><sub><i>i</i></sub>(<b>r</b>)|²，<i>χ</i><sub><i>i</i></sub> = Σ<sub><i>μ</i></sub><i>c</i><sub><i>μi</i></sub><i>φ</i><sub><i>μ</i></sub>。积分得电子总数 <i>N</i> = Σ<sub><i>μν</i></sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub>，其中 <i>P</i><sub><i>μν</i></sub> = Σ<sub><i>i</i></sub><i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub>（"密度矩阵"），<i>S</i><sub><i>μν</i></sub> = ∫<i>φ</i><sub><i>μ</i></sub>*<i>φ</i><sub><i>ν</i></sub>d³<b>r</b>（"重叠矩阵"）。</p>
+<p><b>p4</b>：一对基函数对总密度的贡献 <i>N</i><sub><i>μν</i></sub> = <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub>（轨道布居 × 轨道重叠）。两种情形：① 两个基函数在同一原子上 → 全部算作该原子的电荷；② 在不同原子上 → 两原子共享，既算化学键也算电荷。这可推广到自旋：<i>P</i><sub><i>μν</i></sub><sup><i>α</i></sup> = Σ<i>c</i><sup><i>α</i>*</sup><i>c</i><sup><i>α</i></sup>，<i>P</i><sub><i>μν</i></sub><sup><i>β</i></sup> = Σ<i>c</i><sup><i>β</i>*</sup><i>c</i><sup><i>β</i></sup>。</p>
+</div>
+<p>这两页和第 5 讲 p4–p5 一字不差，<a href="L05-密度泛函理论DFT.html#p4">完整的公式推导、每个符号的标注、H₂ 的数值例子都在第 5 讲 p4–p5</a>。这里只提醒三件后面几页要用的事：</p>
+<table>
+<tr><th style="width:170px">要记住的</th><th>为什么后面要用</th></tr>
+<tr><td><b><i>N</i> = Σ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> = tr(<b>PS</b>)</b></td><td>p5 的 Mulliken 电荷和 p6 的 Löwdin 电荷，都是"怎么把这个和拆给各个原子"的两种不同拆法</td></tr>
+<tr><td><b>同原子块 vs 跨原子块</b></td><td>跨原子的那部分"该分给谁"没有唯一答案——这正是各种电荷定义吵架的地方</td></tr>
+<tr><td><b><b>P</b><sup><i>α</i></sup> − <b>P</b><sup><i>β</i></sup></b></td><td>用同样的拆法就得到每个原子的<b>自旋布居</b></td></tr>
+</table>
+<div class="kp"><span class="lab">考点</span><ul><li><i>N</i> = Σ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> 的推导；同原子 / 跨原子两种情形的含义</li></ul></div>
+</section>
+
+<section class="slide" id="p5">
+<h2><span class="pno">p5</span>★ Mulliken 布居与原子电荷</h2>
+<figure class="orig"><img src="img/L06/p05.png" alt="讲义 p5" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>按照 Mulliken 提出的方法，可以由特定原子轨道的布居导出近似的原子电荷。对体系中每个原子：</p>
+<p><i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈A</sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> − ½Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></p>
+<p>这可以展开成下面一组规则：</p>
+<ol>
+<li>从裸原子核的电荷开始。</li>
+<li>如果基函数 <i>φ</i><sub><i>μ</i></sub> 和 <i>φ</i><sub><i>ν</i></sub> 都在原子 A 上，把相应的全部密度算入原子 A 的电荷。</li>
+<li>如果基函数 <i>φ</i><sub><i>μ</i></sub> 在原子 A 上而 <i>φ</i><sub><i>ν</i></sub> 在原子 B 上，把相应密度的<b>一半</b>算入原子 A 的电荷。</li>
+</ol>
+<p>不带符号、不加核电荷的求和给出<b>原子布居</b>；包含自旋的求和给出<b>原子自旋密度</b>。</p>
+<p>Mulliken 布居的有用之处：① 定性正确（反正也不存在定量的方法）；② 计算非常便宜（基态性质）；③ 能显示化学反应中的正确趋势。</p>
+</div>
+<h3 class="fm">公式解析 · Mulliken 原子电荷</h3>
+<div class="fml"><span class="tag">讲义原式</span>
+<i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − <span style="color:#0b5ea8">Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈A</sub> <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></span> − <span style="color:#2c6e4f">½ Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub> <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Q</i><sub>A</sub></td><td>原子 A 的 Mulliken 电荷</td><td>正 = 缺电子，负 = 富电子。单位：电子电荷 <i>e</i></td></tr>
+<tr><td><i>Z</i><sub>A</sub></td><td>核电荷</td><td>规则 1 的"裸核电荷"。用赝势 (ECP) 时是价电子数</td></tr>
+<tr><td><i>μ</i> ∈ A</td><td>"属于 A 的基函数"</td><td>以原子 A 为中心的所有基函数</td></tr>
+<tr><td><i>ν</i> ∈ B</td><td>"属于其他原子的基函数"</td><td>B 泛指所有不是 A 的原子</td></tr>
+<tr><td><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></td><td>布居矩阵元</td><td>基函数对 (<i>μ</i>,<i>ν</i>) 贡献的电子数（p4 的 <i>N</i><sub><i>μν</i></sub>）</td></tr>
+<tr><td style="color:#0b5ea8">第二项</td><td>净布居</td><td>规则 2：两个基函数都在 A 上 → 全给 A</td></tr>
+<tr><td style="color:#2c6e4f">第三项</td><td>重叠布居的分成</td><td>规则 3：一个在 A、一个在 B → 分一半给 A</td></tr>
+</table>
+
+<div class="warn"><span class="lab">⚠ 讲义这个式子的 ½ 用错了一次——用 H₂ 一验就知道</span>
+<p>A 和 B 之间共享的电子（"重叠布居"）由<b>两块</b>组成：<i>μ</i>∈A,<i>ν</i>∈B 的块，和 <i>μ</i>∈B,<i>ν</i>∈A 的块。因为 <b>P</b>、<b>S</b> 都对称，这两块<b>相等</b>：</p>
+<div class="fml" style="font-size:15px">A–B 重叠布居 = Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub><i>PS</i> + Σ<sub><i>μ</i>∈B</sub>Σ<sub><i>ν</i>∈A</sub><i>PS</i> = <b>2</b> Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub><i>PS</i></div>
+<p>（p9 的键级公式 <i>q</i><sub>AB</sub> = <b>2</b>ΣΣ<i>PS</i> 正是这个量。）规则 3 说"给 A 一半"，一半就是 <b>1 × Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub><i>PS</i></b>——前面不该再乘 ½。正确的式子是：</p>
+<div class="fml" style="font-size:16px"><span class="tag">★ 正确形式</span>
+<i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈A</sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> − Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∉A</sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> = <b><i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub>(<b>PS</b>)<sub><i>μμ</i></sub></b>
+</div>
+<div class="step"><div class="sh">H₂ 验证（第 5 讲 p4 算过这个体系）</div>
+<p>最小基组：<b>P</b> = 2<i>c</i>²<span class="mn">[1 1; 1 1]</span>，<b>S</b> = <span class="mn">[1 <i>S</i>; <i>S</i> 1]</span>，<i>c</i>² = 1/[2(1+<i>S</i>)]。H₂ 是中性对称分子，每个 H 的电荷<b>必须</b>是 0。</p>
+<table>
+<tr><th style="width:130px"></th><th style="width:230px">分到 H<sub>A</sub> 的电子数</th><th><i>Q</i><sub>A</sub>（取 <i>S</i> = 0.66）</th></tr>
+<tr><td><b>讲义原式</b></td><td>2<i>c</i>²·1 + ½·2<i>c</i>²·<i>S</i> = (1 + <i>S</i>/2)/(1+<i>S</i>) ≈ 0.80</td><td class="c" style="color:#c0392b">+0.20（两个 H 都带正电——中性分子凭空少了 0.4 个电子 ✘）</td></tr>
+<tr><td><b>正确形式</b></td><td>2<i>c</i>²·1 + 2<i>c</i>²·<i>S</i> = (1+<i>S</i>)/(1+<i>S</i>) = 1</td><td class="c" style="color:#2c6e4f">0 ✔</td></tr>
+</table>
+<p>所有 Mulliken 电荷加起来必须等于分子的总电荷——这是检查任何电荷公式最快的办法。Gaussian/ORCA 打印的 Mulliken 电荷用的是正确形式。</p>
+</div>
+</div>
+
+<h3>讲解 · 为什么"一半一半"是个问题</h3>
+<p>规则 3 的"平分"是 Mulliken 在 1955 年<b>拍脑袋定的</b>（p6 第 3 条直说 "without any foundation"）。想想 HF 分子：F 的电负性远大于 H，H–F 之间共享的电子显然更靠近 F，平分会让 F 的负电荷被低估。</p>
+<p>尽管如此，p5 列的三个优点是真的：</p>
+<ul>
+<li><b>便宜</b>：只需要 <b>P</b> 和 <b>S</b>，SCF 结束时现成就有，不需要任何额外积分。</li>
+<li><b>趋势对</b>：同一套基组下比较一系列分子，谁的 O 更负、反应中电荷往哪流，Mulliken 通常给得出。</li>
+<li><b>"反正也没有定量的方法"</b>：<span class="key">原子电荷不是可观测量</span>——量子力学里没有"原子 A 的电荷算符"。所以不存在"正确的"原子电荷，只有不同的定义（p6–p8 就是另外几种）。</li>
+</ul>
+<div class="ext"><span class="lab">拓展 · 在输出里找到它们</span>
+<table>
+<tr><th style="width:190px">输出</th><th>含义</th></tr>
+<tr><td><code>Mulliken charges:</code></td><td>每个原子的 <i>Q</i><sub>A</sub>（Gaussian 默认打印）</td></tr>
+<tr><td><code>Mulliken charges with hydrogens summed into heavy atoms:</code></td><td>把 H 的电荷加到它连着的重原子上，方便看"CH₃ 基团整体"</td></tr>
+<tr><td><code>Mulliken atomic spin densities:</code></td><td>开壳层体系：把 <b>P</b> 换成 <b>P</b><sup><i>α</i></sup>−<b>P</b><sup><i>β</i></sup></td></tr>
+<tr><td>ORCA <code>MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS</code></td><td>同上，两列并排；最后一行 <code>Sum of atomic charges</code> 可以直接用来做上面的"总和检查"</td></tr>
+</table>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Mulliken 电荷的三条规则；它只需要 <b>P</b> 和 <b>S</b></li>
+<li>为什么说原子电荷"没有定量的方法"（不是可观测量）</li>
+<li>检查：所有原子电荷之和 = 分子总电荷</li></ul></div>
+</section>
+
+<section class="slide" id="p6">
+<h2><span class="pno">p6</span>Löwdin 布居与电荷</h2>
+<figure class="orig"><img src="img/L06/p06.png" alt="讲义 p6" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>Mulliken 布居有几个问题：</p>
+<ol>
+<li><i>P</i><sub><i>μν</i></sub> 的对角元可能大于 2，意味着一个轨道里多于两个电子（违反泡利原理）。</li>
+<li><i>P</i><sub><i>μν</i></sub> 的非对角元可能是负的，意味着一个轨道里有负数个电子。</li>
+<li>在参与的原子之间平分电子密度没有任何依据。</li>
+<li>以原子 A 为中心的弥散函数仍然只被算作属于 A。</li>
+<li>Mulliken 电荷不能重现分子的多极矩。</li>
+</ol>
+<p>Löwdin 提出了一个改进（至少对第 1–3 点），他利用了迹的<b>循环置换性质</b>：</p>
+<p><i>N</i> = Σ<sub><i>μ</i>,<i>ν</i>=1</sub><sup><i>K</i></sup> <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> = Tr(<b>PS</b>) = Tr(<b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup>)　，　<i>N</i><sub><i>μν</i></sub> = [<b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup>]<sub><i>μν</i></sub></p>
+<p>指出可以用<b>正交化的</b>基函数代替（可能近线性相关的）原始基组来做布居分析。</p>
+</div>
+<h3 class="fm">公式解析 · 迹的循环性质与 Löwdin 布居</h3>
+<div class="fml"><span class="tag">迹的循环置换</span>
+Tr(<b>ABC</b>) = Tr(<b>CAB</b>) = Tr(<b>BCA</b>)
+</div>
+<div class="fml"><span class="tag">★ Löwdin 布居</span>
+<i>N</i> = Tr(<b>PS</b>) = Tr(<b>S</b><sup>1/2</sup> <b>P</b> <b>S</b><sup>1/2</sup>)　⟹　<i>Q</i><sub>A</sub><sup>Löwdin</sup> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub> [<b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup>]<sub><i>μμ</i></sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Tr</td><td>迹</td><td>矩阵对角元之和</td></tr>
+<tr><td><b>S</b><sup>1/2</sup></td><td>重叠矩阵的平方根</td><td>满足 <b>S</b><sup>1/2</sup><b>S</b><sup>1/2</sup> = <b>S</b> 的对称矩阵。算法：对角化 <b>S</b> = <b>U</b><i>s</i><b>U</b><sup>T</sup>，把每个本征值开根号，<b>S</b><sup>1/2</sup> = <b>U</b><i>s</i><sup>1/2</sup><b>U</b><sup>T</sup></td></tr>
+<tr><td><b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup></td><td>正交基下的密度矩阵</td><td><span class="key">就是把 <b>P</b> 变换到 Löwdin 正交化基 <i>φ</i>′ = <b>S</b><sup>−1/2</sup><i>φ</i> 上</span>（第 2 讲 p87 拓展里 Roothaan 方程正交化用的同一个 <b>S</b><sup>−1/2</sup>）</td></tr>
+</table>
+<div class="step"><div class="sh">为什么"循环置换"就能换一种拆法</div>
+<p>把 <b>S</b> 拆成 <b>S</b><sup>1/2</sup><b>S</b><sup>1/2</sup>：Tr(<b>PS</b>) = Tr(<b>P</b><b>S</b><sup>1/2</sup><b>S</b><sup>1/2</sup>)，再把最后一个 <b>S</b><sup>1/2</sup> 循环挪到最前面：= Tr(<b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup>)。</p>
+<p><span class="key">两个矩阵的迹（总电子数）相同，但对角元不同</span>——所以把对角元按原子分组，得到的原子电荷不同。Mulliken 用的是 <b>PS</b> 的对角元，Löwdin 用的是 <b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup> 的对角元。</p>
+</div>
+<div class="step"><div class="sh">Löwdin 修好了什么、没修好什么</div>
+<table>
+<tr><th style="width:190px">Mulliken 的问题</th><th style="width:110px">Löwdin</th><th>原因</th></tr>
+<tr><td>① 布居 &gt; 2</td><td class="c" style="color:#2c6e4f">✔ 修好</td><td>正交基下 <b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup> 是半正定且本征值 ≤ 2（闭壳层）的矩阵，对角元落在 [0, 2]</td></tr>
+<tr><td>② 负布居</td><td class="c" style="color:#2c6e4f">✔ 修好</td><td>同上</td></tr>
+<tr><td>③ 平分无依据</td><td class="c" style="color:#b3541e">部分</td><td>不再需要"平分"——正交基里没有重叠项可分。但"<b>S</b><sup>1/2</sup> 对称地"分配本身也是一种约定</td></tr>
+<tr><td>④ 弥散函数归属</td><td class="c" style="color:#c0392b">✘</td><td>正交化后的函数仍按原中心归属</td></tr>
+<tr><td>⑤ 多极矩</td><td class="c" style="color:#c0392b">✘</td><td>—</td></tr>
+</table>
+<p>实际经验：Löwdin 电荷比 Mulliken 稍稳定，但仍然依赖基组。ORCA 默认同时打印两者（<code>LOEWDIN ATOMIC CHARGES</code>）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Mulliken 布居的五个问题（尤其 &gt;2、负值、平分无依据）</li>
+<li>Löwdin 的思路：用 Tr(<b>PS</b>) = Tr(<b>S</b><sup>1/2</sup><b>PS</b><sup>1/2</sup>)，在正交化基上做布居</li></ul></div>
+</section>
+
+<section class="slide" id="p7">
+<h2><span class="pno">p7</span>Bader 原子电荷（分子中的原子量子理论 QTAIM）</h2>
+<figure class="orig"><img src="img/L06/p07.png" alt="讲义 p7" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>R. Bader 发展了一种把分子划分成原子的直观方法，称为<b>分子中的原子量子理论 (QTAIM)</b>。他对原子的定义<b>纯粹基于电子电荷密度</b>。Bader 用所谓的<b>零通量面</b>来划分原子。零通量面是一个二维曲面，在该曲面上，电荷密度在垂直于曲面的方向上取极小值。在分子体系中，电荷密度通常在原子之间达到极小值，这是把原子彼此分开的自然位置。</p>
+<p>Bader 的分子中原子理论常用于电荷分析。例如，Bader 体积内包含的电荷是原子总电子电荷的良好近似。电荷分布可以用来确定相互作用的原子或分子的多极矩。Bader 分析也被用来定义原子的硬度，可用于量化从原子上移走电荷的代价。该理论还提供了化学键的定义，给出键强度的数值。</p>
+</div>
+<h3 class="fm">公式解析 · 零通量面</h3>
+<div class="fml"><span class="tag">★ Bader 原子边界的定义</span>
+∇<i>ρ</i>(<b>r</b>) · <b>n</b>(<b>r</b>) = 0　（对边界面上每一点）
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>∇<i>ρ</i></td><td>密度梯度</td><td>一个矢量，指向密度增加最快的方向</td></tr>
+<tr><td><b>n</b></td><td>曲面法向量</td><td>垂直于边界面的单位矢量</td></tr>
+<tr><td>点积 = 0</td><td>"零通量"</td><td><span class="key">梯度与法向垂直 = 没有梯度线穿过这张面</span>。所以每个原子是一个"盆地"：盆地里所有梯度线都流向同一个原子核</td></tr>
+</table>
+<figure>
+<svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style></defs>
+<line x1="30" y1="160" x2="490" y2="160" stroke="#9aa5b1"/>
+<path d="M40,155 C 90,150 120,40 150,30 C 180,40 220,120 260,125 C 300,120 340,55 370,45 C 400,55 440,150 490,155" fill="none" stroke="#0b5ea8" stroke-width="2.2"/>
+<text x="150" y="22" class="t" text-anchor="middle">核 A</text><text x="370" y="38" class="t" text-anchor="middle">核 B</text>
+<line x1="260" y1="20" x2="260" y2="160" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5,3"/>
+<text x="266" y="112" class="s" fill="#c0392b">密度沿键轴的极小点</text>
+<text x="266" y="126" class="s" fill="#c0392b">= 键临界点 (BCP)</text>
+<text x="266" y="140" class="s" fill="#c0392b">零通量面从这里穿过</text>
+<text x="140" y="180" class="s" text-anchor="middle">盆地 A：积分得 A 的电子数</text>
+<text x="380" y="180" class="s" text-anchor="middle">盆地 B</text>
+<text x="30" y="30" class="s">ρ(r)</text>
+</svg>
+<figcaption>沿键轴方向的电子密度：两个核之间的最低点就是 Bader 切分原子的地方</figcaption>
+</figure>
+<h3>讲解 · Bader 和 Mulliken 的根本区别</h3>
+<table>
+<tr><th style="width:130px"></th><th style="width:44%">Mulliken / Löwdin</th><th>Bader</th></tr>
+<tr><td><b>分的是什么</b></td><td><b>基函数</b>空间（希尔伯特空间划分）</td><td><b>真实三维空间</b>（实空间划分）</td></tr>
+<tr><td><b>依赖基组吗</b></td><td>强烈依赖</td><td><span class="key">只依赖密度——基组足够大时收敛到唯一值</span></td></tr>
+<tr><td><b>能用实验检验吗</b></td><td>不能</td><td>密度可以由 X 射线衍射测得，所以 Bader 分析也能对实验密度做</td></tr>
+<tr><td><b>代价</b></td><td>几乎为零</td><td>需要在三维格点上找临界点、积分盆地</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · QTAIM 的另外两个常用量（p7 最后一句"键强度的数值"）</span>
+<table>
+<tr><th style="width:190px">量</th><th>怎么用</th></tr>
+<tr><td><b>键临界点处的密度 <i>ρ</i><sub>BCP</sub></b></td><td>越大键越强。C–C 单键约 0.25 a.u.，氢键约 0.01–0.04 a.u.</td></tr>
+<tr><td><b>键临界点处的拉普拉斯 ∇²<i>ρ</i><sub>BCP</sub></b></td><td><span class="key">&lt; 0：电子在键区聚集 → 共享型（共价键）；&gt; 0：电子从键区被抽走 → 闭壳层作用（离子键、氢键、范德华）</span></td></tr>
+</table>
+<p><b>和你作业的关系</b>：VASP（作业 4）算完固体后，最常用的电荷分析就是 Bader 电荷（Henkelman 组的 <code>bader</code> 程序读 CHGCAR）——因为平面波基组里根本没有"原子中心基函数"，Mulliken 做不了。分子体系可以用 Multiwfn 做 QTAIM。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Bader 原子由零通量面 ∇<i>ρ</i>·<b>n</b> = 0 定义；它只依赖电子密度</li>
+<li>实空间划分 vs 基函数划分的区别</li></ul></div>
+</section>
+
+<section class="slide" id="p8">
+<h2><span class="pno">p8</span>Hirshfeld 原子电荷</h2>
+<figure class="orig"><img src="img/L06/p08.png" alt="讲义 p8" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>一种一般而自然的选择是：<b>在每一点上，按各原子在对应核距离处的自由原子密度的比例，分配该点的电荷密度</b>。</p>
+<p>Hirshfeld 电荷（Hirshfeld, 1977）是相对于<b>形变密度</b>定义的，形变密度即分子的（弛豫的）密度与未弛豫的原子电荷密度之差。</p>
+<p>形变密度是化学成键和原子间电子共享的自然结果。</p>
+<p>（图：两张轨道等值线图，标注 HOMO 和 LUMO。）</p>
+</div>
+<h3 class="fm">公式解析 · Hirshfeld（"股东"）划分</h3>
+<div class="fml"><span class="tag">★ Hirshfeld 权重与电荷</span>
+<i>w</i><sub>A</sub>(<b>r</b>) = <i>ρ</i><sub>A</sub><sup>0</sup>(<b>r</b>) ⁄ Σ<sub>B</sub> <i>ρ</i><sub>B</sub><sup>0</sup>(<b>r</b>)　；　<i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − ∫ <i>w</i><sub>A</sub>(<b>r</b>) <i>ρ</i>(<b>r</b>) d<b>r</b>
+</div>
+<div class="fml"><span class="tag">形变密度</span>
+Δ<i>ρ</i>(<b>r</b>) = <i>ρ</i><sub>分子</sub>(<b>r</b>) − Σ<sub>A</sub> <i>ρ</i><sub>A</sub><sup>0</sup>(<b>r</b>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ρ</i><sub>A</sub><sup>0</sup>(<b>r</b>)</td><td>自由原子密度</td><td>把一个<b>孤立的、球对称的中性</b> A 原子放在分子中 A 的位置上，它的密度（上标 0 = 未弛豫）</td></tr>
+<tr><td>Σ<sub>B</sub><i>ρ</i><sub>B</sub><sup>0</sup></td><td>前分子密度 (promolecule)</td><td>所有自由原子密度简单叠加——"还没成键的假想分子"</td></tr>
+<tr><td><i>w</i><sub>A</sub>(<b>r</b>)</td><td>权重（股份）</td><td>0 到 1 之间；所有原子的 <i>w</i> 在每一点加起来 = 1。<span class="key">A 在这一点"原本占多少股"，成键后就分走多少比例的真实密度</span></td></tr>
+<tr><td><i>ρ</i>(<b>r</b>)</td><td>真实分子密度</td><td>SCF 算出来的</td></tr>
+<tr><td>Δ<i>ρ</i></td><td>形变密度</td><td>成键带来的密度重排：键区正值（电子聚集），孤立原子区域负值</td></tr>
+</table>
+<h3>讲解 · 为什么叫"股东 (stockholder)"划分</h3>
+<p>把每个空间点想成一家公司，各原子按"成键前在这里的持股比例"分红。离 A 核近的点，A 的自由原子密度大，A 占大股；两核之间的点，按两边自由原子密度的比例分。<span class="key">没有硬边界（不像 Bader 一刀切），而是平滑地"按比例共享"。</span></p>
+<table>
+<tr><th style="width:130px">方法</th><th>特点</th></tr>
+<tr><td><b>Hirshfeld</b></td><td>电荷数值偏小（因为自由原子作参考，偏向中性）；对基组不敏感；化学直觉好</td></tr>
+<tr><td><b>CM5</b></td><td>在 Hirshfeld 基础上加经验修正，使电荷能较好地重现分子偶极矩——常用于力场参数化</td></tr>
+<tr><td><b>Hirshfeld-I</b></td><td>迭代版：参考原子用带电离子密度，自洽到参考与结果一致；电荷更大、更"离子"</td></tr>
+</table>
+<div class="warn"><span class="lab">关于讲义这页的图</span>
+<p>图下标的是 HOMO 和 LUMO，画的是两个<b>分子轨道</b>的等值线（红蓝两色是轨道的正负相位），<b>不是</b>文字里说的形变密度。它们只是示意"成键带来电子分布变化"。形变密度图通常是单一物理量的正负区（键区正、原子区负），而不是轨道的相位。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Hirshfeld 的权重 <i>w</i><sub>A</sub> = <i>ρ</i><sub>A</sub><sup>0</sup>/Σ<i>ρ</i><sub>B</sub><sup>0</sup>；形变密度的定义</li>
+<li>四种电荷的划分依据：Mulliken/Löwdin（基函数）、Bader（零通量面）、Hirshfeld（自由原子密度比例）</li></ul></div>
+</section>
+
+<section class="slide" id="p9">
+<h2><span class="pno">p9</span>Mulliken 键级（重叠布居）</h2>
+<figure class="orig"><img src="img/L06/p09.png" alt="讲义 p9" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>原子 A 和原子 B 之间的键级，定义为所有"基函数 <i>φ</i><sub><i>μ</i></sub> 在原子 A 上、<i>φ</i><sub><i>ν</i></sub> 在原子 B 上"的那部分电子密度之和：</p>
+<p><i>q</i><sub>AB</sub> = 2 Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub> <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></p>
+<p>（对上面的式子做类似的修改就得到 Löwdin 键级。）</p>
+<p>（左图：若干含 N–O 键的分子/离子，N–O 键级指数对 N–O 重叠布居作图，近似直线。右表：丙烯、乙醛、丙酮中各键的键级，按 σ、π 分量列出。）</p>
+</div>
+<h3 class="fm">公式解析</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>q</i><sub>AB</sub></td><td>A–B 重叠布居</td><td>A 与 B 之间共享的电子数</td></tr>
+<tr><td>因子 2</td><td>两块之和</td><td><span class="key">Σ<sub><i>μ</i>∈A,<i>ν</i>∈B</sub> 与 Σ<sub><i>μ</i>∈B,<i>ν</i>∈A</sub> 两块相等，合起来就是 2 倍</span>（p5 警告框里用到的就是这一点）</td></tr>
+<tr><td>正值 / 负值</td><td>—</td><td><b>正</b>：A、B 之间电子聚集 → 成键；<b>负</b>：电子被推离键区 → 反键（例如两个孤对互相排斥）</td></tr>
+</table>
+<h3>讲解 · 从图和表里读出什么</h3>
+<ul>
+<li><b>左图</b>：键级指数和重叠布居基本成正比——重叠布居大的 N–O 键（如 NO）键级高。<span class="key">所以即使重叠布居的绝对值（0.2–0.4）不像"1、2、3"那样好读，它的<b>相对大小</b>是可靠的。</span></li>
+<li><b>右表</b>：丙烯的 C₂=C₃ 合计 2.04（σ 0.95 + π 0.98 + …），C₁–C₂ 1.13——正好对应"一根双键一根单键"；乙醛 C=O 1.61、丙酮 C=O 1.49，比 C=C 小，因为 C=O 键极性大，电子更多地归到 O 自己名下而不是"共享"。</li>
+</ul>
+<div class="ext"><span class="lab">拓展 · Mayer / Wiberg 键级：更接近"化学键级"的定义</span>
+<div class="fml" style="font-size:15px"><i>B</i><sub>AB</sub><sup>Mayer</sup> = Σ<sub><i>μ</i>∈A</sub>Σ<sub><i>ν</i>∈B</sub> (<b>PS</b>)<sub><i>μν</i></sub>(<b>PS</b>)<sub><i>νμ</i></sub></div>
+<p>它对 H₂ 给出 1、对乙烯 C=C 给出约 2、对 N₂ 给出约 3，和 Lewis 结构的键级吻合得好得多。ORCA 默认打印 <code>Mayer bond orders</code>，Gaussian 用 <code>pop=nbo</code> 可得 Wiberg 键级（在 NBO 正交基上算的同类量）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><i>q</i><sub>AB</sub> = 2ΣΣ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub>；正值成键、负值反键</li></ul></div>
+</section>
+
+<section class="slide" id="p10">
+<h2><span class="pno">p10–11</span>★ 分子静电势 (MEP / ESP)</h2>
+<figure class="orig"><img src="img/L06/p10.png" alt="讲义 p10" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p11.png" alt="讲义 p11" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>p10</b>：分子静电势 (MEP) 可用于描述分子中价电子的<b>电荷分布</b>。</p>
+<p><i>ϕ</i>(<i>x</i>₁,<i>y</i>₁,<i>z</i>₁) = Σ<sub><i>i</i></sub> <i>q</i><sub><i>i</i></sub>/(4π<i>ε</i>₀<i>r</i><sub><i>i</i></sub>) − ∭ <i>ρ</i>(<i>x</i>,<i>y</i>,<i>z</i>)/(4π<i>ε</i>₀<i>r</i><sub><i>e</i></sub>) d<i>x</i>d<i>y</i>d<i>z</i>　（核项为正；电子项为负）</p>
+<p>左图：HF 分子的恒定电子密度曲面网格。氟原子为绿色，网格上的颜色表示分子静电势的值。红、蓝分别对应负值和正值。右图：一个杂环分子映射了 MEP 的等密度面。</p>
+<p><b>p11</b>：17 个含卤素小分子（F₂、Cl₂、NCF、FCCF、NCCCF、NF₃、SOF₂、OF₂、CF₄、C₄F₆、ClF₂Br、Cl₂F₂、ClF₃、F₂CO、FCOOH、FCOOF、FNO₂）的 MEP 图，色标 −22.5（红）到 +56.5（蓝）。</p>
+</div>
+<h3 class="fm">公式解析 · 分子静电势</h3>
+<div class="fml"><span class="tag">★ 分子静电势（原子单位写法）</span>
+<i>ϕ</i>(<b>r</b>) = <span style="color:#0b5ea8">Σ<sub>A</sub> <i>Z</i><sub>A</sub> ⁄ |<b>R</b><sub>A</sub> − <b>r</b>|</span> − <span style="color:#c0392b">∫ <i>ρ</i>(<b>r</b>′) ⁄ |<b>r</b>′ − <b>r</b>| d<b>r</b>′</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ϕ</i>(<b>r</b>)</td><td>静电势</td><td>在点 <b>r</b> 放一个<b>单位正电荷</b>，它感受到的静电势能。讲义把探测点写成 (<i>x</i>₁,<i>y</i>₁,<i>z</i>₁)</td></tr>
+<tr><td style="color:#0b5ea8"><i>q</i><sub><i>i</i></sub> (= <i>Z</i><sub>A</sub>)</td><td>核电荷</td><td>讲义里 <i>q</i><sub><i>i</i></sub> 是第 <i>i</i> 个原子核的电荷，<i>r</i><sub><i>i</i></sub> 是它到探测点的距离</td></tr>
+<tr><td style="color:#c0392b"><i>ρ</i>(<b>r</b>′)</td><td>电子密度</td><td>电子云被当成连续电荷分布；<i>r</i><sub><i>e</i></sub> 是电子云中某一点到探测点的距离</td></tr>
+<tr><td>4π<i>ε</i>₀</td><td>库仑常数</td><td>SI 单位下出现，原子单位下为 1</td></tr>
+<tr><td>正 / 负</td><td>—</td><td>核项正（排斥正电荷）；电子项负（吸引正电荷）。<span class="key">哪边赢，那一点就是正或负</span></td></tr>
+</table>
+<div class="warn"><span class="lab">和 Mulliken 电荷的关键区别：静电势是可观测量</span>
+<p><i>ϕ</i>(<b>r</b>) 只依赖真实的电子密度和核的位置，是一个<b>物理上确定</b>的量（原则上可由 X 射线衍射密度得到），不存在"怎么划分"的任意性。<span class="key">所以分析分子间作用、反应位点时，静电势比原子电荷可靠得多。</span></p>
+</div>
+<h3>讲解 · 怎么读 MEP 图</h3>
+<table>
+<tr><th style="width:120px">颜色</th><th style="width:130px">静电势</th><th>化学含义</th></tr>
+<tr><td class="c" style="color:#c0392b"><b>红</b></td><td>负</td><td>电子富集：孤对电子、π 电子云、阴离子端。<span class="key">亲电试剂、质子、氢键给体（H）会往这里去</span></td></tr>
+<tr><td class="c" style="color:#2c6e4f"><b>绿/黄</b></td><td>接近 0</td><td>非极性区（C–H 骨架）</td></tr>
+<tr><td class="c" style="color:#0b5ea8"><b>蓝</b></td><td>正</td><td>缺电子：酸性 H、阳离子中心、σ-hole。<span class="key">亲核试剂、氢键受体（孤对）会往这里去</span></td></tr>
+</table>
+<p><b>p10 左图 HF 分子</b>：F 端红（F 的孤对），H 端蓝（H 被 F 拉走电子）——这正是 HF 作为氢键给体的原因。</p>
+<div class="ext"><span class="lab">拓展 · p11 为什么全是含卤素分子：σ-hole 与卤键</span>
+<p>仔细看 p11 的 Cl₂、NCF、ClF₃ 等：卤素原子沿键轴延长线的最外端出现一块<b>正电（蓝/绿）区</b>，而侧面是负电（红）的一圈。</p>
+<p>原因：卤素 X 用一个 p 轨道和相邻原子成 σ 键，这个 p 轨道在"背对键"的一端电子被拉走，形成一个正电帽子，叫 <b>σ-hole</b>。它能吸引路易斯碱（N、O 的孤对），形成 <b>卤键</b> R–X···:B，方向性很强（接近 180°）。</p>
+<p><span class="key">这个现象用原子电荷完全看不出来</span>——F、Cl 的 Mulliken 电荷整体都是负的，但它的电子分布是各向异性的。这就是"静电势比点电荷描述更丰富"的最好例子，也是现代力场要在卤素上加"虚拟正电荷点"的原因。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 在软件里画 MEP</span>
+<p>Gaussian：算完后 <code>cubegen</code> 生成密度 cube 和静电势 cube，在 GaussView 里 Results → Surfaces → 用"密度面 + 映射 ESP"。等值面通常取 <i>ρ</i> = 0.001 或 0.002 a.u.（大致代表分子的范德华表面）。Multiwfn 可以直接定量分析表面上静电势的极大/极小点（σ-hole 的强度就这么量）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>MEP 公式：核项（正）+ 电子项（负）；每个符号的含义</li>
+<li>红=负=富电子，蓝=正=缺电子；MEP 是可观测量而原子电荷不是</li></ul></div>
+</section>
+
+<section class="slide" id="p12">
+<h2><span class="pno">p12–13</span>★ 分子轨道与轨道定域化</h2>
+<figure class="orig"><img src="img/L06/p12.png" alt="讲义 p12" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p13.png" alt="讲义 p13" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p12）</span>
+<p>分子轨道本身主要用于构造后 HF 能量和性质计算中的各种积分。它们可以被画出来，画出来很好看。（图：Trp-cage 迷你蛋白中 HOMO 等值面的立体图。）</p>
+<p><b>定域化</b>：Slater 行列式在分子轨道的任意<b>幺正变换</b>下不变——轨道可以按我们认为合适的方式混合。</p>
+<p><b>Boys 判据</b>：使轨道质心之间的距离最大：{<i>φ</i><sub><i>i</i></sub><sup>loc</sup>} = arg max( Σ<sub><i>ij</i></sub>[⟨<i>φ</i><sub><i>i</i></sub>|<b>r</b>|<i>φ</i><sub><i>i</i></sub>⟩ − ⟨<i>φ</i><sub><i>j</i></sub>|<b>r</b>|<i>φ</i><sub><i>j</i></sub>⟩]² )。Boys 方法等价于使轨道的弥散度最小。</p>
+<p><b>Edmiston–Ruedenberg 判据</b>：使自排斥能最大：{<i>φ</i><sub><i>i</i></sub><sup>loc</sup>} = arg max( Σ<sub><i>i</i></sub>⟨<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub>|<i>r</i>⁻¹|<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub>⟩ )。Boys 和 ER 方法的结果一般相近。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p13）</span>
+<p><b>注意</b>：虽然定域轨道仍然给出同一个 Slater 行列式，但它们<b>不再是 SCF 算符的本征函数</b>——不存在"定域轨道的能量"这种东西。</p>
+<p>（左图：<b>香蕉键</b>——一种常见的轨道定域化假象。）</p>
+<p><b>Pipek–Mezey 判据</b>：使所有原子上密度平方之和最大：{<i>φ</i><sub><i>i</i></sub><sup>loc</sup>} = arg max( Σ<sub><i>n</i></sub>|<i>ρ</i><sub><i>n</i></sub>|² )。</p>
+<p>PM 定域化在 π 键体系（如乙烯）中<b>保留了 σ 轨道与 π 轨道的分离</b>（见右表：正则 MO、Pipek–Mezey LMO、Boys LMO 的对比）。</p>
+</div>
+<h3 class="fm">公式解析 · 三种定域化判据</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>arg max(…)</td><td>"使……最大的那个自变量"</td><td>在所有幺正变换中，找出让括号里的量最大的那一组轨道</td></tr>
+<tr><td>{<i>φ</i><sub><i>i</i></sub><sup>loc</sup>}</td><td>定域轨道集</td><td>上标 loc = localized</td></tr>
+<tr><td>⟨<i>φ</i><sub><i>i</i></sub>|<b>r</b>|<i>φ</i><sub><i>i</i></sub>⟩</td><td>轨道质心</td><td>轨道 <i>i</i> 的电子"平均在哪"（一个三维位置矢量）</td></tr>
+<tr><td>⟨<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub>|<i>r</i>⁻¹|<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub>⟩</td><td>自排斥能</td><td>= 第 2 讲的 <i>J</i><sub><i>ii</i></sub>：轨道 <i>i</i> 的电荷云和自己的排斥。<span class="key">轨道越紧凑，这个值越大</span></td></tr>
+<tr><td><i>ρ</i><sub><i>n</i></sub></td><td>轨道在原子 <i>n</i> 上的布居</td><td>PM 里通常用 Mulliken 布居。平方和大 = 轨道集中在少数原子上</td></tr>
+</table>
+<table>
+<tr><th style="width:170px">判据</th><th style="width:230px">最大化的量</th><th>直观理解</th></tr>
+<tr><td><b>Boys</b></td><td>轨道质心间距离平方和</td><td>让各轨道<b>彼此离得最远</b>（等价于每个轨道自身最紧凑）</td></tr>
+<tr><td><b>Edmiston–Ruedenberg</b></td><td>Σ<i>J</i><sub><i>ii</i></sub></td><td>让每个轨道<b>自己最紧凑</b>（电荷越集中自排斥越大）</td></tr>
+<tr><td><b>Pipek–Mezey</b></td><td>Σ（原子布居）²</td><td>让每个轨道<b>落在尽可能少的原子上</b></td></tr>
+</table>
+<h3>讲解 · 为什么"可以随便混"</h3>
+<p>第 3 讲 p46 讲过：<span class="key">Slater 行列式在占据轨道的任意幺正变换下只差一个相位，总能量、电子密度全都不变。</span>SCF 给出的正则轨道只是其中一种选择（让 Fock 矩阵对角），往往离域在整个分子上——比如苯的 π 轨道、甲烷的 <i>a</i>₁ + 3 个 <i>t</i>₂ 轨道。</p>
+<p>定域化就是在这个自由度里挑一组"化学家看得懂"的：甲烷变成 4 根等价的 C–H 键轨道，水变成 2 根 O–H 键 + 2 个孤对。</p>
+<div class="warn"><span class="lab">p13 的注意事项：定域轨道没有轨道能</span>
+<p>定域轨道不是 Fock 算符的本征函数，所以 Fock 矩阵在定域基下<b>不是对角的</b>。"C–H 键轨道的能量"没有意义——<span class="key">Koopmans 定理（第 3 讲 p47）和光电子能谱只对应<b>正则</b>轨道</span>。甲烷的光电子谱有两个峰（<i>a</i>₁ 和 <i>t</i>₂），而不是一个（4 根等价 C–H 键）。</p>
+</div>
+<h3>讲解 · 香蕉键与 σ/π 分离</h3>
+<figure>
+<svg viewBox="0 0 540 170" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style></defs>
+<text x="130" y="18" class="t" text-anchor="middle" fill="#0b5ea8">Pipek–Mezey：σ + π</text>
+<circle cx="90" cy="90" r="6" fill="#1c1c1e"/><circle cx="170" cy="90" r="6" fill="#1c1c1e"/>
+<ellipse cx="130" cy="90" rx="38" ry="12" fill="#0b5ea8" opacity="0.25" stroke="#0b5ea8"/>
+<ellipse cx="130" cy="58" rx="30" ry="16" fill="#c0392b" opacity="0.2" stroke="#c0392b"/>
+<ellipse cx="130" cy="122" rx="30" ry="16" fill="#2c6e4f" opacity="0.2" stroke="#2c6e4f"/>
+<text x="130" y="94" class="s" text-anchor="middle">σ</text><text x="130" y="62" class="s" text-anchor="middle">π(+)</text><text x="130" y="126" class="s" text-anchor="middle">π(−)</text>
+<text x="130" y="160" class="s" text-anchor="middle">一根 σ 键 + 一根 π 键（π 有正负两瓣）</text>
+<line x1="270" y1="25" x2="270" y2="155" stroke="#e3e0da" stroke-dasharray="4,4"/>
+<text x="410" y="18" class="t" text-anchor="middle" fill="#b3541e">Boys / ER：两根"香蕉键"</text>
+<circle cx="370" cy="90" r="6" fill="#1c1c1e"/><circle cx="450" cy="90" r="6" fill="#1c1c1e"/>
+<path d="M372,86 Q410,40 448,86" fill="#b3541e" fill-opacity="0.2" stroke="#b3541e"/>
+<path d="M372,94 Q410,140 448,94" fill="#b3541e" fill-opacity="0.2" stroke="#b3541e"/>
+<text x="410" y="62" class="s" text-anchor="middle">τ₁</text><text x="410" y="124" class="s" text-anchor="middle">τ₂</text>
+<text x="410" y="160" class="s" text-anchor="middle">两根等价的弯曲键（Pauling 的 τ 键模型）</text>
+</svg>
+<figcaption>C=C 双键的两种定域描述——两者给出完全相同的总波函数和能量</figcaption>
+</figure>
+<p>Boys/ER 追求"每个轨道最紧凑"，而 σ+π 中的 π 轨道分成上下两瓣、不够紧凑，所以它们把 σ 和 π 混合成两根弯曲的等价键。讲义称之为"假象 (artefact)"——因为它和化学家习惯的 σ/π 图像不一致；但严格说它<b>和 σ+π 描述在物理上完全等价</b>（幺正变换的两种选择）。PM 因为最大化的是原子布居，不追求空间紧凑，所以保留了 σ/π 分离，更适合讨论共轭体系。</p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>为什么可以定域化（行列式在幺正变换下不变）；定域轨道没有轨道能</li>
+<li>Boys、ER、PM 三种判据各最大化什么；香蕉键是怎么来的</li></ul></div>
+</section>
+
+<section class="slide" id="p14">
+<h2><span class="pno">p14</span>用定域轨道做 HF 与后 HF 计算</h2>
+<figure class="orig"><img src="img/L06/p14.png" alt="讲义 p14" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>轨道定域化减少了正则轨道之间的重叠范围，因而增加了为零和接近零的双电子积分的数目。<b>用定域轨道来表述量子化学方法可以提高效率。</b></p>
+<p><b>近似 1</b>：激发被限制为局域的。</p>
+<p><b>近似 2</b>：忽略相距较远的定域轨道对之间的相关。</p>
+<p>两者在物理上都合理——已知电子相关随距离迅速衰减。通常能保留 <b>&gt;95%</b> 的相关能（见下表）。</p>
+<p>（左图：MP2-F12 与局域 LMP2-F12 的 CPU 时间随蛋白质（甘氨酸链）长度的变化；下表：丙烷、丁烷、戊烷在 VDZ 基组下完整与局域 MP2、CCSD 的相关能及保留百分比。）</p>
+</div>
+<h3>讲解 · 为什么局域化能让高级方法变便宜</h3>
+<div class="step"><div class="sh">物理事实：动态相关是短程的</div>
+<p>第 4 讲 p4 讲过：动态相关是电子"瞬时互相躲开"。<span class="key">两个相距 10 Å 的电子对之间几乎没有这种关联</span>——色散能 ∝ 1/<i>R</i>⁶，衰减极快。</p>
+<p>用正则轨道时这件事看不出来（每个轨道都铺满整个分子，任何两个轨道都"在一起"）；换成定域轨道后，"哪些轨道对离得远"一目了然，远的直接扔掉。</p>
+</div>
+<table>
+<tr><th style="width:170px">从表里读</th><th>含义</th></tr>
+<tr><td>MP2(local) 97.4–97.7%</td><td>局域 MP2 保留约 97.5% 的相关能</td></tr>
+<tr><td>CCSD(local) 97.7–98.0%</td><td>局域 CCSD 类似</td></tr>
+<tr><td>左图：MP2-F12 曲线陡升，LMP2 平缓</td><td><span class="key">完整方法随体系增大按高次幂增长，局域方法接近线性</span></td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 这就是 ORCA 的 DLPNO-CCSD(T)</span>
+<p>第 3 讲 p6 拓展提到过：<b>DLPNO</b> = Domain-based Local Pair Natural Orbital。它在定域轨道基础上再用"对天然轨道 (PNO)"压缩虚轨道空间，让 CCSD(T) 的标度从 O(<i>N</i>⁷) 降到接近线性，保留约 99.9% 的相关能。100+ 原子的 CCSD(T) 单点能因此成为日常操作。ORCA 写法：<code>! DLPNO-CCSD(T) def2-TZVP def2-TZVP/C</code>。</p>
+<p><span class="key">这是第 1 讲 p21 那句"进步靠算法而不是硬件"最好的例子。</span></p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>局域相关方法的两个近似；为什么物理上合理（相关随距离快速衰减）</li></ul></div>
+</section>
+
+<section class="slide" id="p15">
+<h2><span class="pno">p15</span>★ 相对论效应：为什么重元素需要修正</h2>
+<figure class="orig"><img src="img/L06/p15.png" alt="讲义 p15" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>Einstein 的相对论假设：</p>
+<ul>
+<li>光速 <i>c</i> 在所有惯性系中是常数（约 137.036 a.u.）</li>
+<li>所有物理定律在所有惯性系中相同</li>
+<li>空间坐标 (<i>x</i>,<i>y</i>,<i>z</i>) 和时间 (<i>t</i>) 是同一个时空框架的四个坐标，因此彼此等价</li>
+<li>Lorentz 变换把两个惯性系之间的坐标联系起来</li>
+</ul>
+<p>[−(1/2<i>m</i>)(∂²/∂<i>x</i>² + ∂²/∂<i>y</i>² + ∂²/∂<i>z</i>²) + <i>V</i>]Ψ = <i>i</i>∂Ψ/∂<i>t</i>　——<b>薛定谔方程在相对论意义下是不正确的</b>：空间坐标以二阶导数出现，而时间以一阶导数出现。</p>
+<p><i>m</i> = <i>m</i>₀(√(1 − <i>v</i>²/<i>c</i>²))⁻¹　——快速运动的电子（如 1s）的质量比价电子的质量大。</p>
+<p>这导致 1s 轨道收缩，进而使外层电子感受到"更低的有效核电荷" → 外层轨道变得稍微更弥散。</p>
+</div>
+<h3 class="fm">公式解析 · 相对论质量</h3>
+<div class="fml"><span class="tag">★ 相对论质量增加</span>
+<i>m</i> = <i>m</i><sub>0</sub> ⁄ √(1 − <i>v</i>²/<i>c</i>²) = <i>γ</i><i>m</i><sub>0</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>m</i><sub>0</sub></td><td>静止质量</td><td>电子静止时的质量（原子单位下 = 1）</td></tr>
+<tr><td><i>v</i></td><td>电子速度</td><td><span class="key">1s 电子的平均速度 ≈ <i>Z</i> a.u.</span>（由玻尔模型 <i>v</i> = <i>Z</i>/<i>n</i> 得到）</td></tr>
+<tr><td><i>c</i></td><td>光速</td><td>原子单位下 <i>c</i> = 137.036（= 1/<i>α</i>，<i>α</i> 是精细结构常数）</td></tr>
+<tr><td><i>γ</i></td><td>Lorentz 因子</td><td>≥ 1；速度越接近光速越大</td></tr>
+</table>
+<h3>讲解 · 算一算：什么时候相对论才重要</h3>
+<table>
+<tr><th style="width:110px">元素</th><th class="c" style="width:70px"><i>Z</i></th><th class="c" style="width:120px">1s 速度 <i>v</i>/<i>c</i> ≈ <i>Z</i>/137</th><th class="c" style="width:90px"><i>γ</i></th><th>1s 半径收缩（∝ 1/<i>m</i>）</th></tr>
+<tr><td>C</td><td class="c">6</td><td class="c">0.044</td><td class="c">1.001</td><td>0.1%——完全可忽略</td></tr>
+<tr><td>Cu</td><td class="c">29</td><td class="c">0.21</td><td class="c">1.02</td><td>2%</td></tr>
+<tr><td>Ag</td><td class="c">47</td><td class="c">0.34</td><td class="c">1.07</td><td>6%</td></tr>
+<tr><td><b>Au</b></td><td class="c"><b>79</b></td><td class="c"><b>0.58</b></td><td class="c"><b>1.22</b></td><td><span class="key"><b>约 18%</b>——必须考虑</span></td></tr>
+<tr><td>Hg</td><td class="c">80</td><td class="c">0.58</td><td class="c">1.23</td><td>约 19%</td></tr>
+</table>
+<p><b>为什么质量大半径就小</b>：玻尔半径 <i>a</i>₀ = 4π<i>ε</i>₀<i>ħ</i>²/(<i>me</i>²) ∝ 1/<i>m</i>。电子"变重"，就被拉得离核更近。</p>
+<p><b>为什么薛定谔方程"不对"</b>：相对论要求时间和空间地位平等，方程在 Lorentz 变换下形式不变。<span class="key">薛定谔方程对空间求二阶导、对时间求一阶导，两者地位不平等，所以它只能是低速近似。</span>Dirac 的做法（p16）是让时间和空间<b>都</b>是一阶导数。</p>
+
+<div class="warn"><span class="lab">⚠ 讲义最后一句只说对了一半：外层 s 轨道也收缩，变弥散的是 d、f</span>
+<p>相对论效应分"直接"和"间接"两种，方向相反：</p>
+<table>
+<tr><th style="width:130px">效应</th><th style="width:170px">作用在谁身上</th><th>结果</th></tr>
+<tr><td><b>直接效应</b></td><td><b>所有 s 和 p<sub>1/2</sub> 轨道</b>，包括价层的 6s</td><td><span class="key">收缩、能量降低</span>。价层 6s 也在核附近有"穿透"部分（第 2 讲 p52：只有 s 电子能到达原子核），那里速度很高，所以同样变重收缩</td></tr>
+<tr><td><b>间接效应</b></td><td><b>d 和 f 轨道</b></td><td><span class="key">扩张、能量升高</span>。收缩了的 s/p 电子把核屏蔽得更好，d/f 电子（离心势垒大，到不了核附近）感受到的有效核电荷变小——这正是讲义说的"外层轨道变弥散"</td></tr>
+</table>
+<p>所以讲义那句话对 5d、4f 成立，对 6s 不成立。考试问"相对论效应对价层轨道的影响"，要把两种都写出来。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 相对论效应在化学里的著名后果</span>
+<table>
+<tr><th style="width:170px">现象</th><th>相对论解释</th></tr>
+<tr><td><b>金是黄色的</b>（银是白色的）</td><td>6s 收缩下降、5d 扩张上升 → 5d→6s 跃迁能从银的约 3.7 eV（紫外）降到金的约 2.4 eV，吸收蓝光，反射出黄色。非相对论计算的金是银白色的</td></tr>
+<tr><td><b>汞在室温是液体</b></td><td>6s² 被收缩得非常紧、很难参与金属键 → Hg 原子之间结合很弱，熔点 −39 °C（相邻的 Au 1064 °C）</td></tr>
+<tr><td><b>金的电子亲和能很大</b>，能形成 Cs⁺Au⁻</td><td>收缩的 6s 轨道能量低，容易接受一个电子</td></tr>
+<tr><td><b>惰性电子对效应</b>（Tl⁺、Pb²⁺、Bi³⁺ 稳定）</td><td>6s² 收缩稳定，不愿参与成键</td></tr>
+<tr><td><b>铅酸蓄电池电压</b></td><td>约 2.1 V 中有约 1.7 V 来自相对论效应（PbO₂ 的稳定性）；非相对论的"铅酸电池"几乎不能用</td></tr>
+</table>
+<p><b>计算上怎么处理</b>：最常用、最便宜的是<b>相对论赝势 (ECP)</b>——把内层电子换成一个拟合了相对论全电子计算的势（def2 系列对 Rb 之后的元素自动带 ECP，Gaussian 的 LANL2DZ、SDD 也是）。需要全电子时用 DKH 或 ZORA（p18，第 5 讲 p38 建议 6）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>为什么薛定谔方程不是相对论性的（时间一阶、空间二阶）</li>
+<li>相对论质量 <i>m</i> = <i>γm</i>₀；1s 速度 ≈ <i>Z</i> a.u.，<i>c</i> = 137 a.u.；为什么重元素才重要</li>
+<li>直接效应（s、p 收缩）vs 间接效应（d、f 扩张）</li></ul></div>
+</section>
+
+<section class="slide" id="p16">
+<h2><span class="pno">p16</span>Dirac 方程</h2>
+<figure class="orig"><img src="img/L06/p16.png" alt="讲义 p16" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>Dirac 发展了<b>相对论量子化学</b>。他提出（推导）了下面的方程来代替薛定谔方程：</p>
+<p>[<i>c</i><b>α</b>·<b>p</b> + <i>β</i><i>mc</i>²]Ψ = <i>i</i>∂Ψ/∂<i>t</i></p>
+<p>其中：<b>α</b><sub><i>x</i>,<i>y</i>,<i>z</i></sub> = (0 <b>σ</b><sub><i>x</i>,<i>y</i>,<i>z</i></sub>; <b>σ</b><sub><i>x</i>,<i>y</i>,<i>z</i></sub> 0)，<i>β</i> = (<b>I</b> 0; 0 −<b>I</b>)</p>
+<p><b>σ</b><sub><i>x</i></sub> = (0 1; 1 0)，<b>σ</b><sub><i>y</i></sub> = (0 −<i>i</i>; <i>i</i> 0)，<b>σ</b><sub><i>z</i></sub> = (1 0; 0 −1)，<b>I</b> = (1 0; 0 1)</p>
+<p>Dirac 方程的解是<b>四分量</b>波函数：Ψ = (<i>ψ</i>₁, <i>ψ</i>₂, <i>ψ</i>₃, <i>ψ</i>₄)<sup>T</sup> = (Ψ<sub>L</sub>, Ψ<sub>S</sub>)<sup>T</sup></p>
+</div>
+<h3 class="fm">公式解析 · Dirac 方程（自由粒子形式）</h3>
+<div class="fml"><span class="tag">★ Dirac 方程（原子单位，<i>ħ</i> = 1）</span>
+[ <span style="color:#0b5ea8"><i>c</i> <b>α</b>·<b>p</b></span> + <span style="color:#c0392b"><i>β</i> <i>mc</i>²</span> ] Ψ = <i>i</i> ∂Ψ/∂<i>t</i>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><b>p</b></td><td>动量算符</td><td>= −<i>i</i>∇（原子单位），<span class="key"><b>一阶</b>导数——和右边时间的一阶导数地位平等</span></td></tr>
+<tr><td style="color:#0b5ea8"><i>c</i><b>α</b>·<b>p</b></td><td>动能项</td><td>= <i>c</i>(<i>α</i><sub><i>x</i></sub><i>p</i><sub><i>x</i></sub> + <i>α</i><sub><i>y</i></sub><i>p</i><sub><i>y</i></sub> + <i>α</i><sub><i>z</i></sub><i>p</i><sub><i>z</i></sub>)</td></tr>
+<tr><td><b>α</b><sub><i>x</i>,<i>y</i>,<i>z</i></sub></td><td>Dirac 矩阵</td><td>三个 4×4 矩阵，每个由 2×2 的 Pauli 矩阵拼成（对角块为 0）</td></tr>
+<tr><td style="color:#c0392b"><i>β</i><i>mc</i>²</td><td>静止能量项</td><td><i>mc</i>² 是电子的静止能量（Einstein 质能关系）</td></tr>
+<tr><td><i>β</i></td><td>Dirac 矩阵</td><td>4×4 对角矩阵 diag(1,1,−1,−1)</td></tr>
+<tr><td><b>σ</b><sub><i>x</i>,<i>y</i>,<i>z</i></sub></td><td><b>Pauli 矩阵</b></td><td>2×2 矩阵。<span class="key">(<i>ħ</i>/2)<b>σ</b> 就是电子的自旋算符 <b>ŝ</b></span>——自旋在这里自动出现</td></tr>
+<tr><td><b>I</b></td><td>2×2 单位矩阵</td><td>—</td></tr>
+<tr><td>Ψ<sub>L</sub>, Ψ<sub>S</sub></td><td>大分量 / 小分量</td><td>各是两分量的"旋量" (spinor)。L = Large，S = Small</td></tr>
+</table>
+<h3>讲解 · 三件从 Dirac 方程里"自动"冒出来的事</h3>
+<div class="step"><div class="sh">① 为什么必须用矩阵</div>
+<p>要让时间、空间都是一阶导，同时能量-动量关系还要满足相对论的 <i>E</i>² = <i>p</i>²<i>c</i>² + <i>m</i>²<i>c</i>⁴，Dirac 发现系数 <b>α</b>、<i>β</i> 必须满足 <i>α</i><sub><i>i</i></sub>² = <i>β</i>² = 1 且两两<b>反对易</b>（<i>α</i><sub><i>i</i></sub><i>β</i> + <i>βα</i><sub><i>i</i></sub> = 0）。普通数做不到（数和数可以交换），<span class="key">最小的能满足这些条件的对象是 4×4 矩阵</span>——所以波函数必须有 4 个分量。</p>
+</div>
+<div class="step"><div class="sh">② 自旋自动出现</div>
+<p>第 2 讲 p63 的自旋是"手工塞进"非相对论理论的。在 Dirac 方程里，4 个分量中有 2 个对应自旋向上/向下，Pauli 矩阵自然出现——<span class="key">自旋 ½ 和 <i>g</i> ≈ 2 都是相对论的必然结果。</span>（第 2 讲 p63 的警告框提到过这一点。）</p>
+</div>
+<div class="step"><div class="sh">③ 大分量与小分量</div>
+<p>对束缚在原子里的电子，小分量大约是大分量的 <i>v</i>/(2<i>c</i>) 倍：</p>
+<div class="fml" style="font-size:15px">Ψ<sub>S</sub> ≈ (<b>σ</b>·<b>p</b>)/(2<i>mc</i>) · Ψ<sub>L</sub>　⟹　|Ψ<sub>S</sub>|/|Ψ<sub>L</sub>| ~ <i>Z</i>/(2 × 137)</div>
+<p>H 原子：约 1/274，可以忽略——小分量扔掉，就回到了（带自旋的）薛定谔方程。Au 的 1s：约 0.3，不能忽略。<span class="key">p18 的所有近似方法本质上都是"想办法把小分量消掉、只算大分量，同时把它的影响近似保留下来"。</span></p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>写出 Dirac 方程；它为什么是一阶的；为什么波函数有 4 个分量</li>
+<li>大分量 / 小分量；自旋是 Dirac 方程的自然结果</li></ul></div>
+</section>
+
+<section class="slide" id="p17">
+<h2><span class="pno">p17</span>Dirac 方程的能谱</h2>
+<figure class="orig"><img src="img/L06/p17.png" alt="讲义 p17" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>（图：非相对论与相对论的解。非相对论：0 以上为连续态，0 以下为分立态。相对论：上方为电子态（连续态 + 分立态），下方 −2<i>mc</i>² 以下还有一个<b>正电子态</b>连续区。分立态的能量尺度相对于连续态之间的能隙被夸大了。）</p>
+<p><i>mc</i>² ≈ 0.511 MeV；H 中电子的结合能：1.36 × 10⁻⁵ MeV。</p>
+<p>为了把相对论能量和非相对论能量对齐，可以用下面这一项代替 <i>β</i>：<i>β</i>′ = (0 0; 0 −2<b>I</b>)</p>
+</div>
+<h3>讲解 · 这张图的三个要点</h3>
+<table>
+<tr><th style="width:150px">要点</th><th>解释</th></tr>
+<tr><td><b>多了一整片"负能态"</b></td><td>Dirac 方程除了电子态，还给出能量低于 −<i>mc</i>² 的解——Dirac 把它解释为<b>正电子</b>（反物质，1932 年被实验发现）。电子态和正电子态之间隔着 2<i>mc</i>² ≈ 1.02 MeV 的能隙</td></tr>
+<tr><td><b>尺度差异悬殊</b></td><td><span class="key"><i>mc</i>² = 511 000 eV，而 H 原子结合能只有 13.6 eV</span>——相差约 4 万倍。化学关心的所有能量都挤在"0 附近那一小段"里，图上的分立能级被放大了才能看见</td></tr>
+<tr><td><b><i>β</i>′ 的作用</b></td><td><i>β</i>′ = <i>β</i> − <b>I</b> = diag(0,0,−2,−2)。等于把整个能谱往下挪 <i>mc</i>²，使电子的静止能量变成 0，和非相对论的能量零点一致（p19 的算符里用的就是 <i>β</i>′）</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 负能态给四分量计算带来的麻烦："变分塌缩"</span>
+<p>第 3 讲的变分原理说能量有下界、最小化能量就能找到基态。<span class="key">但 Dirac 哈密顿量<b>没有下界</b>——下面有一整片负能态。</span>如果直接最小化，电子会一路"掉进"正电子海，得到毫无意义的结果。</p>
+<p>实际四分量程序用两个办法解决：① 把问题改成"在电子态里找最低的"（极小-极大原理）；② 小分量的基函数必须和大分量满足<b>动能平衡</b>（kinetic balance：小分量基 ∝ <b>σ</b>·<b>p</b> × 大分量基），否则连 H 原子都会算错。所以四分量计算比非相对论贵得多、也麻烦得多——这就是 p18 的二分量/一分量近似存在的原因。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Dirac 能谱：电子态 + 正电子态，间隔 2<i>mc</i>²；化学能量尺度远小于 <i>mc</i>²</li></ul></div>
+</section>
+
+<section class="slide" id="p18">
+<h2><span class="pno">p18</span>★ 从 Dirac 到二分量：标量相对论与自旋-轨道耦合</h2>
+<figure class="orig"><img src="img/L06/p18.png" alt="讲义 p18" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>四分量 Dirac 方程可以变换成只计算 Ψ<sub>L</sub>（大分量，即电子的解）的形式。变换后的哈密顿量为（Pauli–Dirac 方程）：</p>
+<p>[ <i>p</i>²/2<i>m</i> + <i>V</i> − <i>p</i>⁴/(8<i>m</i>³<i>c</i>²) + <i>Z</i><b>s</b>·<b>l</b>/(2<i>m</i>²<i>c</i>²<i>r</i>³) + <i>Z</i>π<i>δ</i>(<b>r</b>)/(2<i>m</i>²<i>c</i>²) ] Ψ<sub>L</sub> = <i>E</i>Ψ<sub>L</sub></p>
+<p>（动能与势能 · 质量-速度项 · 自旋-轨道相互作用 · Darwin 修正）</p>
+<p><b>标量相对论修正 = "质量-速度"项 + "Darwin"项</b></p>
+<p>Ψ<sub>L</sub> 是一个两分量波函数（旋量）。</p>
+<p>Douglas–Kroll–Hess (DKH) 是把二分量 Dirac 哈密顿量变换为非相对论项 + 各种修正项的一种变换。</p>
+</div>
+<h3 class="fm">公式解析 · Pauli 哈密顿量（逐项）</h3>
+<div class="fml"><span class="tag">★ Pauli（Breit–Pauli 单电子）哈密顿量</span>
+<i>Ĥ</i> = <span style="color:#6b6b70"><i>p</i>²/2<i>m</i> + <i>V</i></span> <span style="color:#0b5ea8">− <i>p</i>⁴/(8<i>m</i>³<i>c</i>²)</span> <span style="color:#c0392b">+ <i>Z</i> <b>s</b>·<b>l</b> ⁄ (2<i>m</i>²<i>c</i>²<i>r</i>³)</span> <span style="color:#2c6e4f">+ <i>Z</i>π <i>δ</i>(<b>r</b>) ⁄ (2<i>m</i>²<i>c</i>²)</span>
+</div>
+<table class="vars">
+<tr><th>项</th><th>名称</th><th>含义</th></tr>
+<tr><td style="color:#6b6b70"><i>p</i>²/2<i>m</i> + <i>V</i></td><td>非相对论部分</td><td>就是第 2 讲的薛定谔哈密顿量</td></tr>
+<tr><td style="color:#0b5ea8">−<i>p</i>⁴/(8<i>m</i>³<i>c</i>²)</td><td><b>质量-速度项</b></td><td><span class="key">相对论动能展开的第一个修正</span>（见下）。永远为负 → 降低能量；对速度最快的电子（s 电子、内层电子）影响最大</td></tr>
+<tr><td style="color:#c0392b"><i>Z</i><b>s</b>·<b>l</b>/(2<i>m</i>²<i>c</i>²<i>r</i>³)</td><td><b>自旋-轨道耦合 (SOC)</b></td><td>电子自旋 <b>s</b> 与自身轨道角动量 <b>l</b> 的耦合。<i>l</i> = 0（s 轨道）时为零；把 p 劈裂成 p<sub>1/2</sub> 和 p<sub>3/2</sub></td></tr>
+<tr><td style="color:#2c6e4f"><i>Z</i>π<i>δ</i>(<b>r</b>)/(2<i>m</i>²<i>c</i>²)</td><td><b>Darwin 项</b></td><td><i>δ</i>(<b>r</b>) 只在原子核处非零 → <span class="key">只影响 s 电子</span>（只有 s 电子在核处有密度）。永远为正 → 升高能量</td></tr>
+<tr><td><b>s</b>, <b>l</b></td><td>自旋、轨道角动量</td><td>第 2 讲 p51、p63</td></tr>
+<tr><td><i>δ</i>(<b>r</b>)</td><td>Dirac δ 函数</td><td>第 5 讲 p8</td></tr>
+<tr><td>Ψ<sub>L</sub></td><td>两分量旋量</td><td>每一分量对应一个自旋方向</td></tr>
+</table>
+<div class="step"><div class="sh">质量-速度项从哪来：把相对论动能展开</div>
+<p>相对论能量 <i>E</i> = √(<i>p</i>²<i>c</i>² + <i>m</i>²<i>c</i>⁴)，用 √(1+<i>x</i>) ≈ 1 + <i>x</i>/2 − <i>x</i>²/8 展开（<i>x</i> = <i>p</i>²/<i>m</i>²<i>c</i>²）：</p>
+<div class="fml" style="font-size:15px"><i>E</i> = <i>mc</i>² √(1 + <i>p</i>²/<i>m</i>²<i>c</i>²) ≈ <i>mc</i>² + <b><i>p</i>²/2<i>m</i></b> <b>− <i>p</i>⁴/8<i>m</i>³<i>c</i>²</b> + ⋯</div>
+<p>第一项是静止能量（被 <i>β</i>′ 挪走），第二项是我们熟悉的非相对论动能，<span class="key">第三项就是质量-速度修正</span>——它对应 p15 说的"快速电子变重"。</p>
+</div>
+<h3>讲解 · "标量相对论"与"自旋-轨道"为什么要分开</h3>
+<table>
+<tr><th style="width:130px"></th><th style="width:44%">标量相对论（质量-速度 + Darwin）</th><th>自旋-轨道耦合</th></tr>
+<tr><td><b>含不含自旋</b></td><td><b>不含</b>——只是给哈密顿量加一个修正势</td><td><b>含</b> <b>s</b>·<b>l</b></td></tr>
+<tr><td><b>波函数</b></td><td>仍可用普通实轨道、α/β 分开（<b>一分量</b>，p22 的 "1C"）</td><td>α 和 β 被混在一起，必须用复数<b>二分量</b>旋量（"2C"）</td></tr>
+<tr><td><b>代价</b></td><td>≈ 非相对论计算</td><td>贵好几倍</td></tr>
+<tr><td><b>影响</b></td><td>轨道收缩/扩张、键长、结合能——p15 的所有化学后果主要来自这里</td><td>能级劈裂、磷光、系间窜越、重元素磁性</td></tr>
+<tr><td><b>常用方法</b></td><td><b>DKH2</b>（Gaussian <code>int=DKH</code>，ORCA <code>! DKH2</code>）、<b>ZORA</b>（ORCA <code>! ZORA</code>）、<b>相对论 ECP</b></td><td>SO-DKH、SO-ZORA；OpenMOLCAS 的 SO-RASSI（先做无 SOC 的 CASSCF，再在态之间加 SOC）</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 为什么不直接用 Pauli 哈密顿量，而要 DKH / ZORA</span>
+<p>Pauli 哈密顿量是按 1/<i>c</i>² 展开得到的。<span class="key">在原子核附近 <i>V</i> → −∞，展开参数不再小，展开失效；而且 −<i>p</i>⁴ 项没有下界，变分计算会塌缩。</span>所以 Pauli 形式只能当一阶微扰用。</p>
+<table>
+<tr><th style="width:130px">方法</th><th>思路</th></tr>
+<tr><td><b>DKH</b></td><td>用一系列幺正变换把四分量 Dirac 哈密顿量逐阶"块对角化"成电子部分和正电子部分，按<b>外势</b>的阶数展开（而不是按 1/<i>c</i>²），在核附近也不发散。DKH2 = 二阶，最常用</td></tr>
+<tr><td><b>ZORA</b></td><td>"零阶正规近似"：按 <i>E</i>/(2<i>mc</i>² − <i>V</i>) 展开，核附近 <i>V</i> 很负时分母很大、展开反而更好。ADF、ORCA 常用</td></tr>
+<tr><td><b>X2C</b></td><td>"精确二分量"：一步矩阵变换精确地解耦单电子 Dirac 矩阵，近年越来越流行</td></tr>
+</table>
+<div class="warn"><span class="lab">用 DKH/ZORA 时必须换基组</span>
+<p>标准基组的内层收缩系数是按非相对论原子拟合的，不适合描述相对论收缩后的内层。<span class="key">要用专门的相对论收缩基组</span>：ORCA 用 <code>DKH-def2-TZVP</code> 或 <code>ZORA-def2-TZVP</code>、SARC 系列；Gaussian 用 cc-pVnZ-DK。混用会引入不可控误差。</p>
+</div>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Pauli 哈密顿量的四项：非相对论、质量-速度、自旋-轨道、Darwin；各自的物理意义与符号</li>
+<li>标量相对论 = 质量-速度 + Darwin；自旋-轨道单独算</li>
+<li>为什么 Darwin 项只影响 s 电子；为什么 SOC 对 s 电子为零</li></ul></div>
+</section>
+
+<section class="slide" id="p19">
+<h2><span class="pno">p19</span>相对论的电子间相互作用：Gaunt 与 Breit</h2>
+<figure class="orig"><img src="img/L06/p19.png" alt="讲义 p19" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>单电子的 Dirac 算符（动能项）：<i>c</i><b>α</b>·(<b>p</b> + <b>A</b>) + <i>β</i>′<i>mc</i>²</p>
+<p><b>A</b> 是矢势（例如电场或磁场），<b>p</b> 是动量。所有电子的多电子动能算符是这些算符之和。</p>
+<p>Dirac 算符包含了动能的相对论效应。为了描述原子和分子体系，势能算符也必须修改。</p>
+<p>非相对论势能：<i>V</i>(<i>r</i>₁₂) = <i>q</i>₁<i>q</i>₂/<i>r</i>₁₂</p>
+<p>相对论势能（Coulomb–Breit）：<i>V</i><sub>ee</sub><sup>Coulomb−Breit</sup>(<i>r</i>₁₂) = 1/<i>r</i>₁₂ − (1/2<i>r</i>₁₂)[<b>α</b>₁·<b>α</b>₂ + (<b>α</b>₁·<b>r</b>₁₂)(<b>α</b>₂·<b>r</b>₁₂)/<i>r</i>₁₂²]</p>
+<p><b>α</b>₁·<b>α</b>₂ ——Gaunt 相互作用；<b>α</b>₁·<b>α</b>₂ − (<b>α</b>₁·<b>r</b>₁₂)(<b>α</b>₂·<b>r</b>₁₂)/<i>r</i>₁₂² ——Breit 相互作用</p>
+</div>
+<h3 class="fm">公式解析 · Coulomb–Breit 电子排斥</h3>
+<div class="fml"><span class="tag">★ 相对论电子-电子相互作用</span>
+<i>V</i><sub>ee</sub> = <span style="color:#6b6b70">1/<i>r</i><sub>12</sub></span> − <span style="color:#c0392b">(1/2<i>r</i><sub>12</sub>)[ <b>α</b><sub>1</sub>·<b>α</b><sub>2</sub> + (<b>α</b><sub>1</sub>·<b>r</b><sub>12</sub>)(<b>α</b><sub>2</sub>·<b>r</b><sub>12</sub>) ⁄ <i>r</i><sub>12</sub>² ]</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>1/<i>r</i><sub>12</sub></td><td>瞬时库仑排斥</td><td>第 2 讲的老朋友。它假设相互作用<b>瞬间</b>传递——违反相对论（信号速度不能超过 <i>c</i>）</td></tr>
+<tr><td><b>α</b><sub>1</sub>, <b>α</b><sub>2</sub></td><td>电子 1、2 的 Dirac 矩阵</td><td><span class="key"><i>c</i><b>α</b> 在 Dirac 理论里就是电子的<b>速度</b>算符</span></td></tr>
+<tr><td><b>α</b><sub>1</sub>·<b>α</b><sub>2</sub> 项</td><td><b>Gaunt 项</b></td><td>两个运动电子的<b>电流之间的磁相互作用</b>（两根通电导线互相吸引/排斥的量子版）</td></tr>
+<tr><td>含 <b>r</b><sub>12</sub> 的项</td><td><b>推迟修正</b></td><td>电磁相互作用以有限速度 <i>c</i> 传播带来的修正。Gaunt + 推迟 = Breit</td></tr>
+<tr><td><b>A</b></td><td>矢势</td><td>描述外加电磁场；<b>p</b> + <b>A</b> 是"最小耦合"</td></tr>
+</table>
+<p><b>大小</b>：Breit 项约为库仑项的 (<i>v</i>/<i>c</i>)² 倍。对价层化学性质影响很小，主要影响重元素<b>内层</b>电子能级和精细结构。<span class="key">大多数四分量程序只用"Dirac–Coulomb"哈密顿量（不含 Breit），需要时再微扰地加 Gaunt/Breit。</span></p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Coulomb–Breit 相互作用：Gaunt 项（电流间磁作用）+ 推迟项；它们修正了"瞬时库仑作用"</li></ul></div>
+</section>
+
+<section class="slide" id="p20">
+<h2><span class="pno">p20–21</span>相对论修正在哈密顿量中产生的全部项（Breit–Pauli 哈密顿量）</h2>
+<figure class="orig"><img src="img/L06/p20.png" alt="讲义 p20" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p21.png" alt="讲义 p21" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>p20 单电子修正项</b>：</p>
+<ul>
+<li><i>H</i><sub>mv</sub> = −(1/8<i>m</i>³<i>c</i>²)Σ<sub><i>i</i></sub><i>p</i><sub><i>i</i></sub>⁴　——质量-速度项，即使没有外场也存在</li>
+<li><i>H</i><sub>Zeeman</sub> = <i>g</i><sub>e</sub><i>μ</i><sub>B</sub>Σ<sub><i>i</i></sub>[<b>s</b><sub><i>i</i></sub>·<b>B</b><sub><i>i</i></sub> − (1/2<i>mc</i>²)(<b>s</b><sub><i>i</i></sub>·<b>B</b><sub><i>i</i></sub>)<i>p</i><sub><i>i</i></sub>²]</li>
+<li><i>H</i><sub>SO</sub> = (<i>g</i><sub>e</sub><i>μ</i><sub>B</sub>/4<i>mc</i>²)Σ<sub><i>i</i></sub>[<b>s</b><sub><i>i</i></sub>·(<b>F</b><sub><i>i</i></sub>×<b>p</b><sub><i>i</i></sub> − <b>p</b><sub><i>i</i></sub>×<b>F</b><sub><i>i</i></sub>)]</li>
+<li><i>H</i><sub>Darwin</sub> = (1/8<i>m</i>²<i>c</i>²)Σ<sub><i>i</i></sub>∇·<b>F</b><sub><i>i</i></sub></li>
+</ul>
+<p><b>双电子修正项</b>：<i>H</i><sub>SO</sub><sup>ee</sup>（自旋-同轨道）、<i>H</i><sub>SOO</sub><sup>ee</sup>（自旋-他轨道）、<i>H</i><sub>SS</sub><sup>ee</sup>（自旋-自旋）、<i>H</i><sub>OO</sub><sup>ee</sup>（轨道-轨道）、<i>H</i><sub>Darwin</sub><sup>ee</sup> = −(π/2<i>m</i>²<i>c</i>²)ΣΣ<i>δ</i>(<b>r</b><sub><i>ij</i></sub>)</p>
+<p><b>B</b><sub><i>i</i></sub> ——外加磁场；<b>F</b><sub><i>i</i></sub> ——外加电场；<b>s</b><sub><i>i</i></sub>, <b>p</b><sub><i>i</i></sub> ——电子 <i>i</i> 的自旋和动量</p>
+<p><b>p21 涉及一个电子和一个原子核的算符</b>：<i>H</i><sub>SO</sub><sup>ne</sup>（核电场中的自旋-轨道）、<i>H</i><sub>PSO</sub><sup>ne</sup>（顺磁自旋-轨道，含核自旋 <b>I</b><sub>A</sub>）、<i>H</i><sub>SS</sub><sup>ne</sup>（电子自旋-核自旋）、<i>H</i><sub>Darwin</sub><sup>ne</sup> = (π/2<i>m</i>²<i>c</i>²)ΣΣ<i>Z</i><sub>A</sub><i>δ</i>(<b>r</b><sub><i>iA</i></sub>)</p>
+<p><b>把所有这些项都加进哈密顿量是不现实的。这些项可以用微扰的方式计入。</b></p>
+</div>
+<h3 class="fm">公式解析 · 这些式子里反复出现的符号</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>g</i><sub>e</sub></td><td>电子 <i>g</i> 因子</td><td>≈ 2.0023（Dirac 给出 2，QED 修正 0.0023）</td></tr>
+<tr><td><i>μ</i><sub>B</sub></td><td>Bohr 磁子</td><td>= <i>eħ</i>/2<i>m</i><sub>e</sub>，电子磁矩的自然单位</td></tr>
+<tr><td><i>μ</i><sub>N</sub></td><td>核磁子</td><td>= <i>eħ</i>/2<i>m</i><sub>p</sub>，比 <i>μ</i><sub>B</sub> 小 1836 倍</td></tr>
+<tr><td><i>g</i><sub>A</sub>, <b>I</b><sub>A</sub></td><td>核 <i>g</i> 因子、核自旋</td><td>原子核 A 的磁性质（¹H: <i>I</i> = ½）</td></tr>
+<tr><td><b>s</b><sub><i>i</i></sub>, <b>p</b><sub><i>i</i></sub></td><td>电子自旋、动量</td><td>—</td></tr>
+<tr><td><b>F</b><sub><i>i</i></sub>, <b>B</b><sub><i>i</i></sub></td><td>电子 <i>i</i> 处的电场、磁场</td><td>包括核产生的场和外加场</td></tr>
+<tr><td><b>r</b><sub><i>ij</i></sub>, <b>r</b><sub><i>iA</i></sub></td><td>电子-电子、电子-核距离矢量</td><td>—</td></tr>
+<tr><td>上标 e / ee / ne</td><td>涉及的粒子</td><td>单电子 / 两电子 / 电子+核</td></tr>
+</table>
+<h3>讲解 · 这张大表其实就是"谱学参数的来源清单"</h3>
+<p>两页公式看起来吓人，但你不需要背它们。<span class="key">要记住的是：每一项都对应一种实验能测到的谱学现象</span>——而你在 ORCA（第 3 讲 p6）里要算的那些"困难性质"，就是在算这些项的微扰效应：</p>
+<table>
+<tr><th style="width:170px">哈密顿量中的项</th><th style="width:150px">物理</th><th>对应的谱学参数 / 现象</th></tr>
+<tr><td><i>H</i><sub>mv</sub> + <i>H</i><sub>Darwin</sub></td><td>标量相对论</td><td>重元素的键长、结合能、颜色（p15）</td></tr>
+<tr><td><i>H</i><sub>Zeeman</sub></td><td>电子自旋与外磁场</td><td><b>EPR 的 <i>g</i> 张量</b>（与 <i>H</i><sub>SO</sub> 一起给出 <i>g</i> 偏移）</td></tr>
+<tr><td><i>H</i><sub>SO</sub>（单电子 + 双电子）</td><td>自旋-轨道耦合</td><td>原子光谱精细结构、<b>磷光</b>、<b>系间窜越 (ISC)</b>、<b>零场分裂 <i>D</i></b> 的主要来源、镧系磁各向异性</td></tr>
+<tr><td><i>H</i><sub>SS</sub><sup>ee</sup></td><td>两个电子自旋间的偶极作用</td><td><b>零场分裂 <i>D</i></b>（有机三重态、双自由基中占主导）</td></tr>
+<tr><td><i>H</i><sub>SS</sub><sup>ne</sup>（含 <i>δ</i> 项）</td><td>电子自旋-核自旋</td><td><b>EPR 超精细耦合 <i>A</i></b>：偶极部分 + <b>费米接触项</b>（<i>δ</i> 函数项，只有 s 电子有贡献——第 2 讲 p52 拓展）</td></tr>
+<tr><td><i>H</i><sub>PSO</sub><sup>ne</sup></td><td>核自旋与电子轨道运动</td><td><b>NMR 化学位移和自旋-自旋耦合常数 <i>J</i></b> 的一部分</td></tr>
+<tr><td><i>H</i><sub>OO</sub><sup>ee</sup></td><td>电子轨道运动之间</td><td>很小，一般忽略</td></tr>
+</table>
+<p>讲义 p21 最后一句"用微扰处理"是实际做法：先做普通（或标量相对论）的 SCF，再把这些小项当作一阶/二阶微扰算出能量修正或性质。</p>
+<p style="font-size:13px;color:#6b6b70">小笔误：p20 的 <i>H</i><sub>Darwin</sub><sup>ee</sup> 求和下标写成了 <i>j</i> ≠ 1，应为 <i>j</i> ≠ <i>i</i>。</p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>相对论修正项按参与粒子分为单电子、双电子、电子-核三类；实际计算用微扰处理</li>
+<li>把项和谱学现象对上：SOC → 磷光/ISC/ZFS；<i>H</i><sub>SS</sub><sup>ne</sup> → EPR 超精细；Zeeman → <i>g</i> 因子</li></ul></div>
+</section>
+
+<section class="slide" id="p22">
+<h2><span class="pno">p22</span>★ 收敛立方体：基组 × 电子相关 × 相对论</h2>
+<figure class="orig"><img src="img/L06/p22.png" alt="讲义 p22" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>通过增大基组、增加电子相关的程度、改进相对论效应的描述，来使计算结果收敛。</p>
+<p>（立方体三个轴：<b>基组</b> SZ → DZP → TZP → QZP → 5ZP → 6ZP → …；<b>电子相关</b> HF → CIS → CISD → CISDT → CISDTQ → … → Full CI；<b>相对论修正</b> 1C → 2C → 4C。三个标注点："HF limit"（HF 极限）、"'Exact' NR result"（"精确"非相对论结果）、"'Exact' rel. result"（"精确"相对论结果）。）</p>
+</div>
+<h3>讲解 · 这张图把整门课的"近似"放进了一个坐标系</h3>
+<figure>
+<svg viewBox="0 0 520 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="ca" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#1c1c1e"/></marker>
+<style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style></defs>
+<line x1="70" y1="200" x2="330" y2="200" stroke="#0b5ea8" stroke-width="2" marker-end="url(#ca)"/>
+<line x1="70" y1="200" x2="70" y2="40" stroke="#c0392b" stroke-width="2" marker-end="url(#ca)"/>
+<line x1="70" y1="200" x2="160" y2="140" stroke="#2c6e4f" stroke-width="2" marker-end="url(#ca)"/>
+<text x="320" y="218" class="t" fill="#0b5ea8" text-anchor="end">基组 →（第 3 讲）</text>
+<text x="60" y="36" class="t" fill="#c0392b">电子相关 ↑（第 4、5 讲）</text>
+<text x="165" y="138" class="t" fill="#2c6e4f">相对论（第 6 讲）</text>
+<circle cx="70" cy="200" r="5" fill="#1c1c1e"/><text x="55" y="215" class="s">HF/SZ</text>
+<circle cx="300" cy="200" r="5" fill="#b3541e"/><text x="300" y="190" class="s" text-anchor="middle">HF 极限</text>
+<circle cx="300" cy="60" r="5" fill="#b3541e"/><text x="300" y="52" class="s" text-anchor="middle">精确非相对论</text>
+<circle cx="390" cy="0" r="0"/>
+<line x1="300" y1="60" x2="390" y2="0" stroke="#9aa5b1" stroke-dasharray="4,3"/>
+<circle cx="385" cy="10" r="5" fill="#2c6e4f"/><text x="392" y="16" class="s">精确相对论</text>
+<text x="400" y="100" class="s">1C：标量相对论</text>
+<text x="400" y="116" class="s">　（DKH2 / ZORA / ECP）</text>
+<text x="400" y="136" class="s">2C：+ 自旋-轨道</text>
+<text x="400" y="156" class="s">4C：完整 Dirac</text>
+</svg>
+<figcaption>三个独立的收敛方向：任何一个方向没收敛，结果都不是"精确"的</figcaption>
+</figure>
+<table>
+<tr><th style="width:130px">轴</th><th style="width:230px">从粗到精</th><th>在哪讲</th></tr>
+<tr><td><b>基组</b></td><td>SZ（最小基）→ DZ → TZ → QZ → … → 完备基组</td><td>第 3 讲 p70–76；CBS 外推第 4 讲 p43</td></tr>
+<tr><td><b>电子相关</b></td><td>HF → CISD → … → Full CI</td><td>第 4 讲（DFT 是另一条路，第 5 讲）</td></tr>
+<tr><td><b>相对论</b></td><td>1C（标量）→ 2C（+SOC）→ 4C（Dirac）</td><td>本讲 p15–p21</td></tr>
+</table>
+<div class="warn"><span class="lab">两个值得注意的细节</span>
+<ul>
+<li><b>"精确"都打了引号</b>：即使三个方向都走到头，结果也只在 BO 近似（第 2 讲 p78）和"忽略 QED"下是精确的。</li>
+<li><b>相关轴上的 CIS</b>：对<b>基态</b>能量来说，CIS 给出的就是 HF 能量——因为 Brillouin 定理（第 4 讲 p16），单激发不和 HF 基态混合。它出现在轴上表示"激发级别"的阶梯，CIS 真正的用处是算<b>激发态</b>（p39）。</li>
+<li><b>三个方向并不完全独立</b>：相对论计算需要专门的基组（p18 拓展），而电子相关在重元素中本身也受相对论影响。实践中通常先定好相对论级别，再在它之上收敛基组和相关。</li>
+</ul>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>画出/描述三维收敛图：基组、电子相关、相对论三个轴，以及 HF 极限、精确非相对论、精确相对论三个点</li>
+<li>1C / 2C / 4C 分别指什么</li></ul></div>
+</section>
+
+<section class="slide" id="p23">
+<h2><span class="pno">p23</span>溶剂效应概览</h2>
+<figure class="orig"><img src="img/L06/p23.png" alt="讲义 p23" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>许多计算，尤其是涉及带电和极性分子的计算，本质上需要正确处理溶剂的静电作用……</p>
+<p>（左上表 11：一些溶质在水中的溶剂化能（kcal/mol，6-31G），分为静电部分 Δ<i>G</i><sub>el</sub> 与色散部分 Δ<i>G</i><sub>dis</sub>。左下表 12：<i>N</i>-甲基甲酰胺、甲酸甲酯的甲基扭转能垒在 <i>ε</i> = 1（真空）与 <i>ε</i> = 78.5（水）中的对比。）</p>
+<p>（右侧思维导图——<b>溶剂化效应</b>：① 非特异的静态相互作用：极化、偶极取向、四极取向…；② 特异的静态相互作用：氢键、范德华相互作用、电荷转移效应；③ 热力学与统计效应：疏水效应、溶剂壳层结构。<b>溶剂化模型</b>：① 显式水：同一理论水平；ONIOM（QM/MM 用 TIPnP、SPC 等水模型；QM/半经验用 AM1、PM3 等）；② 隐式水：Born、Onsager、Kirkwood 模型；极化连续介质模型；③ 显式/隐式混合水。）</p>
+</div>
+<h3>讲解 · 先分清"效应"和"模型"两棵树</h3>
+<table>
+<tr><th style="width:170px">溶剂化效应</th><th style="width:230px">例子</th><th>哪种模型能描述</th></tr>
+<tr><td><b>非特异静电</b></td><td>溶剂整体被溶质的电荷/偶极极化，反过来稳定溶质</td><td><span class="key">隐式模型（PCM）就够</span></td></tr>
+<tr><td><b>特异作用</b></td><td>氢键、电荷转移、配位</td><td><span class="key">必须显式溶剂分子</span>（p33）</td></tr>
+<tr><td><b>热力学/统计</b></td><td>疏水效应、溶剂壳层的动态结构</td><td>需要分子动力学采样（显式 + 大量构型）</td></tr>
+</table>
+<table>
+<tr><th style="width:130px">溶剂化模型</th><th style="width:230px">做法</th><th>优缺点</th></tr>
+<tr><td><b>显式</b></td><td>真的放很多溶剂分子进去（p24–p26）</td><td>能描述氢键和结构；贵，需要构型平均</td></tr>
+<tr><td><b>隐式（连续介质）</b></td><td>把溶剂当成一块介电常数为 <i>ε</i> 的均匀介质（p27–p32）</td><td>便宜，自动包含"平均"；丢了特异作用</td></tr>
+<tr><td><b>混合</b></td><td>第一溶剂层显式 + 外面连续介质（p33）</td><td>折中，实践中很常用</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 从表 11、12 读出的两件事</span>
+<ul>
+<li><b>表 11</b>：H₂O、NH₃、HF 这些极性分子的溶剂化能主要来自静电（Δ<i>G</i><sub>el</sub> ≈ −6 ~ −10 kcal/mol）；非极性的 CH₄ 几乎全部来自色散（Δ<i>G</i><sub>el</sub> ≈ −0.5，Δ<i>G</i><sub>dis</sub> ≈ −8）。<span class="key">所以只算静电的溶剂模型对非极性分子几乎没用。</span></li>
+<li><b>表 12</b>：扭转能垒在真空 (<i>ε</i>=1) 和水 (<i>ε</i>=78.5) 中差 0.1–0.5 kcal/mol。极性不同的构象被溶剂稳定的程度不同 → <b>溶剂能改变构象平衡和反应能垒</b>。</li>
+</ul>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>溶剂化模型三类：显式、隐式、混合；各自能/不能描述什么</li></ul></div>
+</section>
+
+<section class="slide" id="p24">
+<h2><span class="pno">p24–26</span>显式水模型：分子动力学、半经验与 HF</h2>
+<figure class="orig"><img src="img/L06/p24.png" alt="讲义 p24" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p25.png" alt="讲义 p25" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p26.png" alt="讲义 p26" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p24）</span>
+<p>（示意图：TIP4P、SPC(E)、TIP5P 三种水模型的几何结构。TIP4P 在 HOH 角平分线上多一个带负电的虚拟点 L；TIP5P 在四面体方向放两个虚拟点 L 模拟孤对电子；SPC 只有三个点。）</p>
+<p>水分子之间的相互作用能：<i>E</i><sub><i>αβ</i></sub> = <i>ε</i><sub>0</sub>[(<i>σ</i><sub>O</sub>/<i>r</i><sub>OO</sub>)¹² − (<i>σ</i><sub>O</sub>/<i>r</i><sub>OO</sub>)⁶] + Σ<sub><i>nk</i></sub> <i>q</i><sub><i>n</i></sub><i>q</i><sub><i>k</i></sub>/<i>r</i><sub><i>nk</i></sub></p>
+<p>（表 I：单体几何、Lennard-Jones 参数和部分电荷。表 III：25 °C、1 atm 下液态水的计算与实验性质。）</p>
+<p><b>这些模型能重现水的结构和热力学性质。</b>SPC = Simple Point Charge（简单点电荷）；TIP = Transferable Intermolecular Potential（可转移分子间势）。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p25）</span>
+<p>（左：液态水的 O–O、O–H 径向分布函数，TIP3P/TIP4P/TIP5P 与实验对比。右表 VI：水单体的偶极矩与四极矩；表 V：计算与实验的介电常数。）</p>
+<p><b>注意：在距离相关函数上与实验吻合得非常好，但在静电性质上，尤其是偶极矩上，与实验值偏差很大。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p26）</span>
+<p><b>半经验方法无法重现液态水的结构性质——连第一配位层都不对。</b></p>
+<p>（左图：用 AM1 方法做 MD 得到的液态水径向分布函数与实验对比。右图：实验、经典 MD、AM1、HF 的 <i>g</i>(<i>r</i><sub>OH</sub>) 对比。）</p>
+<p><b>Hartree–Fock 方法在结构和介电性质上都好得多，但对溶剂化分子的尺度来说非常昂贵。</b></p>
+</div>
+<h3 class="fm">公式解析 · 水-水相互作用势</h3>
+<div class="fml"><span class="tag">★ 刚性点电荷水模型的对势</span>
+<i>E</i><sub><i>αβ</i></sub> = <span style="color:#0b5ea8"><i>ε</i><sub>0</sub>[ (<i>σ</i><sub>O</sub>/<i>r</i><sub>OO</sub>)¹² − (<i>σ</i><sub>O</sub>/<i>r</i><sub>OO</sub>)⁶ ]</span> + <span style="color:#c0392b">Σ<sub><i>n</i>∈<i>α</i></sub>Σ<sub><i>k</i>∈<i>β</i></sub> <i>q</i><sub><i>n</i></sub><i>q</i><sub><i>k</i></sub> ⁄ <i>r</i><sub><i>nk</i></sub></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>α</i>, <i>β</i></td><td>两个水分子的编号</td><td>总能量 = 所有水分子对的 <i>E</i><sub><i>αβ</i></sub> 之和</td></tr>
+<tr><td style="color:#0b5ea8">第一项</td><td><b>Lennard-Jones 势</b></td><td>只作用在两个 O 原子之间。<i>r</i>⁻¹² 项 = 近距离泡利排斥；−<i>r</i>⁻⁶ 项 = 色散吸引（第 5 讲 p35 的 <i>C</i>₆/<i>R</i>⁶）</td></tr>
+<tr><td><i>ε</i><sub>0</sub></td><td>势阱深度</td><td>kJ/mol，表 I 中约 0.65（<span class="key">这里不是真空介电常数！</span>符号撞车）。常见写法是 4<i>ε</i>[…]</td></tr>
+<tr><td><i>σ</i><sub>O</sub></td><td>碰撞直径</td><td>约 0.315 nm，O–O 之间 LJ 势为零的距离</td></tr>
+<tr><td><i>r</i><sub>OO</sub></td><td>两个 O 的距离</td><td>—</td></tr>
+<tr><td style="color:#c0392b">第二项</td><td>点电荷库仑作用</td><td>水分子 <i>α</i> 上每个电荷点 <i>n</i> 与 <i>β</i> 上每个电荷点 <i>k</i> 之间的库仑能</td></tr>
+<tr><td><i>q</i><sub><i>n</i></sub></td><td>部分电荷</td><td>放在 H、O 或虚拟点 L 上的固定电荷（表 I：SPC 的 <i>q</i><sub>H</sub> = +0.41、<i>q</i><sub>O</sub> = −0.82）</td></tr>
+</table>
+<h3>讲解 · 三种水模型的区别就是"电荷放在哪"</h3>
+<table>
+<tr><th style="width:100px">模型</th><th style="width:90px">点数</th><th>负电荷放在哪</th></tr>
+<tr><td><b>SPC / SPC/E</b></td><td class="c">3</td><td>直接放在 O 上。HOH 角 109.47°（四面体角，不是真实的 104.52°）</td></tr>
+<tr><td><b>TIP4P</b></td><td class="c">4</td><td>O 上不带电，负电荷挪到 HOH 角平分线上离 O 0.15 Å 的虚拟点 L——更好地重现四极矩</td></tr>
+<tr><td><b>TIP5P</b></td><td class="c">5</td><td>两个虚拟点 L 沿四面体方向，<span class="key">模拟 O 的两对孤对电子</span>——氢键方向性最好</td></tr>
+</table>
+<div class="warn"><span class="lab">p25 的"偶极矩偏大"不是缺陷，是故意的</span>
+<p>表 VI：模型水单体的偶极矩 2.18–2.35 D，而气相水的实验值只有 1.85 D。</p>
+<p><span class="key">原因：这些模型的电荷是<b>固定</b>的，不能被周围分子极化；但液态水里每个水分子都被邻居极化，真实偶极约 2.6–3.0 D。</span>参数化时把"平均极化"直接吸收进了固定电荷里，所以单体偶极偏大——这样才能在液态下给出正确的结构和能量（p25 的 RDF 吻合得很好）。这类模型叫"有效对势"。更严格的做法是<b>可极化力场</b>（AMOEBA 等），代价更高。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 什么是径向分布函数 <i>g</i>(<i>r</i>)（p25–26 的图）</span>
+<p><i>g</i>(<i>r</i>) = "以某个 O 为中心、在距离 <i>r</i> 处找到另一个 O 的概率" ÷ "完全随机时的概率"。</p>
+<ul>
+<li><i>g</i>(<i>r</i>) = 1：和随机一样（远处）</li>
+<li>第一个峰（O–O 约 2.8 Å）：第一水合层，即氢键连接的邻居</li>
+<li>第二个峰（约 4.5 Å）：第二层，反映四面体氢键网络</li>
+</ul>
+<p>它可以由 X 射线/中子衍射实验测得，所以是检验水模型的标准。p26：AM1 水的第一峰位置和高度都错了——<span class="key">半经验方法的参数没有针对氢键拟合好</span>，不适合做溶剂。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>刚性水模型的势函数：LJ + 点电荷库仑；SPC / TIP4P / TIP5P 的区别</li>
+<li>为什么模型的单体偶极大于实验（固定电荷吸收了平均极化）</li></ul></div>
+</section>
+
+<section class="slide" id="p27">
+<h2><span class="pno">p27</span>★ 连续介质溶剂化</h2>
+<figure class="orig"><img src="img/L06/p27.png" alt="讲义 p27" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>我们假设分子处在一个可极化材料中挖出的<b>空穴</b>里。分子的能量有两个贡献：</p>
+<p><i>E</i> = ⟨Ψ|<i>Ĥ</i>|Ψ⟩ − ⟨Ψ|<i>Ĝ</i>|Ψ⟩　（前一项：分子的能量（包括与空穴的静电相互作用）；后一项：空穴形成能）</p>
+<p>（表 11.1：核酸碱基在气相、氯仿、水中的偶极矩 (D)，SM5.42R/HF/6-31G(d) 水平。）</p>
+<p><b>空穴模型</b>：</p>
+<ol>
+<li><b>Kirkwood–Onsager</b>：假设一个被分子偶极矩极化的<b>球形</b>空穴。<b>对所有实际用途都完全错误。</b></li>
+<li><b>极化连续介质模型 (PCM)</b>：假设空穴是以各原子为中心的球的<b>并集</b>。相当好，但可能在曲面剖分、积分和几何收敛上出现数值问题。</li>
+<li><b>等密度 PCM (IPCM)</b>：用 SCF 等密度面作为空穴。重复 SCF 计算直到空穴不再变化。</li>
+<li><b>自洽等密度 PCM (SCIPCM)</b>：在 SCF 循环内部更新空穴，使 SCF 和空穴同时收敛。</li>
+</ol>
+</div>
+<h3 class="fm">公式解析</h3>
+<div class="fml"><span class="tag">连续介质中分子的能量（讲义形式）</span>
+<i>E</i> = ⟨Ψ|<i>Ĥ</i>|Ψ⟩ − ⟨Ψ|<i>Ĝ</i>|Ψ⟩
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Ψ</td><td>溶剂中的波函数</td><td><span class="key">和真空中的不一样</span>——它是在"溶剂反应场"存在时自洽求出的</td></tr>
+<tr><td><i>Ĥ</i></td><td>分子哈密顿量</td><td>讲义标注：包括分子与空穴（极化了的介质）的静电作用</td></tr>
+<tr><td><i>Ĝ</i></td><td>溶剂相关算符</td><td>讲义标注为"空穴形成能"。实际程序里还分出色散-排斥等非静电项（p29）</td></tr>
+</table>
+<h3>讲解 · 连续介质模型的核心图像：反应场</h3>
+<figure>
+<svg viewBox="0 0 540 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style>
+<marker id="ra6" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#1c1c1e"/></marker></defs>
+<rect x="20" y="20" width="300" height="165" rx="8" fill="#dbe8f5" stroke="#0b5ea8"/>
+<text x="40" y="40" class="s">溶剂 = 均匀介质，介电常数 ε</text>
+<ellipse cx="170" cy="105" rx="90" ry="52" fill="#fff" stroke="#1c1c1e" stroke-width="1.4"/>
+<text x="120" y="110" font-size="18" fill="#c0392b">δ−</text><text x="200" y="110" font-size="18" fill="#0b5ea8">δ+</text>
+<line x1="135" y1="130" x2="210" y2="130" stroke="#1c1c1e" stroke-width="1.4" marker-end="url(#ra6)"/>
+<text x="172" y="146" class="s" text-anchor="middle">溶质偶极 μ</text>
+<text x="70" y="100" font-size="14" fill="#0b5ea8">+ +</text><text x="70" y="120" font-size="14" fill="#0b5ea8">+ +</text>
+<text x="255" y="100" font-size="14" fill="#c0392b">− −</text><text x="255" y="120" font-size="14" fill="#c0392b">− −</text>
+<text x="170" y="175" class="s" text-anchor="middle">空穴表面上感应出的极化电荷（与溶质电荷反号）</text>
+<text x="340" y="50" class="t">反应场的自洽循环</text>
+<text x="340" y="75" class="s">① 溶质的电荷分布极化溶剂</text>
+<text x="340" y="95" class="s">② 极化的溶剂产生"反应场"</text>
+<text x="340" y="115" class="s">③ 反应场加入 Fock 算符，</text>
+<text x="352" y="131" class="s">溶质电子重新分布（偶极变大）</text>
+<text x="340" y="151" class="s">④ 回到 ①，直到自洽</text>
+<text x="340" y="175" class="s">= SCRF（自洽反应场）</text>
+</svg>
+<figcaption>连续介质模型：溶剂只剩一个参数 ε，它在空穴表面感应出电荷，反过来极化溶质</figcaption>
+</figure>
+<p>这就是 Gaussian 关键词 <code>scrf</code> 的全称 <b>Self-Consistent Reaction Field</b>（自洽反应场）。它和 SCF 完全同构：反应场依赖溶质密度，密度又在反应场里求出，所以要迭代。</p>
+<div class="ext"><span class="lab">拓展 · 表 11.1：溶剂让溶质"更极性"</span>
+<p>胞嘧啶的偶极矩：气相 6.5 D → 氯仿 8.0 D → 水 8.5 D。<span class="key">溶剂的反应场把溶质的电子云进一步拉开，偶极变大——这就是上图第 ③ 步的直接证据。</span>这也意味着：溶剂中的电荷、偶极、轨道能都和真空不同，比较实验时要用溶剂中的计算。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>连续介质模型：溶剂 → 介电常数 <i>ε</i>，分子处于空穴中；反应场与溶质自洽</li>
+<li>四种空穴模型：Kirkwood–Onsager（球，错）、PCM（原子球并集）、IPCM（等密度面，外循环）、SCIPCM（等密度面，SCF 内更新）</li></ul></div>
+</section>
+
+<section class="slide" id="p28">
+<h2><span class="pno">p28</span>过时的球形空穴模型：Born、Bell、Onsager、Kirkwood</h2>
+<figure class="orig"><img src="img/L06/p28.png" alt="讲义 p28" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>Born 模型</b>：球形空穴中放一个电荷：Δ<i>G</i><sub>electr</sub> = −[(<i>ε</i>−1)/(2<i>ε</i>)]·<i>q</i>²/<i>R</i></p>
+<p><b>Bell 模型</b>：球形空穴中放一个偶极：Δ<i>G</i><sub>electr</sub> = −[(<i>ε</i>−1)/(2<i>ε</i>+1)]·<i>μ</i>²/<i>R</i>³</p>
+<p><b>Onsager 模型</b>：球形空穴中放一个可极化偶极：Δ<i>G</i><sub>electr</sub> = −[(<i>ε</i>−1)/(2<i>ε</i>+1)]·(<i>μ</i>²/<i>R</i>³)·[1 − ((<i>ε</i>−1)/(2<i>ε</i>+1))·(2<i>α</i>/<i>R</i>³)]</p>
+<p><b>Kirkwood 模型</b>：在球形和椭球形（Kirkwood–Westheimer）空穴中对分子静电势做一般的多极展开。</p>
+<p><b>四个模型的共同特点：对所有实际用途都完全不准确。</b></p>
+</div>
+<h3 class="fm">公式解析 · 球形空穴的静电溶剂化能</h3>
+<div class="fml"><span class="tag">★ Born 公式（离子）</span>
+Δ<i>G</i><sub>Born</sub> = − ( (<i>ε</i> − 1) ⁄ 2<i>ε</i> ) · <i>q</i>² ⁄ <i>R</i> = − ( 1 − 1/<i>ε</i> ) · <i>q</i>² ⁄ (2<i>R</i>)
+</div>
+<div class="fml"><span class="tag">★ Bell / Onsager 公式（偶极）</span>
+Δ<i>G</i><sub>dipole</sub> = − ( (<i>ε</i> − 1) ⁄ (2<i>ε</i> + 1) ) · <i>μ</i>² ⁄ <i>R</i>³
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Δ<i>G</i><sub>electr</sub></td><td>静电溶剂化自由能</td><td>从真空移入溶剂的静电部分。负值 = 溶剂稳定溶质</td></tr>
+<tr><td><i>ε</i></td><td>溶剂介电常数</td><td>真空 1，氯仿 4.8，乙醇 24.6，<b>水 78.4</b>（这里的 <i>ε</i> 是<b>相对</b>介电常数，无量纲）</td></tr>
+<tr><td><i>q</i></td><td>离子电荷</td><td>原子单位下 Na⁺ 为 +1</td></tr>
+<tr><td><i>R</i></td><td>空穴半径</td><td><span class="key">这是可调参数，结果对它极其敏感</span>（离子 ∝ 1/<i>R</i>，偶极 ∝ 1/<i>R</i>³）</td></tr>
+<tr><td><i>μ</i></td><td>溶质偶极矩</td><td>—</td></tr>
+<tr><td><i>α</i></td><td>溶质极化率</td><td>Onsager 模型中，偶极能被反应场进一步感应放大</td></tr>
+</table>
+<h3>讲解 · 从公式读出的两件事</h3>
+<div class="step"><div class="sh">① 介电常数的"饱和"</div>
+<table>
+<tr><th style="width:120px">溶剂</th><th class="c" style="width:80px"><i>ε</i></th><th class="c" style="width:150px">Born 因子 (<i>ε</i>−1)/2<i>ε</i></th><th class="c">偶极因子 (<i>ε</i>−1)/(2<i>ε</i>+1)</th></tr>
+<tr><td>真空</td><td class="c">1</td><td class="c">0</td><td class="c">0</td></tr>
+<tr><td>氯仿</td><td class="c">4.8</td><td class="c">0.40</td><td class="c">0.36</td></tr>
+<tr><td>乙醇</td><td class="c">24.6</td><td class="c">0.48</td><td class="c">0.48</td></tr>
+<tr><td>水</td><td class="c">78.4</td><td class="c">0.49</td><td class="c">0.49</td></tr>
+<tr><td>导体</td><td class="c">∞</td><td class="c">0.5</td><td class="c">0.5</td></tr>
+</table>
+<p><span class="key">从 <i>ε</i> ≈ 20 开始，因子几乎不再变化——乙醇和水在连续介质模型里给出几乎相同的静电溶剂化能。</span>真正区分它们的是氢键等特异作用（p33），而连续介质模型描述不了。这也是 COSMO/CPCM 可以把溶剂近似成导体（<i>ε</i>=∞）再做小修正的原因（p30 拓展）。</p>
+</div>
+<div class="step"><div class="sh">② 为什么"完全不准确"</div>
+<p>真实分子不是球，电荷分布也不是一个点电荷或一个点偶极。球形模型的结果几乎完全取决于人为选定的 <i>R</i>——换一个 <i>R</i> 结果能差好几倍。所以它们只有教学和定性意义；Gaussian 里的 <code>scrf=dipole</code>（Onsager 模型）已基本不再使用。</p>
+</div>
+<div class="warn"><span class="lab">⚠ Onsager 式中方括号应该取倒数</span>
+<p>讲义的 Onsager 公式写成 Bell 结果乘以 [1 − <i>x</i>]，<i>x</i> = [(<i>ε</i>−1)/(2<i>ε</i>+1)]·2<i>α</i>/<i>R</i>³ &gt; 0。这会让可极化偶极的溶剂化能<b>比</b>刚性偶极<b>更小</b>——与物理相反：反应场会感应出额外偶极，稳定作用应该<b>更强</b>。</p>
+<p>推导：反应场 <i>F</i> = <i>gμ</i><sub>tot</sub>，<i>g</i> = 2(<i>ε</i>−1)/[(2<i>ε</i>+1)<i>R</i>³]；感应后 <i>μ</i><sub>tot</sub> = <i>μ</i> + <i>αF</i> ⟹ <i>μ</i><sub>tot</sub> = <i>μ</i>/(1 − <i>gα</i>)；能量 −½<i>gμμ</i><sub>tot</sub>，所以</p>
+<div class="fml" style="font-size:15px">Δ<i>G</i><sub>Onsager</sub> = − [(<i>ε</i>−1)/(2<i>ε</i>+1)]·(<i>μ</i>²/<i>R</i>³) · [ 1 − ((<i>ε</i>−1)/(2<i>ε</i>+1))·(2<i>α</i>/<i>R</i>³) ]<sup><b>−1</b></sup></div>
+<p><i>α</i> → 0 时退回 Bell 公式 ✔；<i>α</i> 越大 |Δ<i>G</i>| 越大 ✔。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Born 公式 −(1−1/<i>ε</i>)<i>q</i>²/2<i>R</i>；Bell/Onsager 的偶极因子 (<i>ε</i>−1)/(2<i>ε</i>+1)</li>
+<li>介电因子在高 <i>ε</i> 下饱和；球形模型对 <i>R</i> 极其敏感，故不实用</li></ul></div>
+</section>
+
+<section class="slide" id="p29">
+<h2><span class="pno">p29</span>现代空穴模型：溶剂化自由能的分解与分子表面</h2>
+<figure class="orig"><img src="img/L06/p29.png" alt="讲义 p29" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>Δ<i>G</i><sub>solvation</sub> = Δ<i>G</i><sub>cavity</sub> + Δ<i>G</i><sub>dispersion</sub> + Δ<i>G</i><sub>electrostatic</sub></p>
+<p><b>溶剂可及表面</b>（Lee–Richards 表面）：把一个探针球在一组原子（用范德华半径表示）上滚动，描出探针<b>球心</b>所在的曲面。<b>溶剂排除表面</b>（Connolly 表面）：描出探针上<b>最接近原子的点</b>而不是球心。</p>
+<p><b>范德华表面</b>：各原子范德华球的并集的表面。它更容易生成和求导，因此在量子化学计算中常被采用。</p>
+<p>（左图：一个蛋白的范德华表面与 Lee–Richards 表面；右图：探针、溶剂可及表面、溶剂排除表面、接触面、再入面的示意。）</p>
+</div>
+<h3 class="fm">公式解析 · 溶剂化自由能的三项</h3>
+<div class="fml"><span class="tag">★ 溶剂化自由能分解</span>
+Δ<i>G</i><sub>solv</sub> = <span style="color:#6b6b70">Δ<i>G</i><sub>cav</sub></span> + <span style="color:#2c6e4f">Δ<i>G</i><sub>disp</sub></span> + <span style="color:#0b5ea8">Δ<i>G</i><sub>elec</sub></span>
+</div>
+<table class="vars">
+<tr><th>项</th><th>名称</th><th>含义与符号</th></tr>
+<tr><td style="color:#6b6b70">Δ<i>G</i><sub>cav</sub></td><td>空穴形成能</td><td>在溶剂里"挖一个洞"要推开溶剂分子、打断它们之间的作用 → <b>正</b>（不利）。约正比于表面积</td></tr>
+<tr><td style="color:#2c6e4f">Δ<i>G</i><sub>disp</sub></td><td>色散（-排斥）能</td><td>溶质与溶剂之间的范德华吸引 → <b>负</b>。对非极性分子是主要稳定项（p23 表 11 的 CH₄）</td></tr>
+<tr><td style="color:#0b5ea8">Δ<i>G</i><sub>elec</sub></td><td>静电能</td><td>溶质电荷分布与极化介质的作用 → <b>负</b>。对离子和极性分子是主导项。PCM 主要算的就是这一项</td></tr>
+</table>
+<h3>讲解 · 三种分子表面</h3>
+<table>
+<tr><th style="width:170px">表面</th><th style="width:230px">怎么构造</th><th>用途</th></tr>
+<tr><td><b>范德华 (vdW) 表面</b></td><td>每个原子一个范德华球，取并集的外表面</td><td>最简单、好求导 → <span class="key">PCM 空穴通常用它（半径乘 1.1–1.2）</span></td></tr>
+<tr><td><b>溶剂可及表面 SAS</b><br>(Lee–Richards)</td><td>探针（水取 1.4 Å）贴着原子滚，记录<b>球心</b>轨迹</td><td>比 vdW 面向外扩一个探针半径；Δ<i>G</i><sub>cav</sub> 常正比于 SAS 面积</td></tr>
+<tr><td><b>溶剂排除表面 SES</b><br>(Connolly)</td><td>记录探针上<b>离原子最近的点</b>；由"接触面"+"再入面"组成</td><td>填平了溶剂进不去的小缝隙，最接近"溶剂看到的分子形状"</td></tr>
+</table>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>Δ<i>G</i><sub>solv</sub> = 空穴 + 色散 + 静电，各项符号</li>
+<li>vdW 面、SAS（球心轨迹）、SES（最近点轨迹）的区别</li></ul></div>
+</section>
+
+<section class="slide" id="p30">
+<h2><span class="pno">p30–32</span>★ 极化连续介质模型 (PCM)</h2>
+<figure class="orig"><img src="img/L06/p30.png" alt="讲义 p30" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p31.png" alt="讲义 p31" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p32.png" alt="讲义 p32" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p30）</span>
+<p><b>表观表面电荷</b>由表面内侧、垂直于表面的电势梯度分量计算：</p>
+<p><i>σ</i>(<b>r</b>) = −[(<i>ε</i>−1)/(4π<i>ε</i>)]·(∂/∂<b>n</b>)[<i>φ</i>(<b>r</b>)]<sub>in</sub></p>
+<p>得到的电荷被输入量子力学模型（细节非常复杂，见 Tomasi、Mennucci、Cammi 2005 年的综述）。</p>
+<p><b>变体</b>：① <b>积分方程形式 (IEF) PCM</b>：（Gaussian03 的默认方法）用 Poisson 方程的 Green 函数求解静电问题。② <b>IPCM</b>：用 SCF 等密度面作空穴，反复做 SCF 直到空穴不再变化。③ <b>SCIPCM</b>：在 SCF 循环内部更新空穴，SCF 与空穴同时收敛。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p31）</span>
+<p>PCM 的结果依赖于生成表面所用的原子半径（Pauling 半径来自晶体学数据，Bondi 半径还考虑了其他因素，Orozco–Luque 半径对酸性氢有例外处理）。</p>
+<p>（表：用不同半径和缩放因子在 G94 上以 PCM/DIR 计算的水合自由能 (kcal/mol)，括号内为与实验的误差。中性分子的平均绝对误差：Bondi×1.2 为 1.64，Pauling×1.2 为 1.30，Orozco–Luque×1.2 为 1.15，Pauling×1.2/1.0 为 1.05，Orozco–Luque×1.25 为 1.03。离子（CH₃COO⁻、CH₃NH₃⁺、CH₃PH₃⁺）的误差可达数 kcal/mol。）</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p32）</span>
+<p>虽然 SCIPCM 方法无疑是最好的，但它往往很贵。<b>基组效应完全不可预测——溶剂化能不会随基组增大收敛到实验值。</b></p>
+<p>Gaussian16 的 SCIPCM 实现有时出现的收敛困难，可以通过<b>把已收敛的真空 SCF 轨道作为溶剂化计算的初始猜测</b>来解决。</p>
+</div>
+<h3 class="fm">公式解析 · 表观表面电荷</h3>
+<div class="fml"><span class="tag">★ PCM 的表观表面电荷</span>
+<i>σ</i>(<b>r</b>) = − [ (<i>ε</i> − 1) ⁄ (4π<i>ε</i>) ] · ∂<i>φ</i>(<b>r</b>) ⁄ ∂<b>n</b> |<sub>in</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>σ</i>(<b>r</b>)</td><td>表观表面电荷密度</td><td><span class="key">溶剂被极化后在空穴表面上等效出现的电荷</span>（单位面积上的电荷）——真实溶剂里是溶剂分子偶极的取向，PCM 用一层表面电荷来等效</td></tr>
+<tr><td><b>r</b></td><td>空穴表面上的点</td><td>程序把表面剖分成几百到几千个小块 (tesserae)，每块放一个点电荷</td></tr>
+<tr><td><i>φ</i>(<b>r</b>)</td><td>总静电势</td><td>溶质（核 + 电子）加上表面电荷自身产生的电势</td></tr>
+<tr><td>∂/∂<b>n</b></td><td>法向导数</td><td>沿表面外法线方向的导数 = 电场的法向分量</td></tr>
+<tr><td>|<sub>in</sub></td><td>在内侧取值</td><td>在空穴内侧（溶质一侧）计算</td></tr>
+<tr><td>(<i>ε</i>−1)/(4π<i>ε</i>)</td><td>介电因子</td><td><i>ε</i> = 1（真空）时为 0 → 没有表面电荷 ✔</td></tr>
+</table>
+<h3>讲解 · PCM 算法一句话</h3>
+<p><span class="key">溶质的电荷 → 在表面上感应出 <i>σ</i> → <i>σ</i> 产生的电势作为额外的单电子项加进 Fock 矩阵 → 溶质密度改变 → <i>σ</i> 改变 → 迭代到自洽。</span>这就是 p27 的反应场循环的具体实现。</p>
+<table>
+<tr><th style="width:170px">变体</th><th>空穴怎么定</th><th>特点</th></tr>
+<tr><td><b>IEF-PCM</b></td><td>原子球并集</td><td><span class="key">Gaussian 默认（写 <code>scrf=(solvent=water)</code> 就是它）</span></td></tr>
+<tr><td><b>C-PCM / COSMO</b></td><td>原子球并集</td><td>先把溶剂当<b>导体</b>（<i>ε</i> = ∞，表面电荷使表面电势为零，好解得多），再乘校正因子 <i>f</i>(<i>ε</i>) = (<i>ε</i>−1)/(<i>ε</i>+0.5)。<span class="key">ORCA 的 <code>CPCM</code> 就是这个（p43 作业用）</span></td></tr>
+<tr><td><b>IPCM</b></td><td>电子密度等值面</td><td>空穴形状由分子自身决定，不需要选半径；外循环</td></tr>
+<tr><td><b>SCIPCM</b></td><td>等值面，SCF 内更新</td><td>讲义说最好但贵，收敛难</td></tr>
+<tr><td><b>SMD</b></td><td>原子球并集 + 参数化的非静电项</td><td>在 IEF-PCM 静电之外加上 p29 的空穴和色散项；<span class="key">算溶剂化自由能 Δ<i>G</i><sub>solv</sub> 时推荐用它</span>（Gaussian <code>scrf=(smd,solvent=water)</code>，ORCA <code>! CPCM(water)</code> + <code>%cpcm smd true end</code>）</td></tr>
+</table>
+<div class="warn"><span class="lab">p31–32 的两个实用警告</span>
+<ul>
+<li><b>结果依赖原子半径</b>：同一个分子换一套半径，水合能差 1–3 kcal/mol；离子更大（CH₃COO⁻ 在不同半径下误差从 +0.1 到 +6）。<span class="key">所以连续介质模型的溶剂化能精度大约是 1 kcal/mol（中性）和几 kcal/mol（离子）</span>，不能指望更好。</li>
+<li><b>基组效应不可预测</b>：PCM 的参数（半径）是在某个基组/方法下拟合的，换大基组不一定更接近实验——又一个"方法组合比单独升级更重要"的例子（第 4 讲 p41–42）。</li>
+<li><b>收敛技巧</b>（p32）：先在真空中算收敛，再用 <code>guess=read</code> 读入轨道做溶剂计算（第 3 讲 p60 拓展）。</li>
+</ul>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>表观表面电荷公式及每个符号含义；PCM 的自洽过程</li>
+<li>IEF-PCM、IPCM、SCIPCM 的区别；PCM 结果依赖原子半径</li></ul></div>
+</section>
+
+<section class="slide" id="p33">
+<h2><span class="pno">p33</span>显式溶剂 + PCM：混合模型</h2>
+<figure class="orig"><img src="img/L06/p33.png" alt="讲义 p33" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>对于极性分子中的超精细耦合和 <i>g</i> 因子的计算，准确处理溶剂化至关重要。</p>
+<p><b>常常需要手动加入第一溶剂层（例如氢键），即添加显式溶剂分子——连续介质溶剂化模型无法重现氢键的效应。</b></p>
+<p>（图：色氨酸阳离子自由基与中性自由基的 DFT 计算与实验 ¹³C 超精细耦合的相关图；色氨酸自由基与周围显式水分子的结构；H₂O 和 CH₃OH 在不同计算水平下溶剂化自由能与实验的差；DTBNO 自由基的 <i>g</i> 偏移随 1/<i>ε</i> 的变化。）</p>
+</div>
+<h3>讲解 · 为什么连续介质描述不了氢键</h3>
+<p>连续介质把溶剂"抹平"成一个只有 <i>ε</i> 的介质，<span class="key">没有方向、没有具体的 H 原子、没有电荷转移</span>。而氢键 X–H···Y 是强方向性的、局部的相互作用，还有少量共价（电荷转移）成分。</p>
+<figure>
+<svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style></defs>
+<rect x="10" y="10" width="500" height="150" rx="8" fill="#dbe8f5" stroke="#0b5ea8"/>
+<text x="30" y="30" class="s">外面：连续介质（PCM，ε = 78.4）——处理长程、平均的极化</text>
+<ellipse cx="260" cy="95" rx="160" ry="55" fill="#f7f9fc" stroke="#9aa5b1" stroke-dasharray="5,3"/>
+<ellipse cx="260" cy="95" rx="45" ry="28" fill="#fff" stroke="#1c1c1e" stroke-width="1.4"/>
+<text x="260" y="100" class="t" text-anchor="middle">溶质</text>
+<circle cx="160" cy="80" r="14" fill="#fde3d5" stroke="#c0392b"/><text x="160" y="84" class="s" text-anchor="middle">H₂O</text>
+<circle cx="360" cy="80" r="14" fill="#fde3d5" stroke="#c0392b"/><text x="360" y="84" class="s" text-anchor="middle">H₂O</text>
+<circle cx="260" cy="140" r="14" fill="#fde3d5" stroke="#c0392b"/><text x="260" y="144" class="s" text-anchor="middle">H₂O</text>
+<line x1="174" y1="84" x2="215" y2="92" stroke="#c0392b" stroke-dasharray="3,2"/>
+<line x1="346" y1="84" x2="305" y2="92" stroke="#c0392b" stroke-dasharray="3,2"/>
+<line x1="260" y1="126" x2="260" y2="123" stroke="#c0392b" stroke-dasharray="3,2"/>
+<text x="400" y="130" class="s">里面：显式水分子（QM）</text>
+<text x="400" y="145" class="s">处理氢键等特异作用</text>
+</svg>
+<figcaption>"簇-连续介质"混合模型：第一溶剂层用真实分子，外面用 PCM</figcaption>
+</figure>
+<div class="ext"><span class="lab">拓展 · 什么时候必须加显式溶剂</span>
+<table>
+<tr><th style="width:230px">情形</th><th>原因</th></tr>
+<tr><td><b>EPR 参数（超精细 <i>A</i>、<i>g</i>）</b>（p33 的主题）</td><td>氢键直接改变自由基的自旋密度分布——讲义图中 DTBNO 的 <i>g</i> 偏移随溶剂明显变化</td></tr>
+<tr><td><b>质子转移、酸碱反应、p<i>K</i><sub>a</sub></b></td><td>水分子直接参与反应（质子接力）</td></tr>
+<tr><td><b>阴离子</b>（尤其小阴离子 F⁻、OH⁻）</td><td>强氢键，PCM 严重低估稳定化</td></tr>
+<tr><td><b>金属离子的配位层</b></td><td>水直接配位到金属上，是化学键而不是"溶剂效应"</td></tr>
+<tr><td><b>溶剂化显色</b>（吸收峰随溶剂移动）</td><td>氢键给体/受体溶剂的特异位移</td></tr>
+</table>
+<p><b>注意</b>：加了显式水之后，结构有多种可能（水放在哪），严格做法是多取几个构型取平均，或用 MD 采样。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>连续介质模型描述不了氢键等特异作用 → 需要显式溶剂 + PCM 的混合模型</li></ul></div>
+</section>
+
+<section class="slide" id="p34">
+<h2><span class="pno">p34–35</span>Poisson–Boltzmann 模型：含离子的溶液</h2>
+<figure class="orig"><img src="img/L06/p34.png" alt="讲义 p34" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p35.png" alt="讲义 p35" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p34）</span>
+<p>（图：带正电的表面附近，溶液中的正、负离子分布。）</p>
+<p>一个电荷的能量正比于局部静电势：<i>E</i>(<b>r</b>) = <i>zeφ</i>(<b>r</b>)</p>
+<p>因此，由 Boltzmann 分布：<i>n</i><sub>+</sub> = <i>n</i><sub>0</sub> exp(−<i>zeφ</i>(<b>r</b>)/<i>kT</i>)，　<i>n</i><sub>−</sub> = <i>n</i><sub>0</sub> exp(+<i>zeφ</i>(<b>r</b>)/<i>kT</i>)</p>
+<p>局部电荷密度是正、负电荷浓度之差：<i>ρ</i>(<b>r</b>) = <i>ze</i>(<i>n</i><sub>+</sub> − <i>n</i><sub>−</sub>) = <i>zen</i><sub>0</sub>{exp[−<i>zeφ</i>/<i>kT</i>] − exp[+<i>zeφ</i>/<i>kT</i>]}</p>
+<p>而局部电荷密度又和局部静电势相联系：(∂²/∂<i>x</i>² + ∂²/∂<i>y</i>² + ∂²/∂<i>z</i>²)<i>φ</i>(<b>r</b>) = −<i>ρ</i>(<b>r</b>)/(<i>ε</i><sub>0</sub><i>ε</i>)</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p35）</span>
+<p>把两个方程合起来，得到：∇²<i>φ</i>(<b>r</b>) = −(<i>zen</i><sub>0</sub>/<i>ε</i><sub>0</sub><i>ε</i>){exp[−<i>zeφ</i>/<i>kT</i>] − exp[+<i>zeφ</i>/<i>kT</i>]}</p>
+<p>这就是 <b>Poisson–Boltzmann 方程</b>。因为它假设液体中存在独立的点电荷，所以<b>不适用于（纯）介电液体</b>。</p>
+<p>Δ<i>G</i><sub>electr</sub> = ½∫<i>ρ</i>(<b>r</b>)<i>φ</i><sub>reac</sub>(<b>r</b>)d³<b>r</b>，　<i>φ</i><sub>reac</sub>(<b>r</b>) = <i>φ</i><sub>solv</sub>(<b>r</b>) − <i>φ</i><sub>vac</sub>(<b>r</b>)</p>
+<p>方程在三维格点上数值求解。得到的<b>反应势</b>（溶剂中与真空中电势之差）决定了溶剂化 Gibbs 自由能的静电部分。</p>
+<p>（图：DNA 分子周围水（蓝）、钠离子（红）和氯离子（绿）分布的交叉眼立体图。）</p>
+</div>
+<h3 class="fm">公式解析 · 从两个已知方程拼出 PB 方程</h3>
+<div class="fml"><span class="tag">① Boltzmann：离子浓度随电势变化</span>
+<i>n</i><sub>±</sub>(<b>r</b>) = <i>n</i><sub>0</sub> exp( ∓ <i>zeφ</i>(<b>r</b>) ⁄ <i>kT</i> )
+</div>
+<div class="fml"><span class="tag">② Poisson：电荷产生电势</span>
+∇²<i>φ</i>(<b>r</b>) = − <i>ρ</i>(<b>r</b>) ⁄ (<i>ε</i><sub>0</sub><i>ε</i>)
+</div>
+<div class="fml"><span class="tag">★ ①代入② = Poisson–Boltzmann 方程</span>
+∇²<i>φ</i>(<b>r</b>) = (2<i>zen</i><sub>0</sub> ⁄ <i>ε</i><sub>0</sub><i>ε</i>) · sinh( <i>zeφ</i>(<b>r</b>) ⁄ <i>kT</i> )
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>φ</i>(<b>r</b>)</td><td>静电势</td><td>要解的未知函数</td></tr>
+<tr><td><i>z</i></td><td>离子价数</td><td>NaCl 为 1（对称 <i>z</i>:<i>z</i> 电解质）</td></tr>
+<tr><td><i>e</i></td><td>元电荷</td><td>1.602×10⁻¹⁹ C</td></tr>
+<tr><td><i>n</i><sub>0</sub></td><td>本体离子浓度</td><td>远离溶质处（<i>φ</i> = 0）正、负离子各自的数密度</td></tr>
+<tr><td><i>n</i><sub>+</sub>, <i>n</i><sub>−</sub></td><td>局部正/负离子浓度</td><td>正电势处负离子富集、正离子贫化（Boltzmann，第 2 讲 p7）</td></tr>
+<tr><td><i>k</i>, <i>T</i></td><td>Boltzmann 常数、温度</td><td><i>kT</i> 是热能尺度：热运动把离子"搅散"，与静电吸引竞争</td></tr>
+<tr><td><i>ε</i><sub>0</sub>, <i>ε</i></td><td>真空介电常数、相对介电常数</td><td>溶剂仍被当作介电常数为 <i>ε</i> 的连续介质</td></tr>
+<tr><td>sinh</td><td>双曲正弦</td><td>sinh <i>x</i> = (e<sup><i>x</i></sup> − e<sup>−<i>x</i></sup>)/2。讲义里 {exp(−…) − exp(+…)} = −2 sinh(…)，与前面的负号合并即得上式</td></tr>
+<tr><td><i>φ</i><sub>reac</sub></td><td>反应势</td><td>溶剂中电势 − 真空中电势 = 溶剂（及离子）极化带来的额外电势</td></tr>
+<tr><td>½</td><td>—</td><td>线性响应中极化能总是"相互作用能的一半"（另一半用来极化介质）</td></tr>
+</table>
+<h3>讲解 · PB 方程在描述什么</h3>
+<p>PCM（p30）的溶剂只有介电常数、没有自由离子。<span class="key">PB 在此基础上加入了溶液中可以自由移动的<b>离子</b>（盐）</span>：溶质的电荷把反号离子吸到身边、同号离子推开，形成一层"离子氛"，从而屏蔽溶质的电场。这就是讲义 p35 图中 DNA（带大量负电的磷酸骨架）周围富集 Na⁺ 的原因。</p>
+<p>讲义说"不适用于介电液体"：意思是 PB 描述的是<b>电解质溶液</b>；如果溶液里没有离子（<i>n</i><sub>0</sub> = 0），方程右边为零，就退化成纯介电的 Poisson 方程——那是 PCM 的情形。</p>
+<div class="ext"><span class="lab">拓展 · 线性化：Debye–Hückel 与 Debye 长度</span>
+<p>电势不大时（<i>zeφ</i> ≪ <i>kT</i>），sinh <i>x</i> ≈ <i>x</i>，PB 方程变成线性的：</p>
+<div class="fml" style="font-size:15px">∇²<i>φ</i> = <i>κ</i>²<i>φ</i>　，　<i>κ</i>² = 2<i>z</i>²<i>e</i>²<i>n</i><sub>0</sub> ⁄ (<i>ε</i><sub>0</sub><i>εkT</i>)　⟹　点电荷的解 <i>φ</i> ∝ e<sup>−<i>κr</i></sup> ⁄ <i>r</i></div>
+<p>电势不再按 1/<i>r</i> 衰减，而是多了一个指数"屏蔽"因子。<b>Debye 长度</b> 1/<i>κ</i> 是屏蔽的特征距离：25 °C 水中 1:1 盐 0.1 M 时约 0.96 nm，1 mM 时约 9.6 nm。<span class="key">盐越浓，屏蔽越强，静电作用越短程</span>——这就是加盐能让蛋白质沉淀（"盐析"）、能调节 DNA 双螺旋稳定性的原因。这正是物理化学里 Debye–Hückel 活度系数理论的来源。</p>
+<p><b>应用</b>：PB 方程是生物分子静电计算的标准工具（APBS、DelPhi 程序），MM-PBSA 方法用它估算蛋白-配体结合自由能。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>PB 方程 = Boltzmann 分布（离子浓度）+ Poisson 方程（电荷 → 电势）；每个符号的含义</li>
+<li>PB 与 PCM 的区别：PB 含可移动离子；Δ<i>G</i><sub>electr</sub> = ½∫<i>ρφ</i><sub>reac</sub></li></ul></div>
+</section>
+
+<section class="slide" id="p36">
+<h2><span class="pno">p36</span>氢键</h2>
+<figure class="orig"><img src="img/L06/p36.png" alt="讲义 p36" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>氢键主要是静电性质的，好的 DFT 交换-相关泛函和后 HF 方法都能充分地描述它。</b></p>
+<p>（表 12-1：不同方法与基组计算的水二聚体 <i>R</i><sub>O–O</sub> 距离相对"实验" <i>R</i><sub>e</sub> 值 2.952 Å 的偏差 [Å]。表 12-4：水二聚体的计算相互作用能 Δ<i>E</i> 与经 counterpoise 校正的相互作用能 Δ<i>E</i><sub>CP</sub> [kcal/mol]，括号内为 BSSE。）</p>
+<p><b>强的（部分共价的）氢键，例如下列这些，需要高水平的后 HF 方法。</b>（右侧三个结构：马来酸氢根类阴离子中的分子内 O–H···O；两个二甲亚砜共享一个质子的阳离子 [S=O–H···O=S]⁺；β-二酮烯醇式中的共振辅助分子内氢键。）</p>
+</div>
+<h3>讲解 · 从两张表读出的结论</h3>
+<table>
+<tr><th style="width:110px">方法</th><th style="width:170px"><i>R</i><sub>O–O</sub> 偏差（Å）</th><th style="width:170px">结合能（kcal/mol，大基组）</th><th>评价</th></tr>
+<tr><td><b>HF</b></td><td class="c">+0.08（太长）</td><td class="c">—</td><td>没有色散和相关，结合偏弱</td></tr>
+<tr><td><b>MP2 / CCSD(T)</b></td><td class="c">−0.03 ~ −0.06</td><td class="c">—</td><td>可靠（实验结合能约 5.0）</td></tr>
+<tr><td><b>SVWN (LDA)</b></td><td class="c"><span style="color:#c0392b"><b>−0.24（太短）</b></span></td><td class="c"><span style="color:#c0392b"><b>约 9</b></span></td><td><span class="key">LDA 严重<b>过度结合</b>（第 5 讲 p24）</span></td></tr>
+<tr><td><b>BLYP</b></td><td class="c">−0.00 ~ −0.04</td><td class="c">约 4.2</td><td>好</td></tr>
+<tr><td><b>SLYP</b></td><td class="c">−0.29</td><td class="c">约 11.5</td><td>很差（只有 LDA 交换 + LYP 相关）</td></tr>
+<tr><td><b>BVWN</b></td><td class="c">+0.12</td><td class="c">约 2.9</td><td>偏弱（GGA 交换 + LDA 相关）</td></tr>
+<tr><td><b>B3LYP</b></td><td class="c">−0.03 ~ −0.07</td><td class="c">—</td><td>好</td></tr>
+</table>
+<div class="step"><div class="sh">两条要点</div>
+<ul>
+<li><b>交换和相关必须"配套"</b>：SLYP 和 BVWN 都是"一半 LDA 一半 GGA"的混搭，误差方向相反且都很大；BLYP（两边都是 GGA）就很好。<span class="key">这再次说明第 5 讲 p25 讲的"DFT 交换与相关的误差互相抵消"——拆开搭配就失去了抵消。</span></li>
+<li><b>BSSE 随基组增大而减小</b>：表 12-4 括号里的 BSSE 从 6-31++G(d,p) 的约 1 kcal/mol 降到 aug-cc-pVQZ 的约 0——和第 4 讲 p37–38 一致。水二聚体结合能只有约 5 kcal/mol，小基组下 BSSE 占 20%。</li>
+</ul>
+</div>
+<div class="ext"><span class="lab">拓展 · 氢键的强弱分类</span>
+<table>
+<tr><th style="width:100px">强度</th><th style="width:170px">能量（kcal/mol）</th><th>特征与计算要求</th></tr>
+<tr><td><b>弱</b></td><td>&lt; 4</td><td>C–H···O 等；色散占相当比例 → DFT 需加 D3</td></tr>
+<tr><td><b>中等</b></td><td>4–15</td><td>水、醇、酰胺之间；主要是静电 → 好的 GGA/杂化泛函就够（讲义第一句话）</td></tr>
+<tr><td><b>强</b></td><td>15–40</td><td>带电辅助（离子型）、共振辅助；质子几乎居中、有明显共价成分和电荷转移 → <span class="key">讲义右侧三个例子，需要高水平方法</span>，因为 DFT 的自相互作用误差会过度稳定"质子共享"的离域结构（第 5 讲 p33）</td></tr>
+</table>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>氢键主要是静电作用；LDA 过度结合、GGA/杂化与 MP2 可靠</li>
+<li>强（部分共价）氢键需要后 HF 方法</li></ul></div>
+</section>
+
+<section class="slide" id="p37">
+<h2><span class="pno">p37–38</span>★ 非共价相互作用：范德华与芳环堆积</h2>
+<figure class="orig"><img src="img/L06/p37.png" alt="讲义 p37" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p38.png" alt="讲义 p38" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p37）</span>
+<p>范德华相互作用和芳环堆积是由于两个分子在靠近时<b>相互极化</b>造成的：</p>
+<p><i>Ĥ</i> = <i>Ĥ</i><sub>A</sub> + <i>Ĥ</i><sub>B</sub> + <i>Ĥ</i><sub>AB</sub>；　<i>Ĥ</i><sub>AB</sub> = Σ<sub><i>a</i>∈A</sub>Σ<sub><i>b</i>∈B</sub> <i>z</i><sub><i>a</i></sub><i>z</i><sub><i>b</i></sub>/<i>r</i><sub><i>ab</i></sub></p>
+<p><i>E</i> = <i>E</i><sub>A</sub> + <i>E</i><sub>B</sub> + ⟨0<sub>A</sub>0<sub>B</sub>|<i>Ĥ</i><sub>AB</sub>|0<sub>A</sub>0<sub>B</sub>⟩ + Σ<sub><i>nk</i></sub> ⟨0<sub>A</sub>0<sub>B</sub>|<i>Ĥ</i><sub>AB</sub>|<i>n</i><sub>A</sub><i>k</i><sub>B</sub>⟩⟨<i>n</i><sub>A</sub><i>k</i><sub>B</sub>|<i>Ĥ</i><sub>AB</sub>|0<sub>A</sub>0<sub>B</sub>⟩ ⁄ (<i>E</i><sub>0</sub><sup>(A)</sup> + <i>E</i><sub>0</sub><sup>(B)</sup> − <i>E</i><sub><i>k</i></sub><sup>(A)</sup> − <i>E</i><sub><i>n</i></sub><sup>(B)</sup>)</p>
+<p>（第三项：简单的静电作用——不够好；第四项：需要知道所有激发行列式。）</p>
+<p><b>除非某个方法准确地引入了激发行列式，否则它不太可能给出准确的范德华相互作用。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p38）</span>
+<p><b>HF、DFT 及其他单行列式方法完全无法描述范德华相互作用和芳环堆积——这些相互作用几乎完全是电子相关效应。</b></p>
+<p><b>MP2/TZ 通常给出好的结果，但 BSSE 校正对定量解释是必不可少的。</b></p>
+<p>（图 6：(a) 夹心型苯二聚体的 CCSD(T) 势能曲线；(b) SCS 类近似和 (c) DFT 方法（M05-2X、M06-2X、B3LYP-D、PBE-D）相对 CCSD(T)/CBS 的相互作用能误差。图 3：counterpoise 校正对夹心苯二聚体 MP2 势能曲线的影响。）</p>
+</div>
+<h3 class="fm">公式解析 · 分子间相互作用的微扰展开</h3>
+<div class="fml"><span class="tag">★ 二阶微扰下的分子间作用能</span>
+<i>E</i> = <i>E</i><sub>A</sub> + <i>E</i><sub>B</sub> + <span style="color:#0b5ea8">⟨0<sub>A</sub>0<sub>B</sub>|<i>Ĥ</i><sub>AB</sub>|0<sub>A</sub>0<sub>B</sub>⟩</span> + <span style="color:#c0392b">Σ′<sub><i>n</i>,<i>k</i></sub> |⟨0<sub>A</sub>0<sub>B</sub>|<i>Ĥ</i><sub>AB</sub>|<i>n</i><sub>A</sub><i>k</i><sub>B</sub>⟩|² ⁄ (<i>E</i><sub>0</sub><sup>A</sup> + <i>E</i><sub>0</sub><sup>B</sup> − <i>E</i><sub><i>n</i></sub><sup>A</sup> − <i>E</i><sub><i>k</i></sub><sup>B</sup>)</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Ĥ</i><sub>A</sub>, <i>Ĥ</i><sub>B</sub></td><td>各分子自己的哈密顿量</td><td>把两个分子分开时各自的完整哈密顿量</td></tr>
+<tr><td><i>Ĥ</i><sub>AB</sub></td><td>分子间相互作用算符</td><td>A 中每个带电粒子 <i>a</i>（电子和核）与 B 中每个带电粒子 <i>b</i> 之间的库仑作用。<span class="key">这就是第 4 讲 p28 微扰论里的 <i>Ĥ</i><sub>1</sub></span></td></tr>
+<tr><td><i>z</i><sub><i>a</i></sub>, <i>z</i><sub><i>b</i></sub></td><td>粒子电荷</td><td>电子为 −1，核为 +<i>Z</i></td></tr>
+<tr><td>|0<sub>A</sub>0<sub>B</sub>⟩</td><td>两分子都在基态</td><td>零阶波函数：A、B 基态波函数的乘积</td></tr>
+<tr><td>|<i>n</i><sub>A</sub><i>k</i><sub>B</sub>⟩</td><td>A 处于态 <i>n</i>、B 处于态 <i>k</i></td><td>激发态乘积；Σ′ 表示排除 <i>n</i> = <i>k</i> = 0</td></tr>
+<tr><td><i>E</i><sub>0</sub><sup>A</sup>, <i>E</i><sub><i>n</i></sub><sup>A</sup></td><td>A 的基态、第 <i>n</i> 激发态能量</td><td>分母永远为负（激发态更高）→ 二阶项永远使能量<b>降低</b>（第 4 讲 p35）</td></tr>
+</table>
+<p style="font-size:13px;color:#6b6b70">小笔误：讲义分母写成 <i>E</i><sub><i>k</i></sub><sup>(A)</sup> − <i>E</i><sub><i>n</i></sub><sup>(B)</sup>，与分子里的 <i>n</i><sub>A</sub><i>k</i><sub>B</sub> 标签对调了；应为 A 取 <i>n</i>、B 取 <i>k</i>。</p>
+<h3>讲解 · 把二阶项拆开：诱导与色散</h3>
+<table>
+<tr><th style="width:130px">项</th><th style="width:170px">哪些 (<i>n</i>, <i>k</i>)</th><th>物理</th></tr>
+<tr><td><b>一阶：静电</b></td><td>基态-基态</td><td>两个<b>不变形</b>的电荷分布之间的库仑作用（偶极-偶极等）。讲义说"不够好"</td></tr>
+<tr><td><b>二阶：诱导</b></td><td><i>n</i>≠0, <i>k</i>=0 或 <i>n</i>=0, <i>k</i>≠0</td><td>一个分子的电场让<b>另一个</b>分子极化变形（永久偶极-诱导偶极）</td></tr>
+<tr><td><b>二阶：色散</b></td><td><span class="key"><i>n</i>≠0 <b>且</b> <i>k</i>≠0</span></td><td><span class="key">两个分子<b>同时</b>被激发</span>——瞬时涨落的偶极互相关联。这就是 London 色散力</td></tr>
+</table>
+<div class="warn"><span class="lab">这一页解释了第 5 讲 p32 的"DFT 算不出色散"的根源</span>
+<p>色散项要求 A 和 B <b>同时</b>激发，在超分子的波函数语言里就是"一个电子在 A 上激发、一个电子在 B 上激发"——一个<b>双激发</b>行列式（两个电子的关联运动）。</p>
+<ul>
+<li><b>HF</b>：只有一个行列式，没有任何激发 → 色散 = 0</li>
+<li><b>常规 DFT</b>：也是一个行列式，局域泛函又看不到远处（第 5 讲 p32）→ 色散 ≈ 0</li>
+<li><b>MP2 / CCSD(T)</b>：包含双激发（第 4 讲）→ 能算出色散</li>
+</ul>
+<p>讲义说 "almost entirely electron correlation effects" 正是这个意思。补救：DFT 加 Grimme D3（第 5 讲 p35）——p38 图 (c) 里 B3LYP-D、PBE-D 的误差已降到约 0.5 kcal/mol 以内，所以"DFT 完全失败"严格说只对<b>不加色散校正</b>的 DFT 成立。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 从 p38 的苯二聚体图读出什么</span>
+<table>
+<tr><th style="width:230px">观察</th><th>结论</th></tr>
+<tr><td>(a) CCSD(T)/CBS 的夹心苯二聚体结合能约 −1.7 kcal/mol，平衡间距约 3.9 Å</td><td>这是基准值</td></tr>
+<tr><td>图 3：MP2/aDZ 不做 CP 约 −6，做 CP 约 −2.9；MP2/CBS 约 −3.3</td><td><span class="key">① 小基组下 BSSE 巨大（比结合能本身还大）；② 即使在 CBS 极限，MP2 也把 π–π 堆积高估约一倍</span>（第 4 讲 p36 拓展：MP2 高估色散）</td></tr>
+<tr><td>(b) SCS-MP2 类方法误差约 0.1–0.2</td><td>对同自旋/异自旋分量重新标度能大幅修正 MP2 的高估</td></tr>
+</table>
+<p>所以讲义那句"MP2/TZ 通常给出好的结果"对氢键、极性体系成立；<b>对 π 堆积要小心</b>，更推荐 SCS-MP2、DLPNO-CCSD(T)（p14）或 DFT-D3。</p>
+<p><b>London 公式</b>（从上面的二阶式取近似得到）：<i>E</i><sub>disp</sub> ≈ −(3/2)·[<i>I</i><sub>A</sub><i>I</i><sub>B</sub>/(<i>I</i><sub>A</sub>+<i>I</i><sub>B</sub>)]·<i>α</i><sub>A</sub><i>α</i><sub>B</sub>/<i>R</i>⁶（<i>I</i> 电离能，<i>α</i> 极化率）——<span class="key">色散正比于两分子极化率之积、按 <i>R</i>⁻⁶ 衰减</span>，这正是 D3 里 <i>C</i>₆/<i>R</i>⁶ 的物理来源。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>分子间作用的微扰分解：静电（一阶）、诱导与色散（二阶）；色散需要两个分子同时激发</li>
+<li>为什么 HF 和常规 DFT 算不出色散；MP2 需 BSSE 校正、且会高估 π 堆积</li></ul></div>
+</section>
+
+<section class="slide" id="p39">
+<h2><span class="pno">p39–40</span>★ UV/Vis 光谱</h2>
+<figure class="orig"><img src="img/L06/p39.png" alt="讲义 p39" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p40.png" alt="讲义 p40" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p39）</span>
+<p>准确的<b>垂直激发能</b>通常由组态相互作用计算得到（激发行列式很昂贵）：</p>
+<p>Δ<i>E</i><sub><i>k</i></sub> = ⟨Ψ<sub><i>k</i></sub>|<i>Ĥ</i>|Ψ<sub><i>k</i></sub>⟩ − ⟨Ψ<sub>0</sub>|<i>Ĥ</i>|Ψ<sub>0</sub>⟩</p>
+<p>跃迁概率用微扰论计算：<b>d</b><sub><i>kn</i></sub> = ⟨Ψ<sub><i>k</i></sub>|<b>d̂</b>|Ψ<sub><i>n</i></sub>⟩，<b>d̂</b> = <i>e</i><b>r</b></p>
+<p><b>基态与激发态的能量极小点不一定重合：</b></p>
+<p>（三张图：<b>垂直吸收</b>、<b>垂直发射</b>、<b>绝热激发</b>。横轴为坐标，纵轴为能量，绿色为基态势能曲线，蓝色为激发态势能曲线。）</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p40）</span>
+<p>关于精度的说明：</p>
+<ol>
+<li>能量精度由所用方法决定——<b>大基组下的 CISD、CCSD 及更高方法强烈推荐</b>。</li>
+<li>谱线宽度由电子结构动力学决定，目前无法计算。</li>
+<li>跃迁矩只是定性正确的。</li>
+<li>所有关于缺少振动平均、溶剂效应等的标准警告都适用。</li>
+</ol>
+<p><b>注意：在许多情况下双激发有显著贡献。</b></p>
+</div>
+<h3 class="fm">公式解析 · 激发能与跃迁偶极矩</h3>
+<div class="fml"><span class="tag">★ 激发能</span>
+Δ<i>E</i><sub><i>k</i></sub> = ⟨Ψ<sub><i>k</i></sub>|<i>Ĥ</i>|Ψ<sub><i>k</i></sub>⟩ − ⟨Ψ<sub>0</sub>|<i>Ĥ</i>|Ψ<sub>0</sub>⟩ = <i>E</i><sub><i>k</i></sub> − <i>E</i><sub>0</sub>
+</div>
+<div class="fml"><span class="tag">★ 跃迁偶极矩与振子强度</span>
+<b>d</b><sub><i>k</i>0</sub> = ⟨Ψ<sub><i>k</i></sub>| <i>e</i><b>r</b> |Ψ<sub>0</sub>⟩　，　<i>f</i> = (2/3) Δ<i>E</i><sub><i>k</i></sub> |<b>d</b><sub><i>k</i>0</sub>|²（原子单位）
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Ψ<sub>0</sub>, Ψ<sub><i>k</i></sub></td><td>基态、第 <i>k</i> 激发态</td><td>用 CI（第 4 讲 p13：CI 矩阵的高本征值就是激发态）、EOM-CCSD 或 TD-DFT 得到</td></tr>
+<tr><td>Δ<i>E</i><sub><i>k</i></sub></td><td>激发能</td><td>对应吸收峰位置。波长 <i>λ</i>(nm) = 1239.84 / Δ<i>E</i>(eV)</td></tr>
+<tr><td><b>d̂</b> = <i>e</i><b>r</b></td><td>电偶极算符</td><td>第 2 讲 p16 拓展</td></tr>
+<tr><td><b>d</b><sub><i>kn</i></sub></td><td>跃迁偶极矩</td><td><span class="key">为零 → 跃迁"禁阻"，不出峰</span>；越大 → 峰越强</td></tr>
+<tr><td><i>f</i></td><td>振子强度</td><td>无量纲，程序输出的"<i>f</i>="就是它（第 5 讲 p45 拓展）。<i>f</i> &gt; 0.1 为强吸收</td></tr>
+</table>
+<h3>讲解 · 三种"激发能"的区别（Franck–Condon 原理）</h3>
+<figure>
+<svg viewBox="0 0 540 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style>
+<marker id="up6" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto"><path d="M0,7 L4,0 L8,7" fill="none" stroke="#1c1c1e" stroke-width="1.4"/></marker></defs>
+<line x1="40" y1="200" x2="500" y2="200" stroke="#9aa5b1"/>
+<text x="270" y="216" class="s" text-anchor="middle">核坐标（例如某个键长）</text>
+<path d="M70,60 C 120,195 170,195 220,150 C 280,100 380,95 500,95" fill="none" stroke="#2c6e4f" stroke-width="2.2"/>
+<text x="480" y="112" class="s" fill="#2c6e4f">S₀ 基态</text>
+<path d="M130,20 C 190,120 250,120 300,85 C 350,55 420,50 500,48" fill="none" stroke="#0b5ea8" stroke-width="2.2"/>
+<text x="480" y="40" class="s" fill="#0b5ea8">S₁ 激发态</text>
+<line x1="148" y1="182" x2="148" y2="72" stroke="#c0392b" stroke-width="1.8" marker-end="url(#up6)"/>
+<text x="120" y="130" class="s" fill="#c0392b" text-anchor="end">垂直吸收</text>
+<line x1="220" y1="112" x2="220" y2="152" stroke="#b3541e" stroke-width="1.8" marker-end="url(#up6)" transform="rotate(180 220 132)"/>
+<text x="228" y="140" class="s" fill="#b3541e">垂直发射</text>
+<line x1="148" y1="183" x2="230" y2="183" stroke="#9aa5b1" stroke-dasharray="3,3"/>
+<line x1="220" y1="111" x2="300" y2="111" stroke="#9aa5b1" stroke-dasharray="3,3"/>
+<line x1="290" y1="183" x2="290" y2="111" stroke="#1c1c1e" stroke-width="1.4"/>
+<text x="296" y="152" class="s">绝热激发</text>
+<text x="296" y="166" class="s">(两极小点之差)</text>
+<text x="360" y="150" class="s">Stokes 位移 = 吸收 − 发射</text>
+</svg>
+<figcaption>吸收和发射都是"竖直"的（核来不及动），所以吸收 &gt; 绝热 &gt; 发射</figcaption>
+</figure>
+<table>
+<tr><th style="width:130px">类型</th><th style="width:230px">怎么算</th><th>对应实验</th></tr>
+<tr><td><b>垂直吸收</b></td><td>在<b>基态</b>优化结构上算激发能</td><td>吸收光谱的<b>峰值</b>（<i>λ</i><sub>max</sub>）</td></tr>
+<tr><td><b>垂直发射</b></td><td>在<b>激发态</b>优化结构上算 S₁ − S₀ 能量差</td><td>荧光光谱的峰值</td></tr>
+<tr><td><b>绝热激发</b></td><td><i>E</i>(S₁ 在 S₁ 结构) − <i>E</i>(S₀ 在 S₀ 结构)</td><td>0–0 跃迁（加零点能校正后），光谱的起点</td></tr>
+</table>
+<p><b>为什么是"竖直"的</b>：<span class="key">Franck–Condon 原理</span>——电子跃迁约 10⁻¹⁵ s，核振动约 10⁻¹³ s，跃迁瞬间核来不及移动（和第 2 讲 p78 的 BO 近似是同一个道理）。于是从基态极小点"竖直"跳到激发态曲线上；之后分子在激发态上弛豫到新的极小点，再"竖直"掉回基态。<b>这三个数都是 p41–43 实践题要比较的东西。</b></p>
+<div class="warn"><span class="lab">p40 的精度警告，逐条对应到前面几讲</span>
+<table>
+<tr><th style="width:190px">讲义说</th><th>原因</th></tr>
+<tr><td>推荐 CISD、CCSD 及以上 + 大基组</td><td>激发态电子分布更弥散（需要弥散函数），相关效应和基态不同</td></tr>
+<tr><td>线宽算不出来</td><td>线宽来自振动结构、激发态寿命、溶剂涨落——单点能计算只给出一根"棍子"</td></tr>
+<tr><td>跃迁矩只定性正确</td><td>跃迁偶极对波函数质量比能量更敏感（第 3 讲 p28：变分原理只保护能量）</td></tr>
+<tr><td><b>双激发贡献显著</b></td><td><span class="key">TD-DFT 和 CIS 只包含单激发</span>，漏掉双激发特征的态（多烯的暗态等，第 5 讲 p45）→ 需 CASPT2 / EOM-CCSD</td></tr>
+</table>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>激发能 Δ<i>E</i><sub><i>k</i></sub> 与跃迁偶极 <b>d</b><sub><i>kn</i></sub> 的定义；跃迁偶极为零 → 禁阻</li>
+<li><b>垂直吸收、垂直发射、绝热激发的区别</b>（能画图）；Franck–Condon 原理；Stokes 位移</li></ul></div>
+</section>
+
+<section class="slide" id="p41">
+<h2><span class="pno">p41–43</span>实践：水中苯酚的最低激发态</h2>
+<figure class="orig"><img src="img/L06/p41.png" alt="讲义 p41" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p42.png" alt="讲义 p42" loading="lazy"></figure>
+<figure class="orig"><img src="img/L06/p43.png" alt="讲义 p43" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p41）</span>
+<p><b>主任务</b>：计算溶于水的苯酚 (C₆H₅–OH) 的最低激发态能量。</p>
+<p><b>子任务 1：气相——基态几何</b></p>
+<ol>
+<li>打开 GaussView，构建苯酚的分子结构。</li>
+<li>用 DFT (BP86) 优化分子结构，计算振动频率，检查是否全部为正（没有虚频）。<code>! BP86 def2-SVP TightSCF TightOpt Freq</code></li>
+<li>用含时 DFT 优化第一激发态。<code>! BP86 def2-SVP TightSCF KeepDens</code>；<code>%tddft Nroots 2（要计算的激发态数目）MaxDim 5 FollowIRoot 1 end</code></li>
+</ol>
+</div>
+<div class="tr"><span class="lab">原文翻译（p42）</span>
+<p><b>子任务 2：气相——第一激发态几何优化</b></p>
+<ol>
+<li>设置计算，把几何优化到第一激发态。</li>
+<li>用 DFT (BP86) 优化分子结构，计算振动频率，检查是否全部为实数且为正。<code>! BP86 def2-SVP TightSCF TightOpt Freq Keepdens</code>；<code>%tddft Nroots 2 MaxDim 5 IRoot 2（选择要做几何优化的激发态，这里是第 2 个）FollowIRoot 1 end</code></li>
+<li>比较子任务 1 和子任务 2 得到的分子几何。</li>
+<li>比较子任务 1 和子任务 2 得到的第一激发态能量。</li>
+</ol>
+</div>
+<div class="tr"><span class="lab">原文翻译（p43）</span>
+<p><b>子任务 3：在水作为溶剂存在下做几何优化（导体型极化连续介质模型，CPCM）</b></p>
+<p>&gt;&gt; 基态优化：① 设置用水作隐式溶剂的基态几何优化；② 用 DFT (BP86) 优化结构并计算频率，检查全部为实数且为正。</p>
+<p>&gt;&gt; 激发态优化：① 设置用水作隐式溶剂的第一激发态几何优化；② 同上。</p>
+<p>把得到的几何与子任务 1、2 的气相几何比较。把第一激发态能量与子任务 1、2 的气相激发能比较。</p>
+<p><code>!CPCM(solvent)</code>　# ORCA 输入。你可以用 Gaussian 或 ORCA 完成这些任务。在 Gaussian 中，溶剂由 SCRF 关键词指定（gaussian.com/scrf/）。</p>
+</div>
+<h3 class="fm">逐项解析 · ORCA 的 %tddft 块</h3>
+<table>
+<tr><th style="width:160px">关键词</th><th>含义</th></tr>
+<tr><td><code>BP86</code></td><td>纯 GGA 泛函（Becke88 交换 + Perdew86 相关，第 5 讲 p29 的命名规则）。便宜；苯酚的最低激发是 ππ* 局域激发，GGA 可以给出合理趋势（电荷转移激发则要换范围分离泛函，第 5 讲 p34）</td></tr>
+<tr><td><code>Nroots 2</code></td><td>求最低的 2 个激发态（Davidson 迭代求 CI 型矩阵最低几个本征值，第 1 讲 p18 拓展）</td></tr>
+<tr><td><code>MaxDim 5</code></td><td>Davidson 迭代展开空间的大小（相对于 Nroots 的倍数）；越大越稳但越耗内存</td></tr>
+<tr><td><code>IRoot n</code></td><td><span class="key">几何优化 / 频率 / 性质针对第 <i>n</i> 个激发态</span></td></tr>
+<tr><td><code>FollowIRoot</code></td><td>优化过程中按波函数重叠<b>追踪</b>同一个态——几何变化时激发态的能量顺序可能交换（S₁ 和 S₂ 交叉），不追踪就会中途"跳"到另一个态上</td></tr>
+<tr><td><code>KeepDens</code></td><td>保存激发态密度，便于之后分析（差分密度、电荷转移程度）</td></tr>
+<tr><td><code>CPCM(Water)</code></td><td>p30 拓展里的导体型 PCM；Gaussian 对应 <code>scrf=(cpcm,solvent=water)</code></td></tr>
+</table>
+<div class="warn"><span class="lab">⚠ 讲义输入里两处要改（照抄会算错或算不出来）</span>
+<ol>
+<li><b>子任务 1 第 3 步不是优化</b>：输入里没有 <code>Opt</code>，所以它是在<b>基态结构上</b>做 TD-DFT 单点——得到的是<b>垂直吸收</b>能（p39），这正是要的；"优化第一激发态"其实是子任务 2 的内容。此外两段 <code>%tddft</code> 输入都要补上坐标块（或 <code>* xyzfile 0 1 xxx.xyz</code> 读入上一步优化好的结构）。</li>
+<li><b>子任务 2 应为 <code>IRoot 1</code></b>：任务是"优化到<b>第一</b>激发态"，而讲义写的是 <code>IRoot 2</code>（注释也说"这里是第 2 个"），那会去优化第二激发态。</li>
+</ol>
+<p>另外：激发态频率在一些 ORCA 版本里没有解析二阶导，<code>Freq</code> 报错时改用 <code>NumFreq</code>（数值频率，慢但通用）。</p>
+</div>
+<h3>讲解 · 三个子任务要比较的到底是什么</h3>
+<table>
+<tr><th style="width:150px">子任务</th><th style="width:230px">得到的量</th><th>对应 p39 的哪个概念</th></tr>
+<tr><td>1：S₀ 结构上的 TD-DFT</td><td>S₁ 的能量（相对 S₀）</td><td><b>垂直吸收</b></td></tr>
+<tr><td>2：优化 S₁ 结构</td><td>S₁ 极小点的结构和能量</td><td>与子任务 1 的 S₀ 能量相减 → <b>绝热激发</b>；在 S₁ 结构上 S₁ − S₀ → <b>垂直发射</b></td></tr>
+<tr><td>3：水中重复 1、2</td><td>溶剂中的吸收、绝热激发</td><td><b>溶剂化显色位移</b>：溶剂对 S₀ 和 S₁ 的稳定程度不同</td></tr>
+</table>
+<p><b>结构上预期看到的</b>：苯酚 S₁ 是 ππ* 激发，一个电子进入反键 π* 轨道 → 苯环 C–C 键平均<b>变长</b>、环略微扩张；参考值：气相苯酚 S₁ 的 0–0 跃迁实验值约 4.51 eV（约 275 nm）。GGA 泛函一般会低估激发能。</p>
+<div class="ext"><span class="lab">拓展 · 溶剂中的激发态：平衡与非平衡溶剂化</span>
+<p>溶剂的极化有两部分：<b>电子极化</b>（溶剂分子的电子云，瞬时跟上）和<b>取向极化</b>（溶剂分子转动，约皮秒）。</p>
+<table>
+<tr><th style="width:170px">过程</th><th>溶剂怎么响应</th></tr>
+<tr><td><b>垂直吸收</b>（10⁻¹⁵ s）</td><td>只有电子极化跟得上 → 用光学介电常数 <i>ε</i><sub>∞</sub> = <i>n</i>²（水约 1.78）→ <b>非平衡溶剂化</b></td></tr>
+<tr><td><b>激发态几何优化 / 发射</b></td><td>溶剂已完全重新取向 → 用静态介电常数 <i>ε</i>（水 78.4）→ <b>平衡溶剂化</b></td></tr>
+</table>
+<p>这是 Franck–Condon 原理（p39）在溶剂上的推广。不同程序、不同计算类型的默认设置不一样，做子任务 3 时要在输出里确认用的是哪一种。另外，苯酚的 OH 与水有氢键，按 p33 的建议，更严格的做法是加几个显式水分子再套 CPCM。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>TD-DFT 输入关键词（Nroots、IRoot、FollowIRoot）；隐式溶剂关键词</li>
+<li>如何由三组计算得到垂直吸收、垂直发射、绝热激发能</li></ul></div>
+</section>
+
+<section class="slide" id="sum">
+<h2>本讲小结</h2>
+<h3>一、三块内容一张表</h3>
+<table>
+<tr><th style="width:130px">板块</th><th style="width:230px">核心内容</th><th>一句话</th></tr>
+<tr><td><b>波函数分析</b></td><td>Mulliken / Löwdin / Bader / Hirshfeld 电荷；键级；MEP；轨道定域化</td><td><span class="key">原子电荷不是可观测量，只是不同的"分法"；静电势是可观测量</span></td></tr>
+<tr><td><b>相对论</b></td><td>Dirac 方程；Pauli 哈密顿量四项；标量相对论 vs SOC；1C/2C/4C</td><td>重元素内层电子速度 ≈ <i>Z</i>/137 <i>c</i>，s/p 收缩、d/f 扩张</td></tr>
+<tr><td><b>环境</b></td><td>显式水模型；PCM；PB；氢键；色散；UV/Vis</td><td>隐式溶剂管平均静电，显式溶剂管氢键；色散需要双激发</td></tr>
+</table>
+<h3>二、必须记住的公式</h3>
+<table>
+<tr><th style="width:260px">公式</th><th style="width:70px">页码</th><th>一句话</th></tr>
+<tr><td><i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub>(<b>PS</b>)<sub><i>μμ</i></sub></td><td class="c">p5</td><td>Mulliken 电荷（讲义式的 ½ 已订正）</td></tr>
+<tr><td><i>N</i> = Tr(<b>PS</b>) = Tr(<b>S</b><sup>½</sup><b>PS</b><sup>½</sup>)</td><td class="c">p6</td><td>Löwdin：换一种拆法</td></tr>
+<tr><td>∇<i>ρ</i>·<b>n</b> = 0</td><td class="c">p7</td><td>Bader 零通量面</td></tr>
+<tr><td><i>w</i><sub>A</sub> = <i>ρ</i><sub>A</sub><sup>0</sup>/Σ<i>ρ</i><sub>B</sub><sup>0</sup></td><td class="c">p8</td><td>Hirshfeld 股份</td></tr>
+<tr><td><i>ϕ</i>(<b>r</b>) = Σ<i>Z</i><sub>A</sub>/|<b>R</b><sub>A</sub>−<b>r</b>| − ∫<i>ρ</i>/|<b>r</b>′−<b>r</b>|</td><td class="c">p10</td><td>静电势：核正、电子负</td></tr>
+<tr><td><i>m</i> = <i>m</i><sub>0</sub>/√(1−<i>v</i>²/<i>c</i>²)</td><td class="c">p15</td><td>相对论质量增加</td></tr>
+<tr><td>[<i>c</i><b>α</b>·<b>p</b> + <i>βmc</i>²]Ψ = <i>i</i>∂Ψ/∂<i>t</i></td><td class="c">p16</td><td>Dirac 方程，4 分量</td></tr>
+<tr><td><i>p</i>²/2<i>m</i> + <i>V</i> − <i>p</i>⁴/8<i>m</i>³<i>c</i>² + SOC + Darwin</td><td class="c">p18</td><td>Pauli 哈密顿量</td></tr>
+<tr><td>Δ<i>G</i><sub>Born</sub> = −(1−1/<i>ε</i>)<i>q</i>²/2<i>R</i></td><td class="c">p28</td><td>球形空穴中的离子</td></tr>
+<tr><td>Δ<i>G</i><sub>solv</sub> = Δ<i>G</i><sub>cav</sub> + Δ<i>G</i><sub>disp</sub> + Δ<i>G</i><sub>elec</sub></td><td class="c">p29</td><td>溶剂化自由能分解</td></tr>
+<tr><td><i>σ</i> = −[(<i>ε</i>−1)/4π<i>ε</i>]∂<i>φ</i>/∂<b>n</b></td><td class="c">p30</td><td>PCM 表观表面电荷</td></tr>
+<tr><td>∇²<i>φ</i> = (2<i>zen</i><sub>0</sub>/<i>ε</i><sub>0</sub><i>ε</i>) sinh(<i>zeφ</i>/<i>kT</i>)</td><td class="c">p35</td><td>Poisson–Boltzmann</td></tr>
+<tr><td>Δ<i>E</i><sub><i>k</i></sub> = <i>E</i><sub><i>k</i></sub> − <i>E</i><sub>0</sub>；<b>d</b><sub><i>kn</i></sub> = ⟨Ψ<sub><i>k</i></sub>|<i>e</i><b>r</b>|Ψ<sub><i>n</i></sub>⟩</td><td class="c">p39</td><td>激发能与跃迁偶极</td></tr>
+</table>
+<h3>三、讲义中已订正的地方（考试时写清楚你用的形式）</h3>
+<table>
+<tr><th style="width:70px">页码</th><th style="width:230px">讲义写的</th><th>应为</th></tr>
+<tr><td class="c">p5</td><td>跨原子项前乘 ½</td><td>不乘 ½（H₂ 验证：否则中性分子两端都带正电）</td></tr>
+<tr><td class="c">p15</td><td>"外层轨道变得更弥散"</td><td>只对 d、f 成立；价层 s（如 Au 6s）也收缩</td></tr>
+<tr><td class="c">p28</td><td>Onsager 式乘 [1 − <i>x</i>]</td><td>乘 [1 − <i>x</i>]<sup>−1</sup>（极化应增强稳定化）</td></tr>
+<tr><td class="c">p37</td><td>分母 <i>E</i><sub><i>k</i></sub><sup>(A)</sup>、<i>E</i><sub><i>n</i></sub><sup>(B)</sup></td><td>与分子一致：<i>E</i><sub><i>n</i></sub><sup>(A)</sup>、<i>E</i><sub><i>k</i></sub><sup>(B)</sup></td></tr>
+<tr><td class="c">p42</td><td><code>IRoot 2</code></td><td>优化第一激发态用 <code>IRoot 1</code></td></tr>
+</table>
+<h3>四、最可能考的概念题</h3>
+<table>
+<tr><th style="width:44%">问题</th><th>答题要点</th></tr>
+<tr><td><b>Mulliken 电荷怎么算？有什么问题？</b></td><td>同原子全给、跨原子平分；布居可 &gt;2 或负、平分无依据、依赖基组、不重现多极矩（p5–6）</td></tr>
+<tr><td>Löwdin 怎么改进</td><td>Tr(<b>PS</b>) = Tr(<b>S</b><sup>½</sup><b>PS</b><sup>½</sup>)，在正交化基上布居（p6）</td></tr>
+<tr><td><b>比较 Mulliken、Bader、Hirshfeld</b></td><td>基函数划分 / 零通量面实空间划分 / 按自由原子密度比例划分（p5–8）</td></tr>
+<tr><td>为什么说原子电荷不是可观测量；什么是可观测的</td><td>没有对应算符，依赖划分约定；静电势、密度是可观测的（p5, p10）</td></tr>
+<tr><td><b>为什么可以定域化轨道？定域轨道有轨道能吗？</b></td><td>行列式在幺正变换下不变；定域轨道不是 Fock 本征函数，没有轨道能（p12–13）</td></tr>
+<tr><td>Boys、ER、PM 判据；香蕉键</td><td>质心距离 / 自排斥 / 原子布居平方；Boys/ER 把 σ+π 混成两根弯键（p12–13）</td></tr>
+<tr><td><b>为什么重元素需要相对论？对轨道有何影响？</b></td><td>1s 速度 ≈ <i>Z</i> a.u. 接近 <i>c</i> = 137；s/p 收缩（直接），d/f 扩张（间接）（p15）</td></tr>
+<tr><td>Dirac 方程与薛定谔方程的区别</td><td>时空都一阶；4 分量；自旋自动出现；有正电子态（p16–17）</td></tr>
+<tr><td><b>Pauli 哈密顿量各项</b></td><td>质量-速度（负，快电子）、SOC（<b>s</b>·<b>l</b>，<i>l</i>=0 为零）、Darwin（<i>δ</i>，只 s）；标量相对论 = 前者 + 后者（p18）</td></tr>
+<tr><td>收敛立方体</td><td>基组 × 相关 × 相对论（1C/2C/4C）三个方向（p22）</td></tr>
+<tr><td><b>显式 vs 隐式溶剂</b></td><td>隐式：只有 <i>ε</i>，便宜，管平均静电；显式：能描述氢键，贵（p23–33）</td></tr>
+<tr><td><b>PCM 的原理</b></td><td>原子球空穴 + 表面感应电荷 <i>σ</i>，与溶质自洽（SCRF）；依赖原子半径（p27–31）</td></tr>
+<tr><td>为什么介电常数大于约 20 后溶剂效应饱和</td><td>(<i>ε</i>−1)/(2<i>ε</i>+1) → ½（p28）</td></tr>
+<tr><td>PB 方程描述什么</td><td>电解质溶液中可移动离子的屏蔽；Boltzmann + Poisson（p34–35）</td></tr>
+<tr><td><b>为什么 HF/DFT 算不出色散</b></td><td>色散 = 两分子同时激发的二阶项，需要双激发；单行列式没有（p37–38）</td></tr>
+<tr><td><b>垂直吸收、垂直发射、绝热激发</b></td><td>Franck–Condon：跃迁竖直；吸收 &gt; 绝热 &gt; 发射（p39）</td></tr>
+</table>
+</section>
+
+<footer>
+CM5235 复习解析 · 第 6 讲　|　源文件：<code>CM5235_Lecture_06.pdf</code>（43 页）<br>
+上一讲：<a href="L05-密度泛函理论DFT.html">第 5 讲　密度泛函理论 (DFT)</a>　·
+<a href="00-总汇总-L1至L6.html">总汇总</a>　·
+<a href="index.html">总目录</a>
+</footer>
+
+
+
+
+</div>
+</body>
+</html>

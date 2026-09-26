@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 总汇总 · 第 1–6 讲</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0 6px}
+.g2 figure,.g1 figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px}
+.g2 img,.g1 img{width:100%;height:auto;border-radius:4px;display:block}
+.g2 figcaption,.g1 figcaption{text-align:left;font-size:13px;color:#333;margin-top:6px;line-height:1.5}
+.g2 figcaption b,.g1 figcaption b{color:var(--accent)}
+.g1{margin:12px 0}
+@media (max-width:640px){.g2{grid-template-columns:1fr}}
+.lec{border-top:3px solid var(--accent);margin-top:38px;padding-top:6px}
+.lec h2{font-size:22px;color:var(--accent);margin:6px 0 2px}
+.lec .go{font-size:13px;color:var(--muted)}
+.lec .go a{color:var(--accent)}
+table.mini td,table.mini th{padding:5px 9px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>总汇总　第 1–6 讲</h1>
+  <div class="sub">精简版：每讲 = 必背公式表 + 关键讲义原图（每图一句话）。看不懂的地方点"详解"跳到完整讲义对应页。</div>
+</header>
+
+<nav class="toc">
+<b>导航</b>
+<a href="#map">一张图看全课</a><a href="#L1">第 1 讲 计算平台</a><a href="#L2">第 2 讲 量子力学与 HF</a>
+<a href="#L3">第 3 讲 变分与 SCF</a><a href="#L4">第 4 讲 电子相关</a><a href="#L5">第 5 讲 DFT</a><a href="#L6">第 6 讲 分析/相对论/溶剂</a>
+<a href="#cmp">方法对比总表</a><a href="#sym">符号撞车对照</a><a href="#qa">高频概念题</a>
+</nav>
+
+<section class="slide" id="map">
+<h2>一张图看全课</h2>
+<figure>
+<svg viewBox="0 0 560 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="m" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#6b6b70"/></marker>
+<style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700;fill:#1c1c1e}</style></defs>
+<rect x="180" y="10" width="200" height="34" rx="6" fill="#fdeeee" stroke="#c0392b" stroke-width="1.4"/>
+<text x="280" y="26" class="t" text-anchor="middle">精确 Ĥ：解不了</text>
+<text x="280" y="39" class="s" text-anchor="middle">元凶 1/r₁₂（L2 p56）</text>
+<line x1="280" y1="46" x2="280" y2="62" stroke="#6b6b70" marker-end="url(#m)"/>
+<rect x="150" y="64" width="260" height="34" rx="6" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.4"/>
+<text x="280" y="80" class="t" text-anchor="middle">BO → 轨道近似 → Slater 行列式</text>
+<text x="280" y="93" class="s" text-anchor="middle">L2 p60–p79</text>
+<line x1="280" y1="100" x2="280" y2="116" stroke="#6b6b70" marker-end="url(#m)"/>
+<rect x="150" y="118" width="260" height="38" rx="6" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.6"/>
+<text x="280" y="134" class="t" text-anchor="middle">Hartree–Fock：平均场 + LCAO + SCF</text>
+<text x="280" y="149" class="s" text-anchor="middle">FC = SCε（L2 p86, L3 p54–69）　丢掉了：电子相关</text>
+<line x1="220" y1="158" x2="120" y2="188" stroke="#6b6b70" marker-end="url(#m)"/>
+<line x1="340" y1="158" x2="440" y2="188" stroke="#6b6b70" marker-end="url(#m)"/>
+<rect x="20" y="190" width="220" height="60" rx="6" fill="#fff8ee" stroke="#b3541e" stroke-width="1.4"/>
+<text x="130" y="208" class="t" text-anchor="middle">路线 A：加行列式（L4）</text>
+<text x="130" y="225" class="s" text-anchor="middle">MP2 · CISD · CCSD(T) · CASSCF</text>
+<text x="130" y="241" class="s" text-anchor="middle">可系统改进；贵（N⁵ ~ N!）</text>
+<rect x="320" y="190" width="220" height="60" rx="6" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.4"/>
+<text x="430" y="208" class="t" text-anchor="middle">路线 B：换 V<tspan font-size="9">xc</tspan>（L5 DFT）</text>
+<text x="430" y="225" class="s" text-anchor="middle">LDA → GGA → 杂化 → 双杂化</text>
+<text x="430" y="241" class="s" text-anchor="middle">便宜（≈HF）；无系统改进路径</text>
+<rect x="130" y="275" width="300" height="46" rx="6" fill="#f7f9fc" stroke="#9aa5b1"/>
+<text x="280" y="293" class="t" text-anchor="middle">贯穿全课的限制（L1）</text>
+<text x="280" y="310" class="s" text-anchor="middle">标度墙 N⁴→N! · 存储层级 · 对角化难并行 · 双精度</text>
+</svg>
+</figure>
+</section>
+
+<!-- ===================== L1 ===================== -->
+<div class="lec" id="L1">
+<h2>第 1 讲　课程概览与计算平台</h2>
+<div class="go">详解：<a href="L01-课程概览与计算平台.html">L01 完整讲义</a></div>
+</div>
+<table class="mini">
+<tr><th style="width:190px">必背</th><th>一句话</th></tr>
+<tr><td>考试形式</td><td>期中 15%、期末 25%，<b>只考理论/概念，不考计算</b>；四次作业各 15%</td></tr>
+<tr><td>四个软件</td><td>Gaussian 常规有机 · ORCA 光谱/磁性 · OpenMOLCAS 多组态 · VASP 固体</td></tr>
+<tr><td>延迟 vs 带宽</td><td>延迟 = 第一字节多久到；带宽 = 之后多快到。RAM 100 周期，跨节点 10⁴ 周期</td></tr>
+<tr><td>为什么双精度</td><td>总能量 ~10³ Hartree，要分辨 10⁻³，单精度 7 位全被吃光</td></tr>
+<tr><td>矩阵分解</td><td>O(<i>n</i>³)，内存不省、<b>难并行</b> → SCF 每轮对角化是瓶颈</td></tr>
+<tr><td>Amdahl</td><td><i>S</i><sub>max</sub> = 1/(1−<i>p</i>)，95% 可并行最多快 20 倍</td></tr>
+<tr><td>摩尔定律的残酷</td><td>算力翻倍，CCSD(T) 能算的体系只大 10%——进步靠算法</td></tr>
+<tr><td>集群三原则</td><td>别在登录节点跑；用 scratch；<code>%NProcShared</code>=<code>ncpus</code>、<code>%Mem</code>&lt;<code>mem</code></td></tr>
+</table>
+<div class="g1"><figure><img src="img/sum/L01_p26.png" alt="L1 p26" loading="lazy"><figcaption><b>L1 p26</b>　只有"矩阵分解"一行三项全差：内存 O(<i>n</i>³)、稀疏没用、难并行。</figcaption></figure></div>
+
+<!-- ===================== L2 ===================== -->
+<div class="lec" id="L2">
+<h2>第 2 讲　量子力学基础与 Hartree–Fock 理论</h2>
+<div class="go">详解：<a href="L02-量子力学基础与HF理论.html">L02 完整讲义</a></div>
+</div>
+<table class="mini">
+<tr><th style="width:190px">必背</th><th>一句话</th></tr>
+<tr><td>何时需要量子力学</td><td>Δ<i>E</i> ≫ <i>k</i><sub>B</sub><i>T</i>（室温 ≈ 2.5 kJ/mol）；电子跃迁是 100–400 <i>k</i><sub>B</sub><i>T</i></td></tr>
+<tr><td><i>Ĥψ</i> = <i>Eψ</i></td><td>本征值方程；量子化来自边界条件</td></tr>
+<tr><td>[<i>x̂</i>, <i>p̂</i>] = <i>iħ</i></td><td>不对易 → 不能同时确定 → 不确定性原理</td></tr>
+<tr><td>厄米</td><td>本征值必为实 → 可观测量的算符必须厄米</td></tr>
+<tr><td>Born 解释</td><td>|Ψ|² 是概率密度，Ψ 本身不可观测</td></tr>
+<tr><td>五大公设</td><td>①Ψ 描述状态 ②可观测量↔算符 ③测量值只能是本征值 ④期望值 = Σ|<i>b</i><sub><i>n</i></sub>|²<i>a</i><sub><i>n</i></sub> ⑤含时方程</td></tr>
+<tr><td>三个量子数</td><td>[<i>Ĥ</i>,<i>L̂</i>²] = [<i>Ĥ</i>,<i>L̂</i><sub><i>z</i></sub>] = 0（球对称）→ <i>n</i>, <i>l</i>, <i>m</i>；节面总数 <i>n</i>−1</td></tr>
+<tr><td>泡利</td><td><i>P̂</i><sub>12</sub>Ψ = −Ψ；Slater 行列式自动满足</td></tr>
+<tr><td><b><i>J</i> vs <i>K</i></b></td><td><i>J</i>：经典库仑，所有电子对都有；<b><i>K</i>：纯量子，仅同自旋</b>，降低能量</td></tr>
+<tr><td>Hund 规则</td><td><i>E</i>(³S) − <i>E</i>(¹S) = −2<i>K</i>：同自旋空间波函数反对称 → Fermi 空穴</td></tr>
+<tr><td>BO 近似</td><td>核不动 → 势能面的概念由此而来</td></tr>
+<tr><td><b>闭壳层 HF 能量</b></td><td><i>E</i> = 2Σ<i>H</i><sub><i>i</i></sub> + ΣΣ(2<i>J</i><sub><i>ij</i></sub> − <i>K</i><sub><i>ij</i></sub>) + <i>V</i><sub>NN</sub></td></tr>
+<tr><td><b>Roothaan</b></td><td><b>FC</b> = <b>SC</b><i>ε</i>；<b>S</b> 因为基函数不正交；<b>F</b> 依赖 <b>C</b> → SCF 迭代</td></tr>
+<tr><td>RHF vs UHF</td><td>H₂ 解离：RHF 锁 50% 离子项（高 ~140 kcal/mol）；UHF 对但自旋污染</td></tr>
+</table>
+<div class="g2">
+<figure><img src="img/sum/L02_p9.png" alt="L2 p9" loading="lazy"><figcaption><b>L2 p9</b>　Δ<i>E</i> ≲ <i>k</i><sub>B</sub><i>T</i> 看起来连续（经典够用）；Δ<i>E</i> ≫ <i>k</i><sub>B</sub><i>T</i> 必须量子。</figcaption></figure>
+<figure><img src="img/sum/L02_p83.png" alt="L2 p83" loading="lazy"><figcaption><b>L2 p83</b>　闭壳层 HF 能量：单电子积分 <i>H</i> + 双电子积分 (2<i>J</i>−<i>K</i>) + 核排斥。</figcaption></figure>
+<figure><img src="img/sum/L02_p87.png" alt="L2 p87" loading="lazy"><figcaption><b>L2 p87</b>　Roothaan：LCAO 把微分方程变成久期行列式 |<i>F</i>−<i>εS</i>| = 0。</figcaption></figure>
+<figure><img src="img/sum/L02_p89.png" alt="L2 p89" loading="lazy"><figcaption><b>L2 p89</b>　SCF：猜 → 解 → 更新 → 重复到不再变化（自洽）。</figcaption></figure>
+<figure><img src="img/sum/L02_p91.png" alt="L2 p91" loading="lazy"><figcaption><b>L2 p91</b>　RHF α/β 共用轨道；UHF 两套独立轨道，解离好但有自旋污染。</figcaption></figure>
+</div>
+
+<!-- ===================== L3 ===================== -->
+<div class="lec" id="L3">
+<h2>第 3 讲　软件工具、变分原理、SCF 实现与基组</h2>
+<div class="go">详解：<a href="L03-变分原理与SCF实现.html">L03 完整讲义</a></div>
+</div>
+<table class="mini">
+<tr><th style="width:190px">必背</th><th>一句话</th></tr>
+<tr><td><b>变分原理</b></td><td><i>E</i><sub>trial</sub> ≥ <i>E</i><sub>exact</sub>；<b>只保证能量</b>，不保证性质和能量差</td></tr>
+<tr><td>变分四步</td><td>写 <i>ψ</i>(<i>α</i>) → 算 <i>E</i>(<i>α</i>) → d<i>E</i>/d<i>α</i> = 0 → 代回</td></tr>
+<tr><td><b>行列式能量（动笔题）</b></td><td><i>E</i> = Σ<i>h</i><sub><i>ii</i></sub> + Σ<sub><i>i</i>&lt;<i>j</i></sub>(<i>J</i><sub><i>ij</i></sub> − <i>K</i><sub><i>ij</i></sub>)；<b>两个双占据轨道之间：4<i>J</i> − 2<i>K</i></b></td></tr>
+<tr><td><b>Koopmans</b></td><td>IE ≈ −<i>ε</i><sub>HOMO</sub>；冻结轨道；HF 误差抵消所以准；<b>DFT 不适用</b></td></tr>
+<tr><td>B 原子</td><td>2p 三重简并 → 需 3 个行列式 → 静态相关 → CASSCF</td></tr>
+<tr><td>自旋污染</td><td>看 ⟨<i>Ŝ</i>²⟩ vs <i>S</i>(<i>S</i>+1)：0 / 0.75 / 2.00</td></tr>
+<tr><td>密度矩阵</td><td><i>D</i><sub><i>γδ</i></sub> = Σ<sub>占据</sub><i>c</i><sub><i>γj</i></sub><i>c</i><sub><i>δj</i></sub>；tr(<b>DS</b>) = <i>N</i></td></tr>
+<tr><td>三种轨道</td><td>正则（<b>F</b> 对角）· 天然（<b>D</b> 对角）· 定域；能量密度全相同</td></tr>
+<tr><td>双电子积分</td><td>~<i>N</i>⁴/8 个 → direct SCF 现算；RI 降到 <i>N</i>³</td></tr>
+<tr><td>收敛技巧</td><td>阻尼 · 能级移动（可能卡局部极小）· <b>DIIS</b>（误差 <b>FDS</b>−<b>SDF</b>）· 二次收敛</td></tr>
+<tr><td><b>GTO vs STO</b></td><td>GTO 核处无尖点、衰减太快，但<b>高斯乘积定理</b>→积分解析</td></tr>
+<tr><td>基组命名</td><td>6-311++G(3df,3pd)；aug-cc-pV<i>n</i>Z；极化 = <i>l</i>+1，弥散 = 阴离子/弱相互作用</td></tr>
+<tr><td>BSSE</td><td>基函数互借 → 高估结合；Counterpoise + 幽灵原子</td></tr>
+<tr><td>虚频</td><td>0 个 = 极小点；1 个 = 过渡态；≥2 = 重做</td></tr>
+</table>
+<div class="g2">
+<figure><img src="img/sum/L03_p26.png" alt="L3 p26" loading="lazy"><figcaption><b>L3 p26</b>　变分原理证明：展开后 Σ|<i>c</i><sub><i>i</i></sub>|²(<i>ε</i><sub><i>i</i></sub>−<i>ε</i>₁) ≥ 0。</figcaption></figure>
+<figure><img src="img/sum/L03_p44.png" alt="L3 p44" loading="lazy"><figcaption><b>L3 p44</b>　数电子对：同自旋才有 −<i>K</i>。<b>唯一的动笔题型。</b></figcaption></figure>
+<figure><img src="img/sum/L03_p47.png" alt="L3 p47" loading="lazy"><figcaption><b>L3 p47</b>　Koopmans：<i>N</i>、<i>N</i>±1 用同一套轨道，能量差 = 轨道能。</figcaption></figure>
+<figure><img src="img/sum/L03_p51.png" alt="L3 p51" loading="lazy"><figcaption><b>L3 p51</b>　RHF / ROHF / UHF 的占据方式。</figcaption></figure>
+<figure><img src="img/sum/L03_p60.png" alt="L3 p60" loading="lazy"><figcaption><b>L3 p60</b>　SCF 矩阵版：猜 <b>D</b> → 建 <b>F</b> → 对角化 → 新 <b>D</b>。</figcaption></figure>
+<figure><img src="img/sum/L03_p72.png" alt="L3 p72" loading="lazy"><figcaption><b>L3 p72</b>　STO 核处尖、长程慢衰减；GTO 核处平、衰减太快 → 用几个 GTO 拼一个 STO。</figcaption></figure>
+</div>
+<div class="g1"><figure><img src="img/sum/L03_p76.png" alt="L3 p76" loading="lazy"><figcaption><b>L3 p76</b>　Pople 与 Dunning 基组命名拆解。</figcaption></figure></div>
+
+<!-- ===================== L4 ===================== -->
+<div class="lec" id="L4">
+<h2>第 4 讲　电子相关方法</h2>
+<div class="go">详解：<a href="L04-电子相关方法.html">L04 完整讲义</a></div>
+</div>
+<table class="mini">
+<tr><th style="width:190px">必背</th><th>一句话</th></tr>
+<tr><td>相关能</td><td><i>E</i><sub>corr</sub> = <i>E</i><sub>exact</sub> − <i>E</i><sub>HF</sub> &lt; 0；~1% 总能量，但与键能同量级</td></tr>
+<tr><td><b>静态 vs 动态</b></td><td>静态：单行列式原理上不够（简并/断键）→ CASSCF；动态：瞬时躲避 → MP2/CC</td></tr>
+<tr><td>Brillouin</td><td>⟨Ψ<sub>HF</sub>|<i>Ĥ</i>|Ψ<sub><i>i</i></sub><sup><i>r</i></sup>⟩ = 0 → 单激发不直接混入、MP2 无单激发项</td></tr>
+<tr><td>Ne 权重</td><td>参考 0.96 · 双激发 0.034 · 单激发 0.001 → 双激发是主力</td></tr>
+<tr><td><b>CI 修 H₂</b></td><td>Ψ = (<i>a</i>₀+<i>a</i>₁)[离子] + (<i>a</i>₀−<i>a</i>₁)[共价]；<i>R</i>→∞ 时 <i>a</i>₁ = −<i>a</i>₀</td></tr>
+<tr><td><b>尺寸一致性</b></td><td>截断 CI ✘（缺 <i>T</i><sub>A</sub><i>T</i><sub>B</sub> 交叉项）；CC ✔（e<sup><i>T</i><sub>A</sub>+<i>T</i><sub>B</sub></sup> = e<sup><i>T</i><sub>A</sub></sup>e<sup><i>T</i><sub>B</sub></sup>）</td></tr>
+<tr><td>CC</td><td>Ψ = e<sup><i>T</i></sup>Ψ₀；½<i>T</i>₂² 隐含四激发；非变分；CCSD(T) 黄金标准</td></tr>
+<tr><td><b>MP2</b></td><td>Σ|⟨<i>ij</i>||<i>ab</i>⟩|²/(<i>ε</i><sub><i>i</i></sub>+<i>ε</i><sub><i>j</i></sub>−<i>ε</i><sub><i>a</i></sub>−<i>ε</i><sub><i>b</i></sub>)；简并时分母→0 发散</td></tr>
+<tr><td>MPn 不收敛</td><td>Be：MP7 = 100.15%，会过冲</td></tr>
+<tr><td><b>标度</b></td><td>HF <i>N</i>⁴ · MP2 <i>N</i>⁵ · CCSD <i>N</i>⁶ · CCSD(T) <i>N</i>⁷ · FCI <i>N</i>!</td></tr>
+<tr><td>CBS</td><td>HF 指数收敛；相关能 <i>A</i>/<i>n</i>³ 慢收敛（电子尖点）</td></tr>
+</table>
+<div class="g2">
+<figure><img src="img/sum/L04_p4.png" alt="L4 p4" loading="lazy"><figcaption><b>L4 p4</b>　静态相关（RHF 把 H₂ 拆成 H⁻+H⁺）vs 动态相关。</figcaption></figure>
+<figure><img src="img/sum/L04_p16.png" alt="L4 p16" loading="lazy"><figcaption><b>L4 p16</b>　激发级别权重：双激发远大于单激发，4 级以上断崖下跌。</figcaption></figure>
+<figure><img src="img/sum/L04_p19.png" alt="L4 p19" loading="lazy"><figcaption><b>L4 p19</b>　HF 行列式 = 50% 离子 + 50% 共价；混入 <i>σ</i><sub><i>u</i></sub>² 后比例可调。</figcaption></figure>
+<figure><img src="img/sum/L04_p21.png" alt="L4 p21" loading="lazy"><figcaption><b>L4 p21</b>　<b>全课最重要的一张图</b>：RHF 长程灾难、UHF 能量对、FCI 精确。</figcaption></figure>
+<figure><img src="img/sum/L04_p22.png" alt="L4 p22" loading="lazy"><figcaption><b>L4 p22</b>　两个相距 100 Å 的水：CISD 下 <i>E</i><sub>sum</sub> &lt; <i>E</i><sub>together</sub>。</figcaption></figure>
+<figure><img src="img/sum/L04_p24.png" alt="L4 p24" loading="lazy"><figcaption><b>L4 p24</b>　CI = (1+<i>T</i>)Ψ₀；CC = e<sup><i>T</i></sup>Ψ₀，展开多出乘积项。</figcaption></figure>
+<figure><img src="img/sum/L04_p36.png" alt="L4 p36" loading="lazy"><figcaption><b>L4 p36</b>　MP2 公式：只含双激发，分母是轨道能差。</figcaption></figure>
+<figure><img src="img/sum/L04_p38.png" alt="L4 p38" loading="lazy"><figcaption><b>L4 p38</b>　Counterpoise：三次计算都用完整 AB 基组。</figcaption></figure>
+</div>
+<div class="g1"><figure><img src="img/sum/L04_p40.png" alt="L4 p40" loading="lazy"><figcaption><b>L4 p40</b>　各方法的标度与可算体系大小。</figcaption></figure></div>
+
+<!-- ===================== L5 ===================== -->
+<div class="lec" id="L5">
+<h2>第 5 讲　密度泛函理论 (DFT)</h2>
+<div class="go">详解：<a href="L05-密度泛函理论DFT.html">L05 完整讲义（每页附原图）</a></div>
+</div>
+<table class="mini">
+<tr><th style="width:190px">必背</th><th>一句话</th></tr>
+<tr><td>密度</td><td><i>ρ</i>(<b>r</b>) 只有 3 个变量，与 <i>N</i> 无关；<i>N</i> = Σ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></td></tr>
+<tr><td>外势</td><td><i>T̂</i>、<i>V̂</i><sub>ee</sub> 普适，只有 <i>V</i><sub>ext</sub> 区分分子</td></tr>
+<tr><td><b>HK 第一定理</b></td><td>基态 <i>ρ</i> ⟺ <i>V</i><sub>ext</sub>，一切性质是 <i>ρ</i> 的泛函（反证法证明）</td></tr>
+<tr><td><b>HK 第二定理</b></td><td><i>E</i>[<i>ρ</i>] = <i>F</i><sub>HK</sub>[<i>ρ</i>] + ∫<i>ρV</i><sub>ext</sub>，在 <i>ρ</i>₀ 处最小</td></tr>
+<tr><td>泛函</td><td>函数 → 数；<i>δ</i>(∫<i>ρν</i>)/<i>δρ</i> = <i>ν</i></td></tr>
+<tr><td><b>Kohn–Sham</b></td><td>无相互作用替身重现 <i>ρ</i>；[−½∇² + <i>V</i><sub>H</sub> + <i>V</i><sub>ext</sub> + <i>V</i><sub>xc</sub>]<i>φ</i> = <i>εφ</i>；只有 <i>V</i><sub>xc</sub> 未知</td></tr>
+<tr><td>HF vs KS</td><td>HF：交换精确非局域、无相关；KS：交换+相关都近似但局域</td></tr>
+<tr><td><b>Jacob 阶梯</b></td><td>LDA(<i>ρ</i>) → GGA(∇<i>ρ</i>) → meta-GGA(<i>τ</i>) → 杂化(HF 交换) → 双杂化(MP2)</td></tr>
+<tr><td><b>B3LYP</b></td><td>20% HF 交换，3 个经验参数 → 严格说非 ab initio</td></tr>
+<tr><td><b>SIE</b></td><td>HF 中 <i>J</i><sub><i>ii</i></sub>=<i>K</i><sub><i>ii</i></sub> 抵消；近似 DFT 抵消不净 → 过度离域、能垒低、带隙小</td></tr>
+<tr><td>范围分离</td><td>erf 拆 1/<i>r</i><sub>12</sub>，长程 HF 交换 → 修 CT 激发、SIE</td></tr>
+<tr><td>色散</td><td>局域泛函看不到远处 → D3：−Σ<i>C</i><sub>6</sub>/<i>R</i>⁶ × 阻尼</td></tr>
+<tr><td>不适合 DFT</td><td>双自由基、开壳层过渡金属、断键；镧系用 4f-in-core</td></tr>
+<tr><td><b>磁耦合</b></td><td><i>Ĥ</i> = −2<i>JŜ</i>₁·<i>Ŝ</i>₂ → <i>E</i><sub>T</sub> = −<i>J</i>/2，<i>E</i><sub>S</sub> = 3<i>J</i>/2，Δ<i>E</i><sub>ST</sub> = −2<i>J</i></td></tr>
+<tr><td><b>BS-DFT</b></td><td>单重态需 2 个行列式 → 算 |<i>αβ</i>|；<i>J</i> = (<i>E</i><sub>BS</sub>−<i>E</i><sub>HS</sub>)/(⟨<i>S</i>²⟩<sub>HS</sub>−⟨<i>S</i>²⟩<sub>BS</sub>)</td></tr>
+<tr><td>TD-DFT</td><td>线性响应，极化率极点 = 激发能；绝热近似；CT/Rydberg/双激发差</td></tr>
+</table>
+<div class="g2">
+<figure><img src="img/sum/L05_p14.png" alt="L5 p14" loading="lazy"><figcaption><b>L5 p14</b>　HK 第一定理：Ψ → <i>ρ</i> 是单射（"非常意外"）。</figcaption></figure>
+<figure><img src="img/sum/L05_p19.png" alt="L5 p19" loading="lazy"><figcaption><b>L5 p19</b>　HK 第二定理：精确泛函在 <i>ρ</i>₀ 处取最小（左图）。</figcaption></figure>
+<figure><img src="img/sum/L05_p22.png" alt="L5 p22" loading="lazy"><figcaption><b>L5 p22</b>　Kohn–Sham 方程：原问题的<b>精确</b>变换，误差全在 <i>V</i><sub>xc</sub>。</figcaption></figure>
+<figure><img src="img/sum/L05_p23.png" alt="L5 p23" loading="lazy"><figcaption><b>L5 p23</b>　HF 与 DFT 前两项相同，区别在电子-电子那一项。</figcaption></figure>
+<figure><img src="img/sum/L05_p24.png" alt="L5 p24" loading="lazy"><figcaption><b>L5 p24</b>　LDA → LSDA → GGA → meta-GGA：逐级加入更多局部信息。</figcaption></figure>
+<figure><img src="img/sum/L05_p30.png" alt="L5 p30" loading="lazy"><figcaption><b>L5 p30</b>　B3LYP 与双杂化的构成式。</figcaption></figure>
+<figure><img src="img/sum/L05_p36.png" alt="L5 p36" loading="lazy"><figcaption><b>L5 p36</b>　Jacob 阶梯五级与代表泛函（填表题）。</figcaption></figure>
+<figure><img src="img/sum/L05_p41.png" alt="L5 p41" loading="lazy"><figcaption><b>L5 p41</b>　Heisenberg 模型：Δ<i>E</i><sub>ST</sub> = −2<i>J</i>，<i>J</i>&gt;0 铁磁。</figcaption></figure>
+</div>
+<div class="g1"><figure><img src="img/sum/L05_p42.png" alt="L5 p42" loading="lazy"><figcaption><b>L5 p42</b>　BS-DFT：<i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub> = −<i>K</i>₁₂。<b>注意：</b>本页最后一行和 p43 的 <i>J</i> 公式按 p41 的约定符号写反了，正确为 <i>J</i> = (<i>E</i><sub>BS</sub>−<i>E</i><sub>HS</sub>)/2（p42）、<i>J</i> = (<i>E</i><sub>BS</sub>−<i>E</i><sub>HS</sub>)/(⟨<i>S</i>²⟩<sub>HS</sub>−⟨<i>S</i>²⟩<sub>BS</sub>)（p43）。详见 <a href="L05-密度泛函理论DFT.html#p42">L05 p42–43</a>。</figcaption></figure></div>
+
+<!-- ===================== L6 ===================== -->
+<div class="lec" id="L6">
+<h2>第 6 讲　波函数分析、相对论效应与溶剂化模型</h2>
+<div class="go">详解：<a href="L06-波函数分析_相对论_溶剂化.html">L06 完整讲义（每页附原图）</a></div>
+</div>
+<table class="mini">
+<tr><th style="width:190px">必背</th><th>一句话</th></tr>
+<tr><td><b>Mulliken 电荷</b></td><td><i>Q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub>(<b>PS</b>)<sub><i>μμ</i></sub>：同原子全给、跨原子平分（讲义 p5 式中的 ½ 多乘了）</td></tr>
+<tr><td>Mulliken 的毛病</td><td>布居 &gt;2 或负；平分无依据；依赖基组；不重现多极矩</td></tr>
+<tr><td>四种电荷</td><td>Mulliken/Löwdin（基函数）· Bader（零通量面 ∇<i>ρ</i>·<b>n</b>=0）· Hirshfeld（自由原子密度比例）</td></tr>
+<tr><td>原子电荷 vs 静电势</td><td>电荷不是可观测量；MEP 是（红=负=富电子，蓝=正）</td></tr>
+<tr><td>键级</td><td><i>q</i><sub>AB</sub> = 2ΣΣ<i>PS</i>（重叠布居）；Mayer 键级更接近 1/2/3</td></tr>
+<tr><td><b>轨道定域化</b></td><td>行列式幺正不变；Boys（质心远）· ER（自排斥大）· PM（原子布居集中，保 σ/π）；定域轨道<b>没有轨道能</b></td></tr>
+<tr><td><b>相对论</b></td><td>1s 速度 ≈ <i>Z</i>/137 <i>c</i>；Au γ≈1.22；s/p 收缩（直接）、d/f 扩张（间接）</td></tr>
+<tr><td>Dirac 方程</td><td>时空都一阶 → 4×4 矩阵、4 分量（大/小分量）、自旋自然出现、正电子态</td></tr>
+<tr><td><b>Pauli 哈密顿量</b></td><td>质量-速度 −<i>p</i>⁴/8<i>m</i>³<i>c</i>² + SOC <b>s</b>·<b>l</b> + Darwin <i>δ</i>(<b>r</b>)；标量相对论 = 质量-速度 + Darwin</td></tr>
+<tr><td>实用相对论</td><td>ECP（便宜）· DKH2 / ZORA / X2C（全电子，需专用基组）；1C/2C/4C</td></tr>
+<tr><td><b>溶剂模型</b></td><td>显式（氢键、贵）· 隐式 PCM（只有 <i>ε</i>）· 混合</td></tr>
+<tr><td>Born / Onsager</td><td>−(1−1/<i>ε</i>)<i>q</i>²/2<i>R</i>；−[(<i>ε</i>−1)/(2<i>ε</i>+1)]<i>μ</i>²/<i>R</i>³；<i>ε</i>&gt;20 后饱和</td></tr>
+<tr><td><b>PCM</b></td><td>原子球空穴 + 表面电荷 <i>σ</i> = −[(<i>ε</i>−1)/4π<i>ε</i>]∂<i>φ</i>/∂<b>n</b>，与溶质自洽；Δ<i>G</i> = 空穴 + 色散 + 静电</td></tr>
+<tr><td>Poisson–Boltzmann</td><td>含可移动离子；线性化 → Debye 屏蔽 e<sup>−<i>κr</i></sup>/<i>r</i></td></tr>
+<tr><td><b>色散</b></td><td>二阶微扰中两分子<b>同时</b>激发的项 → 需双激发 → HF/常规 DFT 为零；MP2 需 CP、会高估 π 堆积</td></tr>
+<tr><td><b>UV/Vis</b></td><td>Franck–Condon：垂直吸收 &gt; 绝热 &gt; 垂直发射；跃迁偶极为零即禁阻</td></tr>
+</table>
+<div class="g2">
+<figure><img src="img/sum/L06_p5.png" alt="L6 p5" loading="lazy"><figcaption><b>L6 p5</b>　Mulliken 三条规则。注意式中第三项的 ½ 应去掉。</figcaption></figure>
+<figure><img src="img/sum/L06_p6.png" alt="L6 p6" loading="lazy"><figcaption><b>L6 p6</b>　Mulliken 的五个问题；Löwdin 用 <b>S</b><sup>½</sup><b>PS</b><sup>½</sup>。</figcaption></figure>
+<figure><img src="img/sum/L06_p10.png" alt="L6 p10" loading="lazy"><figcaption><b>L6 p10</b>　静电势 = 核项（正）− 电子项（负）；红负蓝正。</figcaption></figure>
+<figure><img src="img/sum/L06_p13.png" alt="L6 p13" loading="lazy"><figcaption><b>L6 p13</b>　定域轨道无轨道能；香蕉键；PM 保留 σ/π 分离。</figcaption></figure>
+<figure><img src="img/sum/L06_p15.png" alt="L6 p15" loading="lazy"><figcaption><b>L6 p15</b>　薛定谔方程时空不对称；快电子变重 → 收缩。</figcaption></figure>
+<figure><img src="img/sum/L06_p18.png" alt="L6 p18" loading="lazy"><figcaption><b>L6 p18</b>　Pauli 哈密顿量：质量-速度、SOC、Darwin。</figcaption></figure>
+<figure><img src="img/sum/L06_p22.png" alt="L6 p22" loading="lazy"><figcaption><b>L6 p22</b>　收敛立方体：基组 × 相关 × 相对论。</figcaption></figure>
+<figure><img src="img/sum/L06_p27.png" alt="L6 p27" loading="lazy"><figcaption><b>L6 p27</b>　连续介质模型与四种空穴；溶剂让偶极变大。</figcaption></figure>
+<figure><img src="img/sum/L06_p28.png" alt="L6 p28" loading="lazy"><figcaption><b>L6 p28</b>　Born / Bell / Onsager（Onsager 方括号应取倒数）。</figcaption></figure>
+<figure><img src="img/sum/L06_p30.png" alt="L6 p30" loading="lazy"><figcaption><b>L6 p30</b>　PCM 表观表面电荷；IEF-PCM / IPCM / SCIPCM。</figcaption></figure>
+<figure><img src="img/sum/L06_p35.png" alt="L6 p35" loading="lazy"><figcaption><b>L6 p35</b>　Poisson–Boltzmann 方程；DNA 周围的离子氛。</figcaption></figure>
+<figure><img src="img/sum/L06_p37.png" alt="L6 p37" loading="lazy"><figcaption><b>L6 p37</b>　分子间作用：一阶静电 + 二阶（诱导、色散需双激发）。</figcaption></figure>
+</div>
+<div class="g1"><figure><img src="img/sum/L06_p39.png" alt="L6 p39" loading="lazy"><figcaption><b>L6 p39</b>　垂直吸收 / 垂直发射 / 绝热激发。</figcaption></figure></div>
+
+<!-- ===================== 跨讲 ===================== -->
+<section class="slide" id="cmp" style="margin-top:38px">
+<h2>方法对比总表（跨第 2–5 讲）</h2>
+<div style="overflow-x:auto">
+<table class="mini">
+<tr><th>方法</th><th class="c">标度</th><th class="c">变分？</th><th class="c">尺寸一致？</th><th class="c">静态相关</th><th class="c">动态相关</th><th>什么时候用</th></tr>
+<tr><td><b>HF</b></td><td class="c"><i>N</i>⁴</td><td class="c">✔</td><td class="c">✔</td><td class="c">✘</td><td class="c">✘</td><td>参考态；单独用意义不大</td></tr>
+<tr><td><b>DFT</b>（杂化）</td><td class="c"><i>N</i>³⁻⁴</td><td class="c">近似泛函不严格</td><td class="c">✔</td><td class="c">✘</td><td class="c">近似 ✔</td><td>机理、大体系主力</td></tr>
+<tr><td><b>MP2</b></td><td class="c"><i>N</i>⁵</td><td class="c">✘</td><td class="c">✔</td><td class="c">✘（会发散）</td><td class="c">✔</td><td>便宜的从头算相关</td></tr>
+<tr><td><b>CISD</b></td><td class="c"><i>N</i>⁶</td><td class="c">✔</td><td class="c"><b>✘</b></td><td class="c">✘</td><td class="c">✔</td><td>基本被 CCSD 淘汰</td></tr>
+<tr><td><b>CCSD(T)</b></td><td class="c"><i>N</i>⁷</td><td class="c">✘</td><td class="c">✔</td><td class="c">✘（会崩）</td><td class="c">✔✔</td><td>黄金标准、做基准</td></tr>
+<tr><td><b>CASSCF</b></td><td class="c">活性空间阶乘</td><td class="c">✔</td><td class="c">✔（空间选对）</td><td class="c"><b>✔</b></td><td class="c">✘</td><td>多参考体系（后接 PT2）</td></tr>
+<tr><td><b>CASPT2</b></td><td class="c">—</td><td class="c">✘</td><td class="c">近似</td><td class="c">✔</td><td class="c">✔</td><td>过渡金属、镧系、激发态</td></tr>
+<tr><td><b>FCI</b></td><td class="c"><i>N</i>!</td><td class="c">✔</td><td class="c">✔</td><td class="c">✔</td><td class="c">✔</td><td>3–4 原子基准</td></tr>
+</table>
+</div>
+<p style="font-size:14px"><b>记忆口诀</b>：变分的都是"直接最小化能量"的（HF、CI、CASSCF）；CC 和 MP 靠投影/微扰，所以不变分；只有<b>截断 CI</b> 不尺寸一致。</p>
+</section>
+
+<section class="slide" id="sym">
+<h2>符号撞车对照（最容易看混的地方）</h2>
+<table class="mini">
+<tr><th style="width:110px">符号</th><th>在哪里是什么意思</th></tr>
+<tr><td><i>φ</i> / <i>χ</i></td><td>L2/L3：<i>φ</i> = 分子轨道，<i>χ</i> = 基函数；<b>L5 p4 反过来</b>：<i>χ</i> = 轨道，<i>φ</i> = 基函数</td></tr>
+<tr><td><b>D</b> / <b>P</b></td><td>都是密度矩阵：L3 叫 <b>D</b>，L5 和 Gaussian 输出叫 <b>P</b></td></tr>
+<tr><td><i>J</i></td><td>① <i>J</i><sub><i>ij</i></sub> 库仑积分（L2–L3）② <i>J</i> 磁交换耦合常数（L5 p40）——完全不同</td></tr>
+<tr><td><i>K</i></td><td>交换积分 <i>K</i><sub><i>ij</i></sub>；BS-DFT 中 <i>E</i><sub>HS</sub>−<i>E</i><sub>BS</sub> = −<i>K</i><sub>12</sub></td></tr>
+<tr><td><i>α</i></td><td>① α 自旋 ② 高斯指数 e<sup>−<i>αr</i>²</sup> ③ 变分参数（L3 p29）④ 极化率（L5 p44）⑤ 基函数下标（L3 p54）</td></tr>
+<tr><td><i>ε</i></td><td>① 轨道能 ② <i>ε</i>₀ 真空介电常数 ③ <i>ε</i><sub>xc</sub> 每电子 XC 能量密度（L5 p24）④ 溶剂相对介电常数（L6 PCM）⑤ 水模型 LJ 势阱深度 <i>ε</i>₀（L6 p24）</td></tr>
+<tr><td><i>S</i></td><td>① 重叠矩阵 <i>S</i><sub><i>μν</i></sub> ② 总自旋 <i>S</i> ③ 单激发下标（L4 p12、L5 p6）</td></tr>
+<tr><td><i>T</i></td><td>① 动能 ② 温度 ③ CC 簇算符 ④ 三激发下标 ⑤ 三重态</td></tr>
+<tr><td>(<i>n</i>)</td><td>上标括号 = 微扰阶数（L4 p29），<b>不是幂次</b></td></tr>
+<tr><td>[ ] vs ( )</td><td><i>E</i>[<i>ρ</i>] 方括号 = 泛函（输入是函数）；<i>f</i>(<i>x</i>) 圆括号 = 函数（输入是数）</td></tr>
+</table>
+</section>
+
+<section class="slide" id="qa">
+<h2>高频概念题（一句话答案）</h2>
+<table class="mini">
+<tr><th style="width:46%">问题</th><th>答</th></tr>
+<tr><td>HF 丢了什么？</td><td>电子相关：平均场里电子看不到彼此的瞬时位置</td></tr>
+<tr><td><i>J</i> 和 <i>K</i> 的区别</td><td><i>J</i> 经典库仑、所有对都有；<i>K</i> 纯量子、仅同自旋、降能量</td></tr>
+<tr><td>为什么三重态低于单重态</td><td>同自旋空间波函数反对称 → 电子不重合 → 排斥小（−2<i>K</i>）</td></tr>
+<tr><td>Roothaan 为什么有 <b>S</b></td><td>原子轨道基函数不正交</td></tr>
+<tr><td>HF 为什么要迭代</td><td>Fock 算符依赖轨道本身</td></tr>
+<tr><td>RHF 为什么 H₂ 解离错</td><td>单行列式锁死 50% 离子项</td></tr>
+<tr><td>静态 vs 动态相关</td><td>静态：参考态本身错（简并）→ CASSCF；动态：细节缺失 → MP2/CC</td></tr>
+<tr><td>为什么 CISD 不尺寸一致</td><td>缺两片段各双激发的四激发交叉项</td></tr>
+<tr><td>为什么 CC 尺寸一致</td><td>e<sup><i>A</i>+<i>B</i></sup> = e<sup><i>A</i></sup>e<sup><i>B</i></sup>，波函数自动分解</td></tr>
+<tr><td>MP2 为什么无单激发</td><td>Brillouin 定理</td></tr>
+<tr><td>MP2 什么时候崩</td><td>近简并，分母趋零</td></tr>
+<tr><td>为什么用 GTO</td><td>高斯乘积定理 → 积分解析</td></tr>
+<tr><td>BSSE 是什么</td><td>基函数互借 → 结合能偏大；Counterpoise</td></tr>
+<tr><td>Koopmans 的假设</td><td>冻结轨道；HF 靠误差抵消，DFT 不适用</td></tr>
+<tr><td>HK 两个定理</td><td>① <i>ρ</i> 唯一决定 <i>V</i><sub>ext</sub> ② <i>E</i>[<i>ρ</i>] 在 <i>ρ</i>₀ 处最小</td></tr>
+<tr><td>KS 的核心思想</td><td>无相互作用替身体系重现同一个密度，未知全放进 <i>V</i><sub>xc</sub></td></tr>
+<tr><td>DFT 是 ab initio 吗</td><td>原理上是；实用泛函含经验参数，严格说不是</td></tr>
+<tr><td>自相互作用误差</td><td>近似 <i>E</i><sub>xc</sub> 不能抵消 <i>J</i><sub><i>ii</i></sub> → 过度离域</td></tr>
+<tr><td>DFT 为什么没色散</td><td>泛函局域，看不到远处关联涨落 → D3</td></tr>
+<tr><td>为什么要 BS-DFT</td><td>开壳层单重态要 2 个行列式，KS 只有 1 个</td></tr>
+<tr><td>变分原理的限制</td><td>只保证能量上界，不保证其他性质与能量差</td></tr>
+<tr><td>虚频的意义</td><td>0 = 极小点，1 = 过渡态</td></tr>
+</table>
+</section>
+
+<footer>
+CM5235 复习解析 · 总汇总（第 1–6 讲，共 361 页）<br>
+<a href="index.html">总目录</a>　·　<a href="L01-课程概览与计算平台.html">L01</a>　·　<a href="L02-量子力学基础与HF理论.html">L02</a>　·　<a href="L03-变分原理与SCF实现.html">L03</a>　·　<a href="L04-电子相关方法.html">L04</a>　·　<a href="L05-密度泛函理论DFT.html">L05</a>　·　<a href="L06-波函数分析_相对论_溶剂化.html">L06</a>
+</footer>
+
+</div>
+</body>
+</html>

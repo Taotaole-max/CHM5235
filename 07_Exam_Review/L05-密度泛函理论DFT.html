@@ -1,0 +1,1809 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 第5讲 · 密度泛函理论 (DFT)</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.orig{margin:8px 0 16px;text-align:center}
+.orig img{max-width:100%;border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.orig figcaption{margin-top:4px}
+.kp{background:#f1f7f3;border-left:4px solid var(--accent3);padding:10px 16px;border-radius:0 8px 8px 0;margin:14px 0 4px}
+.kp .lab{font-size:12px;color:var(--accent3);font-weight:700;letter-spacing:.1em;display:block;margin-bottom:4px}
+.kp ul{margin:4px 0 2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>第 5 讲　密度泛函理论 (DFT)</h1>
+  <div class="sub">对应讲义 <code>CM5235_Lecture_05.pdf</code>（48 页）· 每页：原图 → 原文翻译 → 讲解 → 公式与符号表 → 拓展 → 考点</div>
+</header>
+
+<nav class="toc">
+<b>本讲导航</b>
+<a href="#p1">p1 封面</a><a href="#p2">p2 各种密度</a><a href="#p3">p3 本讲提纲</a>
+<a href="#p4">p4 电子密度与密度矩阵</a><a href="#p5">p5 密度划分 / Mulliken</a><a href="#p6">p6 相关能回顾</a>
+<a href="#p7">p7 外势</a><a href="#p8">p8–9 密度算符</a><a href="#p10">p10 单射/满射/双射</a>
+<a href="#p11">p11–14 ★HK 第一定理</a><a href="#p15">p15 ★HK 第一定理的证明</a><a href="#p16">p16–17 一一对应</a>
+<a href="#p18">p18 什么是泛函</a><a href="#p19">p19–20 ★HK 第二定理</a><a href="#p21">p21 基态总能量</a>
+<a href="#p22">p22 ★Kohn–Sham 方程</a><a href="#p23">p23 HF 与 DFT 对比</a><a href="#p24">p24 LDA/GGA</a>
+<a href="#p25">p25–26 杂化泛函</a><a href="#p27">p27 DFT 小结</a><a href="#p28">p28 Kohn</a>
+<a href="#p29">p29 LDA/B88/LYP 公式</a><a href="#p30">p30 ★B3LYP 与双杂化</a><a href="#p31">p31 可系统改进性</a>
+<a href="#p32">p32 DFT 的失败场景</a><a href="#p33">p33 ★自相互作用误差</a><a href="#p34">p34 范围分离泛函</a>
+<a href="#p35">p35 色散校正</a><a href="#p36">p36 ★Jacob 阶梯</a><a href="#p37">p37 性能对比表</a>
+<a href="#p38">p38 实用建议</a><a href="#p39">p39–41 ★磁耦合</a><a href="#p42">p42–43 ★BS-DFT</a>
+<a href="#p44">p44–45 TD-DFT</a><a href="#p46">p46–48 ORCA 实践</a><a href="#sum">本讲小结</a>
+</nav>
+
+<div class="warn"><span class="lab">先读这段：第 5 讲在整门课里的位置</span>
+<p>讲义封面写的是 "Electron Correlation Methods"，但这一讲的真正主题是 <b>密度泛函理论 (DFT)</b>。它是第 4 讲 p6 说的<b>两条路线里的第二条</b>：</p>
+<table>
+<tr><th style="width:130px"></th><th style="width:44%">第 4 讲：波函数方法 (CI / CC / MP2)</th><th>第 5 讲：DFT</th></tr>
+<tr><td><b>基本变量</b></td><td>波函数 Ψ，<b>3<i>N</i> 个</b>变量</td><td>电子密度 <i>ρ</i>(<b>r</b>)，<b>永远 3 个</b>变量</td></tr>
+<tr><td><b>怎么补相关能</b></td><td>加更多 Slater 行列式</td><td>在 Fock 算符里换上一个近似的"交换-相关势" <i>V</i><sub>xc</sub></td></tr>
+<tr><td><b>代价</b></td><td>O(<i>N</i>⁵) 到 O(<i>N</i>!)</td><td>约 O(<i>N</i>³–<i>N</i>⁴)，和 HF 差不多</td></tr>
+</table>
+<p><b>这一讲的逻辑链（记住这 5 步，整讲就串起来了）：</b></p>
+<ol>
+<li><b>p4–p9</b>：定义电子密度 <i>ρ</i>(<b>r</b>)——它只有 3 个变量</li>
+<li><b>p11–p17</b>：<span class="key">HK 第一定理：基态密度唯一决定一切</span>（所以原则上只要 <i>ρ</i> 就够了）</li>
+<li><b>p19–p20</b>：HK 第二定理：能量泛函在真实密度处取最小（所以可以用变分法找 <i>ρ</i>）</li>
+<li><b>p22–p23</b>：<span class="key">Kohn–Sham：把问题变成和 HF 长得几乎一样的单电子方程</span>，唯一的未知是 <i>V</i><sub>xc</sub></li>
+<li><b>p24–p37</b>：<i>V</i><sub>xc</sub> 不知道，只能近似 → 各种泛函（LDA → GGA → meta-GGA → 杂化 → 双杂化），以及它们的毛病</li>
+</ol>
+<p>后面 <b>p39–p43</b> 是一个完整应用：用 DFT 算磁交换耦合常数 <i>J</i>（第 3 讲 p45 预告过的"破缺对称"方法），<b>p44–45</b> 是激发态方法 TD-DFT。</p>
+</div>
+
+<section class="slide" id="p1">
+<h2><span class="pno">p1</span>封面</h2>
+<figure class="orig"><img src="img/L05/p01.png" alt="讲义 p1" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span><p>电子相关方法，第 5 讲，Liviu Ungur。</p></div>
+<h3>讲解</h3>
+<p>标题延续了第 4 讲的"电子相关方法"，因为 DFT 在这门课的框架里<b>也是一种处理电子相关的方法</b>——只不过它不是通过加行列式，而是通过一个"交换-相关泛函"把相关能近似地塞进去。</p>
+</section>
+
+<section class="slide" id="p2">
+<h2><span class="pno">p2</span>各种密度与分布</h2>
+<figure class="orig"><img src="img/L05/p02.png" alt="讲义 p2" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>密度指某个性质在空间中的连续分布。常见的密度有：概率密度 <i>p</i>(<i>x</i>,<i>y</i>,<i>z</i>) = |<i>ψ</i>(<i>x</i>,<i>y</i>,<i>z</i>)|²；电子密度 <i>ρ</i>(<b>r</b>) = <i>N</i>∫|Ψ(<b>r</b>,<b>r</b>₂,…,<b>r</b><sub><i>N</i></sub>)|²d³<i>r</i>₂⋯d³<i>r</i><sub><i>N</i></sub>；自旋密度 <i>σ</i>(<b>r</b>) = <i>ρ</i><sub>↑</sub>(<b>r</b>) − <i>ρ</i><sub>↓</sub>(<b>r</b>)；电荷密度 <i>ρ</i><sub>C</sub>(<b>r</b>) = <i>Ne</i>∫|Ψ|²d³<i>r</i>₂⋯d³<i>r</i><sub><i>N</i></sub>。</p>
+<p>（三张图：映射了静电势的电子等密度面；修饰硅表面的电荷密度图；氧化铈中氧空位周围的自旋密度。）</p>
+</div>
+<h3>讲解</h3>
+<p>这一页和第 4 讲 p44 完全相同，<a href="L04-电子相关方法.html#p44">详细的公式解析和每个符号的标注见第 4 讲 p44</a>。放在这里是为了引出本讲的主角——<b>电子密度 <i>ρ</i>(<b>r</b>)</b>。</p>
+<p>记住第 4 讲那一页的核心结论就够了：<span class="key">波函数有 3<i>N</i> 个变量且不可观测；电子密度只有 3 个变量，而且能被 X 射线衍射直接测到。</span>DFT 就是要"只用密度"来做量子化学。</p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>电子密度的定义式里为什么乘 <i>N</i>、为什么要对其余 <i>N</i>−1 个电子积分（见第 4 讲 p44）</li>
+<li>自旋密度 = α 密度 − β 密度；它对应 EPR 实验</li></ul></div>
+</section>
+
+<section class="slide" id="p3">
+<h2><span class="pno">p3</span>本讲提纲</h2>
+<figure class="orig"><img src="img/L05/p03.png" alt="讲义 p3" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>课程（约 1 小时）：</p>
+<ul>
+<li>密度泛函理论</li>
+<li>Hohenberg–Kohn 定理</li>
+<li>能量作为电子密度的泛函</li>
+<li>密度泛函：LDA、GGA、杂化 (B3LYP)、meta-GGA 等</li>
+<li>实际问题：数值积分、基组大小等</li>
+</ul>
+</div>
+<h3>讲解 · 三个关键词先认个脸</h3>
+<table>
+<tr><th style="width:150px">词</th><th>一句话意思</th></tr>
+<tr><td><b>泛函 (functional)</b></td><td>"吃进一个<b>函数</b>、吐出一个<b>数</b>"的规则（p18 详讲）。能量 <i>E</i>[<i>ρ</i>] 就是一个泛函：你给它一个密度分布，它返回一个能量值。</td></tr>
+<tr><td><b>Hohenberg–Kohn 定理</b></td><td>DFT 的理论基石（1964）：基态密度唯一确定体系的一切（p11–p20）。</td></tr>
+<tr><td><b>LDA / GGA / 杂化</b></td><td>对未知的"交换-相关泛函"的一系列越来越精细的近似（p24–p36）。</td></tr>
+</table>
+</section>
+
+<section class="slide" id="p4">
+<h2><span class="pno">p4</span>电子密度分布与密度矩阵</h2>
+<figure class="orig"><img src="img/L05/p04.png" alt="讲义 p4" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>总电子密度</b>可以作为每个单独电子的概率分布之和得到：</p>
+<p><i>ρ</i>(<b>r</b>) = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> |<i>χ</i><sub><i>i</i></sub>(<b>r</b>)|²　，　<i>χ</i><sub><i>i</i></sub>(<b>r</b>) = Σ<sub><i>μ</i>=1</sub><sup><i>K</i></sup> <i>c</i><sub><i>μi</i></sub><i>φ</i><sub><i>μ</i></sub>(<b>r</b>)</p>
+<p>其中 <i>N</i> 是体系中的电子数，<i>K</i> 是基组中的函数数目。因此总密度可以表示为：</p>
+<p><i>ρ</i>(<b>r</b>) = Σ<sub><i>μ</i>,<i>ν</i>=1</sub><sup><i>K</i></sup> Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub> <i>φ</i><sub><i>μ</i></sub>*(<b>r</b>)<i>φ</i><sub><i>ν</i></sub>(<b>r</b>)</p>
+<p>对全空间积分给出体系的总电子数：</p>
+<p><i>N</i> = ∫<i>ρ</i>(<b>r</b>)d³<b>r</b> = Σ<sub><i>μ</i>,<i>ν</i></sub>Σ<sub><i>i</i></sub> <i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub> ∫<i>φ</i><sub><i>μ</i></sub>*(<b>r</b>)<i>φ</i><sub><i>ν</i></sub>(<b>r</b>)d³<b>r</b></p>
+<p>这个表达式里通常定义两个简写：</p>
+<p><i>P</i><sub><i>μν</i></sub> = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub>　"密度矩阵"；　<i>S</i><sub><i>μν</i></sub> = ∫<i>φ</i><sub><i>μ</i></sub>*(<b>r</b>)<i>φ</i><sub><i>ν</i></sub>(<b>r</b>)d³<b>r</b>　"重叠矩阵"；　<i>N</i> = Σ<sub><i>μ</i>,<i>ν</i></sub> <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></p>
+</div>
+
+<div class="warn"><span class="lab">注意：这一页的字母分工和第 3 讲是反的</span>
+<p><span class="key">第 3 讲里 <i>φ</i> 是分子轨道、<i>χ</i> 是基函数；这一页反过来——<i>χ</i><sub><i>i</i></sub> 是分子（自旋）轨道，<i>φ</i><sub><i>μ</i></sub> 是基函数。</span>密度矩阵在第 3 讲叫 <b>D</b>，这里叫 <b>P</b>（Gaussian 输出里也叫 P）。同一样东西换了名字，别被吓到。<b>看下标最保险：希腊字母 <i>μ</i>,<i>ν</i> 永远数基函数，拉丁字母 <i>i</i> 永远数轨道/电子。</b></p>
+</div>
+
+<h3 class="fm">公式解析 · 从轨道到密度，一步一步</h3>
+<div class="fml"><span class="tag">第一步：密度 = 每个占据轨道的概率密度之和</span>
+<i>ρ</i>(<b>r</b>) = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> |<i>χ</i><sub><i>i</i></sub>(<b>r</b>)|²
+</div>
+<div class="fml"><span class="tag">第二步：把每个轨道用基函数展开（LCAO）后代进去</span>
+<i>ρ</i>(<b>r</b>) = Σ<sub><i>μ</i>,<i>ν</i></sub> <span style="color:#b3541e"><i>P</i><sub><i>μν</i></sub></span> <i>φ</i><sub><i>μ</i></sub>*(<b>r</b>) <i>φ</i><sub><i>ν</i></sub>(<b>r</b>)　，　<span style="color:#b3541e"><i>P</i><sub><i>μν</i></sub> = Σ<sub><i>i</i></sub><sup>占据</sup> <i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub></span>
+</div>
+<div class="fml"><span class="tag">第三步：积分 → 电子总数</span>
+<i>N</i> = Σ<sub><i>μ</i>,<i>ν</i></sub> <i>P</i><sub><i>μν</i></sub> <i>S</i><sub><i>μν</i></sub> = tr(<b>PS</b>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ρ</i>(<b>r</b>)</td><td>电子密度</td><td>空间点 <b>r</b> 处单位体积里的电子数</td></tr>
+<tr><td><i>χ</i><sub><i>i</i></sub></td><td>分子（自旋）轨道</td><td>第 <i>i</i> 个占据轨道。<b>本页</b>用 <i>χ</i> 表示轨道</td></tr>
+<tr><td><i>φ</i><sub><i>μ</i></sub></td><td>基函数</td><td>第 <i>μ</i> 个原子轨道基函数（高斯函数），已知且固定</td></tr>
+<tr><td><i>c</i><sub><i>μi</i></sub></td><td>MO 系数</td><td>基函数 <i>μ</i> 在轨道 <i>i</i> 中的权重，SCF 解出来的东西</td></tr>
+<tr><td><i>N</i></td><td>电子数</td><td>这里的求和对<b>占据的自旋轨道</b>进行，所以上限就是电子数</td></tr>
+<tr><td><i>K</i></td><td>基函数总数</td><td>就是 Gaussian 输出里的 <code>NBasis</code></td></tr>
+<tr><td><i>P</i><sub><i>μν</i></sub></td><td><b>密度矩阵</b></td><td><span class="key">把所有占据轨道的系数打包成一个 <i>K</i>×<i>K</i> 矩阵</span>——有了它，不用再管单个轨道，密度就完全确定了</td></tr>
+<tr><td><i>S</i><sub><i>μν</i></sub></td><td><b>重叠矩阵</b></td><td>两个基函数的重叠积分。对角元 = 1（基函数归一化）</td></tr>
+<tr><td>* </td><td>复共轭</td><td>实函数时可以忽略</td></tr>
+<tr><td>tr(<b>PS</b>)</td><td>矩阵的迹</td><td>trace = 对角元之和。Σ<sub><i>μν</i></sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> 就等于 tr(<b>PS</b>)（因为 <b>S</b> 对称）</td></tr>
+</table>
+<div class="step"><div class="sh">第二步那个双重求和是怎么来的（初学者最容易卡的地方）</div>
+<p>|<i>χ</i><sub><i>i</i></sub>|² = <i>χ</i><sub><i>i</i></sub>*·<i>χ</i><sub><i>i</i></sub>。把两个因子各自展开：</p>
+<div class="fml" style="font-size:15px;line-height:2">
+<i>χ</i><sub><i>i</i></sub>*<i>χ</i><sub><i>i</i></sub> = (Σ<sub><i>μ</i></sub> <i>c</i><sub><i>μi</i></sub>*<i>φ</i><sub><i>μ</i></sub>*) · (Σ<sub><i>ν</i></sub> <i>c</i><sub><i>νi</i></sub><i>φ</i><sub><i>ν</i></sub>) = Σ<sub><i>μ</i></sub>Σ<sub><i>ν</i></sub> <i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub> <i>φ</i><sub><i>μ</i></sub>*<i>φ</i><sub><i>ν</i></sub>
+</div>
+<p>两个和相乘，就得到"每一项 × 每一项"——所以变成双重求和，下标要用两个不同的字母 <i>μ</i> 和 <i>ν</i>。<span class="key">然后再对所有占据轨道 <i>i</i> 求和，把只含 <i>i</i> 的部分 Σ<sub><i>i</i></sub><i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub> 单独拎出来，起个名字叫 <i>P</i><sub><i>μν</i></sub>。</span>密度矩阵就是这么来的。</p>
+</div>
+<div class="step"><div class="sh">小例子：H₂ 最小基组</div>
+<p>2 个基函数（1<i>s</i><sub>A</sub>、1<i>s</i><sub>B</sub>），1 个双占据轨道 <i>σ</i><sub><i>g</i></sub> = <i>c</i>(1<i>s</i><sub>A</sub> + 1<i>s</i><sub>B</sub>)，<i>c</i> = 1/√(2(1+<i>S</i>))。闭壳层时 <i>P</i><sub><i>μν</i></sub> = 2Σ<sub>空间轨道</sub><i>c</i><sub><i>μi</i></sub><i>c</i><sub><i>νi</i></sub>，所以：</p>
+<div class="fml" style="font-size:15px"><b>P</b> = 2<i>c</i>² <span class="mn">[ 1 1 ; 1 1 ]</span>　，　<b>S</b> = <span class="mn">[ 1 <i>S</i> ; <i>S</i> 1 ]</span></div>
+<p><i>N</i> = Σ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> = 2<i>c</i>²(1 + <i>S</i> + <i>S</i> + 1) = 2<i>c</i>²·2(1+<i>S</i>) = 2·[1/(2(1+<i>S</i>))]·2(1+<i>S</i>) = <b>2</b>　✔ 正好两个电子。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>写出 <i>P</i><sub><i>μν</i></sub> 和 <i>S</i><sub><i>μν</i></sub> 的定义，证明 <i>N</i> = Σ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></li>
+<li>为什么密度表达式里需要重叠矩阵？——因为基函数不正交（第 2 讲 p18、第 3 讲 p39）</li></ul></div>
+</section>
+
+<section class="slide" id="p5">
+<h2><span class="pno">p5</span>把密度划分给原子和化学键：Mulliken 布居</h2>
+<figure class="orig"><img src="img/L05/p05.png" alt="讲义 p5" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>现在我们可以求出某一对轨道（基函数）对总的可观测电子密度贡献了多少：</p>
+<p><i>N</i><sub><i>μν</i></sub> = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>c</i><sub><i>μi</i></sub>*<i>c</i><sub><i>νi</i></sub> ∫<i>φ</i><sub><i>μ</i></sub>*(<b>r</b>)<i>φ</i><sub><i>ν</i></sub>(<b>r</b>)d³<b>r</b> = <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub>　（前一部分 = 轨道布居，后一部分 = 轨道重叠）</p>
+<p>这种按轨道对划分密度的做法在电荷分析和成键结构分析中很有用。在以原子为中心的基组中有两种情形：</p>
+<ol>
+<li><i>φ</i><sub><i>μ</i></sub> 和 <i>φ</i><sub><i>ν</i></sub> <b>在同一个原子上</b>。<i>N</i><sub><i>μν</i></sub> 中的全部密度可以分给这个原子，解释为对它电荷的贡献。</li>
+<li><i>φ</i><sub><i>μ</i></sub> 和 <i>φ</i><sub><i>ν</i></sub> <b>在不同原子上</b>。<i>N</i><sub><i>μν</i></sub> 中的密度由两个原子共享，可以解释为对化学键以及电荷的贡献。</li>
+</ol>
+<p>这个形式可以推广到自旋和电荷的划分：</p>
+<p><i>P</i><sub><i>μν</i></sub><sup><i>α</i></sup> = Σ<sub><i>i</i></sub> <i>c</i><sub><i>μi</i></sub><sup><i>α</i>*</sup><i>c</i><sub><i>νi</i></sub><sup><i>α</i></sup>　，　<i>P</i><sub><i>μν</i></sub><sup><i>β</i></sup> = Σ<sub><i>i</i></sub> <i>c</i><sub><i>μi</i></sub><sup><i>β</i>*</sup><i>c</i><sub><i>νi</i></sub><sup><i>β</i></sup></p>
+</div>
+<h3 class="fm">公式解析 · 布居矩阵</h3>
+<div class="fml"><span class="tag">★ 布居矩阵（population matrix）</span>
+<i>N</i><sub><i>μν</i></sub> = <span style="color:#b3541e"><i>P</i><sub><i>μν</i></sub></span> · <span style="color:#0b5ea8"><i>S</i><sub><i>μν</i></sub></span>　（注意：逐元素相乘，不是矩阵乘法）
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>N</i><sub><i>μν</i></sub></td><td>布居矩阵元</td><td>"基函数 <i>μ</i> 与 <i>ν</i> 这一对"分到的电子数。所有元素加起来 = <i>N</i></td></tr>
+<tr><td><i>N</i><sub><i>μμ</i></sub></td><td>净布居</td><td>对角元：纯粹属于基函数 <i>μ</i> 的电子（因为 <i>S</i><sub><i>μμ</i></sub>=1，就等于 <i>P</i><sub><i>μμ</i></sub>）</td></tr>
+<tr><td><i>N</i><sub><i>μν</i></sub>（<i>μ</i>≠<i>ν</i>）</td><td>重叠布居</td><td>非对角元：两个基函数"共有"的电子</td></tr>
+<tr><td><i>P</i><sup><i>α</i></sup>, <i>P</i><sup><i>β</i></sup></td><td>α/β 密度矩阵</td><td>只用 α（或 β）电子的系数构造。<b><i>P</i> = <i>P</i><sup><i>α</i></sup> + <i>P</i><sup><i>β</i></sup></b>（总密度），<b><i>P</i><sup><i>α</i></sup> − <i>P</i><sup><i>β</i></sup></b> 就是<b>自旋密度</b>矩阵</td></tr>
+</table>
+<h3>讲解 · Mulliken 原子电荷是怎么从这张表算出来的</h3>
+<figure>
+<svg viewBox="0 0 520 210" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12.5px;fill:#1c1c1e}</style></defs>
+<rect x="60" y="30" width="180" height="150" fill="none" stroke="#9aa5b1"/>
+<rect x="60" y="30" width="90" height="75" fill="#d6e6f7" stroke="#0b5ea8"/>
+<rect x="150" y="105" width="90" height="75" fill="#fde3d5" stroke="#b3541e"/>
+<rect x="150" y="30" width="90" height="75" fill="#eaf3ea" stroke="#2c6e4f"/>
+<rect x="60" y="105" width="90" height="75" fill="#eaf3ea" stroke="#2c6e4f"/>
+<text x="105" y="70" class="t" text-anchor="middle">A–A 块</text>
+<text x="195" y="145" class="t" text-anchor="middle">B–B 块</text>
+<text x="195" y="70" class="t" text-anchor="middle">A–B 块</text>
+<text x="105" y="145" class="t" text-anchor="middle">B–A 块</text>
+<text x="105" y="22" class="s" text-anchor="middle">原子 A 的基函数</text>
+<text x="195" y="22" class="s" text-anchor="middle">原子 B 的基函数</text>
+<text x="150" y="200" class="s" text-anchor="middle">布居矩阵 N<tspan font-size="9">μν</tspan> = P<tspan font-size="9">μν</tspan>S<tspan font-size="9">μν</tspan></text>
+<text x="270" y="60" class="s" fill="#0b5ea8">① 同一原子上的块 → 全部归 A</text>
+<text x="270" y="80" class="s" fill="#2c6e4f">② 跨原子的块 → A、B <tspan font-weight="700">各分一半</tspan></text>
+<text x="270" y="100" class="s" fill="#2c6e4f">　（Mulliken 的"平分"约定）</text>
+<text x="270" y="130" class="t">q<tspan font-size="9">A</tspan> = Z<tspan font-size="9">A</tspan> − Σ<tspan font-size="9">μ∈A</tspan> (PS)<tspan font-size="9">μμ</tspan></text>
+<text x="270" y="150" class="s">原子电荷 = 核电荷 − 分到的电子数</text>
+</svg>
+<figcaption>Mulliken 布居分析：同原子块归自己，跨原子块两边平分</figcaption>
+</figure>
+<div class="fml"><span class="tag">Mulliken 原子电荷</span>
+<i>q</i><sub>A</sub> = <i>Z</i><sub>A</sub> − Σ<sub><i>μ</i>∈A</sub> (<b>PS</b>)<sub><i>μμ</i></sub>
+</div>
+<table class="vars">
+<tr><td><i>q</i><sub>A</sub></td><td>原子 A 的 Mulliken 电荷</td><td>正 = 缺电子，负 = 富电子</td></tr>
+<tr><td><i>Z</i><sub>A</sub></td><td>核电荷</td><td>用 ECP 时是价电子数</td></tr>
+<tr><td>(<b>PS</b>)<sub><i>μμ</i></sub></td><td>矩阵乘积的对角元</td><td>= Σ<sub><i>ν</i></sub><i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>νμ</i></sub>：基函数 <i>μ</i> 的净布居 + 它和所有其他函数的重叠布居的<b>一半</b>（另一半在对面）</td></tr>
+<tr><td><i>μ</i>∈A</td><td>"属于 A 的基函数"</td><td>只对以原子 A 为中心的基函数求和</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 这一页直接对应作业里的三个输出</span>
+<table>
+<tr><th style="width:190px">Gaussian / ORCA 输出</th><th>从这一页的哪个量来</th></tr>
+<tr><td><b>Mulliken charges</b></td><td>上面的 <i>q</i><sub>A</sub> 公式</td></tr>
+<tr><td><b>Mulliken spin densities</b>（开壳层）</td><td>把 <b>P</b> 换成 <b>P</b><sup><i>α</i></sup> − <b>P</b><sup><i>β</i></sup> 再做同样的分配 → <span class="key">每个原子上有多少未成对电子。本讲 p48 的 Cu₂Cl₆²⁻ 作业就要看这个</span></td></tr>
+<tr><td><b>Mayer 键级</b></td><td>用 A–B 跨原子块的元素构造。单键约 1，双键约 2</td></tr>
+</table>
+<p><b>老问题再提一次</b>（第 3 讲 p58 讲过）：<span class="key">"平分重叠布居"是一个人为约定，所以 Mulliken 电荷对基组很敏感，加弥散函数后可能完全失去意义。</span>只能比较同一计算里不同原子的相对大小。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><i>N</i><sub><i>μν</i></sub> = <i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub> 的两种情形：同一原子 → 电荷；不同原子 → 化学键</li>
+<li>自旋密度 = <b>P</b><sup><i>α</i></sup> − <b>P</b><sup><i>β</i></sup></li>
+<li>Mulliken 电荷为什么依赖基组</li></ul></div>
+</section>
+
+<section class="slide" id="p6">
+<h2><span class="pno">p6</span>电子相关能（回顾）</h2>
+<figure class="orig"><img src="img/L05/p06.png" alt="讲义 p6" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>Ψ = <i>a</i>₀<i>ψ</i><sub>HF</sub> + Σ<sub><i>S</i></sub><i>a</i><sub><i>S</i></sub><i>ψ</i><sub><i>S</i></sub> + Σ<sub><i>D</i></sub><i>a</i><sub><i>D</i></sub><i>ψ</i><sub><i>D</i></sub> + Σ<sub><i>T</i></sub><i>a</i><sub><i>T</i></sub><i>ψ</i><sub><i>T</i></sub> + ⋯</p>
+<p>HF 能量：<i>E</i><sub>HF</sub> = ⟨<i>ψ</i><sub>HF</sub>|<i>Ĥ</i>|<i>ψ</i><sub>HF</sub>⟩　；　精确能量：<i>E</i><sub>exact</sub> = ⟨Ψ|<i>Ĥ</i>|Ψ⟩</p>
+<p>相关能：<i>E</i><sub>corr</sub> = <i>E</i><sub>exact</sub> − <i>E</i><sub>HF</sub></p>
+<p><b>通常 <i>E</i><sub>corr</sub> 只占 <i>E</i><sub>exact</sub> 的约 1–5%，但它对应用非常重要。</b></p>
+</div>
+<h3>讲解</h3>
+<p>这是第 4 讲 p2–p3 的浓缩（<a href="L04-电子相关方法.html#p3">详细解析见第 4 讲 p3</a>）。<i>S</i>、<i>D</i>、<i>T</i> 分别是单、双、三激发行列式的下标。放在这里的目的，是提醒你<b>DFT 要解决的仍然是这个问题</b>：把 HF 丢掉的那 1–5% 找回来。</p>
+<p><span class="key">区别在于方法：第 4 讲靠增加行列式（贵），DFT 靠一个近似的交换-相关泛函（便宜）。</span></p>
+</section>
+
+<section class="slide" id="p7">
+<h2><span class="pno">p7</span>外势：什么东西决定了"这是哪个分子"</h2>
+<figure class="orig"><img src="img/L05/p07.png" alt="讲义 p7" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>在 Born–Oppenheimer 哈密顿量中，分子或固体的<b>种类</b>由电子-原子核相互作用决定：</p>
+<p><i>V̂</i><sub>ext</sub> = −(1/4π<i>ε</i>₀) Σ<sub><i>i</i>=1</sub><sup><i>N</i><sub>elec</sub></sup> Σ<sub><i>A</i>=1</sub><sup><i>N</i><sub>nuc</sub></sup> <i>e</i>²<i>Z</i><sub><i>A</i></sub>/|<b>R</b><sub><i>A</i></sub> − <b>r</b><sub><i>i</i></sub>|　（SI 单位）　= −Σ<sub><i>i</i></sub>Σ<sub><i>A</i></sub> <i>Z</i><sub><i>A</i></sub>/|<b>R</b><sub><i>A</i></sub> − <b>r</b><sub><i>i</i></sub>|　（原子单位）</p>
+<p>（这常被称为"外势"。）</p>
+</div>
+<h3 class="fm">公式解析 · 外势</h3>
+<div class="fml"><span class="tag">★ 外势 external potential（原子单位）</span>
+<i>V̂</i><sub>ext</sub> = − Σ<sub><i>i</i>=1</sub><sup><i>N</i><sub>elec</sub></sup> Σ<sub><i>A</i>=1</sub><sup><i>N</i><sub>nuc</sub></sup> <i>Z</i><sub><i>A</i></sub> / |<b>R</b><sub><i>A</i></sub> − <b>r</b><sub><i>i</i></sub>|
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>V̂</i><sub>ext</sub></td><td>外势</td><td>所有电子感受到的原子核吸引。"外"是相对于电子而言——它不是电子之间的作用，是"外面"的核施加的</td></tr>
+<tr><td><i>i</i></td><td>电子编号</td><td>1 到 <i>N</i><sub>elec</sub></td></tr>
+<tr><td><i>A</i></td><td>原子核编号</td><td>1 到 <i>N</i><sub>nuc</sub></td></tr>
+<tr><td><i>Z</i><sub><i>A</i></sub></td><td>核电荷数</td><td>C=6，O=8</td></tr>
+<tr><td><b>R</b><sub><i>A</i></sub></td><td>核的位置</td><td>BO 近似下固定不动（大写 R 表示核）</td></tr>
+<tr><td><b>r</b><sub><i>i</i></sub></td><td>电子的位置</td><td>小写 r 表示电子</td></tr>
+<tr><td><i>e</i>, <i>ε</i>₀</td><td>电子电荷、真空介电常数</td><td>原子单位下都消失（第 2 讲 p44 拓展）</td></tr>
+</table>
+<h3>讲解 · 为什么说外势"定义了分子"</h3>
+<p>把分子哈密顿量（BO 近似后）拆开看：</p>
+<div class="fml" style="font-size:16px"><i>Ĥ</i> = <span style="color:#6b6b70"><i>T̂</i></span> + <span style="color:#6b6b70"><i>V̂</i><sub>ee</sub></span> + <span style="color:#c0392b"><i>V̂</i><sub>ext</sub></span></div>
+<table>
+<tr><th style="width:170px">项</th><th>对不同分子是否相同？</th></tr>
+<tr><td>动能 <i>T̂</i> = −½Σ∇<sub><i>i</i></sub>²</td><td><b>完全一样</b>——所有电子的动能算符都是同一个形式</td></tr>
+<tr><td>电子排斥 <i>V̂</i><sub>ee</sub> = Σ1/<i>r</i><sub><i>ij</i></sub></td><td><b>完全一样</b>——电子之间的排斥不管在哪个分子里都是 1/<i>r</i></td></tr>
+<tr><td><b>外势 <i>V̂</i><sub>ext</sub></b></td><td><span class="key"><b>唯一不同的地方</b>——核在哪、带多少电荷</span></td></tr>
+</table>
+<p><span class="key">所以：给定电子数 <i>N</i>，只要知道 <i>V</i><sub>ext</sub>，就知道了整个哈密顿量，也就知道了一切。</span>苯和吡啶的区别，全在于 <i>V</i><sub>ext</sub> 里有一个 <i>Z</i>=6 换成了 <i>Z</i>=7。</p>
+<p>这一点是下面 HK 定理的起点：<b>HK 定理要证明的，就是"知道密度 ⟺ 知道外势"</b>。</p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>外势的定义；为什么 <i>T̂</i> 和 <i>V̂</i><sub>ee</sub> 是"普适的"而 <i>V̂</i><sub>ext</sub> 是"体系特有的"</li></ul></div>
+</section>
+
+<section class="slide" id="p8">
+<h2><span class="pno">p8–9</span>电子密度算符</h2>
+<figure class="orig"><img src="img/L05/p08.png" alt="讲义 p8" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p09.png" alt="讲义 p9" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p8）</span>
+<p><b>单个电子</b>的电子密度算符：<i>ρ̂</i>(<b>r</b>) = <i>δ</i>(<b>r</b>′ − <b>r</b>)</p>
+<p>单个电子的电子密度：<i>ρ</i>(<b>r</b>) = ⟨Ψ|<i>ρ̂</i>(<b>r</b>)|Ψ⟩ = ∫Ψ*(<b>r</b>′)Ψ(<b>r</b>′)<i>δ</i>(<b>r</b>′ − <b>r</b>)d<b>r</b>′ = Ψ*(<b>r</b>)Ψ(<b>r</b>) = |Ψ(<b>r</b>)|²</p>
+<p>解释：在位置 <b>r</b> 找到电子的概率。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p9）</span>
+<p><b><i>N</i> 个电子</b>的电子密度算符：<i>ρ̂</i>(<b>r</b>) = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>δ</i>(<b>r</b><sub><i>i</i></sub> − <b>r</b>)</p>
+<p><i>N</i> 电子的电子密度：</p>
+<p><i>ρ</i>(<b>r</b>) = ⟨Ψ|<i>ρ̂</i>(<b>r</b>)|Ψ⟩ = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> ∫Ψ*(<b>r</b>₁,<b>r</b>₂,…,<b>r</b><sub><i>i</i></sub>≡<b>r</b>,…,<b>r</b><sub><i>N</i></sub>)Ψ(<b>r</b>₁,…,<b>r</b><sub><i>i</i></sub>≡<b>r</b>,…,<b>r</b><sub><i>N</i></sub>)d<b>r</b>₁d<b>r</b>₂…d<b>r</b><sub><i>i</i></sub>…d<b>r</b><sub><i>N</i></sub> = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup>|<i>φ</i>(<b>r</b><sub><i>i</i></sub>)|²</p>
+<p>解释：<b>在位置 <b>r</b> 找到<u>任何一个</u>电子的概率，不管其他 <i>N</i>−1 个电子在哪里。</b></p>
+<p><b><i>ρ</i>(<b>r</b>) ≡ <i>ρ</i>(<i>x</i>,<i>y</i>,<i>z</i>) 是一个 3 变量的实函数，无论 <i>N</i> 多大。</b></p>
+</div>
+<h3 class="fm">公式解析 · Dirac δ 函数（这两页的关键工具）</h3>
+<div class="fml"><span class="tag">Dirac δ 函数的定义性质</span>
+∫ <i>f</i>(<b>r</b>′) <i>δ</i>(<b>r</b>′ − <b>r</b>) d<b>r</b>′ = <i>f</i>(<b>r</b>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>δ</i>(<b>r</b>′ − <b>r</b>)</td><td>Dirac δ 函数</td><td><span class="key">一个"无限窄、无限高、面积为 1"的尖峰，只在 <b>r</b>′ = <b>r</b> 处非零。</span>它的作用是"挑出"被积函数在某一点的值</td></tr>
+<tr><td><b>r</b>′</td><td>积分变量</td><td>带撇号的是"跑遍全空间"的哑变量</td></tr>
+<tr><td><b>r</b></td><td>探测点</td><td>你想知道密度的那个位置（固定的）</td></tr>
+<tr><td><i>ρ̂</i>(<b>r</b>)</td><td>密度算符</td><td>"去 <b>r</b> 点数一数有没有电子"这个操作</td></tr>
+<tr><td><b>r</b><sub><i>i</i></sub> ≡ <b>r</b></td><td>把第 <i>i</i> 个电子钉在 <b>r</b></td><td>只有这个电子的坐标不积分，其余全积掉</td></tr>
+</table>
+<div class="step"><div class="sh">用一个比喻理解 δ 函数的"挑选"作用</div>
+<p>想象你有一张全城人口分布图 <i>f</i>(<b>r</b>′)，你想知道某个路口 <b>r</b> 的人口。δ 函数就像一个<b>只在那个路口开着的小窗口</b>：把整张图乘上这个窗口再求和，其他地方全被乘成 0，只剩窗口里的那个值。</p>
+<p>所以 ∫Ψ*(<b>r</b>′)Ψ(<b>r</b>′)<i>δ</i>(<b>r</b>′−<b>r</b>)d<b>r</b>′ = Ψ*(<b>r</b>)Ψ(<b>r</b>)：<span class="key">"算密度算符的期望值"就等于"在那一点取 |Ψ|²"</span>——这就是第 2 讲 p32 的 Born 解释，只不过换成了算符语言。</p>
+</div>
+<div class="step"><div class="sh">p9 的 <i>N</i> 电子情形：为什么是求和</div>
+<p>密度算符 Σ<sub><i>i</i></sub><i>δ</i>(<b>r</b><sub><i>i</i></sub> − <b>r</b>) 的意思是：<b>"电子 1 在 <b>r</b> 吗？+ 电子 2 在 <b>r</b> 吗？+ … + 电子 <i>N</i> 在 <b>r</b> 吗？"</b></p>
+<p>每一项都给出"那个特定电子在 <b>r</b> 的概率"。因为电子全同，<span class="key">这 <i>N</i> 项的值完全相等</span>，所以总和 = <i>N</i> × （任意一个电子在 <b>r</b> 的概率）。这就是第 4 讲 p44 公式里那个因子 <i>N</i> 的来源。</p>
+<p>最后等于 Σ<sub><i>i</i></sub>|<i>φ</i><sub><i>i</i></sub>|² 这一步只在<b>单个 Slater 行列式</b>下成立（用到了轨道正交归一）——这正是 p4 那个式子。</p>
+</div>
+<div class="warn"><span class="lab">p9 最后一句话是 DFT 的全部动机</span>
+<p><span class="key">"<i>ρ</i>(<b>r</b>) 是 3 变量的实函数，<u>无论 N 多大</u>。"</span></p>
+<table>
+<tr><th style="width:170px">体系</th><th style="width:170px">波函数的变量数 3<i>N</i></th><th>密度的变量数</th></tr>
+<tr><td>H₂（2 电子）</td><td class="c">6</td><td class="c">3</td></tr>
+<tr><td>苯（42 电子）</td><td class="c">126</td><td class="c">3</td></tr>
+<tr><td>一个小蛋白（~10⁴ 电子）</td><td class="c">~30 000</td><td class="c"><b>还是 3</b></td></tr>
+</table>
+<p>如果能只用密度做量子化学，问题的复杂度就和体系大小<b>脱钩</b>了。但凭什么说 3 个变量的函数就包含了 3<i>N</i> 个变量的函数的全部信息？——<b>这就是 HK 第一定理要回答的问题。</b></p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>密度算符的定义 <i>ρ̂</i>(<b>r</b>) = Σ<sub><i>i</i></sub><i>δ</i>(<b>r</b><sub><i>i</i></sub> − <b>r</b>) 及其物理解释</li>
+<li>"<i>ρ</i> 只有 3 个变量，与 <i>N</i> 无关"——这是 DFT 相对波函数方法的根本优势</li></ul></div>
+</section>
+
+<section class="slide" id="p10">
+<h2><span class="pno">p10</span>数学准备：单射、满射、双射</h2>
+<figure class="orig"><img src="img/L05/p10.png" alt="讲义 p10" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>（五张示意图，每张左边一列 A、右边一列 B，箭头表示对应关系）</p>
+<ul>
+<li><b>不是函数</b>：一个 A 对应多个 B</li>
+<li><b>一般函数</b>：一个 B 可以有多个 A</li>
+<li><b>单射 (Injective)</b>（非满射）：一个 B 不能有多个 A</li>
+<li><b>满射 (Surjective)</b>（非单射）：每个 B 都有某个 A</li>
+<li><b>双射 (Bijective)</b>（既单又满）：A 到 B 完美对应</li>
+</ul>
+</div>
+<h3>讲解 · 三个词，用"学生与座位"来记</h3>
+<p>设 A = 一群学生，B = 教室里的座位，箭头 = "谁坐哪"。</p>
+<table>
+<tr><th style="width:130px">类型</th><th style="width:230px">数学定义</th><th>座位比喻</th></tr>
+<tr><td><b>函数</b></td><td>每个 A 恰好对应<b>一个</b> B</td><td>每个学生都坐且只坐一个位子（不能一人占两座）</td></tr>
+<tr><td><b>单射</b><br>injective</td><td>不同的 A → 不同的 B<br>（<i>f</i>(<i>a</i>₁) = <i>f</i>(<i>a</i>₂) ⟹ <i>a</i>₁ = <i>a</i>₂）</td><td><span class="key">没有两个人挤同一个座位</span>（可能有空座）</td></tr>
+<tr><td><b>满射</b><br>surjective</td><td>每个 B 都至少被一个 A 对应</td><td><span class="key">没有空座位</span>（可能有人挤一起）</td></tr>
+<tr><td><b>双射</b><br>bijective</td><td>既单射又满射</td><td><span class="key">一人一座，不多不少</span> → 可以<b>反过来</b>：看座位就知道是谁</td></tr>
+</table>
+<div class="warn"><span class="lab">为什么 DFT 要讲这个</span>
+<p><span class="key">只有双射才能"反推"。</span>如果"波函数 → 密度"是双射，那么<b>知道密度就能唯一反推出波函数</b>，于是密度里就包含了波函数的全部信息。</p>
+<p>如果只是一般函数（两个不同波函数可以给出同一个密度），那么光看密度就分不清是哪个波函数——信息丢了，DFT 就不可能成立。<b>p11–p16 就是在证明：它确实是双射。</b></p>
+</div>
+</section>
+
+<section class="slide" id="p11">
+<h2><span class="pno">p11–14</span>★ Hohenberg–Kohn 第一定理（映射图）</h2>
+<figure class="orig"><img src="img/L05/p11.png" alt="讲义 p11" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p12.png" alt="讲义 p12" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p13.png" alt="讲义 p13" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p14.png" alt="讲义 p14" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p11–14，四页是同一张图逐步展开）</span>
+<p>三个集合：外势 <i>V̂</i><sub>ext</sub> → 波函数 Ψ → 密度 <i>ρ</i>。两个映射：</p>
+<p><b>C</b>：<i>V̂</i><sub>ext</sub> ↦ Ψ　（解薛定谔方程）；　<b>D</b>：Ψ ↦ <i>ρ</i>　（从波函数算密度）</p>
+<p><b>p11–12</b>：两者按构造都是<b>满射</b>（"所有波函数""所有密度"）。<b>C 和 D 也是单射吗？</b></p>
+<p><b>p13</b>：C：<i>V̂</i><sub>ext</sub> ↦ Ψ　<b>单射（不意外）</b></p>
+<p><b>p14</b>：D：Ψ ↦ <i>ρ</i>　<b>单射（非常令人意外！）= Hohenberg 和 Kohn 的第一定理 (1964)</b></p>
+</div>
+<h3>讲解 · 把这张图读懂</h3>
+<figure>
+<svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="ra" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+<marker id="ba" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0b5ea8"/></marker>
+<style>.s{font-size:11px;fill:#6b6b70}.t{font-size:13px;fill:#1c1c1e;font-weight:700}</style></defs>
+<ellipse cx="90" cy="105" rx="55" ry="75" fill="#fff8ee" stroke="#b3541e" stroke-width="1.5"/>
+<ellipse cx="280" cy="105" rx="55" ry="75" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.5"/>
+<ellipse cx="470" cy="105" rx="55" ry="75" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.5"/>
+<text x="90" y="22" class="t" text-anchor="middle">外势 V<tspan font-size="9">ext</tspan></text>
+<text x="280" y="22" class="t" text-anchor="middle">基态波函数 Ψ</text>
+<text x="470" y="22" class="t" text-anchor="middle">基态密度 ρ</text>
+<circle cx="90" cy="70" r="4" fill="#b3541e"/><circle cx="90" cy="105" r="4" fill="#b3541e"/><circle cx="90" cy="140" r="4" fill="#b3541e"/>
+<circle cx="280" cy="70" r="4" fill="#0b5ea8"/><circle cx="280" cy="105" r="4" fill="#0b5ea8"/><circle cx="280" cy="140" r="4" fill="#0b5ea8"/>
+<circle cx="470" cy="70" r="4" fill="#2c6e4f"/><circle cx="470" cy="105" r="4" fill="#2c6e4f"/><circle cx="470" cy="140" r="4" fill="#2c6e4f"/>
+<line x1="96" y1="70" x2="270" y2="70" stroke="#c0392b" stroke-width="1.4" marker-end="url(#ra)"/>
+<line x1="96" y1="105" x2="270" y2="105" stroke="#c0392b" stroke-width="1.4" marker-end="url(#ra)"/>
+<line x1="96" y1="140" x2="270" y2="140" stroke="#c0392b" stroke-width="1.4" marker-end="url(#ra)"/>
+<line x1="286" y1="70" x2="460" y2="70" stroke="#0b5ea8" stroke-width="1.4" marker-end="url(#ba)"/>
+<line x1="286" y1="105" x2="460" y2="105" stroke="#0b5ea8" stroke-width="1.4" marker-end="url(#ba)"/>
+<line x1="286" y1="140" x2="460" y2="140" stroke="#0b5ea8" stroke-width="1.4" marker-end="url(#ba)"/>
+<text x="185" y="195" class="s" text-anchor="middle" fill="#c0392b">C：解薛定谔方程</text>
+<text x="185" y="210" class="s" text-anchor="middle">单射：不意外</text>
+<text x="375" y="195" class="s" text-anchor="middle" fill="#0b5ea8">D：Ψ 算出 ρ</text>
+<text x="375" y="210" class="s" text-anchor="middle" font-weight="700">单射：非常意外！= HK 第一定理</text>
+</svg>
+<figcaption>三个集合之间的一一对应：一旦证明两个箭头都是双射，就可以从 ρ 一路倒推回 V<sub>ext</sub></figcaption>
+</figure>
+<div class="step"><div class="sh">为什么 C 是单射"不意外"</div>
+<p>两个不同的外势（比如核的位置不同），解出的基态波函数当然不同——这是物理直觉，数学上也容易证明（两个不同的 <i>V</i> 不可能有相同的基态本征函数，除非它们只差一个常数）。</p>
+</div>
+<div class="step"><div class="sh">为什么 D 是单射"非常意外"</div>
+<p>D 做的事是：从一个 3<i>N</i> 维的函数 Ψ，<b>积掉 3(<i>N</i>−1) 个变量</b>，只留下 3 维的 <i>ρ</i>。</p>
+<p><span class="key">直觉上这是一个极度"有损"的压缩——就像把一部电影压成一张平均亮度图，你怎么可能从平均亮度图还原出电影？</span></p>
+<p>一般的波函数确实做不到（很多不同的 Ψ 可以有相同的 <i>ρ</i>）。<b>HK 定理的惊人之处在于：只要限定为某个外势下的<u>基态</u>波函数，这种压缩就是无损的。</b></p>
+<p><b>关键限定词是"基态"</b>——激发态不适用。这也是为什么普通 DFT 只能算基态，激发态要用 TD-DFT（p44）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>画出 <i>V</i><sub>ext</sub> → Ψ → <i>ρ</i> 的映射图，说明为什么映射 D 的单射性是 HK 第一定理</li>
+<li>HK 定理只适用于<b>基态</b></li></ul></div>
+</section>
+
+<section class="slide" id="p15">
+<h2><span class="pno">p15</span>★ HK 第一定理的证明（反证法，可能直接考）</h2>
+<figure class="orig"><img src="img/L05/p15.png" alt="讲义 p15" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>我们要证明：<b>如果 Ψ ≠ Ψ′，那么 <i>ρ</i> ≠ <i>ρ</i>′。</b></p>
+<p>做法：假设 Ψ ≠ Ψ′ 但 <i>ρ</i> = <i>ρ</i>′，推出矛盾。</p>
+<p>Ψ 是哈密顿量 <i>H</i> 的基态，基态能量为 <i>E</i><sub>GS</sub>；Ψ′ 是哈密顿量 <i>H</i>′ 的基态，基态能量为 <i>E</i><sub>GS</sub>′。<i>V</i> 和 <i>V</i>′ 是两种情况的外势。</p>
+<p>电子数相同（否则是平凡的），因此：<i>H</i> = <i>T</i> + <i>V</i>，<i>H</i>′ = <i>T</i> + <i>V</i>′ ⟹ <i>H</i> = <i>H</i>′ − <i>V</i>′ + <i>V</i></p>
+<p>由变分原理：</p>
+<p><i>E</i><sub>GS</sub> = ⟨Ψ|<i>H</i>|Ψ⟩ &lt; ⟨Ψ′|<i>H</i>|Ψ′⟩ = ⟨Ψ′|<i>H</i>′ − <i>V</i>′ + <i>V</i>|Ψ′⟩ = ⟨Ψ′|<i>H</i>′|Ψ′⟩ + ⟨Ψ′|<i>V</i> − <i>V</i>′|Ψ′⟩ ⟹</p>
+<p><i>E</i><sub>GS</sub> &lt; <i>E</i><sub>GS</sub>′ + ∫<i>ρ</i>′(<b>r</b>)[<i>V</i>(<b>r</b>) − <i>V</i>′(<b>r</b>)]d<b>r</b></p>
+<p>从 Ψ′ 出发重复这个论证：<i>E</i><sub>GS</sub>′ &lt; <i>E</i><sub>GS</sub> − ∫<i>ρ</i>(<b>r</b>)[<i>V</i>(<b>r</b>) − <i>V</i>′(<b>r</b>)]d<b>r</b></p>
+<p>把两式相加，并假设 <i>ρ</i> = <i>ρ</i>′ ⟹ <i>E</i><sub>GS</sub> + <i>E</i><sub>GS</sub>′ &lt; <i>E</i><sub>GS</sub>′ + <i>E</i><sub>GS</sub>　<b>矛盾</b>。</p>
+</div>
+<h3 class="fm">证明逐步拆解（每一步的依据都写出来）</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>V</i>, <i>V</i>′</td><td>两个不同的外势</td><td>假设它们<b>不只差一个常数</b>（差常数的外势给出同一个 Ψ，是平凡情形）</td></tr>
+<tr><td>Ψ, Ψ′</td><td>对应的基态波函数</td><td>假设不相同</td></tr>
+<tr><td><i>E</i><sub>GS</sub>, <i>E</i><sub>GS</sub>′</td><td>对应的基态能量</td><td>GS = Ground State</td></tr>
+<tr><td><i>T</i></td><td>动能 + 电子排斥</td><td>讲义把 <i>T̂</i> + <i>V̂</i><sub>ee</sub> 合写成 <i>T</i>——两个体系<b>完全相同</b>（p7：它们是普适的）</td></tr>
+<tr><td>&lt;（严格小于）</td><td>严格变分不等式</td><td>因为 Ψ′ 不是 <i>H</i> 的基态，用它算出的能量<b>严格</b>高于 <i>H</i> 的真实基态能量（假设基态不简并）</td></tr>
+</table>
+<div class="step"><div class="sh">第 1 步：写出两个哈密顿量的关系</div>
+<p>两个体系电子数相同，所以 <i>T</i>（动能 + 电子排斥）完全一样，只有外势不同：</p>
+<div class="fml" style="font-size:15px"><i>H</i> = <i>T</i> + <i>V</i>　，　<i>H</i>′ = <i>T</i> + <i>V</i>′　⟹　<b><i>H</i> = <i>H</i>′ + (<i>V</i> − <i>V</i>′)</b></div>
+</div>
+<div class="step"><div class="sh">第 2 步：用变分原理（第 3 讲 p26）</div>
+<p>把 Ψ′ 当成 <i>H</i> 的"试探函数"——它不是 <i>H</i> 的基态，所以：</p>
+<div class="fml" style="font-size:15px;line-height:2"><i>E</i><sub>GS</sub> = ⟨Ψ|<i>H</i>|Ψ⟩ <b>&lt;</b> ⟨Ψ′|<i>H</i>|Ψ′⟩ = ⟨Ψ′|<i>H</i>′|Ψ′⟩ + ⟨Ψ′|<i>V</i> − <i>V</i>′|Ψ′⟩</div>
+<p>第一项就是 <i>E</i><sub>GS</sub>′（Ψ′ 是 <i>H</i>′ 的基态）。</p>
+</div>
+<div class="step"><div class="sh">第 3 步：势能的期望值只依赖密度（这一步是整个证明的精髓）</div>
+<p><i>V</i> 是一个"乘法型"的单电子算符：<i>V</i> = Σ<sub><i>i</i></sub><i>v</i>(<b>r</b><sub><i>i</i></sub>)。它的期望值：</p>
+<div class="fml" style="font-size:15px">⟨Ψ′| Σ<sub><i>i</i></sub> <i>v</i>(<b>r</b><sub><i>i</i></sub>) |Ψ′⟩ = ∫ <i>ρ</i>′(<b>r</b>) <i>v</i>(<b>r</b>) d<b>r</b></div>
+<p><span class="key">对任何单电子乘法算符，期望值都只需要密度就能算——不需要完整的波函数。</span>（这和 p9 的密度定义是同一件事：积掉其余电子后只剩 <i>ρ</i>。）于是：</p>
+<div class="fml" style="font-size:15px"><b>① <i>E</i><sub>GS</sub> &lt; <i>E</i><sub>GS</sub>′ + ∫ <i>ρ</i>′(<b>r</b>) [<i>V</i>(<b>r</b>) − <i>V</i>′(<b>r</b>)] d<b>r</b></b></div>
+</div>
+<div class="step"><div class="sh">第 4 步：把角色对调，再做一次</div>
+<p>这次把 Ψ 当成 <i>H</i>′ 的试探函数，完全对称地得到：</p>
+<div class="fml" style="font-size:15px"><b>② <i>E</i><sub>GS</sub>′ &lt; <i>E</i><sub>GS</sub> + ∫ <i>ρ</i>(<b>r</b>) [<i>V</i>′(<b>r</b>) − <i>V</i>(<b>r</b>)] d<b>r</b></b> = <i>E</i><sub>GS</sub> − ∫ <i>ρ</i>(<b>r</b>) [<i>V</i> − <i>V</i>′] d<b>r</b></div>
+</div>
+<div class="step"><div class="sh">第 5 步：相加，引出矛盾</div>
+<p>假设 <i>ρ</i> = <i>ρ</i>′（我们要推翻的假设），那么 ① 和 ② 里的两个积分<b>大小相等、符号相反</b>，相加后抵消：</p>
+<div class="fml" style="font-size:16px"><i>E</i><sub>GS</sub> + <i>E</i><sub>GS</sub>′ &lt; <i>E</i><sub>GS</sub>′ + <i>E</i><sub>GS</sub>　⟹　<b>0 &lt; 0</b>　✘ 荒谬</div>
+<p><span class="key">一个数严格小于它自己，这不可能。所以假设错了——两个不同的外势不可能给出同一个基态密度。</span>∎</p>
+</div>
+<div class="warn"><span class="lab">证明的逻辑结构（考试写证明时的骨架）</span>
+<ol>
+<li>反设：<i>V</i> ≠ <i>V</i>′（Ψ ≠ Ψ′）但 <i>ρ</i> = <i>ρ</i>′</li>
+<li>变分原理 + "势能期望值只依赖密度" → 不等式 ①</li>
+<li>对称地 → 不等式 ②</li>
+<li>相加 → <i>E</i> + <i>E</i>′ &lt; <i>E</i> + <i>E</i>′，矛盾</li>
+<li>结论：<i>ρ</i> 唯一确定 <i>V</i><sub>ext</sub>（至多差一个常数），从而确定 <i>H</i>、Ψ 和一切性质</li>
+</ol>
+<p><b>用到的两个前提</b>：① 变分原理；② 基态<b>非简并</b>（否则"&lt;"要变成"≤"，证明需要修补——Levy 在 1979 年给出了推广）。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 这个证明短得惊人，但它是一个"存在性"证明</span>
+<p>它证明了"<i>ρ</i> 决定一切"，但<span class="key">完全没有告诉你<b>怎么</b>从 <i>ρ</i> 算出能量</span>——那个"从密度到能量的规则"（泛函）存在，但它长什么样没人知道。</p>
+<p>这就是 DFT 的根本处境：<b>理论上是精确的，实践上必须近似</b>。Kohn 因此在 1998 年获诺贝尔奖，而找到那个精确泛函至今仍是未解决的问题（p24 "One unique expression must exist, but it is unknown"）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><b>用反证法证明 HK 第一定理</b>（上面五步，务必能独立写出来）</li>
+<li>证明中用到了哪两个前提（变分原理、非简并基态）</li>
+<li>为什么 ⟨Ψ|<i>V</i>|Ψ⟩ = ∫<i>ρV</i>d<b>r</b></li></ul></div>
+</section>
+
+<section class="slide" id="p16">
+<h2><span class="pno">p16–17</span>一一对应及其后果</h2>
+<figure class="orig"><img src="img/L05/p16.png" alt="讲义 p16" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p17.png" alt="讲义 p17" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>p16</b>：C：<i>V̂</i><sub>ext</sub> ↦ Ψ　双射；D：Ψ ↦ <i>ρ</i>　双射 ⟹ <b>一一对应关系</b>。</p>
+<p><b>p17</b>：<b>"多电子体系的基态密度与外势之间存在一一对应。"</b></p>
+<p>推论：多电子体系任何可观测的基态性质都可以写成密度的唯一泛函：</p>
+<p>性质 = ⟨Ψ|<i>Ô</i>|Ψ⟩ = <i>O</i>[<i>ρ</i>]</p>
+</div>
+<h3 class="fm">公式解析 · "一切性质都是密度的泛函"</h3>
+<div class="fml"><span class="tag">★ HK 第一定理的推论</span>
+<i>ρ</i><sub>0</sub>(<b>r</b>) &nbsp;⟹&nbsp; <i>V</i><sub>ext</sub> &nbsp;⟹&nbsp; <i>Ĥ</i> &nbsp;⟹&nbsp; Ψ<sub>0</sub> &nbsp;⟹&nbsp; ⟨Ψ<sub>0</sub>|<i>Ô</i>|Ψ<sub>0</sub>⟩ = <i>O</i>[<i>ρ</i><sub>0</sub>]
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ρ</i><sub>0</sub></td><td>基态密度</td><td>下标 0 = 基态</td></tr>
+<tr><td><i>Ô</i></td><td>任意可观测量的算符</td><td>能量、偶极矩、键长……</td></tr>
+<tr><td><i>O</i>[<i>ρ</i>]</td><td>密度泛函</td><td><span class="key">方括号 [ ] 专门表示"泛函"</span>——括号里放的是一个<b>函数</b>，不是一个数（对比圆括号 <i>f</i>(<i>x</i>) 里放的是数）</td></tr>
+</table>
+<div class="step"><div class="sh">这条链为什么每一步都成立</div>
+<ul>
+<li><i>ρ</i>₀ ⟹ <i>V</i><sub>ext</sub>：HK 第一定理（p15）</li>
+<li><i>V</i><sub>ext</sub> ⟹ <i>Ĥ</i>：因为 <i>T̂</i> 和 <i>V̂</i><sub>ee</sub> 是普适的（p7），电子数 <i>N</i> = ∫<i>ρ</i>d<b>r</b> 也由密度给出</li>
+<li><i>Ĥ</i> ⟹ Ψ₀：解薛定谔方程（原则上）</li>
+<li>Ψ₀ ⟹ 任何性质：量子力学公设 4（第 2 讲 p38）</li>
+</ul>
+<p><span class="key">所以密度"间接地"知道一切——这就是 p27 说的 "The basic lemma of DFT"。</span></p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>陈述 HK 第一定理：基态密度与外势一一对应</li>
+<li>推论：任何基态可观测量都是密度的唯一泛函</li></ul></div>
+</section>
+
+<section class="slide" id="p18">
+<h2><span class="pno">p18</span>什么是泛函？</h2>
+<figure class="orig"><img src="img/L05/p18.png" alt="讲义 p18" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>函数</b>把数映射成（复）数：<i>f</i>: ℝ → ℂ: <i>x</i> ↦ <i>f</i>(<i>x</i>)</p>
+<p><b>泛函</b>把函数映射成（复）数：<i>F</i>: ℌ → ℂ: <i>f</i> ↦ <i>F</i>[<i>f</i>]</p>
+<p>例：<i>F</i>[<i>f</i>] = ∫<sub>−∞</sub><sup>+∞</sup> <i>f</i>(<i>x</i>)e<sup>−<i>x</i>²</sup>d<i>x</i></p>
+<p><b>泛函导数</b>：导数对泛函的推广。</p>
+<p><i>F</i><sub>1</sub>[<i>ρ</i>] = ∫<i>ρ</i>(<b>r</b>)<i>ν</i>(<b>r</b>)d<b>r</b>　⟹　<i>δF</i><sub>1</sub>[<i>ρ</i>]/<i>δρ</i> = <i>ν</i>(<b>r</b>)</p>
+</div>
+<h3 class="fm">公式解析 · 函数 vs 泛函</h3>
+<table>
+<tr><th style="width:120px"></th><th style="width:44%">函数 <i>f</i>(<i>x</i>)</th><th>泛函 <i>F</i>[<i>f</i>]</th></tr>
+<tr><td><b>输入</b></td><td>一个<b>数</b> <i>x</i></td><td>一整个<b>函数</b> <i>f</i>(·)</td></tr>
+<tr><td><b>输出</b></td><td>一个数</td><td>一个数</td></tr>
+<tr><td><b>记号</b></td><td>圆括号 (<i>x</i>)</td><td>方括号 [<i>f</i>]</td></tr>
+<tr><td><b>例子</b></td><td><i>f</i>(<i>x</i>) = <i>x</i>²：给 3 得 9</td><td><i>F</i>[<i>f</i>] = ∫₀¹<i>f</i>(<i>x</i>)d<i>x</i>：给 <i>f</i>=<i>x</i>² 得 1/3，给 <i>f</i>=sin 得 1−cos1</td></tr>
+<tr><td><b>日常类比</b></td><td>"温度 → 穿几件衣服"</td><td>"一整天的温度曲线 → 这一天的平均体感"</td></tr>
+</table>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>ℝ, ℂ</td><td>实数集、复数集</td><td>函数的定义域和值域</td></tr>
+<tr><td>ℌ</td><td>希尔伯特空间</td><td>"所有合法波函数（或密度）组成的集合"——泛函的定义域是一个<b>函数的集合</b></td></tr>
+<tr><td><i>ν</i>(<b>r</b>)</td><td>某个给定的函数</td><td>例子里扮演外势的角色（希腊字母 nu，别和速度 v 混）</td></tr>
+<tr><td><i>δF</i>/<i>δρ</i></td><td>泛函导数</td><td>见下</td></tr>
+</table>
+<div class="step"><div class="sh">泛函导数：把 <i>ρ</i> 在某一点"戳一下"，看 <i>F</i> 变多少</div>
+<p>普通导数问："<i>x</i> 变一点点，<i>f</i> 变多少？"</p>
+<p>泛函导数问："函数 <i>ρ</i> 在<b>点 <b>r</b> 附近</b>变一点点，<i>F</i> 变多少？"——答案随 <b>r</b> 变化，所以<span class="key">泛函导数本身是一个关于 <b>r</b> 的函数</span>。</p>
+<div class="fml" style="font-size:15px"><i>δF</i> = ∫ (<i>δF</i>/<i>δρ</i>)(<b>r</b>) · <i>δρ</i>(<b>r</b>) d<b>r</b></div>
+<p><b>讲义的例子</b>：<i>F</i>₁[<i>ρ</i>] = ∫<i>ρν</i>d<b>r</b>。给 <i>ρ</i> 一个小改变 <i>δρ</i>：</p>
+<p><i>δF</i>₁ = ∫(<i>ρ</i>+<i>δρ</i>)<i>ν</i>d<b>r</b> − ∫<i>ρν</i>d<b>r</b> = ∫<i>ν</i>(<b>r</b>)·<i>δρ</i>(<b>r</b>)d<b>r</b>　⟹　<b><i>δF</i>₁/<i>δρ</i> = <i>ν</i>(<b>r</b>)</b>　✔</p>
+<p><span class="key">这个例子不是随便举的：外势能量 ∫<i>ρV</i><sub>ext</sub>d<b>r</b> 对密度的泛函导数就是外势本身。</span>p22 的 <i>V</i><sub>xc</sub> = <i>δE</i><sub>xc</sub>/<i>δρ</i> 就是用同样的方式从能量泛函得到势。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 你其实早就见过泛函</span>
+<p>第 3 讲的变分原理里，<i>E</i>[<i>ψ</i>] = ⟨<i>ψ</i>|<i>Ĥ</i>|<i>ψ</i>⟩/⟨<i>ψ</i>|<i>ψ</i>⟩ 就是一个<b>波函数的泛函</b>——给一个试探函数，吐出一个能量。HF 就是在"最小化波函数泛函"。</p>
+<p><span class="key">DFT 做的是同一件事，只是把自变量从 3<i>N</i> 维的 <i>ψ</i> 换成了 3 维的 <i>ρ</i>。</span></p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>函数与泛函的区别；为什么能量是密度的"泛函"而不是"函数"</li>
+<li>泛函导数的例子：<i>δ</i>(∫<i>ρν</i>)/<i>δρ</i> = <i>ν</i></li></ul></div>
+</section>
+
+<section class="slide" id="p19">
+<h2><span class="pno">p19–20</span>★ Hohenberg–Kohn 第二定理（密度的变分原理）</h2>
+<figure class="orig"><img src="img/L05/p19.png" alt="讲义 p19" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p20.png" alt="讲义 p20" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>"当作用于基态密度时返回基态总能量的那个唯一泛函，作用于任何其他密度时返回更高的能量。"</b></p>
+<p>（两张图：左图，<i>E</i><sub><i>V</i>ext</sub>[<i>ρ</i>] 在 <i>ρ</i>₀ 处有极小值；右图，一条单调上升的曲线，<i>ρ</i>₀ 处没有极小值——这是<b>不</b>满足定理的情形。）</p>
+<p><b>注 1</b>：这个泛函可以写成</p>
+<p><i>E</i><sub><i>V</i>ext</sub>[<i>ρ</i>] = <i>F</i><sub>HK</sub>[<i>ρ</i>] + ∫<i>ρ</i>(<b>r</b>)<i>V</i><sub>ext</sub>(<b>r</b>)d<b>r</b></p>
+<p>其中 <i>F</i><sub>HK</sub> 是（未知的）<b>Hohenberg–Kohn 泛函</b>，它返回总能量中的动能部分和电子-电子部分。</p>
+<p><b>注 2</b>：这提示了一种<b>通过最小化总能量泛函来求基态密度</b>的方法。</p>
+</div>
+<h3 class="fm">公式解析 · HK 能量泛函</h3>
+<div class="fml"><span class="tag">★ HK 能量泛函（DFT 的核心方程）</span>
+<i>E</i><sub><i>V</i><sub>ext</sub></sub>[<i>ρ</i>] = <span style="color:#c0392b"><i>F</i><sub>HK</sub>[<i>ρ</i>]</span> + <span style="color:#2c6e4f">∫ <i>ρ</i>(<b>r</b>) <i>V</i><sub>ext</sub>(<b>r</b>) d<b>r</b></span>　，　<span style="color:#c0392b"><i>F</i><sub>HK</sub>[<i>ρ</i>] = <i>T</i>[<i>ρ</i>] + <i>V</i><sub>ee</sub>[<i>ρ</i>]</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>E</i><sub><i>V</i>ext</sub>[<i>ρ</i>]</td><td>能量泛函</td><td>下标 <i>V</i><sub>ext</sub> 表示"对这个特定的分子"——不同分子的外势不同，泛函不同</td></tr>
+<tr><td style="color:#c0392b"><i>F</i><sub>HK</sub>[<i>ρ</i>]</td><td><b>HK 泛函</b><br>（普适泛函）</td><td><span class="key">动能 + 电子排斥能。它<b>对所有分子都一样</b>（因为 <i>T̂</i>、<i>V̂</i><sub>ee</sub> 是普适的，p7）。</span>如果知道它，就能算任何分子——<b>但它的形式未知</b></td></tr>
+<tr><td style="color:#2c6e4f">∫<i>ρV</i><sub>ext</sub>d<b>r</b></td><td>外势能量</td><td>核-电子吸引能。<span class="key"><b>精确已知</b></span>（p15 第 3 步：单电子乘法算符的期望值只需要密度）</td></tr>
+<tr><td><i>T</i>[<i>ρ</i>]</td><td>动能泛函</td><td>未知</td></tr>
+<tr><td><i>V</i><sub>ee</sub>[<i>ρ</i>]</td><td>电子排斥能泛函</td><td>未知（其中经典的库仑部分已知，见 p22）</td></tr>
+</table>
+<div class="fml"><span class="tag">★ HK 第二定理的数学形式</span>
+<i>E</i><sub><i>V</i><sub>ext</sub></sub>[<i>ρ</i>] ≥ <i>E</i><sub><i>V</i><sub>ext</sub></sub>[<i>ρ</i><sub>0</sub>] = <i>E</i><sub>0</sub>　（等号仅当 <i>ρ</i> = <i>ρ</i><sub>0</sub>）
+</div>
+<h3>讲解 · 第二定理就是"密度版的变分原理"</h3>
+<table>
+<tr><th style="width:130px"></th><th style="width:44%">变分原理（第 3 讲 p26）</th><th>HK 第二定理</th></tr>
+<tr><td><b>试探对象</b></td><td>波函数 <i>ψ</i><sub>trial</sub></td><td>密度 <i>ρ</i><sub>trial</sub></td></tr>
+<tr><td><b>结论</b></td><td><i>E</i>[<i>ψ</i><sub>trial</sub>] ≥ <i>E</i><sub>0</sub></td><td><i>E</i>[<i>ρ</i><sub>trial</sub>] ≥ <i>E</i><sub>0</sub></td></tr>
+<tr><td><b>用法</b></td><td>调 <i>ψ</i> 使能量最低</td><td>调 <i>ρ</i> 使能量最低</td></tr>
+</table>
+<div class="step"><div class="sh">为什么第二定理成立（一行证明）</div>
+<p>任给一个合法的试探密度 <i>ρ</i>′。由第一定理，它对应某个外势和某个波函数 Ψ′。把 Ψ′ 代入<b>我们这个分子</b>的哈密顿量，由普通的变分原理：</p>
+<div class="fml" style="font-size:15px"><i>E</i>[<i>ρ</i>′] = ⟨Ψ′|<i>Ĥ</i>|Ψ′⟩ ≥ ⟨Ψ₀|<i>Ĥ</i>|Ψ₀⟩ = <i>E</i>[<i>ρ</i>₀]</div>
+</div>
+<div class="step"><div class="sh">p19 那两张图在说什么</div>
+<ul>
+<li><b>左图（正确）</b>：泛函在真实基态密度 <i>ρ</i>₀ 处取<b>最小值</b>——任何偏离都让能量升高。</li>
+<li><b>右图（错误）</b>：一条没有极小值的曲线，<i>ρ</i>₀ 只是曲线上普通的一点。<span class="key">这是一个"坏泛函"的样子：如果泛函长这样，最小化它根本找不到 <i>ρ</i>₀。</span></li>
+</ul>
+<p>第二定理保证<b>精确的</b>泛函一定长得像左图。但<b>近似泛函</b>不一定——这就是为什么 DFT 的能量不像 HF 那样严格是变分上界（第 3 讲 p81 问题 9 的伏笔）。</p>
+</div>
+<div class="warn"><span class="lab">两个定理合起来，DFT 就有了"原理上可行"的完整方案</span>
+<ol>
+<li><b>第一定理</b>：只要找到 <i>ρ</i>₀，就知道一切 → <b>目标明确了</b></li>
+<li><b>第二定理</b>：<i>ρ</i>₀ 就是让 <i>E</i>[<i>ρ</i>] 最小的那个 → <b>找的方法也有了</b>（最小化）</li>
+<li><b>唯一的障碍</b>：<i>F</i><sub>HK</sub>[<i>ρ</i>] 长什么样不知道 → <b>这就是 p22 的 Kohn–Sham 要解决的</b></li>
+</ol>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>陈述 HK 第二定理；它与波函数变分原理的关系</li>
+<li>写出 <i>E</i>[<i>ρ</i>] = <i>F</i><sub>HK</sub>[<i>ρ</i>] + ∫<i>ρV</i><sub>ext</sub>，说明哪部分已知、哪部分未知、哪部分是普适的</li></ul></div>
+</section>
+
+<section class="slide" id="p21">
+<h2><span class="pno">p21</span>"基态总能量"是什么</h2>
+<figure class="orig"><img src="img/L05/p21.png" alt="讲义 p21" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>基态总能量</b> = 为了把所有原子核和电子带到彼此相距无穷远处，你需要向基态加入的能量。</p>
+<p>（图：左边是基态（= 0 K）的一小团原子核（黑点）与电子（红点）；加入 <i>E</i><sub>tot</sub> 后，所有粒子彼此相距 ∞。）</p>
+<p><i>E</i><sub>tot</sub> 可以从实验上测定：比热、熔化与汽化潜热，以及把剩下的原子变成等离子体所需的能量。</p>
+</div>
+<h3>讲解 · 为什么量化算出的能量是 −2692 Hartree 这种巨大的负数</h3>
+<p><span class="key">能量零点定义在"所有粒子彼此无限远、静止不动"的状态。</span>从那里把粒子聚在一起形成分子，会<b>放出</b>能量（核-电吸引远大于排斥），所以分子的总能量是负的。</p>
+<figure>
+<svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;fill:#1c1c1e}</style></defs>
+<line x1="60" y1="30" x2="60" y2="175" stroke="#9aa5b1" stroke-width="1.2"/>
+<line x1="70" y1="40" x2="250" y2="40" stroke="#2c6e4f" stroke-width="2.2"/>
+<text x="258" y="44" class="t">E = 0：所有核和电子相距 ∞</text>
+<line x1="70" y1="95" x2="250" y2="95" stroke="#b3541e" stroke-width="2.2"/>
+<text x="258" y="99" class="t">孤立原子（C、H、H…）</text>
+<line x1="70" y1="160" x2="250" y2="160" stroke="#0b5ea8" stroke-width="2.2"/>
+<text x="258" y="164" class="t">分子基态（量化程序输出的 E）</text>
+<line x1="120" y1="40" x2="120" y2="160" stroke="#0b5ea8" stroke-width="1.2" stroke-dasharray="3,3"/>
+<text x="126" y="120" class="s" fill="#0b5ea8">E<tspan font-size="9">tot</tspan>（约 −10² ~ −10³ Hartree）</text>
+<line x1="200" y1="95" x2="200" y2="160" stroke="#b3541e" stroke-width="1.2"/>
+<text x="206" y="135" class="s" fill="#b3541e">原子化能</text>
+<text x="206" y="148" class="s" fill="#b3541e">（化学关心的只有这一小段）</text>
+</svg>
+<figcaption>总能量的零点在"全部拆散到无穷远"，所以数值巨大且为负；化学关心的是其中很小的能量差</figcaption>
+</figure>
+<p>这就是第 1 讲 p20 说"科学计算必须双精度"的原因：总能量几千 Hartree，化学精度要求 0.0016 Hartree。</p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>基态总能量的定义（相对于"全部粒子无限远"的零点）；为什么它是负的</li></ul></div>
+</section>
+
+<section class="slide" id="p22">
+<h2><span class="pno">p22</span>★ Kohn–Sham 方程：DFT 真正能用的形式</h2>
+<figure class="orig"><img src="img/L05/p22.png" alt="讲义 p22" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>Kohn–Sham 定理</b>：</p>
+<p>"一个 <i>N</i> 电子体系的精确基态密度是</p>
+<p><i>ρ</i>(<b>r</b>) = Σ<sub><i>i</i>=1</sub><sup><i>N</i></sup> <i>φ</i><sub><i>i</i></sub>*(<b>r</b>)<i>φ</i><sub><i>i</i></sub>(<b>r</b>)</p>
+<p>其中单粒子波函数 <i>φ</i><sub><i>i</i></sub> 是 Kohn–Sham 方程能量最低的 <i>N</i> 个解：</p>
+<p><i>Ĥ</i><sub>KS</sub><i>φ</i><sub><i>i</i></sub> = <i>ε</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub></p>
+<p>其中 <i>Ĥ</i><sub>KS</sub> = <i>T̂</i><sub>0</sub> + <i>V̂</i><sub>H</sub> + <i>V̂</i><sub>ext</sub> + <i>V̂</i><sub>xc</sub> = −(<i>ħ</i>²/2<i>m</i>)∇<sub><i>i</i></sub>² + (<i>e</i>²/4π<i>ε</i>₀)∫<i>ρ</i>(<b>r</b>′)/|<b>r</b>−<b>r</b>′| d<b>r</b>′ + <i>V̂</i><sub>ext</sub> + <i>V̂</i><sub>xc</sub></p>
+<p>且 <i>V̂</i><sub>xc</sub> = <i>δV</i><sub>xc</sub>[<i>ρ</i>]/<i>δρ</i>。"</p>
+<p><b>Kohn–Sham 方程是原问题（耦合的微分方程）到单粒子方程（非耦合的）的一个精确变换。</b></p>
+</div>
+
+<h3 class="fm">公式解析 · Kohn–Sham 哈密顿量（逐项）</h3>
+<div class="fml"><span class="tag">★ Kohn–Sham 方程（原子单位）</span>
+[ <span style="color:#0b5ea8">−½∇²</span> + <span style="color:#2c6e4f">∫ <i>ρ</i>(<b>r</b>′)/|<b>r</b>−<b>r</b>′| d<b>r</b>′</span> + <span style="color:#6b6b70"><i>V</i><sub>ext</sub>(<b>r</b>)</span> + <span style="color:#c0392b"><i>V</i><sub>xc</sub>(<b>r</b>)</span> ] <i>φ</i><sub><i>i</i></sub>(<b>r</b>) = <i>ε</i><sub><i>i</i></sub> <i>φ</i><sub><i>i</i></sub>(<b>r</b>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>φ</i><sub><i>i</i></sub></td><td><b>Kohn–Sham 轨道</b></td><td><span class="key">一组"虚构的"无相互作用粒子的轨道</span>，唯一的要求是：它们的密度 Σ|<i>φ</i><sub><i>i</i></sub>|² 恰好等于真实体系的密度</td></tr>
+<tr><td><i>ε</i><sub><i>i</i></sub></td><td>KS 轨道能</td><td>KS 方程的本征值。<b>严格说没有直接物理意义</b>（只有 HOMO 的 <i>ε</i> 在精确泛函下等于 −IE），见第 3 讲 p47 警告</td></tr>
+<tr><td style="color:#0b5ea8"><i>T̂</i><sub>0</sub> = −½∇²</td><td>无相互作用动能</td><td>下标 0 表示"<b>无相互作用</b>体系的"动能。<span class="key">它和真实动能 <i>T</i>[<i>ρ</i>] 不一样——差值被塞进了 <i>V</i><sub>xc</sub></span></td></tr>
+<tr><td style="color:#2c6e4f"><i>V̂</i><sub>H</sub></td><td><b>Hartree 势</b></td><td>= ∫<i>ρ</i>(<b>r</b>′)/|<b>r</b>−<b>r</b>′|d<b>r</b>′：<b>整团电子云</b>在 <b>r</b> 点产生的经典静电势。<span class="key">就是第 2 讲 p85 的库仑算符 Σ<i>Ĵ</i><sub><i>j</i></sub></span></td></tr>
+<tr><td><b>r</b>′</td><td>积分变量</td><td>跑遍所有"源电荷"的位置</td></tr>
+<tr><td><i>V̂</i><sub>ext</sub></td><td>外势</td><td>核吸引（p7），精确已知</td></tr>
+<tr><td style="color:#c0392b"><i>V̂</i><sub>xc</sub></td><td><b>交换-相关势</b></td><td><span class="key">唯一的未知项。</span>它负责：① 交换效应；② 相关效应；③ 真实动能与 <i>T</i><sub>0</sub> 的差；④ 修正 <i>V</i><sub>H</sub> 里的自相互作用</td></tr>
+<tr><td><i>δV</i><sub>xc</sub>[<i>ρ</i>]/<i>δρ</i></td><td>泛函导数</td><td>势 = 能量泛函对密度的泛函导数（p18）。讲义把能量泛函也写成 <i>V</i><sub>xc</sub>[<i>ρ</i>]，更常见的写法是 <i>E</i><sub>xc</sub>[<i>ρ</i>]</td></tr>
+</table>
+
+<h3>讲解 · Kohn–Sham 的天才想法</h3>
+<div class="step"><div class="sh">问题：HK 泛函 <i>F</i><sub>HK</sub>[<i>ρ</i>] = <i>T</i>[<i>ρ</i>] + <i>V</i><sub>ee</sub>[<i>ρ</i>] 完全未知</div>
+<p>最大的困难在<b>动能</b>——动能占总能量的一半左右（位力定理，第 3 讲 p5），而且用密度直接表示动能极其困难（早期的 Thomas–Fermi 模型尝试过，连化学键都给不出）。</p>
+</div>
+<div class="step"><div class="sh">Kohn–Sham 的解法（1965）：引入一个"替身体系"</div>
+<figure>
+<svg viewBox="0 0 540 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12.5px;fill:#1c1c1e;font-weight:700}</style>
+<marker id="kk" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#6b6b70"/></marker></defs>
+<rect x="20" y="30" width="200" height="120" rx="8" fill="#fdeeee" stroke="#c0392b" stroke-width="1.5"/>
+<text x="120" y="52" class="t" text-anchor="middle">真实体系</text>
+<text x="120" y="74" class="s" text-anchor="middle">N 个<b>有相互作用</b>的电子</text>
+<text x="120" y="92" class="s" text-anchor="middle">波函数 Ψ(r₁…r<tspan font-size="9">N</tspan>)，3N 维</text>
+<text x="120" y="110" class="s" text-anchor="middle">解不了</text>
+<text x="120" y="135" class="s" text-anchor="middle" fill="#c0392b">密度 ρ(r)</text>
+<rect x="320" y="30" width="200" height="120" rx="8" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.5"/>
+<text x="420" y="52" class="t" text-anchor="middle">KS 替身体系</text>
+<text x="420" y="74" class="s" text-anchor="middle">N 个<b>无相互作用</b>的"准粒子"</text>
+<text x="420" y="92" class="s" text-anchor="middle">在有效势 V<tspan font-size="9">KS</tspan> 中运动</text>
+<text x="420" y="110" class="s" text-anchor="middle">单个行列式，和 HF 一样好解</text>
+<text x="420" y="135" class="s" text-anchor="middle" fill="#2c6e4f">密度 Σ|φ<tspan font-size="9">i</tspan>|² <tspan font-weight="700">= 同一个 ρ(r)</tspan></text>
+<line x1="222" y1="90" x2="318" y2="90" stroke="#6b6b70" stroke-width="1.4" marker-end="url(#kk)"/>
+<line x1="318" y1="110" x2="222" y2="110" stroke="#6b6b70" stroke-width="1.4" marker-end="url(#kk)"/>
+<text x="270" y="80" class="s" text-anchor="middle">要求密度相同</text>
+<text x="270" y="180" class="s" text-anchor="middle">所有"说不清的"效应 → 全部打包进 V<tspan font-size="9">xc</tspan></text>
+</svg>
+<figcaption>Kohn–Sham 的核心思想：找一个"好解"的无相互作用替身体系，只要求它的密度和真实体系一样</figcaption>
+</figure>
+<p>因为替身体系的电子<b>没有相互作用</b>，它的波函数<b>精确地</b>就是一个 Slater 行列式，动能 <i>T</i><sub>0</sub> 可以用轨道精确地算出来（−½∇²）。<span class="key">这一步把动能的绝大部分（约 99%）精确地处理掉了。</span></p>
+<p>于是总能量被重新拆分：</p>
+<div class="fml" style="font-size:16px"><i>E</i>[<i>ρ</i>] = <span style="color:#0b5ea8"><i>T</i><sub>0</sub>[<i>ρ</i>]</span> + <span style="color:#2c6e4f"><i>J</i>[<i>ρ</i>]</span> + <span style="color:#6b6b70">∫<i>ρV</i><sub>ext</sub></span> + <span style="color:#c0392b"><i>E</i><sub>xc</sub>[<i>ρ</i>]</span></div>
+<table>
+<tr><th style="width:150px">项</th><th style="width:130px">能否精确计算</th><th>约占总能量</th></tr>
+<tr><td><i>T</i><sub>0</sub>（无相互作用动能）</td><td class="c" style="color:#2c6e4f">✔ 用轨道算</td><td>大</td></tr>
+<tr><td><i>J</i>（经典库仑排斥）</td><td class="c" style="color:#2c6e4f">✔ 用密度算</td><td>大</td></tr>
+<tr><td>∫<i>ρV</i><sub>ext</sub>（核吸引）</td><td class="c" style="color:#2c6e4f">✔ 用密度算</td><td>最大（负）</td></tr>
+<tr><td><b><i>E</i><sub>xc</sub></b>（交换-相关）</td><td class="c" style="color:#c0392b"><b>✘ 必须近似</b></td><td><span class="key">约 10%（交换为主）</span></td></tr>
+</table>
+<p><span class="key">KS 的成功之处：把"未知的部分"从整个 <i>F</i><sub>HK</sub>（约 50% 的能量）压缩到只剩 <i>E</i><sub>xc</sub>（约 10%），而且这 10% 相对容易近似。</span></p>
+</div>
+<div class="warn"><span class="lab">"精确变换"这四个字的意思</span>
+<p>讲义最后一句：KS 方程是原问题的<b>精确</b>变换。</p>
+<p><span class="key">如果 <i>V</i><sub>xc</sub> 是精确的，KS-DFT 就给出精确的基态能量和密度——没有任何近似。</span>所有误差都来自 <i>V</i><sub>xc</sub> 的近似。</p>
+<p>对比 HF：即使完备基组，HF 也有固有误差（丢了相关能）。<b>DFT 原则上可以精确，HF 原则上不能。</b>这是两者理论地位的根本区别。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · KS 方程也要做 SCF</span>
+<p>看 KS 哈密顿量：<i>V</i><sub>H</sub> 和 <i>V</i><sub>xc</sub> <b>都依赖于 <i>ρ</i></b>，而 <i>ρ</i> 又由轨道 <i>φ</i><sub><i>i</i></sub> 算出——<span class="key">和 HF 一模一样的"鸡生蛋"困境</span>（第 2 讲 p85）。所以解法也一样：</p>
+<p>猜 <i>ρ</i> → 建 <i>Ĥ</i><sub>KS</sub> → 对角化得 <i>φ</i><sub><i>i</i></sub> → 算新 <i>ρ</i> → 重复直到自洽。</p>
+<p><b>第 3 讲讲的一切 SCF 技术（DIIS、level shift、基组、RI 近似）在 DFT 里原封不动地适用。</b>这就是为什么 Gaussian 里 <code>#p hf</code> 和 <code>#p b3lyp</code> 只差一个关键词。</p>
+<p><b>DFT 多出来的一件事</b>：<i>V</i><sub>xc</sub> 一般没有解析积分，要在<b>数值格点</b>上积分——这就是第 3 讲 p4 的 <code>integral=(grid=ultrafine)</code>，也是本讲 p3 提纲里"数值积分"指的东西。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>写出 KS 方程，逐项说明含义；指出唯一未知的是 <i>V</i><sub>xc</sub></li>
+<li>KS 的核心思想：用无相互作用替身体系重现真实密度</li>
+<li>为什么说 KS 方程是"精确变换"；误差从哪里来</li></ul></div>
+</section>
+
+<section class="slide" id="p23">
+<h2><span class="pno">p23</span>Hartree–Fock 与 DFT 的哈密顿量并排对比</h2>
+<figure class="orig"><img src="img/L05/p23.png" alt="讲义 p23" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>Hartree–Fock</b>：<i>H</i> = −Σ<sub><i>i</i></sub>∇²/<i>m</i><sub><i>i</i></sub> − Σ<sub><i>i</i>,<i>j</i></sub>(<i>eZ</i><sub><i>i</i></sub>)<i>e</i>/|<b>R</b><sub><i>i</i></sub>−<b>r</b><sub><i>j</i></sub>| + ½Σ<sub><i>i</i>≠<i>j</i></sub><i>e</i>²/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>j</i></sub>|</p>
+<ul><li>有动能的电子</li><li>受原子核的库仑势作用</li><li>与其他电子有库仑相互作用</li></ul>
+<p><b>DFT</b>：<i>H</i> = −Σ<sub><i>i</i></sub>∇²/<i>m</i><sub><i>i</i></sub> − Σ<sub><i>i</i>,<i>j</i></sub>(<i>eZ</i><sub><i>i</i></sub>)<i>e</i>/|<b>R</b><sub><i>i</i></sub>−<b>r</b><sub><i>j</i></sub>| + <i>V</i><sub>H</sub> + <i>V</i><sub>xc</sub></p>
+<ul><li>有动能的<b>准粒子</b></li><li>受原子核的库仑势作用</li><li>与所有其他准粒子的<b>平均、静态</b>分布相互作用</li><li>受一个神秘的"交换-相关"势的影响</li></ul>
+<p><b>数学简单得多，但你必须知道 <i>V</i><sub>xc</sub>。</b></p>
+</div>
+<h3>讲解 · 前两项完全一样，区别全在第三项</h3>
+<table>
+<tr><th style="width:130px"></th><th style="width:44%">Hartree–Fock 的有效单电子算符</th><th>Kohn–Sham 的有效单电子算符</th></tr>
+<tr><td><b>动能</b></td><td>−½∇²</td><td>−½∇²（同）</td></tr>
+<tr><td><b>核吸引</b></td><td><i>V</i><sub>ext</sub></td><td><i>V</i><sub>ext</sub>（同）</td></tr>
+<tr><td><b>库仑</b></td><td>Σ<sub><i>j</i></sub><i>Ĵ</i><sub><i>j</i></sub></td><td><i>V</i><sub>H</sub>（同一个东西，写法不同）</td></tr>
+<tr><td><b>交换</b></td><td><span class="key">−Σ<sub><i>j</i></sub><i>K̂</i><sub><i>j</i></sub>：<b>精确</b>，但<b>非局域</b>（第 2 讲 p85）</span></td><td rowspan="2" style="vertical-align:middle"><span class="key"><i>V</i><sub>xc</sub>(<b>r</b>)：<b>近似</b>，但<b>局域</b>（只是一个普通的函数）</span></td></tr>
+<tr><td><b>相关</b></td><td><b>完全没有</b></td></tr>
+</table>
+<p><b>一句话</b>：<span class="key">HF 精确地处理交换、完全不处理相关；DFT 近似地同时处理交换和相关。</span></p>
+<p>"准粒子 (quasi-particles)"这个词是在提醒你：KS 轨道描述的不是真实电子，而是 p22 那个替身体系里的虚构粒子。</p>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>HF 与 KS 算符的逐项对比；交换在两者中如何处理；相关在两者中如何处理</li></ul></div>
+</section>
+
+<section class="slide" id="p24">
+<h2><span class="pno">p24</span>近似交换-相关泛函：LDA、LSDA、GGA、meta-GGA</h2>
+<figure class="orig"><img src="img/L05/p24.png" alt="讲义 p24" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>近似：选择 XC 泛函。</b><i>V</i><sub>xc</sub>[<i>ρ</i>] 一定存在一个唯一的表达式，但它是未知的。</p>
+<p><b>局域密度近似 (LDA)</b> 假定：<i>V</i><sub>xc</sub>[<i>ρ</i>] = <i>V</i><sub>xc</sub><sup>LDA</sup>[<i>ρ</i>] = ∫<i>ρ</i>(<b>r</b>)<i>ε</i><sub>xc</sub>(<i>ρ</i>(<b>r</b>))d<b>r</b></p>
+<p><b>局域自旋密度近似 (LSDA)</b> 假定：<i>V</i><sub>xc</sub><sup>LSDA</sup>[<i>ρ</i><sub>↑</sub>,<i>ρ</i><sub>↓</sub>] = ∫<i>ρ</i>(<b>r</b>)<i>ε</i><sub>xc</sub>(<i>ρ</i><sub>↑</sub>(<b>r</b>),<i>ρ</i><sub>↓</sub>(<b>r</b>))d<b>r</b></p>
+<p>推广：<b>广义梯度近似 GGA</b>：<i>V</i><sub>xc</sub><sup>GGA</sup>[<i>ρ</i>,∇<i>ρ</i>] = ∫<i>ρ</i>(<b>r</b>)<i>ε</i><sub>xc</sub>(<i>ρ</i><sub>↑</sub>,<i>ρ</i><sub>↓</sub>,∇<i>ρ</i><sub>↑</sub>,∇<i>ρ</i><sub>↓</sub>)d<b>r</b></p>
+<p><b>Meta-GGA</b> 还包含密度的二阶及更高阶导数。</p>
+<p>这实际上相当于对真实的 XC 泛函构造越来越精确的 <b>Taylor 型近似</b>。</p>
+</div>
+<h3 class="fm">公式解析 · 所有近似共享的形式</h3>
+<div class="fml"><span class="tag">★ 局域 / 半局域 XC 泛函的通用形式</span>
+<i>E</i><sub>xc</sub>[<i>ρ</i>] = ∫ <i>ρ</i>(<b>r</b>) · <i>ε</i><sub>xc</sub>( 在点 <b>r</b> 处的局部信息 ) d<b>r</b>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ε</i><sub>xc</sub></td><td>每个电子的 XC 能量密度</td><td>希腊字母 epsilon。<span class="key">一个<b>普通函数</b>，只依赖点 <b>r</b> 附近的信息</span>——这是"局域"的意思</td></tr>
+<tr><td><i>ρ</i>(<b>r</b>)·<i>ε</i><sub>xc</sub></td><td>XC 能量的空间密度</td><td>"这一点有多少电子" × "每个电子贡献多少 XC 能"</td></tr>
+<tr><td><i>ρ</i><sub>↑</sub>, <i>ρ</i><sub>↓</sub></td><td>α、β 自旋密度</td><td>LSDA 起分开处理——<b>开壳层体系必需</b></td></tr>
+<tr><td>∇<i>ρ</i></td><td>密度梯度</td><td>密度在该点变化得多快（一阶导数）</td></tr>
+<tr><td>∇²<i>ρ</i> 或 <i>τ</i></td><td>拉普拉斯 / 动能密度</td><td>meta-GGA 用的额外信息。<i>τ</i> = ½Σ|∇<i>φ</i><sub><i>i</i></sub>|²</td></tr>
+</table>
+<h3>讲解 · 从 LDA 到 meta-GGA，每一级多看了一点"邻居信息"</h3>
+<figure>
+<svg viewBox="0 0 540 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;fill:#1c1c1e;font-weight:700}</style></defs>
+<line x1="40" y1="170" x2="510" y2="170" stroke="#9aa5b1"/>
+<path d="M40,165 C 110,160 150,60 220,55 C 290,52 330,130 400,140 C 450,146 480,150 510,150" fill="none" stroke="#0b5ea8" stroke-width="2"/>
+<text x="45" y="190" class="s">ρ(r) 沿某条路径的变化</text>
+<circle cx="180" cy="80" r="5" fill="#c0392b"/>
+<line x1="180" y1="80" x2="180" y2="170" stroke="#c0392b" stroke-dasharray="3,3"/>
+<text x="180" y="210" class="s" text-anchor="middle" fill="#c0392b">点 r</text>
+<line x1="150" y1="104" x2="210" y2="58" stroke="#b3541e" stroke-width="2"/>
+<text x="300" y="30" class="t" fill="#1c1c1e">在点 r，泛函"看"到了什么：</text>
+<text x="300" y="52" class="s"><tspan font-weight="700" fill="#c0392b">LDA</tspan>：只看高度 ρ(r)</text>
+<text x="300" y="70" class="s"><tspan font-weight="700" fill="#b3541e">GGA</tspan>：还看坡度 ∇ρ(r)（橙色切线）</text>
+<text x="300" y="88" class="s"><tspan font-weight="700" fill="#2c6e4f">meta-GGA</tspan>：还看弯曲程度 ∇²ρ 或 τ</text>
+<text x="300" y="106" class="s"><tspan font-weight="700" fill="#0b5ea8">杂化</tspan>：再掺一点"看全局"的 HF 交换</text>
+</svg>
+<figcaption>越高级的泛函，在每个点上利用的局部信息越多——正如讲义所说，相当于一个 Taylor 展开</figcaption>
+</figure>
+<table>
+<tr><th style="width:110px">级别</th><th style="width:190px">依赖的变量</th><th style="width:170px">物理模型</th><th>特点</th></tr>
+<tr><td><b>LDA</b></td><td><i>ρ</i></td><td><b>均匀电子气</b>：假装每一点附近的电子密度都是均匀的</td><td>对固体（金属）还行；对分子：<span class="key">严重高估结合能（过度成键）</span></td></tr>
+<tr><td><b>LSDA</b></td><td><i>ρ</i><sub>↑</sub>, <i>ρ</i><sub>↓</sub></td><td>自旋极化的均匀电子气</td><td>能处理开壳层</td></tr>
+<tr><td><b>GGA</b></td><td>+ ∇<i>ρ</i></td><td>考虑密度的不均匀性</td><td>对分子大幅改善。PBE、BLYP、BP86</td></tr>
+<tr><td><b>meta-GGA</b></td><td>+ ∇²<i>ρ</i> 或 <i>τ</i></td><td>更精细的局部信息</td><td>TPSS、M06-L、SCAN</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · "均匀电子气"为什么是一个合理的起点</span>
+<p>均匀电子气 (uniform electron gas, jellium) 是<b>唯一</b>一个 XC 能被精确算出的多电子体系：一堆电子在均匀的正电荷背景里。它的交换能有解析式（p29 那个 <i>ρ</i><sup>4/3</sup>），相关能由 Ceperley–Alder 的量子蒙特卡罗计算（1980）精确给出并拟合成公式（VWN、PW92）。</p>
+<p><span class="key">LDA 的假设就是：分子里每一个小体积元，都当成"密度为该点 <i>ρ</i> 的均匀电子气"来处理。</span>对金属（电子本来就很均匀）效果好；对分子（密度在核附近剧烈变化）就不太好——所以要加梯度修正。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>LDA、GGA、meta-GGA 各依赖哪些变量；LDA 背后的物理模型（均匀电子气）</li>
+<li>"局域"的含义：<i>ε</i><sub>xc</sub> 只依赖点 <b>r</b> 附近的信息</li></ul></div>
+</section>
+
+<section class="slide" id="p25">
+<h2><span class="pno">p25–26</span>杂化泛函与早期性能数据</h2>
+<figure class="orig"><img src="img/L05/p25.png" alt="讲义 p25" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p26.png" alt="讲义 p26" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p25）</span>
+<p><b>杂化交换-相关泛函</b>：LDA、GGA 与 Hartree–Fock 交换（精确已知）的混合：</p>
+<p><i>E</i><sub>XC</sub><sup>HYB</sup> = <i>E</i><sub>XC</sub><sup>LDA</sup> + <i>a</i><sub>0</sub>(<i>E</i><sub>X</sub><sup>HF</sup> − <i>E</i><sub>X</sub><sup>LDA</sup>) + <i>a</i><sub>X</sub>(<i>E</i><sub>X</sub><sup>GGA</sup> − <i>E</i><sub>X</sub><sup>LDA</sup>) + <i>a</i><sub>C</sub>(<i>E</i><sub>C</sub><sup>GGA</sup> − <i>E</i><sub>C</sub><sup>LDA</sup>)</p>
+<p><b>这些系数是对照实验数据优化的。这使得 DFT 不能归入"从头算 (ab initio) 方法"一类——它确实需要经验参数。</b></p>
+<p>（表 V：BLYP、HCTH、B3LYP、B97、B97-1 算的经典反应能垒（kcal/mol）与从头算值对比；表 III：训练集分子的优化几何（Å 与度）。）</p>
+<p><b>不要什么都用 B3LYP——查文献看什么最合适。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p26）</span>
+<p>BLYP 和 B3LYP 是 DFT 相对近期的成功故事——Becke 关于这个主题的论文已被引用超过 10 000 次。</p>
+<p>在非常新的交换-相关泛函家族中，一个很有前景的是 <b>M06</b>。</p>
+<p>（表：电子亲和能、电离能、双原子键长、原子化能的平均绝对误差；以及 PBE、BLYP、PBEh、B3LYP、BMK、M06-2X、B98、M06-L、M06 对主族与过渡金属的误差图。）</p>
+</div>
+<h3 class="fm">公式解析 · 杂化泛函的通用式</h3>
+<div class="fml"><span class="tag">★ 杂化泛函（以 LDA 为基准，逐项加修正）</span>
+<i>E</i><sub>XC</sub><sup>HYB</sup> = <i>E</i><sub>XC</sub><sup>LDA</sup> + <span style="color:#c0392b"><i>a</i><sub>0</sub>(<i>E</i><sub>X</sub><sup>HF</sup> − <i>E</i><sub>X</sub><sup>LDA</sup>)</span> + <span style="color:#b3541e"><i>a</i><sub>X</sub>(<i>E</i><sub>X</sub><sup>GGA</sup> − <i>E</i><sub>X</sub><sup>LDA</sup>)</span> + <span style="color:#2c6e4f"><i>a</i><sub>C</sub>(<i>E</i><sub>C</sub><sup>GGA</sup> − <i>E</i><sub>C</sub><sup>LDA</sup>)</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>下标 X / C</td><td>交换 / 相关</td><td><b>X</b> = exchange，<b>C</b> = correlation。XC = 两者之和</td></tr>
+<tr><td><i>E</i><sub>X</sub><sup>HF</sup></td><td>HF 交换能</td><td><span class="key">用 KS 轨道按 HF 的公式算出来的精确交换能</span>（即 −½Σ<i>K</i><sub><i>ij</i></sub>）。"精确已知"指公式精确，不是指它就是正确的 XC 能</td></tr>
+<tr><td style="color:#c0392b"><i>a</i><sub>0</sub></td><td>HF 交换比例</td><td>掺多少精确交换。<b>B3LYP 取 0.20</b>，PBE0 取 0.25</td></tr>
+<tr><td style="color:#b3541e"><i>a</i><sub>X</sub></td><td>交换梯度修正系数</td><td>B3LYP 取 0.72</td></tr>
+<tr><td style="color:#2c6e4f"><i>a</i><sub>C</sub></td><td>相关梯度修正系数</td><td>B3LYP 取 0.81</td></tr>
+<tr><td>括号 (A − B)</td><td>"修正量"</td><td><span class="key">每一项都是"用更好的替换 LDA"的<b>差值</b>，乘上一个比例</span>——系数为 0 就退回 LDA，为 1 就完全换掉</td></tr>
+</table>
+<h3>讲解 · 为什么要"掺"HF 交换</h3>
+<div class="step"><div class="sh">两种交换各有各的毛病，混合后误差部分抵消</div>
+<table>
+<tr><th style="width:170px"></th><th style="width:44%">纯 DFT 交换（LDA/GGA）</th><th>纯 HF 交换</th></tr>
+<tr><td><b>自相互作用</b></td><td>有误差（p33）→ <b>过度离域</b></td><td>无误差</td></tr>
+<tr><td><b>与相关的配合</b></td><td><span class="key">DFT 交换和 DFT 相关的误差<b>恰好部分抵消</b></span>（都描述了"近程的"交换-相关空穴）</td><td>和 DFT 相关配合不好——HF 交换空穴是非局域的</td></tr>
+<tr><td><b>典型偏差</b></td><td>能垒偏低、带隙偏小</td><td>能垒偏高、带隙偏大</td></tr>
+</table>
+<p>Becke (1993) 的想法：<span class="key">两边往相反方向错，混在一起就更接近真值</span>。系数用实验数据（G2 数据集的原子化能、电离能等）拟合出来。</p>
+</div>
+<div class="warn"><span class="lab">p25 的两句话要记住</span>
+<ol>
+<li><b>"This disqualifies DFT from the ab initio category"</b>：<span class="key">含拟合参数 ⟹ 严格说不是"从头算"</span>。HF、MP2、CCSD 不含任何经验参数；B3LYP 有 3 个。（考试可能问："DFT 是从头算方法吗？"答：原理上是，实际使用的杂化泛函含经验参数，严格说不是。）</li>
+<li><b>"Do not just use B3LYP for everything"</b>：B3LYP 缺色散、低估能垒（表 V 显示所有泛函的能垒都低于从头算值）、对过渡金属表现一般。现代推荐：有机体系用 ωB97X-D、M06-2X、B3LYP-D3(BJ)；过渡金属用 TPSSh、PBE0。</li>
+</ol>
+</div>
+<div class="ext"><span class="lab">拓展 · 从 p25–26 的表里能读出什么</span>
+<table>
+<tr><th style="width:200px">数据</th><th>结论</th></tr>
+<tr><td>表 III：键长误差 Δ<i>r</i></td><td>B3LYP 0.008 Å、BLYP 0.019 Å。<span class="key">杂化泛函的几何非常好</span>——和第 4 讲 p27 的 CCSD(T) 0.013 Å 相当甚至更好（这里是不同测试集，但数量级说明问题）</td></tr>
+<tr><td>表 V：反应能垒</td><td>所有泛函都<b>低估</b>能垒（例：反应 I，从头算 9.61，BLYP 只有 2.76）。<span class="key">这是自相互作用误差的典型后果</span>（p33）：过渡态电子更离域，SIE 让它被过度稳定</td></tr>
+<tr><td>p26 原子化能表</td><td>LSD(SVWN) 误差 36–121 kcal/mol，PBE 8.6–17，B3LYP 2.4–3.1。<span class="key">LDA → GGA → 杂化，每一级都是量级上的改进</span></td></tr>
+<tr><td>p26 M06 家族图</td><td>M06 系列对主族和过渡金属都较均衡——但它们对积分格点很敏感（第 3 讲 p4 拓展）</td></tr>
+</table>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>杂化泛函的构造思想；为什么它比纯 GGA 好</li>
+<li>为什么说含经验参数的 DFT 不属于严格的 ab initio 方法</li></ul></div>
+</section>
+
+<section class="slide" id="p27">
+<h2><span class="pno">p27</span>DFT 小结</h2>
+<figure class="orig"><img src="img/L05/p27.png" alt="讲义 p27" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>DFT 的基本引理</b>：在某个外势中、有相互作用电子组成的束缚体系，其基态密度唯一地决定这个外势。</p>
+<p>基态密度 → 外势 → 哈密顿算符（动能项我们知道） → 体系的所有性质（通过标准量子力学）</p>
+<p>因此应该可以<b>只用电子密度（只有三维！）</b>来重新表述量子化学——一个重大的简化。</p>
+<p><b>Hohenberg–Kohn 变分原理</b>：存在一个定义明确（虽然没有显式已知）的电子密度泛函，它在基态密度处取得全局最小值。</p>
+<p>min<sub><i>ρ</i></sub> <i>E</i>[<i>ρ</i>] = ⟨Ψ₀|<i>T̂</i> + <i>V̂</i> + <i>Û</i>|Ψ₀⟩　（Ψ₀ = 基态波函数；<i>T̂</i> 动能项；<i>V̂</i> 核吸引；<i>Û</i> 电子排斥）</p>
+<p><i>E</i>[<i>ρ</i>] = <i>T</i>[<i>ρ</i>] + <i>U</i>[<i>ρ</i>] + ∫<i>V</i>(<b>r</b>)<i>ρ</i>(<b>r</b>)d³<b>r</b>　（能量泛函 = 动能泛函 + 电子间排斥能泛函 + 核吸引能泛函（已知））</p>
+</div>
+<h3>讲解 · 这一页把 p7–p20 压缩成了两句话</h3>
+<table>
+<tr><th style="width:190px">讲义说法</th><th style="width:130px">对应哪个定理</th><th>本讲在哪</th></tr>
+<tr><td>"基态密度唯一决定外势"</td><td>HK 第一定理</td><td><a href="#p11">p11–p17</a></td></tr>
+<tr><td>"泛函在基态密度处取全局最小"</td><td>HK 第二定理</td><td><a href="#p19">p19–p20</a></td></tr>
+</table>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>T</i>[<i>ρ</i>]</td><td>动能泛函</td><td>未知 → KS 用 <i>T</i><sub>0</sub> 近似掉大部分</td></tr>
+<tr><td><i>U</i>[<i>ρ</i>]</td><td>电子排斥泛函</td><td>讲义 p20 叫 <i>V</i><sub>ee</sub>，这里叫 <i>U</i>——同一个东西</td></tr>
+<tr><td><i>V</i>(<b>r</b>)</td><td>外势</td><td>= <i>V</i><sub>ext</sub>，已知</td></tr>
+<tr><td>d³<b>r</b></td><td>体积元</td><td>= d<i>x</i>d<i>y</i>d<i>z</i></td></tr>
+</table>
+<div class="kp"><span class="lab">考点</span><ul><li>"DFT 的基本引理"原文及其推理链（密度 → 外势 → 哈密顿量 → 一切性质）</li></ul></div>
+</section>
+
+<section class="slide" id="p28">
+<h2><span class="pno">p28</span>Walter Kohn，"DFT 之父"</h2>
+<figure class="orig"><img src="img/L05/p28.png" alt="讲义 p28" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span><p>Walter Kohn，"DFT 之父"。照片来自 "Applied DFT 2001" 维也纳会议。</p></div>
+<p>Kohn 与 Pople 共获 1998 年诺贝尔化学奖（第 1 讲 p9）。两篇奠基论文：Hohenberg &amp; Kohn, <i>Phys. Rev.</i> 136, B864 (1964)；Kohn &amp; Sham, <i>Phys. Rev.</i> 140, A1133 (1965)。后者是物理学史上被引用最多的论文之一。</p>
+</section>
+
+<section class="slide" id="p29">
+<h2><span class="pno">p29</span>具体泛函：LDA 交换、Becke88 交换、LYP 相关</h2>
+<figure class="orig"><img src="img/L05/p29.png" alt="讲义 p29" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>局域密度近似 (LDA)</b>：<i>V</i><sub>xc</sub><sup>LDA</sup>[<i>ρ</i>] = ∫<i>ρ</i>(<b>r</b>)<i>ε</i><sub>xc</sub>(<i>ρ</i>(<b>r</b>))d<b>r</b> = −(3/4)(3/π)<sup>1/3</sup>∫<i>ρ</i><sup>4/3</sup>(<b>r</b>)d<b>r</b></p>
+<p><b>广义梯度近似 (GGA)</b>：Becke (B88) 交换、Lee–Yang–Parr (LYP) 相关（两个框里的公式）</p>
+<p><b>Meta-GGA</b>：TPSS、VSXC、HCTH 等（在 <i>ε</i><sub>xc</sub> 中包含密度、密度梯度和密度的二阶导数）</p>
+</div>
+<h3 class="fm">公式解析 · LDA 交换（唯一需要记住形式的一个）</h3>
+<div class="fml"><span class="tag">★ LDA 交换能（Dirac / Slater 交换）</span>
+<i>E</i><sub>X</sub><sup>LDA</sup>[<i>ρ</i>] = −(3/4)·(3/π)<sup>1/3</sup> ∫ <i>ρ</i>(<b>r</b>)<sup>4/3</sup> d<b>r</b>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ρ</i><sup>4/3</sup></td><td>密度的 4/3 次方</td><td><span class="key">这个指数可以由量纲分析直接得到</span>（见下）</td></tr>
+<tr><td>−(3/4)(3/π)<sup>1/3</sup></td><td>常数</td><td>≈ −0.7386。由均匀电子气精确推出</td></tr>
+<tr><td>负号</td><td>—</td><td>交换能永远是负的（稳定化，Fermi 空穴）</td></tr>
+</table>
+<div class="step"><div class="sh">为什么是 4/3 次方（一个漂亮的量纲论证）</div>
+<p>均匀电子气里，电子的平均间距 <i>r</i><sub>s</sub> ∝ <i>ρ</i><sup>−1/3</sup>（密度越大，间距越小）。交换能是库仑型的，每个电子的交换能 ∝ 1/<i>r</i><sub>s</sub> ∝ <i>ρ</i><sup>1/3</sup>。</p>
+<p>总交换能 = ∫（电子数密度）×（每个电子的交换能）= ∫<i>ρ</i> · <i>ρ</i><sup>1/3</sup> = <b>∫<i>ρ</i><sup>4/3</sup></b>　✔</p>
+<p>所以 <i>ε</i><sub>x</sub><sup>LDA</sup> ∝ −<i>ρ</i><sup>1/3</sup>。</p>
+</div>
+<h3 class="fm">公式解析 · B88 交换（看结构，不用背）</h3>
+<div class="fml" style="font-size:16px;line-height:2.1">
+<i>ε</i><sub>x</sub><sup>B88</sup> = <i>ε</i><sub>x</sub><sup>LDA</sup> + Δ<i>ε</i><sub>x</sub><sup>B88</sup>　，　Δ<i>ε</i><sub>x</sub><sup>B88</sup> = −<i>β</i><i>ρ</i><sup>1/3</sup> · <i>x</i>² / (1 + 6<i>βx</i>·sinh⁻¹<i>x</i>)　，　<i>x</i> = |∇<i>ρ</i>| / <i>ρ</i><sup>4/3</sup>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>x</i></td><td>约化密度梯度</td><td><span class="key">无量纲的"不均匀程度"</span>。均匀电子气 <i>x</i>=0，修正项消失，退回 LDA</td></tr>
+<tr><td><i>β</i></td><td>经验参数</td><td>= 0.0042，拟合惰性气体原子的交换能得到——<b>这就是 GGA 的"经验性"</b></td></tr>
+<tr><td>sinh⁻¹</td><td>反双曲正弦</td><td>保证在远离分子处（<i>ρ</i>→0，<i>x</i>→∞）有正确的渐近行为</td></tr>
+</table>
+<p><b>LYP 相关</b>（右框）：由 Colle–Salvetti 的氦原子相关能公式改写而来，参数 <i>a</i>, <i>b</i>, <i>c</i>, <i>d</i> 拟合氦原子数据。<span class="key">LYP 的特点是它是从一个"单电子对"模型推来的，所以对单个电子正确地给出零相关能——没有相关部分的自相互作用。</span>公式很长，考试不会要求背。</p>
+<div class="ext"><span class="lab">拓展 · 泛函名字的拼法</span>
+<p>泛函名一般是 <b>交换部分 + 相关部分</b> 拼起来：</p>
+<table>
+<tr><th style="width:130px">名字</th><th>交换</th><th>相关</th></tr>
+<tr><td><b>BLYP</b></td><td>Becke 88</td><td>Lee–Yang–Parr</td></tr>
+<tr><td><b>BP86</b></td><td>Becke 88</td><td>Perdew 86</td></tr>
+<tr><td><b>PBE</b></td><td>Perdew–Burke–Ernzerhof</td><td>PBE</td></tr>
+<tr><td><b>SVWN</b></td><td>Slater (= LDA 交换)</td><td>Vosko–Wilk–Nusair (LDA 相关)</td></tr>
+<tr><td><b>B3LYP</b></td><td>Becke <b>3</b> 参数杂化</td><td>LYP</td></tr>
+</table>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>LDA 交换 ∝ ∫<i>ρ</i><sup>4/3</sup>；GGA 在 LDA 基础上加梯度修正，均匀极限下退回 LDA</li>
+<li>泛函名的构成（交换 + 相关）</li></ul></div>
+</section>
+
+<section class="slide" id="p30">
+<h2><span class="pno">p30</span>★ B3LYP 与双杂化泛函</h2>
+<figure class="orig"><img src="img/L05/p30.png" alt="讲义 p30" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>杂化泛函</b>：包含一部分来自 Hartree–Fock 方法的交换（如 B3LYP）</p>
+<p><i>E</i><sub>xc</sub><sup>B3LYP</sup> = (1−<i>a</i>)<i>E</i><sub>x</sub><sup>LSDA</sup> + <i>aE</i><sub>x</sub><sup>HF</sup> + <i>b</i>Δ<i>E</i><sub>x</sub><sup>B88</sup> + (1−<i>c</i>)<i>E</i><sub>c</sub><sup>LSDA</sup> + <i>cE</i><sub>c</sub><sup>LYP</sup></p>
+<p>系数 <i>a</i>、<i>b</i>、<i>c</i> 通过拟合一组实验数据得到。</p>
+<p><b>双杂化泛函</b>：包含一部分 HF 交换以及一部分类似 MP2 的能量（如 B2PLYP）：</p>
+<p><i>E</i><sub>xc</sub><sup>DHDFT</sup> = (1−<i>a</i>)<i>E</i><sub>x</sub><sup>DFT</sup> + <i>aE</i><sub>x</sub><sup>HF</sup> + (1−<i>b</i>)<i>E</i><sub>c</sub><sup>DFT</sup> + <i>bE</i><sub>c</sub><sup>MP2</sup></p>
+<p>系数 <i>a</i>、<i>b</i> 通过拟合一组实验数据得到。<b><i>E</i><sub>c</sub><sup>MP2</sup> 的计算标度为 <i>N</i>⁵</b>，使得大体系的计算相当慢。</p>
+</div>
+<h3 class="fm">公式解析 · B3LYP（可能要求写出）</h3>
+<div class="fml"><span class="tag">★ B3LYP 交换-相关能</span>
+<i>E</i><sub>xc</sub><sup>B3LYP</sup> = <span style="color:#0b5ea8">(1−<i>a</i>)<i>E</i><sub>x</sub><sup>LSDA</sup> + <i>a</i><i>E</i><sub>x</sub><sup>HF</sup> + <i>b</i>Δ<i>E</i><sub>x</sub><sup>B88</sup></span> + <span style="color:#2c6e4f">(1−<i>c</i>)<i>E</i><sub>c</sub><sup>LSDA</sup> + <i>c</i><i>E</i><sub>c</sub><sup>LYP</sup></span><br>
+<span style="font-size:13px;font-style:normal;color:#6b6b70"><span style="color:#0b5ea8">交换部分</span>　　　　　　　　　　　　　　　　<span style="color:#2c6e4f">相关部分</span></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>数值与含义</th></tr>
+<tr><td><i>a</i></td><td>HF 交换比例</td><td><b>0.20</b>——B3LYP 里 20% 是精确交换，80% 是 LSDA 交换</td></tr>
+<tr><td><i>b</i></td><td>B88 梯度修正比例</td><td><b>0.72</b></td></tr>
+<tr><td><i>c</i></td><td>LYP 相关比例</td><td><b>0.81</b>——81% 用 GGA 的 LYP，19% 用 LSDA 相关（VWN）</td></tr>
+<tr><td>"3"</td><td>名字里的 3</td><td><span class="key">就是这 3 个经验参数</span></td></tr>
+<tr><td><i>E</i><sub>x</sub><sup>LSDA</sup></td><td>LDA 交换</td><td>p29 的 ∫<i>ρ</i><sup>4/3</sup> 公式（自旋极化版）</td></tr>
+<tr><td>Δ<i>E</i><sub>x</sub><sup>B88</sup></td><td>B88 梯度修正</td><td>p29 左框的修正项（注意是<b>修正量</b>，不是完整的 B88）</td></tr>
+</table>
+<div class="step"><div class="sh">检查：交换部分的系数加起来是多少？</div>
+<p>LSDA 占 (1−<i>a</i>) = 0.80，HF 占 <i>a</i> = 0.20，加起来 = 1 ✔——所以"交换能的总量"是完整的一份，只是来源比例不同。B88 那一项是在 LSDA 基础上加的梯度<b>修正</b>，不计入份额。</p>
+<p>相关部分：(1−<i>c</i>) + <i>c</i> = 1 ✔。</p>
+</div>
+<h3 class="fm">公式解析 · 双杂化泛函</h3>
+<div class="fml"><span class="tag">双杂化（Double Hybrid），例：B2PLYP</span>
+<i>E</i><sub>xc</sub><sup>DH</sup> = (1−<i>a</i>)<i>E</i><sub>x</sub><sup>DFT</sup> + <i>a</i><i>E</i><sub>x</sub><sup>HF</sup> + (1−<i>b</i>)<i>E</i><sub>c</sub><sup>DFT</sup> + <span style="color:#c0392b"><i>b</i><i>E</i><sub>c</sub><sup>MP2</sup></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>a</i></td><td>HF 交换比例</td><td>B2PLYP 取 <b>0.53</b>（远高于 B3LYP 的 0.20）</td></tr>
+<tr><td><i>b</i></td><td>MP2 相关比例</td><td>B2PLYP 取 <b>0.27</b></td></tr>
+<tr><td style="color:#c0392b"><i>E</i><sub>c</sub><sup>MP2</sup></td><td>MP2 型相关能</td><td><span class="key">用 KS 轨道和轨道能代入第 4 讲 p36 的 MP2 公式算出来</span>——需要<b>虚轨道</b>，所以 p36 表里说双杂化用到了 "Virtual orbitals"</td></tr>
+</table>
+<div class="warn"><span class="lab">"双"杂化的含义：两个方向都掺了波函数方法</span>
+<table>
+<tr><th style="width:130px">泛函类型</th><th style="width:170px">交换</th><th>相关</th></tr>
+<tr><td>GGA</td><td>纯 DFT</td><td>纯 DFT</td></tr>
+<tr><td><b>杂化</b></td><td><span class="key">DFT + <b>HF</b></span></td><td>纯 DFT</td></tr>
+<tr><td><b>双杂化</b></td><td>DFT + <b>HF</b></td><td><span class="key">DFT + <b>MP2</b></span></td></tr>
+</table>
+<p><b>代价</b>：MP2 部分标度 <i>N</i>⁵（第 4 讲 p40），所以双杂化比普通杂化慢一个数量级；<b>收益</b>：p37 表中 B2PLYP 在大多数指标上是所有 DFT 里最好的，接近 CCSD(T)。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>写出 B3LYP 的构成；"3"指什么；<i>a</i> = 0.20 意味着什么</li>
+<li>双杂化与杂化的区别；为什么双杂化是 O(<i>N</i>⁵)</li></ul></div>
+</section>
+
+<section class="slide" id="p31">
+<h2><span class="pno">p31</span>可系统改进性</h2>
+<figure class="orig"><img src="img/L05/p31.png" alt="讲义 p31" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li>对基于波函数的方法没有问题：只要扩大 CI 展开</li>
+<li>对 DFT 就不那么清楚</li>
+<li>梯度校正泛函的表现优于 LSDA</li>
+<li>杂化泛函质量相当，但地位不那么清楚（B3LYP 是一个"魔法"泛函）</li>
+<li>在各种各样的体系上，DFT 都表现得相当稳健</li>
+<li>进一步改进 DFT 的途径：更好地定义空穴函数；更好地校正自相互作用误差</li>
+</ul>
+</div>
+<h3>讲解 · DFT 最大的理论弱点</h3>
+<table>
+<tr><th style="width:130px"></th><th style="width:44%">波函数方法</th><th>DFT</th></tr>
+<tr><td><b>改进路径</b></td><td><span class="key">明确的阶梯：HF → MP2 → CCSD → CCSD(T) → … → FCI，每一步都更接近精确</span></td><td>换泛函，但<b>不保证</b>更好</td></tr>
+<tr><td><b>能判断收敛吗</b></td><td>能：看结果随级别升高是否稳定</td><td><span class="key">不能：没有"更高一级"可以用来检验</span></td></tr>
+<tr><td><b>误差可控吗</b></td><td>可以估计</td><td>只能靠和实验/高级计算的 benchmark</td></tr>
+</table>
+<p><b>"B3LYP 是魔法泛函"</b>：它的 3 个参数是 1993 年针对一个小数据集拟合的，却在此后 30 年里对大量从未见过的体系表现意外地好——没有人能从理论上完全解释为什么。<span class="key">这正是"缺乏系统改进性"的写照：你不知道它为什么对，所以也不知道它什么时候会错。</span></p>
+<p><b>"空穴函数 (hole function)"</b>：交换-相关空穴描述"在某处有一个电子时，它周围其他电子被排开形成的空洞"（第 2 讲 p70 的 Fermi 空穴 + 库仑空穴）。<i>E</i><sub>xc</sub> 本质上就是电子与自己的 XC 空穴之间的相互作用能。更好地建模这个空穴，是构造新泛函的主要理论途径。</p>
+<div class="kp"><span class="lab">考点</span><ul><li>对比波函数方法与 DFT 的"可系统改进性"</li></ul></div>
+</section>
+
+<section class="slide" id="p32">
+<h2><span class="pno">p32</span>DFT 的最坏情形</h2>
+<figure class="orig"><img src="img/L05/p32.png" alt="讲义 p32" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li><b>无法描述 London 色散力</b>——它源自"长程"的电子相关。例：He、Ne 等惰性气体二聚体被 DFT 预测为<b>不稳定</b></li>
+<li>在氢键体系中，重原子-重原子距离通常<b>太短</b>；DFT 对解离的误差相对较大</li>
+<li>对于靠<b>电荷转移</b>结合的分子间复合物，DFT <b>高估</b>结合能。例：乙烯与 F₂ 的结合被高估了 20 kcal/mol</li>
+<li>DFT 的普遍问题：<b>"过度离域 (overdelocalization)"</b></li>
+</ul>
+</div>
+<h3>讲解 · 四种失败，追到两个根源</h3>
+<table>
+<tr><th style="width:170px">失败现象</th><th style="width:190px">根源</th><th>修补方法</th></tr>
+<tr><td><b>算不出色散</b><br>（He₂、π–π 堆积）</td><td><span class="key">泛函是<b>局域</b>的</span>：<i>ε</i><sub>xc</sub> 只看点 <b>r</b> 附近。两个分子相距较远、电子云不重叠时，局域泛函"看不到"对方</td><td><b>色散校正 D3/D4</b>（p35）</td></tr>
+<tr><td><b>氢键太短</b></td><td>自相互作用误差 → 过度离域 → 电荷转移被夸大</td><td>杂化 / 范围分离泛函</td></tr>
+<tr><td><b>电荷转移复合物结合过强</b></td><td>同上</td><td>范围分离泛函（p34）</td></tr>
+<tr><td><b>过度离域</b></td><td><span class="key"><b>自相互作用误差</b></span>（p33）</td><td>杂化、范围分离、SIC</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 为什么局域泛函算不出色散（直观图）</span>
+<p>色散力来自两个分子电子云的<b>瞬时涨落相互关联</b>：A 的电子云某一瞬间偏向一边形成瞬时偶极，诱导 B 产生反向偶极，两者吸引。能量 ∝ −<i>C</i><sub>6</sub>/<i>R</i>⁶。</p>
+<p><span class="key">这需要"A 处的电子知道 B 处电子在干什么"——一种<b>非局域</b>的关联。</span>而 LDA/GGA 在每个点只看本地的 <i>ρ</i> 和 ∇<i>ρ</i>。当 A、B 之间的密度几乎为零时，泛函在两者之间"看"到的就是真空，自然给不出吸引。</p>
+<p><b>讲义的例子</b>：He₂ 真实有一个约 0.02 kcal/mol 的极浅势阱（靠色散），很多 GGA 给出纯排斥曲线——"predicted to be unstable"。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>列举 DFT 的典型失败（色散、电荷转移、过度离域）及其根源</li></ul></div>
+</section>
+
+<section class="slide" id="p33">
+<h2><span class="pno">p33</span>★ 自相互作用误差 (Self-Interaction Error)</h2>
+<figure class="orig"><img src="img/L05/p33.png" alt="讲义 p33" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>自相互作用问题</b></p>
+<p><b>在 HF 中</b>：Hartree 能 = Σ<sub><i>i</i>,<i>j</i></sub>∫<i>ρ</i><sub><i>i</i></sub>(<b>r</b>)<i>ρ</i><sub><i>j</i></sub>(<b>r</b>′)/|<b>r</b>−<b>r</b>′| d<b>r</b>d<b>r</b>′；交换能 = −Σ<sub><i>i</i>,<i>j</i></sub>∫<i>ψ</i><sub><i>i</i></sub>*(<b>r</b>)<i>ψ</i><sub><i>i</i></sub>(<b>r</b>′)<i>ψ</i><sub><i>j</i></sub>*(<b>r</b>)<i>ψ</i><sub><i>j</i></sub>(<b>r</b>′)/|<b>r</b>−<b>r</b>′| d<b>r</b>d<b>r</b>′</p>
+<p>非物理的自相互作用被抵消：Σ<sub><i>i</i></sub>∫<i>ρ</i><sub><i>i</i></sub>(<b>r</b>)<i>ρ</i><sub><i>i</i></sub>(<b>r</b>′)/|<b>r</b>−<b>r</b>′| d<b>r</b>d<b>r</b>′</p>
+<p><b>在 DFT (Kohn–Sham) 中</b>：Hartree 能 = Σ<sub><i>i</i>,<i>j</i></sub>∫<i>ρ</i><sub><i>i</i></sub><i>ρ</i><sub><i>j</i></sub>/|<b>r</b>−<b>r</b>′|，被（未知的）精确 XC 泛函中的某一项<b>精确抵消</b>。</p>
+<p>实际使用的 DFT 版本存在一个<b>虚假的、非物理的自相互作用</b>贡献，因此需要"自相互作用校正方法"(SIC)。<b>当电子排列紧密、因而相关很强时尤其重要。</b></p>
+</div>
+<h3 class="fm">公式解析 · 自相互作用从哪里来</h3>
+<div class="fml"><span class="tag">Hartree（经典库仑）能 —— 求和包含 i = j 的项</span>
+<i>E</i><sub>H</sub> = ½ Σ<sub><i>i</i>,<i>j</i></sub> ∫∫ <i>ρ</i><sub><i>i</i></sub>(<b>r</b>) <i>ρ</i><sub><i>j</i></sub>(<b>r</b>′) / |<b>r</b> − <b>r</b>′| d<b>r</b>d<b>r</b>′　⊃　<span style="color:#c0392b">½ Σ<sub><i>i</i></sub> ∫∫ <i>ρ</i><sub><i>i</i></sub>(<b>r</b>)<i>ρ</i><sub><i>i</i></sub>(<b>r</b>′)/|<b>r</b>−<b>r</b>′|</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ρ</i><sub><i>i</i></sub>(<b>r</b>)</td><td>第 <i>i</i> 个轨道的密度</td><td>= |<i>ψ</i><sub><i>i</i></sub>(<b>r</b>)|²</td></tr>
+<tr><td>Σ<sub><i>i</i>,<i>j</i></sub></td><td>对所有轨道对求和</td><td><span class="key">包括 <i>i</i> = <i>j</i>！</span>即"轨道 <i>i</i> 的电荷云和它自己的电荷云相互排斥"</td></tr>
+<tr><td style="color:#c0392b"><i>i</i> = <i>j</i> 项</td><td><b>自相互作用</b></td><td>一个电子和自己排斥——<b>物理上不存在</b></td></tr>
+<tr><td>½</td><td>—</td><td>讲义省略了这个 ½，不影响论证</td></tr>
+</table>
+<h3>讲解 · HF 自动消掉了它，近似 DFT 消不干净</h3>
+<div class="step"><div class="sh">在 HF 里：<i>J</i><sub><i>ii</i></sub> = <i>K</i><sub><i>ii</i></sub>，完美抵消</div>
+<p>回忆第 3 讲 p43：<span class="key">同一个轨道的库仑积分和交换积分定义完全一样</span>，<i>J</i><sub><i>ii</i></sub> = <i>K</i><sub><i>ii</i></sub>。HF 能量里是 Σ(<i>J</i><sub><i>ij</i></sub> − <i>K</i><sub><i>ij</i></sub>)，所以 <i>i</i>=<i>j</i> 的项：</p>
+<div class="fml" style="font-size:16px"><i>J</i><sub><i>ii</i></sub> − <i>K</i><sub><i>ii</i></sub> = 0　✔ 自相互作用被精确扣除</div>
+</div>
+<div class="step"><div class="sh">在近似 DFT 里：<i>E</i><sub>H</sub> 是精确的，但 <i>E</i><sub>xc</sub> 是近似的</div>
+<p>KS 的 Hartree 能 <i>E</i><sub>H</sub> 包含自相互作用 <i>J</i><sub><i>ii</i></sub>。理论上<b>精确的</b> <i>E</i><sub>xc</sub> 里有一项恰好等于 −<i>J</i><sub><i>ii</i></sub> 把它抵消。</p>
+<p><span class="key">但 LDA/GGA 是局域近似，它给出的"自交换"不等于 −<i>J</i><sub><i>ii</i></sub>，抵消不干净，剩下一个正的残差</span>——电子多排斥了自己一点。</p>
+<p><b>最干净的检验：氢原子</b>（只有 1 个电子，不应有任何电子-电子相互作用）：</p>
+<table>
+<tr><th style="width:170px">方法</th><th style="width:170px">H 原子能量 (Hartree)</th><th>说明</th></tr>
+<tr><td>精确</td><td class="c">−0.5000</td><td></td></tr>
+<tr><td>HF</td><td class="c">−0.5000</td><td>自相互作用精确抵消 ✔</td></tr>
+<tr><td>LDA (SVWN)</td><td class="c">≈ −0.479</td><td><span class="key">一个电子和自己排斥 ⟹ 能量偏高</span></td></tr>
+<tr><td>B3LYP</td><td class="c">≈ −0.502</td><td>误差较小但不为零</td></tr>
+</table>
+</div>
+<figure>
+<svg viewBox="0 0 540 170" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700}</style>
+<radialGradient id="g1"><stop offset="0" stop-color="#0b5ea8" stop-opacity=".5"/><stop offset="1" stop-color="#0b5ea8" stop-opacity=".03"/></radialGradient>
+<radialGradient id="g2"><stop offset="0" stop-color="#c0392b" stop-opacity=".35"/><stop offset="1" stop-color="#c0392b" stop-opacity=".03"/></radialGradient></defs>
+<text x="130" y="20" class="t" fill="#0b5ea8" text-anchor="middle">正确（无自相互作用）</text>
+<circle cx="130" cy="85" r="36" fill="url(#g1)"/>
+<text x="130" y="140" class="s" text-anchor="middle">电子云紧凑</text>
+<text x="130" y="156" class="s" text-anchor="middle">局域在该在的地方</text>
+<text x="400" y="20" class="t" fill="#c0392b" text-anchor="middle">有 SIE（近似 DFT）</text>
+<circle cx="400" cy="85" r="60" fill="url(#g2)"/>
+<text x="400" y="89" class="s" text-anchor="middle">自己排斥自己</text>
+<text x="400" y="156" class="s" text-anchor="middle">⟹ 电子云被"撑开"＝过度离域</text>
+</svg>
+<figcaption>自相互作用误差的物理后果：电子为了减少和自己的排斥而过度扩散</figcaption>
+</figure>
+<div class="warn"><span class="lab">SIE 解释了 DFT 的一连串典型错误（考试好题）</span>
+<table>
+<tr><th style="width:200px">现象</th><th>SIE 怎么导致它</th></tr>
+<tr><td><b>反应能垒偏低</b>（p25 表 V）</td><td>过渡态的电子更离域 → SIE 让离域态被人为稳定 → 过渡态能量偏低</td></tr>
+<tr><td><b>带隙 / HOMO-LUMO gap 偏小</b></td><td>占据轨道被自排斥抬高，−<i>ε</i><sub>HOMO</sub> 远小于真实 IE</td></tr>
+<tr><td><b>电荷转移结合过强</b>（p32）</td><td>电子"部分转移"的离域态被过度稳定</td></tr>
+<tr><td><b>H₂⁺ 解离错误</b></td><td>拉开后电子应该完全在一边，SIE 让"半个电子在左、半个在右"更低 → 解离极限错误</td></tr>
+<tr><td><b>阴离子不束缚</b></td><td>多余的电子被自排斥推开，LDA/GGA 常预测小阴离子不稳定</td></tr>
+<tr><td><b>TD-DFT 的电荷转移激发能偏低</b></td><td>p34 讲的问题</td></tr>
+</table>
+<p><span class="key">为什么杂化泛函好一点：掺了 20% HF 交换 → 抵消了 20% 的自相互作用。</span>范围分离泛函在长程用 100% HF 交换，效果更好。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><b>解释什么是自相互作用误差；为什么 HF 没有而近似 DFT 有</b>（<i>J</i><sub><i>ii</i></sub> = <i>K</i><sub><i>ii</i></sub>）</li>
+<li>SIE 导致的后果：过度离域、能垒偏低、带隙偏小</li></ul></div>
+</section>
+
+<section class="slide" id="p34">
+<h2><span class="pno">p34</span>范围分离（长程校正）泛函</h2>
+<figure class="orig"><img src="img/L05/p34.png" alt="讲义 p34" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>范围分离（长程校正）泛函</b>旨在解决 DFT 的一些系统性误差：</p>
+<ul>
+<li><b>自相互作用误差</b>（对某个电子，交换抵消项不能精确抵消库仑项，导致误差。在 HF 理论中，交换与库仑精确匹配。）</li>
+<li>（TD-DFT 算的）<b>电荷转移态的激发能太低</b></li>
+<li><b>电子过度离域</b>问题</li>
+</ul>
+<p>做法是把库仑算符拆成两部分：短程和长程：</p>
+<p>1/|<b>r</b>₁−<b>r</b>₂| = 1/<i>r</i>₁₂ = [1 − erf(<i>ωr</i>₁₂)]/<i>r</i>₁₂ + erf(<i>ωr</i>₁₂)/<i>r</i>₁₂，　erf(<i>x</i>) = (2/√π)∫₀<sup><i>x</i></sup>e<sup>−<i>t</i>²</sup>d<i>t</i></p>
+<p>对<b>短程</b>用 DFT 交换-相关，对<b>长程</b>用精确的 HF 交换。</p>
+<p>例子：LC-BLYP、CAM-B3LYP 等。</p>
+</div>
+<h3 class="fm">公式解析 · 库仑算符的范围分离</h3>
+<div class="fml"><span class="tag">★ 把 1/r₁₂ 拆成两段</span>
+1/<i>r</i><sub>12</sub> = <span style="color:#2c6e4f">[1 − erf(<i>ω</i><i>r</i><sub>12</sub>)] / <i>r</i><sub>12</sub></span> + <span style="color:#c0392b">erf(<i>ω</i><i>r</i><sub>12</sub>) / <i>r</i><sub>12</sub></span><br>
+<span style="font-size:13px;font-style:normal;color:#6b6b70">　　<span style="color:#2c6e4f">短程 SR：用 DFT 交换</span>　　　　　　<span style="color:#c0392b">长程 LR：用 HF 交换</span></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>erf(<i>x</i>)</td><td>误差函数</td><td>error function：一条 S 形曲线，<i>x</i>=0 时为 0，<i>x</i>→∞ 时趋于 1。<span class="key">它充当一个"平滑开关"</span></td></tr>
+<tr><td><i>ω</i></td><td>范围分离参数</td><td>单位 Bohr⁻¹。1/<i>ω</i> 大致是"短程与长程的分界距离"。LC-ωPBE 约 0.4，CAM-B3LYP 0.33</td></tr>
+<tr><td><i>r</i><sub>12</sub></td><td>电子间距</td><td>—</td></tr>
+<tr><td><i>t</i></td><td>积分哑变量</td><td>只出现在 erf 的定义里</td></tr>
+</table>
+<figure>
+<svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}</style></defs>
+<line x1="50" y1="160" x2="490" y2="160" stroke="#9aa5b1"/>
+<line x1="50" y1="160" x2="50" y2="25" stroke="#9aa5b1"/>
+<text x="270" y="185" class="s" text-anchor="middle">电子间距 r₁₂</text>
+<text x="44" y="44" class="s" text-anchor="end">1</text><text x="44" y="164" class="s" text-anchor="end">0</text>
+<line x1="50" y1="40" x2="490" y2="40" stroke="#e3e0da" stroke-dasharray="3,3"/>
+<path d="M50,160 C 110,158 150,120 200,90 C 250,60 300,45 490,40" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+<path d="M50,40 C 110,42 150,80 200,110 C 250,140 300,155 490,160" fill="none" stroke="#2c6e4f" stroke-width="2.4"/>
+<text x="400" y="34" class="s" fill="#c0392b" font-weight="700">erf(ωr) → 长程权重（HF 交换）</text>
+<text x="400" y="152" class="s" fill="#2c6e4f" font-weight="700">1−erf(ωr) → 短程权重（DFT 交换）</text>
+<line x1="200" y1="25" x2="200" y2="160" stroke="#b3541e" stroke-dasharray="4,3"/>
+<text x="205" y="30" class="s" fill="#b3541e">r ≈ 1/ω 附近切换</text>
+</svg>
+<figcaption>误差函数做"平滑开关"：近处主要用 DFT 交换，远处逐渐切换到 100% HF 交换</figcaption>
+</figure>
+<h3>讲解 · 为什么"短程 DFT + 长程 HF"是对的组合</h3>
+<table>
+<tr><th style="width:130px">距离</th><th style="width:44%">谁更合适</th><th>理由</th></tr>
+<tr><td><b>短程</b></td><td>DFT 交换</td><td>DFT 交换与 DFT 相关在短程误差互相抵消（p25 讲过），效果好</td></tr>
+<tr><td><b>长程</b></td><td>HF 交换</td><td><span class="key">精确的交换势在远处应该按 −1/<i>r</i> 衰减</span>（一个电子离开分子时，感受到剩下的 <i>N</i>−1 个电子 + <i>Z</i> 个质子，净电荷 +1）。GGA 的交换势是指数衰减的，太快了；HF 交换恰好给出正确的 −1/<i>r</i></td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 什么时候必须用范围分离泛函</span>
+<table>
+<tr><th style="width:200px">场景</th><th>原因</th></tr>
+<tr><td><b>TD-DFT 算电荷转移激发</b></td><td><span class="key">B3LYP 可能把电荷转移激发能低估 1–2 eV，甚至预测出不存在的低能"幽灵态"</span>。CAM-B3LYP、ωB97X-D 基本解决这个问题</td></tr>
+<tr><td><b>给体-受体体系</b>（有机光伏、染料）</td><td>同上</td></tr>
+<tr><td><b>阴离子、Rydberg 激发</b></td><td>需要正确的长程势（本讲 p38 建议 4 也提到阴离子要用 range-corrected 泛函）</td></tr>
+<tr><td><b>极化率、超极化率</b></td><td>GGA 严重高估长链分子的极化率</td></tr>
+</table>
+<p>Gaussian 关键词：<code>CAM-B3LYP</code>、<code>wB97XD</code>、<code>LC-wPBE</code>。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>范围分离泛函的构造：用 erf 把 1/<i>r</i><sub>12</sub> 分成短程 + 长程；短程 DFT、长程 HF</li>
+<li>它解决的三个问题：SIE、电荷转移激发能过低、过度离域</li></ul></div>
+</section>
+
+<section class="slide" id="p35">
+<h2><span class="pno">p35</span>色散校正泛函</h2>
+<figure class="orig"><img src="img/L05/p35.png" alt="讲义 p35" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>色散校正泛函</b>旨在计入各种色散力，如范德华力。标准 DFT 或 HF 方法不包含这些弱相互作用，但它们对大体系越来越重要（它是<b>累积</b>的）。</p>
+<p><b>Grimme</b> 提出以经验项的形式加入色散校正，类似于力场方法中的范德华项。</p>
+<p>Grimme：Δ<i>E</i><sub>disp</sub> = −Σ<sub><i>n</i>=6(8,10)</sub> <i>s</i><sub><i>n</i></sub> Σ<sub>AB</sub><sup>atoms</sup> (<i>C</i><sub><i>n</i></sub><sup>AB</sup>/<i>R</i><sub>AB</sub><sup><i>n</i></sup>)·<i>f</i><sub>damp</sub>(<i>R</i><sub>AB</sub>)</p>
+<p>Becke–Johnson (BJ)：<i>C</i><sub>6</sub><sup>AB</sup> = <i>α</i><sub>A</sub><i>α</i><sub>B</sub>⟨<i>μ</i>²⟩<sub>A</sub>⟨<i>μ</i>²⟩<sub>B</sub> / (<i>α</i><sub>A</sub>⟨<i>μ</i>²⟩<sub>B</sub> + <i>α</i><sub>B</sub>⟨<i>μ</i>²⟩<sub>A</sub>)</p>
+<p>实现依赖于为任意一对原子制表（或计算）参数 <i>C</i><sub><i>n</i></sub><sup>AB</sup>，以及与泛函有关的参数 <i>s</i><sub><i>n</i></sub>。</p>
+<p>通过选择合适的模型把色散加入计算。Grimme 方法记作 D / D2 / D3 / D4（如 ωB97D）。</p>
+<p>另一种做法是让 Δ<i>E</i><sub>disp</sub> 依赖真实密度并数值计算（van Voorhis–Vydrov）。这更慢，但表现与 D3 相近。</p>
+</div>
+<h3 class="fm">公式解析 · Grimme 色散校正</h3>
+<div class="fml"><span class="tag">★ DFT-D 色散能</span>
+Δ<i>E</i><sub>disp</sub> = − Σ<sub><i>n</i>=6,8</sub> <i>s</i><sub><i>n</i></sub> Σ<sub>A&lt;B</sub> ( <i>C</i><sub><i>n</i></sub><sup>AB</sup> / <i>R</i><sub>AB</sub><sup><i>n</i></sup> ) · <i>f</i><sub>damp</sub>(<i>R</i><sub>AB</sub>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Δ<i>E</i><sub>disp</sub></td><td>色散校正能</td><td><b>直接加到 DFT 总能量上</b>，不改变电子密度</td></tr>
+<tr><td><i>R</i><sub>AB</sub></td><td>原子 A、B 的距离</td><td>只需要几何坐标——所以<b>几乎不花计算时间</b></td></tr>
+<tr><td><i>C</i><sub>6</sub><sup>AB</sup></td><td>色散系数</td><td><span class="key">London 色散的强度</span>，−<i>C</i><sub>6</sub>/<i>R</i>⁶ 是色散力的经典形式。D3 中它还依赖原子的配位数（sp³ 碳和 sp² 碳不同）</td></tr>
+<tr><td><i>n</i> = 6, 8, (10)</td><td>展开阶数</td><td><i>R</i>⁻⁶ 是偶极-偶极，<i>R</i>⁻⁸ 是偶极-四极……D2 只有 <i>n</i>=6，D3 有 6 和 8</td></tr>
+<tr><td><i>s</i><sub><i>n</i></sub></td><td>标度因子</td><td><span class="key">依赖于所用泛函</span>——B3LYP-D3 和 PBE-D3 的 <i>s</i><sub>8</sub> 不同，因为每个泛函自己"已经包含"的中程相关不同</td></tr>
+<tr><td><i>f</i><sub>damp</sub></td><td><b>阻尼函数</b></td><td>短距离时趋于 0，长距离时趋于 1。见下</td></tr>
+<tr><td><i>α</i><sub>A</sub></td><td>原子极化率</td><td>BJ 公式中：原子的电子云有多"软"</td></tr>
+<tr><td>⟨<i>μ</i>²⟩<sub>A</sub></td><td>偶极矩平方期望</td><td>BJ 公式中：交换空穴偶极矩（衡量瞬时偶极的大小）</td></tr>
+</table>
+<div class="step"><div class="sh">为什么必须有阻尼函数 <i>f</i><sub>damp</sub></div>
+<p>① <i>R</i>→0 时 1/<i>R</i>⁶ → ∞，会让原子"塌缩"到一起；② 短程的相关 DFT 泛函已经算过了，再加一遍会<b>重复计算</b>。</p>
+<p><span class="key">阻尼函数在短程把校正"关掉"，只在中长程起作用。</span>"D3(BJ)" 中的 BJ 就是指 Becke–Johnson 形式的阻尼（在 <i>R</i>→0 时趋于一个有限常数而不是 0），比原来的"零阻尼"表现更好。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 色散"是累积的"——为什么大体系一定要加</span>
+<p>单个原子对的色散只有零点几 kcal/mol，但它<b>对所有原子对求和</b>，数目 ∝ <i>N</i>²。</p>
+<table>
+<tr><th style="width:230px">体系</th><th>色散对结合能的贡献</th></tr>
+<tr><td>苯二聚体（π–π 堆积）</td><td>约 −3 kcal/mol，<span class="key">几乎是全部结合能</span>（不加 D3 算出来是排斥的）</td></tr>
+<tr><td>蛋白-配体结合</td><td>可达 −20 ~ −50 kcal/mol</td></tr>
+<tr><td>石墨层间</td><td>约 −50 meV/原子，<b>全部来自色散</b></td></tr>
+</table>
+<p><b>实用规则</b>（p38 建议 5）：<span class="key">现代计算里，除非有特殊理由，默认总是加 D3(BJ)。</span>它几乎不增加时间。Gaussian：<code>empiricaldispersion=gd3bj</code>；ORCA：<code>! D3BJ</code>。第 3 讲 p5 的 Gaussian 输出里那行 "Adding Grimme-D3(BJ) dispersion" 就是它。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>为什么标准 DFT 缺色散；Grimme D3 的形式（−<i>C</i><sub>6</sub>/<i>R</i>⁶ × 阻尼）</li>
+<li>阻尼函数的作用；为什么色散对大体系更重要</li></ul></div>
+</section>
+
+<section class="slide" id="p36">
+<h2><span class="pno">p36</span>★ 泛函的分类：Jacob 阶梯</h2>
+<figure class="orig"><img src="img/L05/p36.png" alt="讲义 p36" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>表：交换-相关泛函的 Perdew 分类。斜体表示包含范围分离 XC 势，粗体表示包含色散。</p>
+<table>
+<tr><th class="c" style="width:50px">级</th><th style="width:100px">名称</th><th style="width:150px">变量</th><th>例子（参数少）</th><th>例子（参数多）</th></tr>
+<tr><td class="c">1</td><td>局域密度</td><td><i>ρ</i></td><td>LDA, LSDA, X<i>α</i></td><td></td></tr>
+<tr><td class="c">2</td><td>GGA</td><td><i>ρ</i>, ∇<i>ρ</i></td><td>PW91, PBE, BLYP, OLYP, HCTH, KT3</td><td>SOGGA11, N12</td></tr>
+<tr><td class="c">3</td><td>Meta-GGA</td><td><i>ρ</i>, ∇<i>ρ</i>, ∇²<i>ρ</i> 或 <i>τ</i></td><td>BR, B95, PKZB, TPSS, <i>τ</i>-HCTH, B97M-V</td><td>VSXC, M11L, MN12L</td></tr>
+<tr><td class="c">4</td><td>杂化 GGA</td><td>+ HF 交换</td><td>BHLYP, B3LYP, B3PW91, O3LYP, PBE0, TPSSh, <i>τ</i>-HCTH-hyb, HSE, CAM-B3LYP, ωB97X-V</td><td>B97-3, SOGGA11X, M11, N12SX, MN12SX, ωB97X, ωB97XD</td></tr>
+<tr><td class="c">5</td><td>双杂化</td><td>+ HF 交换 + 虚轨道</td><td>B2PLYP, PBE0-DH</td><td></td></tr>
+</table>
+</div>
+<h3>讲解 · "Jacob 天梯"——每往上一级，多用一种信息</h3>
+<figure>
+<svg viewBox="0 0 540 290" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12.5px;font-weight:700;fill:#1c1c1e}</style></defs>
+<text x="270" y="18" class="t" text-anchor="middle" fill="#2c6e4f">化学精度的天堂（精确泛函）</text>
+<line x1="120" y1="30" x2="120" y2="270" stroke="#6b6b70" stroke-width="2.5"/>
+<line x1="220" y1="30" x2="220" y2="270" stroke="#6b6b70" stroke-width="2.5"/>
+<line x1="120" y1="60" x2="220" y2="60" stroke="#6b6b70" stroke-width="2"/>
+<line x1="120" y1="105" x2="220" y2="105" stroke="#6b6b70" stroke-width="2"/>
+<line x1="120" y1="150" x2="220" y2="150" stroke="#6b6b70" stroke-width="2"/>
+<line x1="120" y1="195" x2="220" y2="195" stroke="#6b6b70" stroke-width="2"/>
+<line x1="120" y1="240" x2="220" y2="240" stroke="#6b6b70" stroke-width="2"/>
+<text x="170" y="56" class="t" text-anchor="middle">5</text><text x="170" y="101" class="t" text-anchor="middle">4</text>
+<text x="170" y="146" class="t" text-anchor="middle">3</text><text x="170" y="191" class="t" text-anchor="middle">2</text>
+<text x="170" y="236" class="t" text-anchor="middle">1</text>
+<text x="235" y="58" class="s"><tspan font-weight="700" fill="#1c1c1e">双杂化</tspan>　+ 虚轨道 (MP2)　B2PLYP</text>
+<text x="235" y="103" class="s"><tspan font-weight="700" fill="#1c1c1e">杂化</tspan>　+ 占据轨道 (HF 交换)　B3LYP, PBE0</text>
+<text x="235" y="148" class="s"><tspan font-weight="700" fill="#1c1c1e">meta-GGA</tspan>　+ τ 或 ∇²ρ　TPSS, M06-L</text>
+<text x="235" y="193" class="s"><tspan font-weight="700" fill="#1c1c1e">GGA</tspan>　+ ∇ρ　PBE, BLYP</text>
+<text x="235" y="238" class="s"><tspan font-weight="700" fill="#1c1c1e">LDA</tspan>　只用 ρ　SVWN</text>
+<text x="170" y="285" class="t" text-anchor="middle" fill="#c0392b">Hartree 世界（无 XC）</text>
+<text x="60" y="80" class="s" text-anchor="middle" transform="rotate(-90 60,150)">越往上：越准、越贵</text>
+</svg>
+<figcaption>Perdew 的"Jacob 天梯"（2001）：从 Hartree 的地面爬向化学精度的天堂</figcaption>
+</figure>
+<table>
+<tr><th class="c" style="width:50px">级</th><th style="width:130px">新增信息</th><th style="width:130px">计算代价</th><th>典型用途</th></tr>
+<tr><td class="c">1</td><td><i>ρ</i></td><td>最低</td><td>固体（金属）；分子上已基本不用</td></tr>
+<tr><td class="c">2</td><td>∇<i>ρ</i></td><td>≈ LDA</td><td><span class="key">PBE：固体计算的默认（VASP 作业会用）</span>；大体系几何优化</td></tr>
+<tr><td class="c">3</td><td><i>τ</i></td><td>≈ GGA</td><td>过渡金属（TPSS、M06-L）</td></tr>
+<tr><td class="c">4</td><td>HF 交换</td><td><span class="key">比 GGA 慢数倍</span>（要算非局域交换积分）</td><td><b>分子计算的主力</b>：B3LYP、PBE0、ωB97X-D</td></tr>
+<tr><td class="c">5</td><td>虚轨道 / MP2</td><td>O(<i>N</i>⁵)</td><td>高精度热化学</td></tr>
+</table>
+<div class="warn"><span class="lab">关于"参数少 vs 参数多"两列</span>
+<p>表格把每一级再分成两类：</p>
+<ul>
+<li><b>参数少</b>（非经验/少经验）：尽量从物理约束（均匀电子气极限、渐近行为、精确条件）推出来。PBE 零个经验参数、TPSS 也基本如此。<span class="key">可迁移性好。</span></li>
+<li><b>参数多</b>（高度参数化）：Minnesota 家族（M06、M11、MN12）有几十个拟合参数。在训练集覆盖的体系上很准，出了训练集可能表现不稳定。</li>
+</ul>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><b>Jacob 阶梯五级，每级的名称、新增变量、代表泛函</b>——很可能出填表题</li>
+<li>B3LYP 属于第几级（第 4 级，杂化 GGA）；B2PLYP 属于第几级（第 5 级）</li></ul></div>
+</section>
+
+<section class="slide" id="p37">
+<h2><span class="pno">p37</span>DFT 与波函数方法的性能对比表</h2>
+<figure class="orig"><img src="img/L05/p37.png" alt="讲义 p37" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>表：各 DFT 方法在不同基准测试上相对参考值的平均绝对偏差（单位 kJ/mol）。</p>
+<p>a 阶梯级别：1 = 局域自旋密度近似，2 = 广义梯度近似，3 = meta-GGA，4 = 含 HF 交换的杂化泛函，4-RS = 带范围分离交换的 4，5 = 双杂化方法。所有结果使用 TZP 型基组。<b>括号中的值来自完备基组外推。</b></p>
+<p>b 每根键的 MAD。</p>
+</div>
+<h3>讲解 · 先搞懂六列测的是什么</h3>
+<table>
+<tr><th style="width:90px">列</th><th style="width:190px">全称</th><th>测的是什么</th></tr>
+<tr><td><b>MGAE</b></td><td>Main-Group Atomization Energy</td><td>主族分子的原子化能（每根键）</td></tr>
+<tr><td><b>SRMBE</b></td><td>Single-Reference Metal Bond Energy</td><td>单参考特征的金属键能</td></tr>
+<tr><td><b>MRBE</b></td><td>Multi-Reference Bond Energy</td><td><span class="key">多参考（强静态相关）体系的键能</span></td></tr>
+<tr><td><b>IP</b></td><td>Ionization Potential</td><td>电离能</td></tr>
+<tr><td><b>EA</b></td><td>Electron Affinity</td><td>电子亲和能</td></tr>
+<tr><td><b>BH</b></td><td>Barrier Height</td><td>反应能垒</td></tr>
+</table>
+<h3>讲解 · 从表里读出的五条结论（节选关键行）</h3>
+<table>
+<tr><th style="width:110px">方法</th><th class="c">MGAE</th><th class="c">SRMBE</th><th class="c">MRBE</th><th class="c">IP</th><th class="c">EA</th><th class="c">BH</th></tr>
+<tr><td>HF</td><td class="c">129</td><td class="c">144</td><td class="c">304</td><td class="c">92</td><td class="c">113</td><td class="c">48</td></tr>
+<tr><td>MP2</td><td class="c">9</td><td class="c">22</td><td class="c">161</td><td class="c">27</td><td class="c">13</td><td class="c">20</td></tr>
+<tr><td>CCSD(T)</td><td class="c">12 (<b>1</b>)</td><td class="c">23 (14)</td><td class="c">73 (43)</td><td class="c">21 (8)</td><td class="c">16 (<b>2</b>)</td><td class="c">5 (<b>2</b>)</td></tr>
+<tr><td>LSDA</td><td class="c">70</td><td class="c">89</td><td class="c">127</td><td class="c">41</td><td class="c">24</td><td class="c">63</td></tr>
+<tr><td>PBE</td><td class="c">13</td><td class="c">29</td><td class="c">60</td><td class="c">26</td><td class="c">9</td><td class="c">37</td></tr>
+<tr><td>TPSS</td><td class="c">4</td><td class="c">24</td><td class="c">28</td><td class="c">17</td><td class="c">10</td><td class="c">35</td></tr>
+<tr><td>B3LYP</td><td class="c">4</td><td class="c">25</td><td class="c">91</td><td class="c">24</td><td class="c">10</td><td class="c">18</td></tr>
+<tr><td>PBE0</td><td class="c">4</td><td class="c">21</td><td class="c">117</td><td class="c">14</td><td class="c">12</td><td class="c">16</td></tr>
+<tr><td>ωB97XD</td><td class="c">2</td><td class="c">24</td><td class="c">106</td><td class="c">13</td><td class="c">8</td><td class="c">13</td></tr>
+<tr><td>MN12-SX</td><td class="c">2</td><td class="c">45</td><td class="c">44</td><td class="c">22</td><td class="c">9</td><td class="c"><b>5</b></td></tr>
+<tr><td>B2PLYP</td><td class="c">4 (2)</td><td class="c">18 (15)</td><td class="c">74 (64)</td><td class="c">10</td><td class="c">10 (6)</td><td class="c">8</td></tr>
+</table>
+<ol>
+<li><b>HF 在所有指标上都最差</b>，原子化能误差 129 kJ/mol——缺相关能的代价（和第 4 讲 p27 一致）。</li>
+<li><b>LSDA → PBE → 杂化，一级比一级好</b>，印证 Jacob 阶梯。LSDA 的能垒误差 63，杂化降到 13–18。</li>
+<li><span class="key"><b>能垒 (BH)：纯 GGA 最差</b>（PBE 37、TPSS 35），加 HF 交换后显著改善——这是 SIE 的直接证据（p33）。</span></li>
+<li><span class="key"><b>多参考 (MRBE)：所有单参考方法都很差</b>，连 CCSD(T) 也有 73 kJ/mol；杂化泛函甚至比纯 GGA 更差（B3LYP 91、PBE0 117 vs TPSS 28）。</span>原因：HF 交换对静态相关体系有害（HF 本身在多参考体系上就灾难性地失败）。</li>
+<li><b>CCSD(T) 外推到 CBS 后</b>（括号内）在单参考指标上达到 1–2 kJ/mol——"黄金标准"名副其实；但它必须配大基组（TZP 下是 12，CBS 才是 1）。</li>
+</ol>
+<div class="warn"><span class="lab">表里一个很重要但容易漏的点</span>
+<p><b>用 TZP 基组时，DFT 在原子化能上（MGAE 2–4）反而比 CCSD(T)（12）好！</b></p>
+<p><span class="key">原因：DFT 对基组不敏感（TZ 基本收敛），而 CCSD(T) 的相关能收敛极慢（第 4 讲 p43：幂律 <i>n</i>⁻³），TZ 远未收敛。</span>所以"高级方法 + 小基组"可能不如"低级方法 + 够用的基组"。这就是第 4 讲 p41–42 反复警告的"方法和基组要平衡"。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>从表中读出：Jacob 阶梯的改进趋势；HF 交换改善能垒但恶化多参考体系</li>
+<li>为什么 TZP 下 DFT 的原子化能可以优于 CCSD(T)（基组收敛速度不同）</li></ul></div>
+</section>
+
+<section class="slide" id="p38">
+<h2><span class="pno">p38</span>使用 DFT 的七条建议</h2>
+<figure class="orig"><img src="img/L05/p38.png" alt="讲义 p38" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译</span>
+<ol>
+<li>思考被研究体系的波函数，<b>评估 DFT 是否适用</b>（即你是否预期能级近简并？）。大多数闭壳层有机分子适合 DFT。所有开壳层单自由基也适合（非限制 DFT）。双自由基和多自由基——不太适合。过渡金属化合物——不太适合，除非它们明显是闭壳层。</li>
+<li><b>镧系元素只适合用 4f-in-core 赝势。</b></li>
+<li>尽可能多地获取实验数据，以便把计算与实验比较。测量是在溶剂中还是气相中完成的？</li>
+<li>选择基组。从小基组开始，然后把结果投影到更大的基组上（很多程序自动做这件事）。<b>阴离子需要额外的弥散函数和范围校正泛函。</b>通常 VTZP 基组给出合理结果，更大的基组不带来额外精度。</li>
+<li>对小体系可以忽略色散。<b>对大体系，色散很重要。</b></li>
+<li>如果你的体系含重元素（如 Pt、Pd、Zn 等），<b>相对论校正</b>很重要。搜索 DKH 或 ZORA 关键词。</li>
+<li>阅读文献，找到针对你的具体问题和化合物类别表现最好的 DFT 泛函与基组。<b>查文献比自己做基准测试更快。</b></li>
+</ol>
+</div>
+<h3>讲解 · 每条建议背后的理由（都能在前面四讲找到）</h3>
+<table>
+<tr><th class="c" style="width:44px">#</th><th style="width:200px">建议</th><th>为什么（回溯到哪里）</th></tr>
+<tr><td class="c">1</td><td>先判断有没有近简并</td><td><span class="key">KS-DFT 是<b>单行列式</b>方法，和 HF 一样处理不了静态相关</span>（第 4 讲 p4、第 3 讲 p49–50）。p37 表的 MRBE 列就是证据</td></tr>
+<tr><td class="c">2</td><td>镧系用 4f-in-core</td><td>4f 轨道 7 重近简并、强关联，DFT 算不对 → 干脆把 4f 电子冻进赝势里不管。要研究 4f 电子本身的性质（磁性、发光）必须用 CASSCF（OpenMOLCAS 作业）</td></tr>
+<tr><td class="c">3</td><td>对照实验，注意溶剂</td><td>气相计算 vs 溶液实验可能差很多 → 需要溶剂模型（PCM/SMD，Gaussian 的 <code>scrf</code>，第 3 讲 p2 提到 Gaussian 的溶剂化支持）</td></tr>
+<tr><td class="c">4</td><td>由小基组投影到大基组；阴离子加弥散 + 范围分离</td><td>第 3 讲 p60 拓展的 <code>guess=read</code>；p34 的长程渐近行为；第 3 讲 p75 的弥散函数。<span class="key">"TZ 以上无额外精度"——因为 DFT 的基组收敛比波函数方法快得多（p37 的警告框）</span></td></tr>
+<tr><td class="c">5</td><td>大体系加色散</td><td>p35："累积的"</td></tr>
+<tr><td class="c">6</td><td>重元素加相对论</td><td>第 2 讲 p77 拓展：非相对论哈密顿量对重元素失效。DKH = Douglas–Kroll–Hess，ZORA = Zeroth-Order Regular Approximation，都是标量相对论哈密顿量</td></tr>
+<tr><td class="c">7</td><td>查文献</td><td>第 3 讲 p2："CPU 时间便宜，人脑时间贵"；p31：DFT 无系统改进路径，只能靠 benchmark</td></tr>
+</table>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>哪些体系适合 DFT、哪些不适合（闭壳层有机 ✔、单自由基 ✔、双自由基 ✘、开壳层过渡金属 ✘、镧系需 4f-in-core）</li></ul></div>
+</section>
+
+<section class="slide" id="p39">
+<h2><span class="pno">p39–41</span>★ 磁耦合：两个自旋之间的交换相互作用</h2>
+<figure class="orig"><img src="img/L05/p39.png" alt="讲义 p39" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p40.png" alt="讲义 p40" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p41.png" alt="讲义 p41" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p39）</span>
+<p>（图：两个自旋 <i>S</i>₁、<i>S</i>₂ 平行 = <b>铁磁相互作用</b>；反平行 = <b>反铁磁相互作用</b>。<i>S</i>₁ = <i>S</i>₂ = ½。）</p>
+<p><b>真实</b>波函数：</p>
+<p>三重态 <i>S</i>=1：Ψ<sub><i>S</i>=1,<i>M</i>=+1</sub> = <i>α</i>(1)<i>α</i>(2)；Ψ<sub><i>S</i>=1,<i>M</i>=0</sub> = (1/√2)[<i>α</i>(1)<i>β</i>(2) + <i>β</i>(1)<i>α</i>(2)]；Ψ<sub><i>S</i>=1,<i>M</i>=−1</sub> = <i>β</i>(1)<i>β</i>(2)　——<b>磁性的</b></p>
+<p>单重态 <i>S</i>=0：Ψ<sub><i>S</i>=0,<i>M</i>=0</sub> = (1/√2)[<i>α</i>(1)<i>β</i>(2) − <i>β</i>(1)<i>α</i>(2)]　——<b>非磁性的</b></p>
+<p>（右图：随磁场强度 <i>B</i> 增大，三重态分裂成 <i>M</i> = +1, 0, −1 三条线；单重态 <i>M</i>=0 不随磁场变化。）</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p40）</span>
+<p>磁相互作用由 <b>Heisenberg–Dirac–Van Vleck 哈密顿量</b>唯象地描述：<i>Ĥ</i><sub>exch</sub> = −2<i>J</i> <i>Ŝ</i>₁·<i>Ŝ</i>₂</p>
+<p>其中 <i>J</i> 是描述磁相互作用强度的参数。</p>
+<p>它可以用总自旋改写：<i>S</i><sub>T</sub>：<i>S</i>₁+<i>S</i>₂, <i>S</i>₁+<i>S</i>₂−1, …, |<i>S</i>₁−<i>S</i>₂|</p>
+<p><i>S</i><sub>T</sub>² = (<i>S</i>₁+<i>S</i>₂)² = <i>S</i>₁² + <i>S</i>₂² + 2<i>Ŝ</i>₁·<i>Ŝ</i>₂；　2<i>Ŝ</i>₁·<i>Ŝ</i>₂ = <i>S</i><sub>T</sub>² − <i>S</i>₁² − <i>S</i>₂²</p>
+<p><i>Ĥ</i><sub>exch</sub> = −<i>J</i>[<i>S</i><sub>T</sub>² − <i>S</i>₁² − <i>S</i>₂²]</p>
+<p>现在这个哈密顿量可以在 <i>S</i>=1 和 <i>S</i>=0 的本征态基下展开。<b>铁磁相互作用 <i>J</i> &gt; 0；反铁磁相互作用 <i>J</i> &lt; 0。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p41）</span>
+<p>三重态：<i>E</i>(<i>S</i><sub>T</sub>=1) = −<i>J</i>[<i>S</i><sub>T</sub>(<i>S</i><sub>T</sub>+1) − <i>S</i>₁(<i>S</i>₁+1) − <i>S</i>₂(<i>S</i>₂+1)] = −<i>J</i>[2 − ½×3/2 − ½×3/2] = −½<i>J</i></p>
+<p>单重态：<i>E</i>(<i>S</i><sub>T</sub>=0) = −<i>J</i>[0 − ½×3/2 − ½×3/2] = +(3/2)<i>J</i></p>
+<p>验证：−½<i>J</i>×(2×1+1) + (3/2)<i>J</i>×(2×0+1) = −(3/2)<i>J</i> + (3/2)<i>J</i> = 0</p>
+<p>现在把 <i>S</i>=0 设为基态（即取为 0），三重态的能量为：<i>E</i>(<i>S</i><sub>T</sub>=0) = 0；<b><i>E</i>(<i>S</i><sub>T</sub>=1) = Δ<i>E</i><sub>ST</sub> = −½<i>J</i> − (+3/2<i>J</i>) = −2<i>J</i></b></p>
+<p>若 <i>J</i> &gt; 0 ⟹ <i>E</i>(<i>S</i><sub>T</sub>=1) &lt; <i>E</i>(<i>S</i><sub>T</sub>=0) ⟹ 铁磁耦合。</p>
+<p><b>单重态与三重态之间的能隙直接与磁相互作用参数相联系。</b></p>
+<p>如果 <i>E</i>(<i>S</i><sub>T</sub>=1) 和 <i>E</i>(<i>S</i><sub>T</sub>=0) 能由计算方法估算，就可以直接得到 <i>J</i>。对 CI 或多参考方法这里没有问题，只是相关计算很繁琐。</p>
+</div>
+
+<h3 class="fm">公式解析 · Heisenberg 哈密顿量</h3>
+<div class="fml"><span class="tag">★ Heisenberg–Dirac–Van Vleck (HDVV) 自旋哈密顿量</span>
+<i>Ĥ</i><sub>exch</sub> = −2<i>J</i> <i>Ŝ</i><sub>1</sub>·<i>Ŝ</i><sub>2</sub> = −<i>J</i> [ <i>Ŝ</i><sub>T</sub>² − <i>Ŝ</i><sub>1</sub>² − <i>Ŝ</i><sub>2</sub>² ]
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Ŝ</i><sub>1</sub>, <i>Ŝ</i><sub>2</sub></td><td>两个中心的自旋算符</td><td>比如双核配合物里两个金属离子各自的自旋。<b>它们是矢量算符</b></td></tr>
+<tr><td><i>Ŝ</i><sub>1</sub>·<i>Ŝ</i><sub>2</sub></td><td>自旋点积</td><td>衡量两个自旋"平行还是反平行"</td></tr>
+<tr><td><i>J</i></td><td><b>交换耦合常数</b></td><td><span class="key">一个<b>唯象参数</b>（不从第一原理算出，而是拟合实验的"一个数"）</span>。单位常用 cm⁻¹。本讲约定：<b><i>J</i> &gt; 0 铁磁，<i>J</i> &lt; 0 反铁磁</b></td></tr>
+<tr><td><i>Ŝ</i><sub>T</sub></td><td>总自旋算符</td><td>= <i>Ŝ</i><sub>1</sub> + <i>Ŝ</i><sub>2</sub>。总自旋量子数 <i>S</i><sub>T</sub> 从 |<i>S</i>₁−<i>S</i>₂| 到 <i>S</i>₁+<i>S</i>₂（第 2 讲 p58–59 的矢量相加规则）</td></tr>
+<tr><td>"−2"</td><td>约定因子</td><td><span class="key">这是众多约定之一！</span>文献里还有 −<i>J</i><i>Ŝ</i>₁·<i>Ŝ</i>₂、+<i>J</i><i>Ŝ</i>₁·<i>Ŝ</i>₂ 等写法，<i>J</i> 的数值和符号会差一个因子 2 或一个负号。<b>比较不同文献的 <i>J</i> 前必须先核对约定</b></td></tr>
+</table>
+<h3>讲解 · p40 那步"改写"为什么成立</h3>
+<div class="step"><div class="sh">技巧：把难算的点积换成好算的平方</div>
+<p>把总自旋平方展开（和 (<i>a</i>+<i>b</i>)² = <i>a</i>² + <i>b</i>² + 2<i>ab</i> 一样）：</p>
+<div class="fml" style="font-size:15px"><i>Ŝ</i><sub>T</sub>² = (<i>Ŝ</i><sub>1</sub>+<i>Ŝ</i><sub>2</sub>)² = <i>Ŝ</i><sub>1</sub>² + <i>Ŝ</i><sub>2</sub>² + 2<i>Ŝ</i><sub>1</sub>·<i>Ŝ</i><sub>2</sub>　⟹　2<i>Ŝ</i><sub>1</sub>·<i>Ŝ</i><sub>2</sub> = <i>Ŝ</i><sub>T</sub>² − <i>Ŝ</i><sub>1</sub>² − <i>Ŝ</i><sub>2</sub>²</div>
+<p>（能这样展开是因为 <i>Ŝ</i>₁ 和 <i>Ŝ</i>₂ 作用在不同粒子上，彼此对易。）</p>
+<p><span class="key">好处：<i>Ŝ</i><sup>2</sup> 类算符的本征值是现成的 <i>S</i>(<i>S</i>+1)（第 2 讲 p63），不用再算点积。</span></p>
+</div>
+<h3>讲解 · 能级计算（p41，按步骤填表）</h3>
+<p>每个中心 <i>S</i>₁ = <i>S</i>₂ = ½，所以 <i>S</i>₁(<i>S</i>₁+1) = <i>S</i>₂(<i>S</i>₂+1) = ½ × 3/2 = <b>3/4</b>。</p>
+<table>
+<tr><th class="c" style="width:120px">态</th><th class="c" style="width:80px"><i>S</i><sub>T</sub></th><th class="c" style="width:110px"><i>S</i><sub>T</sub>(<i>S</i><sub>T</sub>+1)</th><th class="c" style="width:180px">方括号 [ ]</th><th class="c">能量 −<i>J</i>[ ]</th><th class="c">简并度 2<i>S</i><sub>T</sub>+1</th></tr>
+<tr><td class="c">三重态</td><td class="c">1</td><td class="c">2</td><td class="c">2 − 3/4 − 3/4 = ½</td><td class="c"><b>−½<i>J</i></b></td><td class="c">3</td></tr>
+<tr><td class="c">单重态</td><td class="c">0</td><td class="c">0</td><td class="c">0 − 3/4 − 3/4 = −3/2</td><td class="c"><b>+3/2 <i>J</i></b></td><td class="c">1</td></tr>
+</table>
+<div class="fml"><span class="tag">★ 单重态-三重态能隙</span>
+Δ<i>E</i><sub>ST</sub> ≡ <i>E</i>(<i>S</i>=1) − <i>E</i>(<i>S</i>=0) = −½<i>J</i> − (3/2)<i>J</i> = <b>−2<i>J</i></b>
+</div>
+<figure>
+<svg viewBox="0 0 540 190" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12.5px;font-weight:700}.e{font-size:14px;fill:#c0392b}</style></defs>
+<text x="135" y="18" class="t" text-anchor="middle" fill="#2c6e4f">J &gt; 0：铁磁</text>
+<line x1="70" y1="140" x2="200" y2="140" stroke="#2c6e4f" stroke-width="2.4"/><text x="210" y="144" class="s">S=1（基态，3 重）</text>
+<text x="128" y="136" class="e">↑↑</text>
+<line x1="70" y1="60" x2="200" y2="60" stroke="#9aa5b1" stroke-width="2.4"/><text x="210" y="64" class="s">S=0</text>
+<text x="128" y="56" class="e">↑↓</text>
+<line x1="60" y1="60" x2="60" y2="140" stroke="#2c6e4f"/><text x="52" y="104" class="s" text-anchor="end">2J</text>
+<line x1="290" y1="25" x2="290" y2="175" stroke="#e3e0da" stroke-dasharray="4,4"/>
+<text x="410" y="18" class="t" text-anchor="middle" fill="#c0392b">J &lt; 0：反铁磁</text>
+<line x1="345" y1="140" x2="475" y2="140" stroke="#c0392b" stroke-width="2.4"/><text x="483" y="144" class="s">S=0（基态）</text>
+<text x="403" y="136" class="e">↑↓</text>
+<line x1="345" y1="60" x2="475" y2="60" stroke="#9aa5b1" stroke-width="2.4"/><text x="483" y="64" class="s">S=1</text>
+<text x="403" y="56" class="e">↑↑</text>
+<line x1="335" y1="60" x2="335" y2="140" stroke="#c0392b"/><text x="327" y="104" class="s" text-anchor="end">2|J|</text>
+<text x="270" y="185" class="s" text-anchor="middle">能隙 |ΔE<tspan font-size="9">ST</tspan>| = 2|J|：知道两个态的能量差，就得到 J</text>
+</svg>
+<figcaption>Heisenberg 模型下两个 S=½ 中心的能级图</figcaption>
+</figure>
+<div class="step"><div class="sh">p41 的"验证"在验证什么</div>
+<p>−½<i>J</i>×3 + (3/2)<i>J</i>×1 = 0：<span class="key">按简并度加权的能量总和为零</span>。这是因为 <i>Ĥ</i><sub>exch</sub> 的<b>迹</b>为零（<i>Ŝ</i>₁·<i>Ŝ</i>₂ 在所有 4 个自旋态上求和为零）——交换作用只是把能级"劈开"，不改变平均值（"重心守恒"）。这是检查计算有没有算错的好方法。</p>
+</div>
+<div class="step"><div class="sh">p39 右图：为什么叫"磁性的"和"非磁性的"</div>
+<p>加外磁场后，能量变化 ∝ <i>M</i>·<i>B</i>（Zeeman 效应）。三重态有 <i>M</i> = +1, 0, −1，所以分裂成三条线，<b>对磁场有响应</b>；单重态只有 <i>M</i> = 0，<b>对磁场没响应</b>。</p>
+<p><span class="key">这就是测 <i>J</i> 的实验原理</span>：测磁化率 <i>χ</i> 随温度的变化。反铁磁体系低温时只有单重态被布居 → <i>χ</i> → 0；升温后三重态被热激发（Boltzmann，第 2 讲 p7）→ <i>χ</i> 上升。用 Bleaney–Bowers 方程拟合 <i>χ</i>(<i>T</i>) 曲线就得到 <i>J</i>。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><b>从 <i>Ĥ</i> = −2<i>J</i><i>Ŝ</i>₁·<i>Ŝ</i>₂ 出发推出三重态 −<i>J</i>/2、单重态 +3<i>J</i>/2、Δ<i>E</i><sub>ST</sub> = −2<i>J</i></b>（完整推导可能直接考）</li>
+<li><i>J</i> 的符号与铁磁/反铁磁的对应；Zeeman 分裂图</li></ul></div>
+</section>
+
+<section class="slide" id="p42">
+<h2><span class="pno">p42–43</span>★ 用 DFT 算 <i>J</i>：破缺对称 (BS-DFT) 方法</h2>
+<figure class="orig"><img src="img/L05/p42.png" alt="讲义 p42" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p43.png" alt="讲义 p43" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p42）</span>
+<p>能用 DFT 计算磁相互作用参数吗？</p>
+<p>三重态 <i>S</i>=1：Ψ<sub><i>S</i>=1,<i>M</i>=+1</sub> = <i>α</i>(1)<i>α</i>(2)　⟹ <b>一个 Slater 行列式，适合 DFT</b></p>
+<p>单重态 <i>S</i>=0：Ψ<sub><i>S</i>=0,<i>M</i>=0</sub> = (1/√2)[<i>α</i>(1)<i>β</i>(2) − <i>β</i>(1)<i>α</i>(2)]　⟹ <b>两个 Slater 行列式，<u>不</u>适合 DFT</b></p>
+<p>因此，直接用 DFT 可能不适合计算单重态。</p>
+<p>为克服这个问题，提出了<b>破缺对称 (BS)</b> 方法。在 BS-DFT 中，不计算单重态波函数，而是计算<b>一个</b>行列式 <i>α</i>(1)<i>β</i>(2) 的能量。参数 <i>J</i> 由两个组态的能量差导出：</p>
+<p><i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub> = [⟨1|<i>h</i>|1⟩ + ⟨2|<i>h</i>|2⟩ + ⟨12|12⟩ − ⟨12|21⟩]<sub>HS</sub> − [⟨1|<i>h</i>|1⟩ + ⟨2|<i>h</i>|2⟩ + ⟨12|12⟩]<sub>BS</sub></p>
+<p>= −⟨12|21⟩ = −⟨<i>α</i>(1)<i>β</i>(2)|1/<i>r</i>₁₂|<i>α</i>(2)<i>β</i>(1)⟩ = −2<i>J</i></p>
+<p><i>J</i> = (<i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub>)/2 = ⟨12|21⟩/2 = ⟨<i>α</i>(1)<i>β</i>(2)|1/<i>r</i>₁₂|<i>α</i>(2)<i>β</i>(1)⟩/2</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p43）</span>
+<p>对更一般的情形 <i>S</i><sub>1,2</sub> ≥ ½，上面的公式不太正确，因为磁耦合依赖于相互作用自旋的数值，因此必须考虑总自旋的较大值。</p>
+<p>Yamaguchi 等人 [Chem. Phys. Lett. 432 (2006) 343–347] 提出了如下表达式：</p>
+<p><i>J</i> = (<i>E</i><sub>BS</sub> − <i>E</i><sub>HS</sub>) / (⟨<i>S</i>²⟩<sub>BS</sub> − ⟨<i>S</i>²⟩<sub>HS</sub>) = (<i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub>) / (⟨<i>S</i>²⟩<sub>HS</sub> − ⟨<i>S</i>²⟩<sub>BS</sub>)</p>
+<p>其中 ⟨<i>S</i>²⟩<sub>BS</sub> 和 ⟨<i>S</i>²⟩<sub>HS</sub> 是 <i>S</i>² 算符在各自波函数上的期望值，<i>E</i><sub>BS</sub> 和 <i>E</i><sub>HS</sub> 是破缺对称和高自旋组态的总能量。</p>
+<p>Noodleman 等人给出了 <i>J</i> 的另一种公式。</p>
+<p>ORCA 软件提供了一个易用的 BS-DFT 磁耦合实现，实现了多种公式。使用 ORCA 做这件事的研究：Phys. Chem. Chem. Phys., 2014, 16, 14568。</p>
+<p>GAUSSIAN 也可以计算磁耦合，教程见 gaussian.com/afc/。</p>
+</div>
+
+<h3>讲解 · 为什么需要"破缺对称"</h3>
+<table>
+<tr><th style="width:150px">态</th><th style="width:230px">真实波函数</th><th>DFT 能直接算吗</th></tr>
+<tr><td><b>高自旋 (HS)</b><br>三重态 <i>M</i>=1</td><td>|<i>α</i><i>α</i>| —— <b>1 个</b>行列式</td><td class="c" style="color:#2c6e4f">✔</td></tr>
+<tr><td><b>单重态</b></td><td>(|<i>α</i><i>β</i>| − |<i>β</i><i>α</i>|)/√2 —— <b>2 个</b>行列式</td><td class="c" style="color:#c0392b">✘ <span class="key">KS-DFT 只有 1 个行列式</span>（第 2 讲 p73 的开壳层单重态问题）</td></tr>
+<tr><td><b>破缺对称 (BS)</b></td><td>|<i>α</i>(1)<i>β</i>(2)| —— <b>1 个</b>行列式，左边自旋向上、右边向下</td><td class="c" style="color:#2c6e4f">✔ 能算，但<b>它不是自旋本征态</b></td></tr>
+</table>
+<p><span class="key">"破缺对称"指破坏了自旋对称性</span>：BS 行列式既不是纯的单重态也不是纯的三重态，而是两者的混合（第 3 讲 p52–53 的自旋污染）。它"故意"被污染，然后用公式把污染校正掉。</p>
+
+<h3 class="fm">推导逐步 · p42 的行列式能量差</h3>
+<div class="step"><div class="sh">用第 3 讲 p44 的规则写出两个行列式的能量</div>
+<p>两个磁性轨道 1（在左边金属上）、2（在右边金属上），各放一个电子：</p>
+<table>
+<tr><th style="width:130px">行列式</th><th style="width:130px">自旋排布</th><th>能量（第 3 讲 p44 规则）</th></tr>
+<tr><td><b>HS</b></td><td class="c">1↑ 2↑</td><td><i>h</i>₁₁ + <i>h</i>₂₂ + <i>J</i>₁₂ <b>− <i>K</i>₁₂</b>　（自旋相同 → 有交换项）</td></tr>
+<tr><td><b>BS</b></td><td class="c">1↑ 2↓</td><td><i>h</i>₁₁ + <i>h</i>₂₂ + <i>J</i>₁₂　（自旋相反 → 没有交换项）</td></tr>
+</table>
+<p>讲义的记号：⟨1|<i>h</i>|1⟩ = <i>h</i>₁₁，⟨12|12⟩ = 库仑积分 <i>J</i>₁₂，⟨12|21⟩ = 交换积分 <i>K</i>₁₂。<span class="key">注意这里的 <i>J</i>₁₂（库仑积分）和耦合常数 <i>J</i> 是两个完全不同的东西——字母撞车了。</span></p>
+<div class="fml" style="font-size:16px"><i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub> = −<i>K</i><sub>12</sub> = −⟨12|21⟩</div>
+<p>这一步和第 3 讲 p45 拓展里算的完全一样。</p>
+</div>
+
+<div class="warn"><span class="lab">⚠ 讲义 p42 最后一行和 p43 的公式有符号笔误 —— 按本讲自己的约定核对</span>
+<p>本讲 p40–41 的约定是：<b><i>Ĥ</i> = −2<i>J</i><i>Ŝ</i>₁·<i>Ŝ</i>₂，<i>J</i> &gt; 0 为铁磁，<i>E</i>(<i>S</i>=1) − <i>E</i>(<i>S</i>=0) = −2<i>J</i></b>。</p>
+<p><b>p42</b>：先写 <i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub> = −2<i>J</i>（✔ 与 p41 一致，把 BS 当作单重态），紧接着却写 <i>J</i> = (<i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub>)/2——代入前一式得 <i>J</i> = −<i>J</i>，自相矛盾。最右边的 ⟨12|21⟩/2 是对的。</p>
+<div class="fml" style="font-size:16px">正确写法：<b><i>J</i> = (<i>E</i><sub>BS</sub> − <i>E</i><sub>HS</sub>) / 2 = <i>K</i><sub>12</sub> / 2</b></div>
+<p><b>p43</b>：Yamaguchi 公式分子分母的顺序也反了。按 −2<i>J</i> 约定的标准形式是：</p>
+<div class="fml" style="font-size:16px"><b><i>J</i> = (<i>E</i><sub>BS</sub> − <i>E</i><sub>HS</sub>) / (⟨<i>S</i>²⟩<sub>HS</sub> − ⟨<i>S</i>²⟩<sub>BS</sub>)</b></div>
+<p><b>自检方法</b>（考试时用这个判断，不用死记）：铁磁体系 HS 更稳定，<i>E</i><sub>BS</sub> &gt; <i>E</i><sub>HS</sub>；又总有 ⟨<i>S</i>²⟩<sub>HS</sub> &gt; ⟨<i>S</i>²⟩<sub>BS</sub>。上式分子分母都为正 → <i>J</i> &gt; 0 ✔ 铁磁。讲义原式在同样情形下给出 <i>J</i> &lt; 0，与 p40 的约定矛盾。</p>
+<p>如果考试直接考讲义原式，建议写出你采用的约定并说明符号。</p>
+</div>
+
+<h3 class="fm">公式解析 · Yamaguchi 公式与两个极限</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>E</i><sub>HS</sub></td><td>高自旋态能量</td><td>所有未成对电子自旋平行的 UKS 计算（两个 Cu²⁺ → 多重度 3）</td></tr>
+<tr><td><i>E</i><sub>BS</sub></td><td>破缺对称态能量</td><td>一个中心自旋翻转后的 UKS 计算（<i>M</i><sub><i>S</i></sub> = 0）</td></tr>
+<tr><td>⟨<i>S</i>²⟩<sub>HS</sub></td><td>HS 态的 <i>S</i>² 期望值</td><td>接近纯自旋态的理论值 <i>S</i><sub>max</sub>(<i>S</i><sub>max</sub>+1)。两个 ½ 自旋：= 2</td></tr>
+<tr><td>⟨<i>S</i>²⟩<sub>BS</sub></td><td>BS 态的 <i>S</i>² 期望值</td><td><span class="key">介于 0 和 <i>S</i><sub>max</sub> 之间，反映 BS 态混入了多少三重态</span>。两个 ½ 自旋、磁轨道几乎不重叠时 ≈ 1</td></tr>
+<tr><td>分母</td><td>自旋污染校正</td><td>把"BS 不是纯单重态"这件事定量地考虑进来</td></tr>
+</table>
+<div class="step"><div class="sh">为什么 p42 和 Yamaguchi 相差一个因子 2（两个 ½ 自旋的情形）</div>
+<table>
+<tr><th style="width:190px">假设</th><th style="width:130px">⟨<i>S</i>²⟩<sub>BS</sub></th><th style="width:150px">Yamaguchi 分母</th><th>结果</th></tr>
+<tr><td><b>BS ≈ 纯单重态</b>（磁轨道强重叠）</td><td class="c">0</td><td class="c">2 − 0 = 2</td><td><i>J</i> = (<i>E</i><sub>BS</sub>−<i>E</i><sub>HS</sub>)/2　← <b>就是 p42 的结果</b>（Ruiz/Bencini 公式）</td></tr>
+<tr><td><b>BS ≈ 一半单重态 + 一半三重态</b>（磁轨道弱重叠）</td><td class="c">1</td><td class="c">2 − 1 = 1</td><td><i>J</i> = <i>E</i><sub>BS</sub>−<i>E</i><sub>HS</sub>　← <b>Noodleman 公式</b></td></tr>
+<tr><td><b>一般情形</b></td><td class="c">实际计算值</td><td class="c">⟨<i>S</i>²⟩<sub>HS</sub> − ⟨<i>S</i>²⟩<sub>BS</sub></td><td><b>Yamaguchi</b>：在两个极限之间自动插值</td></tr>
+</table>
+<p>弱重叠时 BS 行列式 |<i>α</i><i>β</i>| 恰好是 (单重态 + 三重态<sub><i>M</i>=0</sub>)/√2，所以 <i>E</i><sub>BS</sub> ≈ ½(<i>E</i><sub>S</sub> + <i>E</i><sub>T</sub>)，于是 <i>E</i><sub>BS</sub> − <i>E</i><sub>HS</sub> = ½(<i>E</i><sub>S</sub> − <i>E</i><sub>T</sub>) = ½ × 2<i>J</i> = <i>J</i>。</p>
+<p><span class="key">这就是 p43 说"一般情形下上面的公式不太正确"的真正含义：p42 默认 BS 就是单重态，但实际上 BS 是自旋污染的混合态。</span>ORCA 的 BS 输出会同时打印这三种公式给出的 <i>J</i> 值。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 一个更深的问题：这个简单模型只能给出铁磁</span>
+<p>p42 的推导得到 <i>J</i> = <i>K</i>₁₂/2，而交换积分 <i>K</i>₁₂ 永远为正 → <i>J</i> 永远 &gt; 0 → <b>永远是铁磁</b>。可实际上大多数双核 Cu(II) 配合物是<b>反铁磁</b>的，这是为什么？</p>
+<p><span class="key">因为推导里假设了"两个行列式用<b>同样的</b>轨道"（冻结轨道）。</span>真实的反铁磁性来自<b>超交换 (superexchange)</b>：两个磁性轨道通过桥联配体（Cl⁻）的轨道发生重叠，电子可以"跳过去"，而只有自旋相反时才允许跳（泡利），跳跃带来的动能降低让单重态更稳定。这一项 ∝ −<i>t</i>²/<i>U</i>（<i>t</i> = 跳跃积分，<i>U</i> = 同位排斥），叫<b>动力学交换</b>。</p>
+<p><b>真实的 BS-DFT 计算为什么能抓到它</b>：在 UKS 计算里，BS 态的 α 和 β 轨道是<b>各自优化</b>的，会向对方中心发生离域——这种轨道弛豫就包含了超交换效应。</p>
+<p><b>结构-磁性关系（p48 附加任务的背景）</b>：Goodenough–Kanamori 规则——M–X–M 桥联角接近 90° 时，两条超交换路径的轨道正交，倾向<b>铁磁</b>；角度增大时重叠增大，倾向<b>反铁磁</b>。对双 μ-Cl 桥联 Cu₂ 体系，交叉点大致在 Cu–Cl–Cu ≈ 90–95°附近。所以作业里"算 <i>J</i> 随 Cu–Cl–Cu 角的变化"应该能看到符号翻转。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li><b>为什么 DFT 不能直接算开壳层单重态</b>（需要 2 个行列式）；BS 方法的思路</li>
+<li>用行列式能量规则推出 <i>E</i><sub>HS</sub> − <i>E</i><sub>BS</sub> = −<i>K</i>₁₂</li>
+<li>Yamaguchi 公式的形式与物理意义（用 ⟨<i>S</i>²⟩ 校正自旋污染）；两个极限</li>
+<li>符号约定：写 <i>J</i> 时必须写明哈密顿量的形式</li></ul></div>
+</section>
+
+<section class="slide" id="p44">
+<h2><span class="pno">p44–45</span>传播子方法与 TD-DFT：算激发态</h2>
+<figure class="orig"><img src="img/L05/p44.png" alt="讲义 p44" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p45.png" alt="讲义 p45" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p44）</span>
+<p>如果分子受到一个线性振荡电场 <b>E</b> = <b>r</b> cos<i>ωt</i> 的作用，频率依赖的极化率可以很好地近似为：</p>
+<p>⟨<i>α</i>⟩<sub><i>ω</i></sub> = Σ<sub><i>i</i>=0</sub><sup><i>N</i>states</sup> |⟨<i>ψ</i><sub>0</sub>|<b>r</b>|<i>ψ</i><sub><i>i</i></sub>⟩|² / [<i>ω</i> − (<i>E</i><sub><i>i</i></sub> − <i>E</i><sub>0</sub>)]</p>
+<p><b>传播子方法</b>（基于 Green 函数或运动方程 EOM）旨在不显式计算 <i>ψ</i><sub><i>i</i></sub> 就求出频率依赖极化率。</p>
+<p><b>随机相位近似 (RPA)</b> 方法计入单、双电子激发对 CI 矩阵元的影响，而不显式构造 CI 波函数。RPA 可以作用于 HF 波函数或 CASSCF。RPA 计入的动态电子相关质量中等。</p>
+<p><b>含时 DFT (TD-DFT)</b> 是 RPA 对 DFT 波函数的等价物，它通过把"电子从某个占据轨道激发到虚轨道"看作对原体系的外部微扰，来优化<b>激发态</b>。</p>
+<p>当然，用 TD-DFT 计算激发态时并没有真正的"时间依赖"。这个名字来源于 TD-DFT 方程最初是从求解含时薛定谔方程出发的，之后做了所谓的<b>绝热近似</b>，这等价于"丢失时间记忆"，即不再依赖时间。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p45）</span>
+<p>TD-DFT 在以下条件下表现良好：</p>
+<ol type="a">
+<li>基态波函数能被单个 Slater 行列式很好地描述</li>
+<li>自旋污染低</li>
+<li>只需要低能的电子激发态</li>
+<li>使用了合适的基组和密度积分格点</li>
+<li>使用了合适的色散校正方法</li>
+</ol>
+<p>并非所有软件包都为 TD-DFT 提供溶剂效应、相对论校正、色散校正的所有组合。也会有一些 bug；因此建议对结果进行批判性分析并配合适当的测试。</p>
+<p><b>能量与分子电离能相当的高激发态描述得很差。</b></p>
+</div>
+<h3 class="fm">公式解析 · 频率依赖极化率（求和-态公式）</h3>
+<div class="fml"><span class="tag">★ 极化率的"态求和"表达式</span>
+<i>α</i>(<i>ω</i>) = Σ<sub><i>i</i></sub> <span style="color:#0b5ea8">|⟨<i>ψ</i><sub>0</sub>|<b>r</b>|<i>ψ</i><sub><i>i</i></sub>⟩|²</span> ⁄ <span style="color:#c0392b">[<i>ω</i> − (<i>E</i><sub><i>i</i></sub> − <i>E</i><sub>0</sub>)]</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>α</i>(<i>ω</i>)</td><td>动态极化率</td><td>分子在频率为 <i>ω</i> 的光照下"被极化"的难易程度</td></tr>
+<tr><td><i>ω</i></td><td>外场（光）的频率</td><td>原子单位下即光子能量</td></tr>
+<tr><td style="color:#0b5ea8">⟨<i>ψ</i><sub>0</sub>|<b>r</b>|<i>ψ</i><sub><i>i</i></sub>⟩</td><td><b>跃迁偶极矩</b></td><td>基态到激发态 <i>i</i> 的跃迁偶极矩（第 2 讲 p16 拓展）。它的平方决定吸收强度（振子强度）</td></tr>
+<tr><td style="color:#c0392b"><i>E</i><sub><i>i</i></sub> − <i>E</i><sub>0</sub></td><td><b>激发能</b></td><td>第 <i>i</i> 个激发态的能量 = UV-Vis 吸收峰的位置</td></tr>
+<tr><td>Σ<sub><i>i</i></sub></td><td>对所有激发态求和</td><td>讲义上限写 <i>N</i>states</td></tr>
+</table>
+<div class="step"><div class="sh">这个公式的关键：分母为零处就是激发能</div>
+<p>当光的频率 <i>ω</i> 恰好等于某个激发能 <i>E</i><sub><i>i</i></sub> − <i>E</i><sub>0</sub> 时，分母 → 0，<i>α</i>(<i>ω</i>) → ∞——这叫<b>极点 (pole)</b>，物理上就是<b>共振吸收</b>。</p>
+<p><span class="key">所以：只要能算出"分子对振荡电场的响应函数 <i>α</i>(<i>ω</i>)"，找到它的极点位置就得到了所有激发能，找到极点处的留数就得到了跃迁强度——完全不需要显式算出激发态波函数 <i>ψ</i><sub><i>i</i></sub>。</span>这就是"传播子方法 / 线性响应理论"的核心思想，TD-DFT 就是其中一员。</p>
+</div>
+<h3>讲解 · 三个名词</h3>
+<table>
+<tr><th style="width:150px">名词</th><th>一句话</th></tr>
+<tr><td><b>RPA</b>（随机相位近似）</td><td>在 HF（或 CASSCF）基础上做线性响应，求激发能。也叫 TD-HF。<span class="key">包含"激发"和"去激发"两种过程</span></td></tr>
+<tr><td><b>TD-DFT</b></td><td>"RPA 的 DFT 版"：用 KS 轨道和 XC 核做同样的线性响应。实际计算中最常用的激发态方法</td></tr>
+<tr><td><b>绝热近似</b></td><td>真正的含时 XC 势应该依赖密度的<b>整个历史</b>（记忆效应）；绝热近似假设它只依赖<b>当前时刻</b>的密度，于是可以直接用基态的 XC 泛函。<span class="key">这是 TD-DFT 算不好双激发态的根源</span></td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · TD-DFT 在实践中的三个常见陷阱（对应 p45 的条件）</span>
+<table>
+<tr><th style="width:210px">问题</th><th>原因与对策</th></tr>
+<tr><td><b>电荷转移 (CT) 激发能严重偏低</b></td><td>SIE + 错误的长程行为（p33–34）。<span class="key">用 CAM-B3LYP / ωB97X-D</span></td></tr>
+<tr><td><b>高激发态、Rydberg 态差</b>（p45 最后一句）</td><td>激发电子跑到很远，GGA 势衰减太快（p34）；还需要弥散基组</td></tr>
+<tr><td><b>双激发特征的态完全漏掉</b></td><td>绝热线性响应 TD-DFT 只能给出单激发。多烯的暗态 2A<sub>g</sub>、许多光化学关键态 → 用 CASPT2 / NEVPT2</td></tr>
+<tr><td><b>基态本身多参考</b>（p45 条件 a）</td><td>参考态错了，响应也错。开壳层过渡金属、双自由基 → 多参考方法</td></tr>
+</table>
+<p><b>Gaussian 用法</b>：<code>#p td=(nstates=10) cam-b3lyp/6-31+G(d)</code>。输出里 <code>Excited State 1: ... 3.5421 eV 350.03 nm f=0.2134</code>——eV 是激发能，nm 是对应波长，<b><i>f</i> 是振子强度</b>（∝ |跃迁偶极矩|²，决定峰的高度）。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>极化率态求和公式的物理含义：极点 = 激发能，分子 = 跃迁强度</li>
+<li>TD-DFT 的名称来源与绝热近似；它的适用条件（p45 五条）与失败场景</li></ul></div>
+</section>
+
+<section class="slide" id="p46">
+<h2><span class="pno">p46–48</span>实践：ORCA 软件与 [Cu₂Cl₆]²⁻ 磁耦合任务</h2>
+<figure class="orig"><img src="img/L05/p46.png" alt="讲义 p46" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p47.png" alt="讲义 p47" loading="lazy"></figure>
+<figure class="orig"><img src="img/L05/p48.png" alt="讲义 p48" loading="lazy"></figure>
+<div class="tr"><span class="lab">原文翻译（p46）</span>
+<p>学习 ORCA 的有用链接：① ORCA 5.0.2 手册（Canvas: Files → Examples_for_various_calculations → ORCA）；② ORCA 输入库；③ ORCA 论坛；④ ORCA 教程站。另有通用输入、UV-Vis 光谱、磁耦合、过渡态的视频教程链接。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p48）</span>
+<p><b>主要任务：求 [Cu₂Cl₆]²⁻ 化合物的磁交换。</b></p>
+<ul>
+<li>子任务：用 Avogadro 或等效程序检查分子</li>
+<li>子任务：准备输入并计算 <i>S</i>=1 态。检查结果：&gt; 找出未成对电子位于哪些原子上；&gt; 找出自旋污染指标</li>
+<li>子任务：准备 "SpinFlip" 的输入，即告诉程序翻转其中一个 Cu 原子上的自旋</li>
+<li>子任务：运行 BS-DFT 计算。检查结果。找出未成对电子位于哪些原子上。自旋确实在目标原子上翻转了吗？BS 波函数的自旋污染是多少？</li>
+<li>子任务：比较所附 [Cu₂Cl₆]²⁻ 体系的磁耦合。</li>
+</ul>
+<p>附加：如果你愿意，可以把磁交换作为某些结构形变的函数来计算，例如 Cu–Cl–Cu 角、外侧两个 Cl 与 Cu₂Cl₂ 平面的夹角等。</p>
+</div>
+<h3 class="fm">逐行解析 · p47 的 ORCA 输入文件（苯的优化 + 频率）</h3>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto">! UKS B3LYP def2-SVP def2/J TightSCF TightOpt Freq LARGEPRINT
+%pal nprocs 12 end
+%maxcore 1000
+%scf
+  MaxIter 1000
+end
+%output
+  XYZFile true
+end
+* xyz 0 1
+ C   0.00000   1.40272   0.00000
+ ...（12 个原子）
+*</pre>
+<table>
+<tr><th style="width:200px">写法</th><th>含义</th></tr>
+<tr><td><code>UKS</code></td><td><b>U</b>nrestricted <b>K</b>ohn–<b>S</b>ham = 非限制 DFT（第 2 讲 p91 的 UHF 的 DFT 版）。苯是闭壳层，UKS 会自动收敛到和 RKS 相同的解</td></tr>
+<tr><td><code>B3LYP</code></td><td>泛函（p30）</td></tr>
+<tr><td><code>def2-SVP</code></td><td>Ahlrichs 双 zeta 极化基组。def2 系列覆盖到 Rn，重元素自动带 ECP——<span class="key">算 Cu 体系比 Pople 基组方便</span></td></tr>
+<tr><td><code>def2/J</code></td><td><b>RI 辅助基组</b>（第 3 讲 p64）。必须和 def2 主基组配套</td></tr>
+<tr><td><code>TightSCF</code> / <code>TightOpt</code></td><td>收紧 SCF 和几何优化的收敛阈值（做频率前必须）</td></tr>
+<tr><td><code>Freq</code></td><td>振动频率（检查虚频，第 3 讲 p81）</td></tr>
+<tr><td><code>LARGEPRINT</code></td><td><span class="key">详细输出——Avogadro 读振动模式必需</span>（第 3 讲 p20）</td></tr>
+<tr><td><code>%pal nprocs 12 end</code></td><td>12 核并行。<b>必须与 PBS 脚本的 <code>ncpus</code> 一致</b>（第 1 讲 p41）</td></tr>
+<tr><td><code>%maxcore 1000</code></td><td><span class="key">每个核</span> 1000 MB 内存。总内存 = 12 × 1000 MB = 12 GB，PBS 申请要再留余量</td></tr>
+<tr><td><code>%scf MaxIter 1000 end</code></td><td>SCF 最多迭代 1000 轮（默认 125，过渡金属体系常不够）</td></tr>
+<tr><td><code>XYZFile true</code></td><td>额外输出一个 .xyz 结构文件，方便可视化</td></tr>
+<tr><td><code>* xyz 0 1 … *</code></td><td>笛卡尔坐标，电荷 0，多重度 1</td></tr>
+</table>
+<h3>讲解 · p48 任务的做法思路</h3>
+<div class="step"><div class="sh">体系分析</div>
+<p>[Cu₂Cl₆]²⁻：两个 Cu(II)，每个 d⁹，<b>各有 1 个未成对电子</b>（<i>S</i>₁ = <i>S</i>₂ = ½）。两个 Cu 由两个桥联 Cl 相连（Cu₂Cl₂ 菱形核心），外侧各有两个端基 Cl。总电荷 −2（2×Cu²⁺ + 6×Cl⁻ = +4 − 6）。</p>
+</div>
+<div class="step"><div class="sh">第一步：高自旋态（<i>S</i>=1）</div>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:12.5px;line-height:1.7">! UKS B3LYP def2-TZVP def2/J TightSCF LargePrint
+* xyz -2 3        &lt;- 电荷 -2, 多重度 3 (两个自旋平行)
+...</pre>
+<p><b>要检查的</b>：</p>
+<ul>
+<li><b>Mulliken 自旋布居</b>（p5 的 <b>P</b><sup><i>α</i></sup> − <b>P</b><sup><i>β</i></sup>）：两个 Cu 上应该各有约 +0.5–0.6，其余分布在 Cl 上（自旋离域到配体——这正是超交换的通道）</li>
+<li><b>⟨<i>S</i>²⟩</b>：理论值 2.00，实际应在 2.00–2.01（高自旋态几乎无污染）</li>
+</ul>
+</div>
+<div class="step"><div class="sh">第二步：破缺对称态</div>
+<p>ORCA 最简单的写法：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:12.5px;line-height:1.7">! UKS B3LYP def2-TZVP def2/J TightSCF LargePrint
+%scf
+  BrokenSym 1,1     &lt;- 一个中心 1 个未成对电子向上, 另一个 1 个向下
+end
+* xyz -2 3          &lt;- 先按高自旋收敛, 程序再自动翻转
+...</pre>
+<p>或者用讲义说的 "SpinFlip" 显式指定翻转哪个原子：<code>%scf FlipSpin 1 FinalMs 0.0 end</code>（<code>FlipSpin</code> 后面是要翻转的原子编号，<b>ORCA 从 0 开始数</b>）。</p>
+<p><b>要检查的</b>：</p>
+<ul>
+<li>自旋布居：<span class="key">一个 Cu 约 +0.5，另一个约 −0.5</span>——如果两个都接近 0，说明塌回了闭壳层解，翻转失败</li>
+<li>⟨<i>S</i>²⟩<sub>BS</sub>：应在 1.0 附近（弱重叠）或更小（强重叠）——p43 Yamaguchi 公式要用</li>
+</ul>
+</div>
+<div class="step"><div class="sh">第三步：算 <i>J</i></div>
+<p>用 Yamaguchi（按上面订正后的符号）：<i>J</i> = (<i>E</i><sub>BS</sub> − <i>E</i><sub>HS</sub>)/(⟨<i>S</i>²⟩<sub>HS</sub> − ⟨<i>S</i>²⟩<sub>BS</sub>)。能量从 Hartree 换成 cm⁻¹：<b>1 Hartree = 219 474.6 cm⁻¹</b>。</p>
+<p><span class="key">典型 <i>J</i> 只有几到几百 cm⁻¹，即 10⁻⁵–10⁻³ Hartree</span>——比总能量小 7–8 个数量级。所以两次计算必须用<b>完全相同</b>的几何、基组、格点、收敛阈值，否则数值噪声就会盖过 <i>J</i>。这也是 <code>TightSCF</code> 在这里必不可少的原因。</p>
+</div>
+<div class="warn"><span class="lab">泛函对 <i>J</i> 的影响很大</span>
+<p><span class="key">BS-DFT 算出的 <i>J</i> 强烈依赖泛函中 HF 交换的比例</span>：纯 GGA（SIE 大、过度离域）严重高估反铁磁耦合；HF 交换越多，|<i>J</i>| 越小。B3LYP 和 TPSSh 是常用的折中。报告 <i>J</i> 时必须注明泛函。</p>
+</div>
+<div class="kp"><span class="lab">考点</span>
+<ul><li>ORCA 输入各关键词的含义（<code>UKS</code>、<code>def2/J</code>、<code>%maxcore</code> 是每核内存）</li>
+<li>BS-DFT 计算的流程：HS 计算 → 翻转一个中心的自旋 → BS 计算 → 用能量差和 ⟨<i>S</i>²⟩ 算 <i>J</i></li></ul></div>
+</section>
+
+<section class="slide" id="sum">
+<h2>本讲小结</h2>
+<h3>一、一张图串起整讲</h3>
+<figure>
+<svg viewBox="0 0 540 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="sa" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#6b6b70"/></marker>
+<style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;font-weight:700;fill:#1c1c1e}</style></defs>
+<rect x="20" y="20" width="150" height="50" rx="6" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.4"/>
+<text x="95" y="40" class="t" text-anchor="middle">HK 第一定理</text>
+<text x="95" y="58" class="s" text-anchor="middle">ρ₀ ⟺ V<tspan font-size="9">ext</tspan>，一切由 ρ 决定</text>
+<rect x="195" y="20" width="150" height="50" rx="6" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.4"/>
+<text x="270" y="40" class="t" text-anchor="middle">HK 第二定理</text>
+<text x="270" y="58" class="s" text-anchor="middle">E[ρ] 在 ρ₀ 处最小</text>
+<rect x="370" y="20" width="150" height="50" rx="6" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.4"/>
+<text x="445" y="40" class="t" text-anchor="middle">Kohn–Sham</text>
+<text x="445" y="58" class="s" text-anchor="middle">无相互作用替身，只剩 V<tspan font-size="9">xc</tspan> 未知</text>
+<line x1="172" y1="45" x2="193" y2="45" stroke="#6b6b70" marker-end="url(#sa)"/>
+<line x1="347" y1="45" x2="368" y2="45" stroke="#6b6b70" marker-end="url(#sa)"/>
+<line x1="445" y1="72" x2="445" y2="92" stroke="#6b6b70" marker-end="url(#sa)"/>
+<rect x="195" y="95" width="325" height="60" rx="6" fill="#fff8ee" stroke="#b3541e" stroke-width="1.4"/>
+<text x="357" y="115" class="t" text-anchor="middle">近似 V<tspan font-size="9">xc</tspan>：Jacob 阶梯</text>
+<text x="357" y="133" class="s" text-anchor="middle">LDA → GGA → meta-GGA → 杂化 (B3LYP) → 双杂化</text>
+<text x="357" y="148" class="s" text-anchor="middle">+ 范围分离（修 SIE / CT）+ D3 色散</text>
+<rect x="20" y="95" width="150" height="60" rx="6" fill="#fdeeee" stroke="#c0392b" stroke-width="1.4"/>
+<text x="95" y="115" class="t" text-anchor="middle" fill="#c0392b">DFT 的软肋</text>
+<text x="95" y="133" class="s" text-anchor="middle">SIE → 过度离域</text>
+<text x="95" y="148" class="s" text-anchor="middle">无色散；单行列式</text>
+<line x1="193" y1="125" x2="172" y2="125" stroke="#6b6b70" marker-end="url(#sa)"/>
+<line x1="270" y1="157" x2="200" y2="185" stroke="#6b6b70" marker-end="url(#sa)"/>
+<line x1="445" y1="157" x2="420" y2="185" stroke="#6b6b70" marker-end="url(#sa)"/>
+<rect x="60" y="188" width="200" height="50" rx="6" fill="#f7f9fc" stroke="#9aa5b1"/>
+<text x="160" y="208" class="t" text-anchor="middle">应用 1：BS-DFT 算 J</text>
+<text x="160" y="226" class="s" text-anchor="middle">单重态要 2 个行列式 → 破缺对称</text>
+<rect x="300" y="188" width="200" height="50" rx="6" fill="#f7f9fc" stroke="#9aa5b1"/>
+<text x="400" y="208" class="t" text-anchor="middle">应用 2：TD-DFT 算激发态</text>
+<text x="400" y="226" class="s" text-anchor="middle">线性响应，极点 = 激发能</text>
+</svg>
+</figure>
+<h3>二、必须记住的公式</h3>
+<table>
+<tr><th style="width:230px">公式</th><th style="width:90px">页码</th><th>一句话</th></tr>
+<tr><td><i>ρ</i> = Σ<i>P</i><sub><i>μν</i></sub><i>φ</i><sub><i>μ</i></sub><i>φ</i><sub><i>ν</i></sub>，<i>N</i> = Σ<i>P</i><sub><i>μν</i></sub><i>S</i><sub><i>μν</i></sub></td><td class="c">p4</td><td>密度矩阵与电子数</td></tr>
+<tr><td><i>V</i><sub>ext</sub> = −ΣΣ<i>Z</i><sub><i>A</i></sub>/|<b>R</b><sub><i>A</i></sub>−<b>r</b><sub><i>i</i></sub>|</td><td class="c">p7</td><td>唯一区分不同分子的项</td></tr>
+<tr><td><b><i>E</i>[<i>ρ</i>] = <i>F</i><sub>HK</sub>[<i>ρ</i>] + ∫<i>ρV</i><sub>ext</sub></b></td><td class="c">p20</td><td><i>F</i><sub>HK</sub> 普适但未知</td></tr>
+<tr><td><b>[−½∇² + <i>V</i><sub>H</sub> + <i>V</i><sub>ext</sub> + <i>V</i><sub>xc</sub>]<i>φ</i><sub><i>i</i></sub> = <i>ε</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub></b></td><td class="c">p22</td><td>KS 方程；只有 <i>V</i><sub>xc</sub> 要近似</td></tr>
+<tr><td><i>E</i><sub>x</sub><sup>LDA</sup> ∝ −∫<i>ρ</i><sup>4/3</sup></td><td class="c">p29</td><td>均匀电子气交换</td></tr>
+<tr><td><b>B3LYP：(1−<i>a</i>)<i>E</i><sub>x</sub><sup>LSDA</sup> + <i>aE</i><sub>x</sub><sup>HF</sup> + <i>b</i>Δ<i>E</i><sub>x</sub><sup>B88</sup> + (1−<i>c</i>)<i>E</i><sub>c</sub><sup>LSDA</sup> + <i>cE</i><sub>c</sub><sup>LYP</sup></b></td><td class="c">p30</td><td><i>a</i>=0.20，3 个经验参数</td></tr>
+<tr><td>1/<i>r</i><sub>12</sub> = [1−erf(<i>ωr</i>)]/<i>r</i> + erf(<i>ωr</i>)/<i>r</i></td><td class="c">p34</td><td>范围分离</td></tr>
+<tr><td>Δ<i>E</i><sub>disp</sub> = −Σ<i>s</i><sub><i>n</i></sub>Σ<i>C</i><sub><i>n</i></sub><sup>AB</sup><i>R</i><sup>−<i>n</i></sup><i>f</i><sub>damp</sub></td><td class="c">p35</td><td>Grimme D3</td></tr>
+<tr><td><b><i>Ĥ</i> = −2<i>JŜ</i>₁·<i>Ŝ</i>₂ ⟹ Δ<i>E</i><sub>ST</sub> = −2<i>J</i></b></td><td class="c">p40–41</td><td><i>J</i>&gt;0 铁磁</td></tr>
+<tr><td><b><i>J</i> = (<i>E</i><sub>BS</sub>−<i>E</i><sub>HS</sub>)/(⟨<i>S</i>²⟩<sub>HS</sub>−⟨<i>S</i>²⟩<sub>BS</sub>)</b></td><td class="c">p43</td><td>Yamaguchi（已按 p40 约定订正符号）</td></tr>
+</table>
+<h3>三、最可能考的概念题</h3>
+<table>
+<tr><th style="width:44%">问题</th><th>答题要点</th></tr>
+<tr><td><b>陈述 HK 两个定理</b></td><td>① 基态密度与外势一一对应，一切基态性质是 <i>ρ</i> 的泛函；② 精确能量泛函在真实密度处取最小（p17, p19）</td></tr>
+<tr><td><b>证明 HK 第一定理</b></td><td>反证：设 <i>V</i>≠<i>V</i>′ 但 <i>ρ</i>=<i>ρ</i>′ → 变分原理两次 → 相加得 <i>E</i>+<i>E</i>′ &lt; <i>E</i>+<i>E</i>′（p15）</td></tr>
+<tr><td>函数与泛函的区别</td><td>函数：数→数；泛函：函数→数（p18）</td></tr>
+<tr><td><b>Kohn–Sham 的核心思想是什么？为什么说它是精确的？</b></td><td>无相互作用替身体系重现真实密度；未知部分全放进 <i>V</i><sub>xc</sub>；若 <i>V</i><sub>xc</sub> 精确则结果精确（p22）</td></tr>
+<tr><td><b>HF 与 KS-DFT 的异同</b></td><td>形式相同（单行列式、SCF）；HF 交换精确非局域、无相关；DFT 交换相关都近似但局域（p23）</td></tr>
+<tr><td><b>Jacob 阶梯五级</b></td><td>LDA(<i>ρ</i>) → GGA(+∇<i>ρ</i>) → meta-GGA(+<i>τ</i>) → 杂化(+HF 交换) → 双杂化(+MP2)（p36）</td></tr>
+<tr><td>为什么 DFT 严格说不是 ab initio</td><td>实用泛函含拟合实验数据的经验参数（p25）</td></tr>
+<tr><td><b>什么是自相互作用误差？后果？</b></td><td>近似 <i>E</i><sub>xc</sub> 不能精确抵消 <i>J</i><sub><i>ii</i></sub>（HF 中 <i>J</i><sub><i>ii</i></sub>=<i>K</i><sub><i>ii</i></sub>）；过度离域、能垒偏低、带隙偏小（p33）</td></tr>
+<tr><td>DFT 为什么算不出色散？怎么补？</td><td>泛函是局域的，看不到远处的关联涨落；Grimme D3（p32, p35）</td></tr>
+<tr><td>范围分离泛函的原理与用途</td><td>erf 拆分 1/<i>r</i><sub>12</sub>，长程 HF 交换；修 SIE、CT 激发能（p34）</td></tr>
+<tr><td><b>什么体系不适合 DFT？</b></td><td>近简并/多参考：双自由基、开壳层过渡金属、断键；镧系要 4f-in-core（p38）</td></tr>
+<tr><td><b>从 −2<i>JŜ</i>₁·<i>Ŝ</i>₂ 推 Δ<i>E</i><sub>ST</sub></b></td><td>用 <i>S</i><sub>T</sub>² 改写，三重态 −<i>J</i>/2，单重态 +3<i>J</i>/2（p41）</td></tr>
+<tr><td><b>为什么要破缺对称？Yamaguchi 公式校正了什么？</b></td><td>开壳层单重态需 2 个行列式，KS 只有 1 个；BS 态是自旋污染的混合态，用 ⟨<i>S</i>²⟩ 差校正（p42–43）</td></tr>
+<tr><td>TD-DFT 的原理与局限</td><td>线性响应，极化率极点=激发能；绝热近似；CT/Rydberg/双激发差（p44–45）</td></tr>
+</table>
+</section>
+
+<footer>
+CM5235 复习解析 · 第 5 讲　|　源文件：<code>CM5235_Lecture_05.pdf</code>（48 页）<br>
+上一讲：<a href="L04-电子相关方法.html">第 4 讲　电子相关方法</a>　·
+下一讲：<a href="L06-波函数分析_相对论_溶剂化.html">第 6 讲　波函数分析、相对论与溶剂化</a>　·
+<a href="00-总汇总-L1至L6.html">总汇总</a>　·
+<a href="index.html">总目录</a>
+</footer>
+
+
+
+</div>
+</body>
+</html>

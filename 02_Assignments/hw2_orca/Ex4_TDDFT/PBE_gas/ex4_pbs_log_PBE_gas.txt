@@ -1,0 +1,31 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> ex4_tddft_PBE_gas 开始  Sun Sep 20 00:18:09 +08 2026
+>>> ORCA 结束  Sun Sep 20 00:27:54 +08 2026
+         ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS
+-----------------------------------------------------------------------------
+State   Energy    Wavelength  fosc         T2        TX        TY        TZ  
+        (cm-1)      (nm)                 (au**2)    (au)      (au)      (au) 
+-----------------------------------------------------------------------------
+   1   37553.6    266.3   0.040138800   0.35188  -0.00394   0.17793   0.56586
+   2   41741.0    239.6   0.000134584   0.00106  -0.03257  -0.00070  -0.00004
+   3   44185.5    226.3   0.024420356   0.18195  -0.00497   0.23017  -0.35909
+   4   47305.8    211.4   0.000000345   0.00000  -0.00153  -0.00025   0.00008
+   5   49432.9    202.3   0.209966832   1.39833  -0.01817   0.82521  -0.84678
+
+-----------------------------------------------------------------------------
+         ABSORPTION SPECTRUM VIA TRANSITION VELOCITY DIPOLE MOMENTS
+>>> 全部完成  Sun Sep 20 00:27:54 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-20 00:27:54.667530:
+     JobId: 1009597.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 8gb 				 Memory Used: 256460kb 
+     Vmem Used: 1205420kb
+     CPU Time Used: 00:01:55 
+     Walltime requested: 04:00:00 			 Walltime Used: 00:09:46
+     Submit Time:  Sun Sep 20 00:05:17 2026 		 Start Time: Sun Sep 20 00:18:08 2026 
+     End Time: Sun Sep 20 00:27:54 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=8388608kb)
+     ======================================================================================

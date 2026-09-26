@@ -1,0 +1,2859 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 第2讲 · 量子力学基础与 Hartree–Fock 理论</title>
+<style>:root{
+  --bg:#faf9f7; --card:#ffffff; --ink:#1c1c1e; --muted:#6b6b70;
+  --line:#e3e0da; --accent:#0b5ea8; --accent2:#b3541e; --accent3:#2c6e4f;
+  --box-tr:#eef4fb; --box-ex:#fff8ee; --box-warn:#fdeeee; --box-fml:#f5f8fc;
+  --mono:"Cascadia Mono",Consolas,Menlo,monospace;
+  --math:"Cambria Math","Latin Modern Math",Cambria,Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:16px;line-height:1.78;}
+.wrap{max-width:940px;margin:0 auto;padding:32px 22px 120px;}
+header.top{border-bottom:3px solid var(--accent);padding-bottom:18px;margin-bottom:8px}
+header.top .kicker{color:var(--accent);font-weight:700;letter-spacing:.14em;font-size:13px}
+header.top h1{margin:6px 0 4px;font-size:30px;line-height:1.3}
+header.top .sub{color:var(--muted);font-size:14px}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:14px 20px;margin:26px 0 40px;font-size:14px}
+nav.toc b{display:block;margin-bottom:8px;color:var(--accent)}
+nav.toc a{color:var(--ink);text-decoration:none;display:inline-block;margin:3px 14px 3px 0}
+nav.toc a:hover{color:var(--accent);text-decoration:underline}
+section.slide{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:24px 26px;margin:0 0 30px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+section.slide>h2{margin:0 0 4px;font-size:21px;line-height:1.4;color:var(--accent)}
+.pno{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;
+  font-size:12px;font-weight:700;padding:2px 9px;margin-right:10px;vertical-align:3px;
+  font-family:var(--mono)}
+.entitle{color:var(--muted);font-size:14px;font-style:italic;margin:0 0 16px}
+h3{font-size:15.5px;margin:24px 0 8px;padding-left:11px;border-left:4px solid var(--accent);
+  letter-spacing:.02em}
+h3.ex{border-left-color:var(--accent2)}
+h3.fm{border-left-color:var(--accent3)}
+h4{font-size:14.5px;margin:16px 0 6px;color:#333}
+p{margin:9px 0}
+ul,ol{margin:9px 0 9px 4px;padding-left:22px}
+li{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f2f4f7;font-weight:600}
+td.c,th.c{text-align:center}
+code,.f{font-family:var(--mono);background:#f2f2ef;padding:1px 5px;border-radius:4px;
+  font-size:.93em}
+.m{font-family:var(--math);font-size:1.06em;font-style:italic}
+.mn{font-family:var(--math);font-size:1.06em;font-style:normal}
+.tr{background:var(--box-tr);border-left:4px solid var(--accent);padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.tr .lab{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.ext{background:var(--box-ex);border-left:4px solid var(--accent2);padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.ext .lab{font-size:12px;color:var(--accent2);font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.warn{background:var(--box-warn);border-left:4px solid #c0392b;padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.warn .lab{font-size:12px;color:#c0392b;font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.fml{background:var(--box-fml);border:1px solid #dbe5f0;border-radius:8px;
+  padding:16px 18px;margin:14px 0;text-align:center;overflow-x:auto;
+  font-family:var(--math);font-size:18px;line-height:2.0}
+.fml .tag{display:block;font-family:var(--mono);font-size:11px;color:var(--accent);
+  letter-spacing:.08em;text-align:left;margin-bottom:8px;font-style:normal}
+.fml i{font-style:italic}
+table.vars{font-size:14px;margin:10px 0 16px}
+table.vars th{background:#eef3f8;font-size:13px}
+table.vars td:first-child{font-family:var(--math);font-size:16px;text-align:center;
+  width:74px;background:#fbfcfe;white-space:nowrap}
+table.vars td:nth-child(2){width:150px;font-weight:600}
+.step{background:#fbfbf9;border:1px dashed var(--line);border-radius:8px;
+  padding:12px 16px;margin:12px 0}
+.step .sh{font-weight:700;color:var(--accent3);font-size:14px;margin-bottom:4px}
+figure{margin:20px 0;text-align:center;overflow-x:auto}
+figure svg{max-width:100%;height:auto}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+.key{background:linear-gradient(transparent 62%,#ffe9a8 62%);font-weight:600}
+hr.sep{border:0;border-top:1px dashed var(--line);margin:26px 0}
+details{margin:10px 0;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
+  background:#fbfbf9}
+details summary{cursor:pointer;font-weight:600;color:var(--accent2);font-size:14.5px}
+details[open] summary{margin-bottom:8px}
+footer{color:var(--muted);font-size:13px;text-align:center;margin-top:50px;
+  border-top:1px solid var(--line);padding-top:20px}
+footer a{color:var(--accent)}
+@media print{body{background:#fff}section.slide{break-inside:avoid;box-shadow:none}}
+
+@page{size:A4;margin:11mm}@media print{body{background:#fff;font-size:13px}.wrap{max-width:none;padding:0}section.slide{break-inside:auto!important;box-shadow:none;padding:14px 16px}tr,figure,.fml,.kp,.tr,.step{break-inside:avoid}h2,h3{break-after:avoid}nav.toc{display:none}}</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>第 2 讲　量子力学基础与 Hartree–Fock 理论</h1>
+  <div class="sub">对应讲义 <code>CM5235_Lecture_02.pdf</code>（102 页）· 逐页翻译 + 零基础讲解 + 每个符号标注 + 拓展</div>
+</header>
+
+<nav class="toc">
+<b>本讲导航</b>
+<a href="#p2">p2 历史背景</a><a href="#p3">p3–5 波粒二象性</a><a href="#p6">p6–9 何时需要量子力学</a>
+<a href="#p10">p10–12 波动力学</a><a href="#p13">p13–14 薛定谔方程</a><a href="#p15">p15 算符与本征值</a>
+<a href="#p16">p16 可观测量</a><a href="#p17">p17 本征函数练习</a><a href="#p18">p18–19 正交归一</a>
+<a href="#p20">p20 完备性</a><a href="#p21">p21 线性与对易</a><a href="#p22">p22 厄米性</a>
+<a href="#p23">p23–24 对易子的物理意义</a><a href="#p25">p25–27 矩阵力学与对易子代数</a>
+<a href="#p28">p28–31 坐标空间中的算符</a><a href="#p32">p32 Born 解释</a><a href="#p33">p33–43 五大公设</a>
+<a href="#p44">p44–45 氢原子与球坐标</a><a href="#p46">p46–52 中心力场问题</a><a href="#p53">p53–55 球谐与径向函数</a>
+<a href="#p56">p56–57 氦原子</a><a href="#p58">p58–59 总角动量</a><a href="#p60">p60–62 轨道近似</a>
+<a href="#p63">p63–64 电子自旋</a><a href="#p65">p65 泡利原理</a><a href="#p66">p66–71 J 与 K 积分</a>
+<a href="#p72">p72–73 Slater 行列式</a><a href="#p74">p74–75 轨道能的依赖</a><a href="#p76">p76–77 总哈密顿量</a>
+<a href="#p78">p78–79 Born–Oppenheimer</a><a href="#p80">p80–85 HF 能量与 Fock 算符</a>
+<a href="#p86">p86–88 Roothaan 方程</a><a href="#p89">p89–90 SCF</a><a href="#p91">p91 RHF vs UHF</a>
+<a href="#p92">p92–100 Linux 实践</a><a href="#p101">p101–102 H₂ 势能面任务</a><a href="#sum">本讲小结</a>
+</nav>
+
+<div class="warn"><span class="lab">开始之前：这一讲的地图</span>
+<p>102 页看起来吓人，其实是<b>三段完全不同的内容</b>拼起来的：</p>
+<table>
+<tr><td class="c" style="width:90px"><b>p2–p55</b></td><td><b>量子力学入门</b>——从波粒二象性到氢原子的精确解。这段是纯物理，几乎所有本科量子化学课都讲过。<b>目标：让你看懂"算符 / 本征值 / 波函数"这套语言。</b></td></tr>
+<tr><td class="c"><b>p56–p91</b></td><td><b>本讲真正的主体</b>——从"氢原子能精确解"到"氦原子就解不了"，然后一步步引入近似：轨道近似 → 平均场 → Slater 行列式 → Born–Oppenheimer → Hartree–Fock → Roothaan 方程 → SCF。<span class="key">整门课的理论骨架全在这 35 页里。</span></td></tr>
+<tr><td class="c"><b>p92–p102</b></td><td><b>Linux 与实践</b>——和第 1 讲重复，外加一个真实的 H₂ 势能面扫描任务。</td></tr>
+</table>
+<p><b>如果时间紧，先读 p56 往后。</b>前面那 55 页是工具，后面那 35 页才是这门课要考的东西。</p>
+</div>
+
+<section class="slide" id="p2">
+<h2><span class="pno">p2</span>历史背景：哪些实验逼出了量子力学</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li>经典物理</li>
+<li>电子的发现</li>
+<li>黑体辐射</li>
+<li>光电效应</li>
+<li>热容</li>
+<li>玻尔模型</li>
+<li>康普顿散射</li>
+<li>波粒二象性</li>
+<li>海森堡不确定性原理</li>
+</ul>
+<p>旁注：<b>这些实验只有在认为"能量是量子化的"（即能量不是连续量）时才能被解释。</b></p>
+</div>
+<h3>讲解 · 逐个说清楚每个实验"逼"出了什么</h3>
+<table>
+<tr><th style="width:120px">实验</th><th style="width:160px">经典物理预言什么</th><th>实际观测到什么 → 逼出什么结论</th></tr>
+<tr><td><b>黑体辐射</b><br>(1900, Planck)</td><td>辐射强度在短波长处趋于无穷（"紫外灾难"）</td><td>强度在某个波长达到峰值后下降。<b>Planck 被迫假设：能量只能以 <i>E</i> = <i>hν</i> 的整数倍交换。</b>这是 <i>h</i> 第一次出现。</td></tr>
+<tr><td><b>光电效应</b><br>(1905, Einstein)</td><td>光越强，打出的电子动能越大；任何频率的光只要够强就能打出电子</td><td>电子动能只与<b>频率</b>有关，与强度无关；低于某个频率（红限）无论多强都打不出电子。<b>→ 光是一份一份的（光子）。</b></td></tr>
+<tr><td><b>热容</b><br>(1907, Einstein)</td><td>Dulong–Petit 定律：固体摩尔热容恒为 3<i>R</i></td><td>低温下热容趋于 0。<b>→ 晶格振动的能量也是量子化的</b>（低温时热能不够激发一个振动量子）。</td></tr>
+<tr><td><b>玻尔模型</b><br>(1913)</td><td>绕核运动的电子会辐射能量、螺旋坠入原子核（原子应在 10⁻¹¹ s 内塌缩）</td><td>原子是稳定的，且发射光谱是<b>分立的线</b>。<b>→ 只有特定的轨道被允许。</b></td></tr>
+<tr><td><b>康普顿散射</b><br>(1923)</td><td>X 射线被电子散射后波长不变</td><td>波长变长，且变化量符合"光子与电子的弹性碰撞"。<b>→ 光子有动量 <i>p</i> = <i>h</i>/<i>λ</i>。</b></td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · "量子化"到底是什么意思</span>
+<p>初学者容易把"量子化"理解成"很小"。<b>不对。量子化的意思是"分立"（discrete），即某个物理量只能取一串特定的值，中间的值取不到。</b></p>
+<p>类比：楼梯 vs 斜坡。斜坡上你可以停在任何高度（连续）；楼梯上你只能站在第 1、2、3 级（分立）。<span class="key">量子力学说：微观世界的能量是楼梯，不是斜坡。</span></p>
+<p>但注意——<b>不是所有物理量在所有情形下都量子化</b>。自由粒子的能量是连续的；只有被<b>束缚</b>在某个势阱里的粒子，能量才量子化。这是 p6–p9 那几页的正题。</p>
+</div>
+</section>
+
+<section class="slide" id="p3">
+<h2><span class="pno">p3–5</span>波粒二象性与 de Broglie 关系</h2>
+<div class="tr"><span class="lab">原文翻译（p3）</span>
+<p>科学家一直难以描述光的本质——它是波还是粒子？</p>
+<p>1924 年，de Broglie 推理：如果光既能有波的性质又能有粒子的性质，为什么物质不行？</p>
+<p>由 Einstein 的相对论能量方程，一个静止质量为零的粒子的能量是它的动量与光速的乘积：</p>
+<p><i>E</i> = <i>pc</i> = <i>mc</i>²</p>
+<p>把这个方程与光子能量 <i>E</i> = <i>hν</i> 结合，就得到 de Broglie 波长关系：</p>
+<p><i>λ</i> = <i>h</i>/<i>p</i></p>
+<p>de Broglie 断言这对粒子和光子<b>都</b>成立。</p>
+<p>（de Broglie 因"物质波动行为的思想"获 1929 年诺贝尔奖。）</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p4）</span>
+<p>这个关系的后果影响深远（它引导薛定谔建立了波动力学理论），但它在自然中的依据是无可置疑的：</p>
+<ul>
+<li>Davisson 与 Germer（1925）以及 Thompson（1927）观测到了电子衍射</li>
+<li>电子的波动性质被用于电子显微镜</li>
+<li>电子的波长可以通过外加电压控制，很小的 de Broglie 波长提供了比普通光学显微镜精确得多的探针</li>
+<li>此外，与相近波长的电磁辐射不同，电子束可以用电场和磁场方便地聚焦</li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p5）</span>
+<p>de Broglie 波为量子化的玻尔轨道提供了一个简单的物理解释。</p>
+</div>
+
+<h3 class="fm">公式解析 · de Broglie 关系</h3>
+<div class="fml"><span class="tag">de Broglie 关系（本讲最基础的一条）</span>
+<i>λ</i> = <i>h</i> / <i>p</i> = <i>h</i> / (<i>mv</i>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义与单位</th></tr>
+<tr><td><i>λ</i></td><td>波长</td><td>希腊字母 lambda。物质波的波长，单位 m。<b>这是"波"的属性。</b></td></tr>
+<tr><td><i>h</i></td><td>普朗克常数</td><td><i>h</i> = 6.626×10⁻³⁴ J·s。<span class="key">整个量子力学的"尺度常数"</span>——它决定了量子效应在多小的尺度上才显现。</td></tr>
+<tr><td><i>p</i></td><td>动量</td><td><i>p</i> = <i>mv</i>，单位 kg·m/s。<b>这是"粒子"的属性。</b></td></tr>
+<tr><td><i>m</i></td><td>质量</td><td>粒子质量，单位 kg</td></tr>
+<tr><td><i>v</i></td><td>速度</td><td>单位 m/s</td></tr>
+<tr><td><i>c</i></td><td>光速</td><td>2.998×10⁸ m/s</td></tr>
+<tr><td><i>ν</i></td><td>频率</td><td>希腊字母 nu（注意别和拉丁字母 v 混），单位 Hz = s⁻¹</td></tr>
+</table>
+<p><span class="key">这个公式的震撼之处在于等号两边：左边 <i>λ</i> 是纯粹的波的概念，右边 <i>p</i> 是纯粹的粒子的概念。</span>一个 <i>h</i> 把它们连起来了。</p>
+
+<h3>讲解 · p10 那道"算一算"的题，我们现在就做</h3>
+<p>讲义 p10 让你算两个 de Broglie 波长，这是理解"为什么宏观世界不需要量子力学"的最快方式：</p>
+<div class="step"><div class="sh">情形 1：一个 80 kg 的人，以 5 m/s 跑步</div>
+<p><i>λ</i> = <i>h</i>/(<i>mv</i>) = 6.626×10⁻³⁴ / (80 × 5) = 6.626×10⁻³⁴ / 400 ≈ <b>1.7×10⁻³⁶ m</b></p>
+<p>对比：一个原子核的直径约 10⁻¹⁵ m。这个波长比原子核还小 20 个数量级。<b>没有任何东西能观测到这么短的波长，所以人不表现波动性。</b></p>
+</div>
+<div class="step"><div class="sh">情形 2：一个电子（<i>m</i> = 9.11×10⁻³¹ kg），同样以 5 m/s 运动</div>
+<p><i>λ</i> = 6.626×10⁻³⁴ / (9.11×10⁻³¹ × 5) = 6.626×10⁻³⁴ / 4.56×10⁻³⁰ ≈ <b>1.5×10⁻⁴ m = 0.15 mm</b></p>
+<p>0.15 毫米！这是肉眼可见的尺度。<span class="key">同样的速度，仅仅因为质量差了 10³² 倍，波长就从"不可想象地小"变成"用尺子能量出来"。</span></p>
+</div>
+<p><b>结论</b>：波动性显不显现，取决于 <i>λ</i> 和你的系统尺寸相比是大是小。<b>电子在原子里的 <i>λ</i> 恰好和原子尺寸（约 10⁻¹⁰ m）同量级——所以原子里的电子必须用量子力学描述。</b>这就是整个量子化学存在的理由。</p>
+
+<h3>讲解 · p5 那张图：de Broglie 怎么解释了玻尔轨道</h3>
+<p>玻尔在 1913 年硬塞了一条假设："角动量只能取 <i>nħ</i>"。当时没人知道为什么。de Broglie 给出了答案：</p>
+<figure>
+<svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.lb{font-size:12px;fill:#1c1c1e}.sm{font-size:11px;fill:#6b6b70}</style></defs>
+<circle cx="120" cy="100" r="60" fill="none" stroke="#c9d4de" stroke-width="1" stroke-dasharray="3,3"/>
+<path d="M120,40 q14,10 0,20 q-14,10 0,20 q14,10 0,20 q-14,10 0,20" fill="none" stroke="#0b5ea8" stroke-width="0"/>
+<path id="c1" d="M 60,100 A 60,60 0 1,1 180,100 A 60,60 0 1,1 60,100" fill="none" stroke="none"/>
+<g stroke="#0b5ea8" stroke-width="1.8" fill="none">
+<path d="M120,40 C143,42 160,58 168,80 C176,102 172,124 158,140 C144,156 122,162 100,158 C78,154 62,138 58,116 C54,94 62,72 78,58 C94,44 110,39 120,40"/>
+</g>
+<g stroke="#0b5ea8" stroke-width="1.6" fill="none" opacity="0.85">
+<path d="M120,34 C150,36 172,58 178,84 C184,110 176,132 156,146 C136,160 108,164 84,154 C60,144 46,120 48,94 C50,68 70,46 96,38 C106,35 114,34 120,34"/>
+</g>
+<circle cx="120" cy="100" r="8" fill="#b3541e"/>
+<text x="120" y="185" class="lb" text-anchor="middle">允许：整数个波长首尾相接</text>
+<text x="120" y="20" class="sm" text-anchor="middle">2π<tspan font-style="italic">r</tspan> = <tspan font-style="italic">n</tspan>λ　✔ 相长干涉</text>
+<circle cx="390" cy="100" r="60" fill="none" stroke="#c9d4de" stroke-width="1" stroke-dasharray="3,3"/>
+<g stroke="#c0392b" stroke-width="1.8" fill="none">
+<path d="M390,40 C416,45 436,66 440,92 C444,118 430,140 408,152 C386,164 358,162 338,146 C318,130 310,104 318,80 C326,56 350,40 374,38"/>
+<path d="M374,38 C360,52 348,64 344,84" stroke-dasharray="4,3"/>
+</g>
+<circle cx="390" cy="100" r="8" fill="#b3541e"/>
+<text x="390" y="185" class="lb" text-anchor="middle">禁止：波首尾对不上</text>
+<text x="390" y="20" class="sm" text-anchor="middle">2π<tspan font-style="italic">r</tspan> ≠ <tspan font-style="italic">n</tspan>λ　✘ 相消干涉，自我抵消</text>
+</svg>
+<figcaption>de Broglie 对玻尔轨道的解释：电子的物质波必须在圆周上形成驻波</figcaption>
+</figure>
+<div class="fml"><span class="tag">驻波条件 → 玻尔的角动量量子化</span>
+2π<i>r</i> = <i>n</i><i>λ</i> = <i>n</i>·<i>h</i>/<i>p</i>　⟹　<i>pr</i> = <i>n</i>·<i>h</i>/(2π) = <i>nħ</i>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>r</i></td><td>轨道半径</td><td>电子绕核圆周运动的半径</td></tr>
+<tr><td><i>n</i></td><td>主量子数</td><td>正整数 1, 2, 3…　<b>"整数"就是量子化的来源</b></td></tr>
+<tr><td><i>pr</i></td><td>角动量</td><td>动量 × 半径 = 角动量的大小</td></tr>
+<tr><td><i>ħ</i></td><td>约化普朗克常数</td><td>念作 "h-bar"，<i>ħ</i> = <i>h</i>/(2π) = 1.055×10⁻³⁴ J·s。<span class="key">量子力学里几乎处处用 <i>ħ</i> 而不是 <i>h</i>，因为角频率 <i>ω</i>=2π<i>ν</i> 用起来更自然。</span></td></tr>
+</table>
+<p><b>逻辑链条</b>：波必须首尾相接（否则自我抵消） → 周长必须是波长的整数倍 → 代入 <i>λ</i>=<i>h</i>/<i>p</i> → 角动量必须是 <i>ħ</i> 的整数倍。<span class="key">玻尔硬塞的假设，变成了驻波条件的必然结果。</span></p>
+</section>
+
+<section class="slide" id="p6">
+<h2><span class="pno">p6–9</span>什么时候必须用量子力学？（Boltzmann 判据）</h2>
+<div class="tr"><span class="lab">原文翻译（p6）</span>
+<ul>
+<li>经典力学和量子力学并不是在竞争谁能描述我们周围的世界</li>
+<li><b>当状态之间的能量差可以忽略、使得谱可以看作"连续"时，经典力学适用</b></li>
+<li><b>当能谱是"分立"的时，才需要量子描述</b></li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p7–p9）</span>
+<p>Boltzmann 分布：<i>n</i>₂/<i>n</i>₁ = (<i>g</i>₂/<i>g</i>₁)·exp[−(<i>e</i>₂−<i>e</i>₁)/(<i>k</i><sub>B</sub><i>T</i>)]</p>
+<p><i>n</i>₁, <i>n</i>₂ —— 能量为 <i>e</i>₁ 和 <i>e</i>₂ 的气体原子数目</p>
+<p><i>g</i>₁, <i>g</i>₂ —— 每个能态的简并度</p>
+<p>简并度 ⟹ 原子能量落在区间 <i>e</i>₁−Δ<i>e</i> &lt; <i>e</i> &lt; <i>e</i>₁+Δ<i>e</i> 内的方式数</p>
+<p><b>能量越高 = 分配能量的方式越多 = 简并度越高（= 熵越高）</b></p>
+<p>动能：<i>e</i>ᵢ = ½<i>mv</i>ᵢ² = ½<i>m</i>(<i>v</i>ᵢₓ² + <i>v</i>ᵢᵧ² + <i>v</i>ᵢᵤ²)</p>
+<p>p8 例子：考虑一个有 1000 个原子的系统，只有两个允许的能态 <i>e</i>₁ 和 <i>e</i>₂。各态布居为：</p>
+<p><i>n</i>₁ = 1000/(1+e<sup>−Δ<i>e</i>/<i>k</i><sub>B</sub><i>T</i></sup>)，　<i>n</i>₂ = 1000·e<sup>−Δ<i>e</i>/<i>k</i><sub>B</sub><i>T</i></sup>/(1+e<sup>−Δ<i>e</i>/<i>k</i><sub>B</sub><i>T</i></sup>)</p>
+<p>p9 结论：</p>
+<ul>
+<li>若 Δ<i>E</i> &lt; <i>k</i><sub>B</sub><i>T</i> 或 Δ<i>E</i> ≈ <i>k</i><sub>B</sub><i>T</i> ⟹ 谱看起来是连续的 ⟹ <b>经典描述就够了</b></li>
+<li>若 Δ<i>E</i> &gt; <i>k</i><sub>B</sub><i>T</i> ⟹ 分立谱 ⟹ <b>需要量子描述</b></li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · Boltzmann 分布</h3>
+<div class="fml"><span class="tag">Boltzmann 分布（统计热力学最重要的一个公式）</span>
+<i>n</i><sub>2</sub> / <i>n</i><sub>1</sub> = (<i>g</i><sub>2</sub> / <i>g</i><sub>1</sub>) · e<sup>−Δ<i>E</i> / (<i>k</i><sub>B</sub><i>T</i>)</sup>　，　Δ<i>E</i> = <i>e</i><sub>2</sub> − <i>e</i><sub>1</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>n</i><sub>1</sub>, <i>n</i><sub>2</sub></td><td>布居数</td><td>处于能级 1 和能级 2 上的粒子<b>个数</b></td></tr>
+<tr><td><i>e</i><sub>1</sub>, <i>e</i><sub>2</sub></td><td>能级能量</td><td>两个能级各自的能量值</td></tr>
+<tr><td>Δ<i>E</i></td><td>能级间隔</td><td>= <i>e</i><sub>2</sub> − <i>e</i><sub>1</sub>，两个能级差多少。<b>这是判据里的主角。</b></td></tr>
+<tr><td><i>g</i><sub>1</sub>, <i>g</i><sub>2</sub></td><td>简并度</td><td>degeneracy。<span class="key">"能量相同但状态不同"的状态个数。</span>比如 2p 轨道有 2p<sub>x</sub>、2p<sub>y</sub>、2p<sub>z</sub> 三个，能量相同 → <i>g</i> = 3。</td></tr>
+<tr><td><i>k</i><sub>B</sub></td><td>玻尔兹曼常数</td><td>1.381×10⁻²³ J/K。<b>它的作用是"把温度翻译成能量"</b>：<i>k</i><sub>B</sub><i>T</i> 就是温度 <i>T</i> 对应的典型热运动能量。</td></tr>
+<tr><td><i>T</i></td><td>绝对温度</td><td>单位 K（开尔文）</td></tr>
+<tr><td>e<sup>x</sup></td><td>指数函数</td><td>自然指数。注意别和电子电荷 <i>e</i> 或能级 <i>e</i>ᵢ 混淆——<b>这个领域符号复用非常严重，只能靠上下文判断。</b></td></tr>
+</table>
+
+<h3>讲解 · 这个公式在说什么（用大白话）</h3>
+<p>指数上的那个分数 <b>Δ<i>E</i>/(<i>k</i><sub>B</sub><i>T</i>)</b> 是全部信息所在。它在比较两个能量：</p>
+<ul>
+<li><b>分子 Δ<i>E</i></b>：粒子从下面那级爬到上面那级<b>需要</b>的能量</li>
+<li><b>分母 <i>k</i><sub>B</sub><i>T</i></b>：环境的热运动<b>能提供</b>的典型能量</li>
+</ul>
+<table>
+<tr><th style="width:150px">情形</th><th style="width:150px">指数值 e<sup>−Δ<i>E</i>/<i>k</i><sub>B</sub><i>T</i></sup></th><th>物理图像</th></tr>
+<tr><td>Δ<i>E</i> ≪ <i>k</i><sub>B</sub><i>T</i></td><td>≈ e⁰ = 1</td><td>两个能级<b>布居几乎相同</b>。热运动轻松就能跨过去，粒子在两级间随意游走。<b>这时"分立"这件事完全不重要 → 经典力学够用。</b></td></tr>
+<tr><td>Δ<i>E</i> ≈ <i>k</i><sub>B</sub><i>T</i></td><td>≈ e⁻¹ = 0.37</td><td>上面那级有可观布居。过渡区。</td></tr>
+<tr><td>Δ<i>E</i> ≫ <i>k</i><sub>B</sub><i>T</i></td><td>→ 0</td><td><b>几乎所有粒子都待在基态。</b>这时"只有特定能量被允许"这件事就是决定性的 → <b>必须用量子力学。</b></td></tr>
+</table>
+
+<div class="ext"><span class="lab">拓展 · 把数字代进去：室温下 <i>k</i><sub>B</sub><i>T</i> 是多少</span>
+<p>这是做计算化学必须记住的一个数：</p>
+<div class="fml" style="font-size:16px">室温 <i>T</i> = 298 K：　<i>k</i><sub>B</sub><i>T</i> ≈ <b>0.0257 eV ≈ 2.48 kJ/mol ≈ 0.59 kcal/mol ≈ 207 cm⁻¹</b></div>
+<p>现在拿它去衡量化学中各种能级间隔：</p>
+<table>
+<tr><th style="width:150px">运动/跃迁类型</th><th style="width:170px">典型 Δ<i>E</i></th><th>相对 <i>k</i><sub>B</sub><i>T</i>(298K)</th><th>结论</th></tr>
+<tr><td><b>平动</b>（分子在容器里跑）</td><td>10⁻²⁰ eV</td><td>Δ<i>E</i> ≪ <i>k</i><sub>B</sub><i>T</i></td><td><b>经典</b>（所以理想气体定律不需要量子力学）</td></tr>
+<tr><td><b>转动</b>（分子转圈）</td><td>10⁻⁴–10⁻² eV<br>(1–100 cm⁻¹)</td><td>Δ<i>E</i> ≲ <i>k</i><sub>B</sub><i>T</i></td><td><b>接近经典</b>，室温下大量转动能级被布居</td></tr>
+<tr><td><b>振动</b>（键的伸缩）</td><td>0.1–0.5 eV<br>(500–4000 cm⁻¹)</td><td>Δ<i>E</i> ≈ 4–20 × <i>k</i><sub>B</sub><i>T</i></td><td><b>需要量子</b>。这就是为什么室温下绝大多数分子处于振动基态（<span class="key">零点能是真实存在的，且不可消除</span>）</td></tr>
+<tr><td><b>电子跃迁</b>（HOMO→LUMO）</td><td>2–10 eV</td><td>Δ<i>E</i> ≈ 100–400 × <i>k</i><sub>B</sub><i>T</i></td><td><b>绝对需要量子</b>。这就是量子化学存在的原因。</td></tr>
+</table>
+<p><span class="key">最后一行是关键：电子的能级间隔比室温热能大两三个数量级，所以电子被牢牢锁在基态，绝不能用经典力学描述。这就是为什么这门课整整四讲都在解电子的薛定谔方程。</span></p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · 简并度 <i>g</i> 与熵的联系</span>
+<p>讲义 p7 有句话："能量越高 = 分配能量的方式越多 = 简并度越高 = <b>熵越高</b>"。这句话把量子力学和热力学接上了：</p>
+<div class="fml"><span class="tag">Boltzmann 墓碑上的公式</span><i>S</i> = <i>k</i><sub>B</sub> ln <i>W</i></div>
+<table class="vars">
+<tr><td><i>S</i></td><td>熵</td><td>单位 J/K</td></tr>
+<tr><td><i>W</i></td><td>微观状态数</td><td>实现同一宏观状态的微观方式数——<b>就是简并度</b></td></tr>
+</table>
+<p>所以 Boltzmann 分布里的 <i>g</i>₂/<i>g</i>₁ 其实是个<b>熵因子</b>，而 e<sup>−Δ<i>E</i>/<i>k</i><sub>B</sub><i>T</i></sup> 是<b>焓（能量）因子</b>。两者的竞争就是自由能 Δ<i>G</i> = Δ<i>H</i> − <i>T</i>Δ<i>S</i> 的微观来源。</p>
+</div>
+</section>
+
+<section class="slide" id="p10">
+<h2><span class="pno">p10–12</span>从经典波方程到定态方程</h2>
+<div class="tr"><span class="lab">原文翻译（p10）</span>
+<p>de Broglie 关系使物质可以用波来描述。</p>
+<p>动量：<i>mv</i> = <i>h</i>/<i>λ</i>；<i>λ</i> = <i>h</i>/(<i>mv</i>)</p>
+<p>波动性质对小物体重要得多。<i>λ</i>(80 kg 物体以 5 m/s 运动) = …　<i>λ</i>(电子以 5 m/s 运动) = …</p>
+<p>大多数分子性质都由波动力学导出。</p>
+<p>∂²Ψ(<i>x</i>,<i>t</i>)/∂<i>x</i>² = (1/<i>v</i>²)·∂²Ψ(<i>x</i>,<i>t</i>)/∂<i>t</i>²　⟸ 一维经典非色散波方程</p>
+<p>Ψ(<i>x</i>,<i>t</i>) = 波函数（例如 = <i>A</i> sin(<i>kx</i> − <i>ωt</i>)）；<i>v</i> = <i>λν</i> = 速度；<i>k</i> = 2π/<i>λ</i> = <i>ω</i>/<i>v</i> = 波矢；<i>ω</i> = 角频率</p>
+<p><b>为什么要换成波？因为对我们要做的事，数学更简单。</b></p>
+</div>
+
+<h3 class="fm">公式解析 · 经典波动方程</h3>
+<div class="fml"><span class="tag">一维非色散波方程</span>
+∂²Ψ(<i>x</i>,<i>t</i>) / ∂<i>x</i>² = (1/<i>v</i>²) · ∂²Ψ(<i>x</i>,<i>t</i>) / ∂<i>t</i>²
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Ψ</td><td>波函数</td><td>大写希腊字母 Psi。描述波的形状随位置和时间的变化。<b>对水波是水面高度，对声波是压强，对电子——p32 才会告诉你它是什么。</b></td></tr>
+<tr><td>∂</td><td>偏导数符号</td><td>念 "partial"。<b>∂Ψ/∂<i>x</i> 的意思是"<i>t</i> 固定不动，只看 Ψ 随 <i>x</i> 怎么变"</b>。因为 Ψ 有两个自变量，必须说清楚对谁求导。</td></tr>
+<tr><td>∂²/∂<i>x</i>²</td><td>二阶偏导</td><td>求两次导。<b>几何意义是"曲率"</b>——函数弯得有多厉害。</td></tr>
+<tr><td><i>v</i></td><td>波速</td><td>波形传播的速度，<i>v</i> = <i>λν</i></td></tr>
+<tr><td><i>A</i></td><td>振幅</td><td>波的最大高度</td></tr>
+<tr><td><i>k</i></td><td>波矢 / 波数</td><td><i>k</i> = 2π/<i>λ</i>。可以理解为"每单位长度里有几个弧度的相位"</td></tr>
+<tr><td><i>ω</i></td><td>角频率</td><td>希腊字母 omega。<i>ω</i> = 2π<i>ν</i>，单位 rad/s</td></tr>
+<tr><td><i>φ</i></td><td>相位</td><td>希腊字母 phi。波的初始相位偏移</td></tr>
+</table>
+<p><b>这个方程在说什么</b>：<span class="key">波在某点的"弯曲程度"（左边）正比于它在该点的"加速度"（右边）。</span>弯得越厉害，回复得越快——就像绷紧的弦，拉得越弯，弹回去的加速度越大。</p>
+
+<h3 class="fm">推导 · p11：验证 <i>A</i> sin(<i>kx</i> − <i>ωt</i> + <i>φ</i>) 是解</h3>
+<div class="tr"><span class="lab">原文翻译（p11）</span>
+<p>练习：证明波函数 Ψ(<i>x</i>,<i>t</i>) = <i>A</i> sin(<i>kx</i> − <i>ωt</i> + <i>φ</i>) 是上述非色散波方程的解。</p>
+<p>解：左边：∂²[<i>A</i> sin(<i>kx</i>−<i>ωt</i>+<i>φ</i>)]/∂<i>x</i>² = −<i>Ak</i>² sin(<i>kx</i>−<i>ωt</i>+<i>φ</i>)</p>
+<p>右边：(1/<i>v</i>²)·∂²[<i>A</i> sin(<i>kx</i>−<i>ωt</i>+<i>φ</i>)]/∂<i>t</i>² = −(<i>ω</i>²/<i>v</i>²)·<i>A</i> sin(<i>kx</i>−<i>ωt</i>+<i>φ</i>)</p>
+<p>把关系 <i>k</i> = <i>ω</i>/<i>v</i> 代入上式即得等式成立。</p>
+</div>
+<div class="step"><div class="sh">一步步做（如果你对求导有点生疏）</div>
+<p><b>左边</b>：对 <i>x</i> 求导两次。<i>t</i> 当常数看。</p>
+<ul>
+<li>第一次：∂/∂<i>x</i> [<i>A</i> sin(<i>kx</i>−<i>ωt</i>+<i>φ</i>)] = <i>A</i>·cos(<i>kx</i>−<i>ωt</i>+<i>φ</i>)·<b><i>k</i></b>　（链式法则：括号里对 <i>x</i> 的导数是 <i>k</i>）</li>
+<li>第二次：∂/∂<i>x</i> [<i>Ak</i> cos(…)] = −<i>Ak</i>·sin(…)·<b><i>k</i></b> = <b>−<i>Ak</i>² sin(…)</b></li>
+</ul>
+<p><b>右边</b>：对 <i>t</i> 求导两次。<i>x</i> 当常数看。</p>
+<ul>
+<li>第一次：∂/∂<i>t</i> [<i>A</i> sin(…)] = <i>A</i> cos(…)·<b>(−<i>ω</i>)</b></li>
+<li>第二次：∂/∂<i>t</i> [−<i>Aω</i> cos(…)] = <i>Aω</i> sin(…)·<b>(−<i>ω</i>)</b> = <b>−<i>Aω</i>² sin(…)</b></li>
+<li>再除以 <i>v</i>²：<b>−(<i>Aω</i>²/<i>v</i>²) sin(…)</b></li>
+</ul>
+<p><b>令左=右</b>：−<i>Ak</i>² sin(…) = −(<i>Aω</i>²/<i>v</i>²) sin(…)　⟹　<i>k</i>² = <i>ω</i>²/<i>v</i>²　⟹　<i>k</i> = <i>ω</i>/<i>v</i>　✔</p>
+<p><span class="key">注意关键点：sin(…) 这个因子在两边都出现，可以约掉。剩下的只是常数之间的关系。这个"函数被求导后变回自己乘一个常数"的现象，就是下一页"本征值方程"的雏形。</span></p>
+</div>
+
+<h3 class="fm">推导 · p12：驻波（定态）</h3>
+<div class="tr"><span class="lab">原文翻译（p12）</span>
+<p>驻波：Ψ(<i>x</i>,<i>t</i>) = <i>ψ</i>(<i>x</i>)·cos(<i>ωt</i>)（= 定态的等价物）</p>
+<p>把它代入波方程，经过整理得到：</p>
+<p>∂²<i>ψ</i>(<i>x</i>)/∂<i>x</i>² + <i>ω</i>²<i>ψ</i>(<i>x</i>)/<i>v</i>² = 0</p>
+<p>再把 <i>ω</i> = 2π<i>ν</i> 和 <i>v</i> = <i>λν</i> 代入，得到：</p>
+<p>(∂²/∂<i>x</i>²)<i>ψ</i>(<i>x</i>) + (4π²/<i>λ</i>²)<i>ψ</i>(<i>x</i>) = 0</p>
+</div>
+<div class="step"><div class="sh">这一步的关键思想：分离变量</div>
+<p>原来的 Ψ(<i>x</i>,<i>t</i>) 同时依赖位置和时间，很麻烦。<b>驻波的特点是"形状不动，只是整体上下振荡"</b>——所以可以写成"一个只管形状的函数 <i>ψ</i>(<i>x</i>)"乘以"一个只管振荡的函数 cos(<i>ωt</i>)"。</p>
+<p>代入后：</p>
+<ul>
+<li>对 <i>x</i> 求二阶导：cos(<i>ωt</i>) 是常数，提出来 → cos(<i>ωt</i>)·<i>ψ</i>″(<i>x</i>)</li>
+<li>对 <i>t</i> 求二阶导：<i>ψ</i>(<i>x</i>) 是常数，提出来 → <i>ψ</i>(<i>x</i>)·(−<i>ω</i>²)cos(<i>ωt</i>)</li>
+<li>整个方程两边都有 cos(<i>ωt</i>)，<b>约掉</b> → 得到只含 <i>x</i> 的方程</li>
+</ul>
+<p><span class="key">这就是"定态"的数学含义：时间部分被分离出去并约掉了，剩下一个不含时间的方程。所以定态 = 概率分布不随时间变化的状态。</span>原子的 1s、2p 轨道全都是定态。</p>
+</div>
+<p>最后一步的代换：<i>ω</i>/<i>v</i> = 2π<i>ν</i>/(<i>λν</i>) = 2π/<i>λ</i>，所以 <i>ω</i>²/<i>v</i>² = 4π²/<i>λ</i>²。</p>
+</section>
+
+<section class="slide" id="p13">
+<h2><span class="pno">p13–14</span>薛定谔方程：这一讲最重要的一页</h2>
+<div class="tr"><span class="lab">原文翻译（p13）</span>
+<p>到目前为止得到的波方程仍然是"经典的"：(∂²/∂<i>x</i>²)<i>ψ</i>(<i>x</i>) + (4π²/<i>λ</i>²)<i>ψ</i>(<i>x</i>) = 0</p>
+<p>要把它变成"量子的"，我们按如下步骤进行。</p>
+<p>总能量的经典表达式是：<i>E</i> = <i>T</i> + <i>V</i>(<i>x</i>) = <i>mv</i>²/2 + <i>V</i>(<i>x</i>) = <i>p</i>²/(2<i>m</i>) + <i>V</i>(<i>x</i>)　⟹　<i>p</i>² = 2<i>m</i>[<i>E</i> − <i>V</i>(<i>x</i>)]</p>
+<p>把它代入 de Broglie 关系 <i>λ</i> = <i>h</i>/<i>p</i>，再把 <i>λ</i> 代入上面的波方程：</p>
+<p>(∂²/∂<i>x</i>²)<i>ψ</i>(<i>x</i>) + (8π²<i>m</i>/<i>h</i>²)[<i>E</i> − <i>V</i>(<i>x</i>)]<i>ψ</i>(<i>x</i>) = 0</p>
+<p>代入约化普朗克常数 <i>ħ</i> = <i>h</i>/2π 并稍作整理，得到：</p>
+<p><b>−(<i>ħ</i>²/2<i>m</i>)(∂²/∂<i>x</i>²)<i>ψ</i>(<i>x</i>) + <i>V</i>(<i>x</i>)<i>ψ</i>(<i>x</i>) = <i>Eψ</i>(<i>x</i>)</b></p>
+<p>这就是<b>不含时薛定谔方程</b>，用于研究量子力学系统的定态，例如 H 原子的 1s 和 2p<sub>z</sub> 轨道就是定态。</p>
+</div>
+
+<h3 class="fm">公式解析 · 不含时薛定谔方程（TISE）</h3>
+<div class="fml"><span class="tag">★ 不含时薛定谔方程　Time-Independent Schrödinger Equation</span>
+−(<i>ħ</i>² / 2<i>m</i>) · ∂²<i>ψ</i>(<i>x</i>) / ∂<i>x</i>² &nbsp;+&nbsp; <i>V</i>(<i>x</i>) <i>ψ</i>(<i>x</i>) &nbsp;=&nbsp; <i>E</i> <i>ψ</i>(<i>x</i>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义（务必逐条看懂）</th></tr>
+<tr><td><i>ψ</i>(<i>x</i>)</td><td>定态波函数</td><td>小写 psi。<span class="key">这是我们要求解的未知函数</span>——整个量子化学就是在求它。注意小写 <i>ψ</i> 表示不含时间，大写 Ψ 表示含时间。</td></tr>
+<tr><td>−(<i>ħ</i>²/2<i>m</i>)·∂²/∂<i>x</i>²</td><td>动能算符 <i>T̂</i></td><td>整个这一坨是一个<b>算符</b>。它由经典动能 <i>p</i>²/2<i>m</i> 中把 <i>p</i> 换成 −<i>iħ</i>∂/∂<i>x</i> 得到（p29 会明说）。<b>物理意义：波函数弯曲得越厉害，动能越高。</b></td></tr>
+<tr><td><i>m</i></td><td>粒子质量</td><td>对电子就是电子质量 <i>m</i><sub>e</sub></td></tr>
+<tr><td><i>V</i>(<i>x</i>)</td><td>势能函数</td><td>粒子在位置 <i>x</i> 处感受到的势能。<span class="key">这是你"输入"给方程的东西——不同的 <i>V</i> 对应不同的物理问题。</span>氢原子里 <i>V</i> = −<i>e</i>²/(4π<i>ε</i>₀<i>r</i>)。</td></tr>
+<tr><td><i>E</i></td><td>总能量</td><td><b>一个数（标量），不是函数。</b>它是方程的"本征值"——只有特定的几个 <i>E</i> 值才有合法的解。<b>能量量子化就是从这里冒出来的。</b></td></tr>
+</table>
+
+<h3>讲解 · 这个方程为什么长这样（三个层次的理解）</h3>
+<div class="step"><div class="sh">层次 1：它其实就是"总能量 = 动能 + 势能"</div>
+<p>把方程重新分组看：</p>
+<div class="fml" style="font-size:16px">
+[ <i>T̂</i> + <i>V̂</i> ] <i>ψ</i> = <i>E</i> <i>ψ</i>　　即　　<i>Ĥψ</i> = <i>Eψ</i>
+</div>
+<p>左边中括号里就是"动能算符 + 势能算符"= 哈密顿算符 <i>Ĥ</i>（总能量算符）。<span class="key">所以薛定谔方程说的是：把总能量算符作用在波函数上，得到的还是这个波函数，只是乘了一个数 <i>E</i>。</span></p>
+</div>
+<div class="step"><div class="sh">层次 2：为什么动能里有个二阶导数</div>
+<p>回想 p11 的推导：对 sin(<i>kx</i>) 求二阶导得到 −<i>k</i>²·sin(<i>kx</i>)。而 <i>k</i> = 2π/<i>λ</i> = 2π<i>p</i>/<i>h</i> = <i>p</i>/<i>ħ</i>。</p>
+<p>所以 <b>−<i>ħ</i>²·(二阶导) 作用在波上，会"取出" <i>p</i>²</b>：</p>
+<div class="fml" style="font-size:15px">−<i>ħ</i>² ∂²/∂<i>x</i>² [sin(<i>kx</i>)] = <i>ħ</i>²<i>k</i>² sin(<i>kx</i>) = <i>p</i>² sin(<i>kx</i>)</div>
+<p>再除以 2<i>m</i>，就是动能 <i>p</i>²/2<i>m</i>。<span class="key">二阶导数就是"测量动量平方"的操作，这不是巧合，是 de Broglie 关系的直接后果。</span></p>
+</div>
+<div class="step"><div class="sh">层次 3：为什么能量会量子化</div>
+<p>这是最容易被跳过、但最重要的一点。方程本身对任何 <i>E</i> 值都有数学解。<b>但物理上合法的解还必须满足边界条件</b>（p34–35 会列出：单值、连续、有限、可归一化）。</p>
+<p>大多数 <i>E</i> 值给出的解在 <i>x</i>→±∞ 时会发散（趋于无穷），这样的解不能归一化，物理上无意义，必须扔掉。<span class="key">只有少数几个特定的 <i>E</i> 值，解才恰好"收敛"——这些就是允许的能级。</span></p>
+<p>类比：一根两端固定的琴弦，只有特定的几个频率能形成驻波（其他频率的波在端点对不上，自我抵消）。<b>能量量子化 = 边界条件筛选的结果。</b>这也是为什么自由粒子（没有边界）的能量是连续的。</p>
+</div>
+
+<h3 class="fm">公式解析 · p14：含时薛定谔方程（TDSE）</h3>
+<div class="tr"><span class="lab">原文翻译（p14）</span>
+<p>不含时薛定谔方程：−(<i>ħ</i>²/2<i>m</i>)(∂²/∂<i>x</i>²)<i>ψ</i>(<i>x</i>) + <i>V</i>(<i>x</i>)<i>ψ</i>(<i>x</i>) = <i>Eψ</i>(<i>x</i>)</p>
+<p>含时薛定谔方程（例如当 <i>V</i>(<i>x</i>,<i>t</i>) 时）：</p>
+<p>−(<i>ħ</i>²/2<i>m</i>)(∂²/∂<i>x</i>²)Ψ(<i>x</i>,<i>t</i>) + <i>V</i>(<i>x</i>,<i>t</i>)Ψ(<i>x</i>,<i>t</i>) = <i>iħ</i>·∂Ψ(<i>x</i>,<i>t</i>)/∂<i>t</i></p>
+<p>对定态，两个方程都满足。因此：<i>iħ</i>·∂Ψ/∂<i>t</i> = <i>E</i>Ψ</p>
+<p>同样对定态，Ψ(<i>x</i>,<i>t</i>) = <i>ψ</i>(<i>x</i>)<i>f</i>(<i>t</i>)，波函数取如下形式：Ψ(<i>x</i>,<i>t</i>) = <i>ψ</i>(<i>x</i>)·e<sup>−<i>iEt</i>/<i>ħ</i></sup></p>
+<p>注意乘积：Ψ*(<i>x</i>,<i>t</i>)Ψ(<i>x</i>,<i>t</i>) = <i>ψ</i>*(<i>x</i>)e<sup>+<i>iEt</i>/<i>ħ</i></sup>·<i>ψ</i>(<i>x</i>)e<sup>−<i>iEt</i>/<i>ħ</i></sup> = <i>ψ</i>*<i>ψ</i>　<b>与时间相位无关</b>。</p>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>i</i></td><td>虚数单位</td><td><i>i</i> = √(−1)。<span class="key">量子力学中波函数一般是复数——这不是数学技巧，是物理必需（下面解释）。</span></td></tr>
+<tr><td>Ψ*</td><td>复共轭</td><td>把所有的 <i>i</i> 换成 −<i>i</i>。如果 Ψ = <i>a</i>+<i>bi</i>，则 Ψ* = <i>a</i>−<i>bi</i>。</td></tr>
+<tr><td>e<sup>−<i>iEt</i>/<i>ħ</i></sup></td><td>时间相位因子</td><td>由 Euler 公式 e<sup><i>iθ</i></sup> = cos<i>θ</i> + <i>i</i>sin<i>θ</i>，它是一个<b>模长恒为 1、只是在复平面上转圈</b>的数。</td></tr>
+<tr><td><i>f</i>(<i>t</i>)</td><td>时间部分</td><td>分离变量后只含时间的那个因子</td></tr>
+</table>
+<div class="step"><div class="sh">最后一行为什么关键</div>
+<p>Ψ*Ψ = <i>ψ</i>*<i>ψ</i>——<b>时间因子完全消失了</b>。因为 e<sup>+<i>iEt</i>/<i>ħ</i></sup> × e<sup>−<i>iEt</i>/<i>ħ</i></sup> = e<sup>0</sup> = 1。</p>
+<p><span class="key">这就是"定态 (stationary state)"这个名字的由来：波函数本身在复平面上一直转圈（在变），但可观测的概率密度 |Ψ|² 完全不随时间变化（不动）。</span></p>
+<p>所以我们平时说"1s 轨道"，画的那个球形电子云，就是 |<i>ψ</i><sub>1s</sub>|²——一个不随时间变化的分布。<b>电子并不是"绕核转圈"，它的概率分布就那么静静地待着。</b></p>
+</div>
+<div class="ext"><span class="lab">拓展 · 为什么波函数必须是复数</span>
+<p>看含时方程右边：<i>iħ</i>∂Ψ/∂<i>t</i>。<b>方程里明晃晃地有一个 <i>i</i>。</b>如果 Ψ 是实函数，左边是实的，右边是虚的，方程不可能成立。所以 Ψ 必须是复的。</p>
+<p><b>物理上为什么需要复数</b>：因为需要同时编码"振幅"和"相位"两个信息。相位是量子干涉的来源——两条路径的波叠加时，是相长还是相消完全由相位差决定。<span class="key">没有相位就没有化学键</span>（成键轨道 = 同相叠加，反键轨道 = 反相叠加）。</p>
+<p>不过实践中：<b>不含时薛定谔方程的解（如果 <i>V</i> 是实的）总可以取成实函数。</b>所以你在教科书上看到的原子轨道图（2p<sub>x</sub>、2p<sub>y</sub>、3d<sub>xy</sub>…）都是实的——它们是复的球谐函数经过线性组合后的实数形式（p53 会讲）。</p>
+</div>
+</section>
+
+<section class="slide" id="p15">
+<h2><span class="pno">p15</span>算符、本征值与本征函数</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>一维薛定谔方程可以写成如下形式：</p>
+<p>[−(<i>ħ</i>²/2<i>m</i>)(∂²/∂<i>x</i>²) + <i>V</i>(<i>x</i>)] <i>ψ</i>(<i>x</i>) = <i>Eψ</i>(<i>x</i>)</p>
+<p>或：<i>Ĥψ</i><sub>n</sub>(<i>x</i>) = <i>E</i><sub>n</sub><i>ψ</i><sub>n</sub>(<i>x</i>)</p>
+<ul>
+<li><i>Ĥ</i> = 总能量算符（哈密顿量）</li>
+<li><i>E</i><sub>n</sub> = 算符 <i>Ĥ</i> 的第 <i>n</i> 个本征值</li>
+<li><i>ψ</i><sub>n</sub>(<i>x</i>) = 算符 <i>Ĥ</i> 的第 <i>n</i> 个本征函数</li>
+</ul>
+<p>这是"本征值方程"的一个例子：<b>算符 × <i>ψ</i><sub>n</sub>(<i>x</i>) = 本征值 × <i>ψ</i><sub>n</sub>(<i>x</i>)</b></p>
+<p>本征值是标量、实数。算符举例：∂/∂<i>x</i>、<i>x</i>、Exp、Log 等。</p>
+</div>
+
+<h3>讲解 · 什么是"算符"（零基础版）</h3>
+<div class="step"><div class="sh">算符 = 一台"函数加工机"</div>
+<p>普通的<b>函数</b>吃一个数，吐一个数：<i>f</i>(3) = 9。</p>
+<p><b>算符</b>吃一个<b>函数</b>，吐一个<b>函数</b>：</p>
+<table>
+<tr><th style="width:110px">算符</th><th style="width:170px">你喂给它</th><th>它吐出来</th></tr>
+<tr><td><b>d/d<i>x</i></b>（求导）</td><td><i>x</i>³</td><td>3<i>x</i>²</td></tr>
+<tr><td><b><i>x̂</i></b>（乘以 <i>x</i>）</td><td>sin(<i>x</i>)</td><td><i>x</i>·sin(<i>x</i>)</td></tr>
+<tr><td><b>Log</b></td><td><i>x</i>²</td><td>ln(<i>x</i>²)</td></tr>
+</table>
+<p>习惯上算符头上戴帽子：<i>Â</i>、<i>Ĥ</i>、<i>p̂</i>。（讲义里帽子有时因为字体问题显示不出来，别被吓到。）</p>
+</div>
+
+<h3 class="fm">公式解析 · 本征值方程</h3>
+<div class="fml"><span class="tag">★ 本征值方程（量子力学的通用语法）</span>
+<i>Â</i> <i>ψ</i><sub><i>n</i></sub> = <i>a</i><sub><i>n</i></sub> <i>ψ</i><sub><i>n</i></sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Â</i></td><td>算符</td><td>一个作用在函数上的操作</td></tr>
+<tr><td><i>ψ</i><sub><i>n</i></sub></td><td>本征函数</td><td>eigenfunction。<span class="key">一类特殊的函数：被 <i>Â</i> 加工后形状不变，只是整体放大/缩小了。</span></td></tr>
+<tr><td><i>a</i><sub><i>n</i></sub></td><td>本征值</td><td>eigenvalue。放大的倍数，<b>是一个数</b>。</td></tr>
+<tr><td>下标 <i>n</i></td><td>编号</td><td>一个算符通常有很多个本征函数，用 <i>n</i> = 1,2,3… 编号</td></tr>
+</table>
+<div class="step"><div class="sh">"eigen" 是德语，意思是"自己的、固有的"</div>
+<p>所以 eigenfunction = <b>该算符"固有的"函数</b>。</p>
+<p><span class="key">核心图像：算符一般会把函数改得面目全非，但对少数几个"特权函数"，它只是把它们放大了一个倍数——形状纹丝不动。</span>这些特权函数就是本征函数。</p>
+<p><b>为什么这在物理上重要</b>：p37 的公设 3 会说——<b>你测量一个物理量，测到的<u>只能</u>是对应算符的本征值。</b>所以求解本征值方程 = 找出"这个体系允许出现的所有测量结果"。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 和线性代数的对应关系（如果你学过矩阵）</span>
+<table>
+<tr><th style="width:200px">线性代数</th><th>量子力学</th></tr>
+<tr><td>矩阵 <b>A</b></td><td>算符 <i>Â</i></td></tr>
+<tr><td>向量 <b>v</b></td><td>波函数 <i>ψ</i></td></tr>
+<tr><td>本征向量方程 <b>Av</b> = <i>λ</i><b>v</b></td><td>本征值方程 <i>Âψ</i> = <i>aψ</i></td></tr>
+<tr><td>对角化矩阵</td><td>求解薛定谔方程</td></tr>
+<tr><td>本征值 <i>λ</i></td><td>能量 <i>E</i></td></tr>
+</table>
+<p><span class="key">这个对应不是比喻——它是精确的。p25 那页的"矩阵力学"讲的就是这件事：把算符写成矩阵，量子力学就变成了纯粹的线性代数。</span>而这正是量子化学能用计算机做的原因——计算机不会解微分方程，但极其擅长对角化矩阵。</p>
+<p><b>整门课的技术路线就是</b>：薛定谔方程（微分方程，不会解）→ 选一组基函数展开（LCAO）→ 变成矩阵本征值问题（Roothaan 方程，p86）→ 交给 LAPACK 对角化（第 1 讲 p26）。</p>
+</div>
+</section>
+
+<section class="slide" id="p16">
+<h2><span class="pno">p16</span>物理可观测量与它们的算符</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>物理可观测量（每个可观测量对应一个厄米算符）：</p>
+<table>
+<tr><td style="width:170px">坐标</td><td><i>r̂</i></td></tr>
+<tr><td>动量</td><td><i>p̂</i></td></tr>
+<tr><td>角动量</td><td><i>L̂</i> = <i>r̂</i> × <i>p̂</i></td></tr>
+<tr><td>势能</td><td><i>V̂</i></td></tr>
+<tr><td>动能</td><td><i>K̂</i></td></tr>
+<tr><td>总能量（哈密顿量）</td><td><i>Ĥ</i></td></tr>
+<tr><td>电偶极矩与磁偶极矩</td><td><i>d̂</i>, <i>μ̂</i></td></tr>
+</table>
+<p>表象空间：</p>
+<ul>
+<li>坐标空间：<i>r</i> = (<i>x</i>, <i>y</i>, <i>z</i>)</li>
+<li>动量空间：<i>p</i> = (<i>p̂</i><sub>x</sub>, <i>p̂</i><sub>y</sub>, <i>p̂</i><sub>z</sub>)</li>
+<li><i>r</i> 和 <i>p</i> 在各自的表象空间中是连续函数</li>
+</ul>
+</div>
+<h3>讲解 · "每个可观测量对应一个算符"是量子力学的核心公设</h3>
+<p>这就是 p36 的公设 2。它建立了<b>物理世界</b>（你能测的量）和<b>数学世界</b>（算符）之间的字典：</p>
+<table>
+<tr><th style="width:110px">你想测</th><th style="width:120px">对应算符</th><th>坐标空间中的具体形式（p29 会给）</th></tr>
+<tr><td>位置</td><td><i>x̂</i></td><td>就是"乘以 <i>x</i>"这个操作</td></tr>
+<tr><td>动量</td><td><i>p̂</i><sub>x</sub></td><td>−<i>iħ</i> ∂/∂<i>x</i></td></tr>
+<tr><td>动能</td><td><i>K̂</i></td><td>−(<i>ħ</i>²/2<i>m</i>)∇²</td></tr>
+<tr><td>势能</td><td><i>V̂</i></td><td>就是"乘以 <i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>)"</td></tr>
+<tr><td>总能量</td><td><i>Ĥ</i></td><td><i>K̂</i> + <i>V̂</i></td></tr>
+<tr><td>角动量</td><td><i>L̂</i></td><td><i>r̂</i> × <i>p̂</i>（叉乘，p28 复习）</td></tr>
+<tr><td>电偶极矩</td><td><i>d̂</i></td><td>Σ<i>q</i><sub>i</sub><i>r</i><sub>i</sub>（决定 IR 强度和 UV-Vis 跃迁是否允许）</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 电偶极矩算符为什么重要</span>
+<p>这个算符是你以后算光谱时的关键。<b>跃迁强度</b>（一条谱线亮不亮）正比于：</p>
+<div class="fml" style="font-size:16px">|⟨<i>ψ</i><sub>末</sub> | <i>d̂</i> | <i>ψ</i><sub>初</sub>⟩|²　　（跃迁偶极矩的平方）</div>
+<p>如果这个积分等于零，跃迁就是"禁阻的"（forbidden），谱线不出现。<span class="key">所有的光谱选律（Δ<i>l</i> = ±1、g↔u、自旋守恒等）本质上都是在判断这个积分是不是零。</span>而判断的工具是群论——积分非零要求被积函数含有全对称表示。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · "表象"是什么意思</span>
+<p>同一个物理状态可以用不同的"语言"描述，就像同一个向量可以在不同坐标系下写出不同的分量：</p>
+<ul>
+<li><b>坐标表象</b>：<i>ψ</i>(<i>x</i>) —— 告诉你"在位置 <i>x</i> 找到粒子的概率幅"。这是化学家用的（电子密度、轨道图）。</li>
+<li><b>动量表象</b>：<i>φ</i>(<i>p</i>) —— 告诉你"粒子动量为 <i>p</i> 的概率幅"。这是固体物理学家用的（能带、布里渊区）。</li>
+</ul>
+<p>两者由<b>傅里叶变换</b>相互转换。这也是不确定性原理的数学根源：<span class="key">一个函数在位置空间越窄（定位越准），它的傅里叶变换在动量空间就越宽（动量越不确定）。</span>这是傅里叶分析的普遍定理，不是量子力学特有的神秘性质。</p>
+</div>
+</section>
+
+<section class="slide" id="p17">
+<h2><span class="pno">p17</span>练习：判断是不是本征函数</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>练习：验证函数 <i>ψ</i>(<i>x</i>) = <i>A</i>e<sup><i>ikx</i></sup> + <i>B</i>e<sup>−<i>ikx</i></sup> 是否是以下算符的本征函数：∂/∂<i>x</i> 和 ∂²/∂<i>x</i>²。如果是本征函数，求出本征值。</p>
+<p>∂/∂<i>x</i>(<i>A</i>e<sup><i>ikx</i></sup> + <i>B</i>e<sup>−<i>ikx</i></sup>) = <i>ikA</i>e<sup><i>ikx</i></sup> − <i>ikB</i>e<sup>−<i>ikx</i></sup> = <i>ik</i>(<i>A</i>e<sup><i>ikx</i></sup> − <i>B</i>e<sup>−<i>ikx</i></sup>)</p>
+<p><b><i>ψ</i>(<i>x</i>) 不是 ∂/∂<i>x</i> 算符的本征函数</b></p>
+<p>∂²/∂<i>x</i>²(<i>A</i>e<sup><i>ikx</i></sup> + <i>B</i>e<sup>−<i>ikx</i></sup>) = ∂/∂<i>x</i>[<i>ik</i>(<i>A</i>e<sup><i>ikx</i></sup> − <i>B</i>e<sup>−<i>ikx</i></sup>)] = (<i>ik</i>)²<i>A</i>e<sup><i>ikx</i></sup> + (−<i>ik</i>)²<i>B</i>e<sup>−<i>ikx</i></sup> = −<i>k</i>²(<i>A</i>e<sup><i>ikx</i></sup> + <i>B</i>e<sup>−<i>ikx</i></sup>)</p>
+<p><b><i>ψ</i>(<i>x</i>) 是算符 ∂²/∂<i>x</i>² 的本征函数，本征值为 "−<i>k</i>²"</b></p>
+</div>
+<h3>讲解 · 判断标准只有一条</h3>
+<div class="warn"><span class="lab">判断本征函数的唯一标准</span>
+<p>算符作用后的结果，<b>必须能写成"（一个常数）× （原来那个一模一样的函数）"</b>。</p>
+<p>不能是"常数 × 长得有点像的函数"，必须是<b>完全相同</b>的函数。</p>
+</div>
+<div class="step"><div class="sh">看第一个：为什么 ∂/∂<i>x</i> 不行</div>
+<p>原函数：<i>A</i>e<sup><i>ikx</i></sup> <b>+</b> <i>B</i>e<sup>−<i>ikx</i></sup>（中间是<b>加号</b>）</p>
+<p>结果：<i>ik</i>(<i>A</i>e<sup><i>ikx</i></sup> <b>−</b> <i>B</i>e<sup>−<i>ikx</i></sup>)（中间变成了<b>减号</b>）</p>
+<p><span class="key">符号变了，就不是同一个函数了。</span>所以不是本征函数。</p>
+<p><b>为什么会变号</b>：因为 e<sup><i>ikx</i></sup> 求导得 <i>ik</i>·e<sup><i>ikx</i></sup>（乘 +<i>ik</i>），而 e<sup>−<i>ikx</i></sup> 求导得 −<i>ik</i>·e<sup>−<i>ikx</i></sup>（乘 −<i>ik</i>）。<b>两项被乘上了不同的常数</b>，所以提不出公因子。</p>
+</div>
+<div class="step"><div class="sh">看第二个：为什么 ∂²/∂<i>x</i>² 可以</div>
+<p>求两次导后：第一项乘了 (<i>ik</i>)² = <i>i</i>²<i>k</i>² = <b>−<i>k</i>²</b>；第二项乘了 (−<i>ik</i>)² = <i>i</i>²<i>k</i>² = <b>−<i>k</i>²</b>。</p>
+<p><span class="key">两项被乘上了<b>同一个</b>常数 −<i>k</i>²，所以能提出公因子，原函数原封不动地保留下来。</span></p>
+<p>本征值 = <b>−<i>k</i>²</b>。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 这道题的物理含义（讲义没说，但很重要）</span>
+<p>这个函数描述的是<b>一维自由粒子</b>：<i>A</i>e<sup><i>ikx</i></sup> 是向右传播的平面波，<i>B</i>e<sup>−<i>ikx</i></sup> 是向左传播的。</p>
+<ul>
+<li><b>不是动量算符的本征函数</b>（因为 <i>p̂</i> = −<i>iħ</i>∂/∂<i>x</i>）：合理！<span class="key">因为它是"向右走"和"向左走"的叠加，动量的方向不确定。</span>你测一次动量，可能得 +<i>ħk</i>，也可能得 −<i>ħk</i>。</li>
+<li><b>是动能算符的本征函数</b>（因为 <i>K̂</i> ∝ ∂²/∂<i>x</i>²）：也合理！<span class="key">向左走和向右走的动能是一样的（<i>p</i>²/2<i>m</i> 里 <i>p</i> 平方了，符号消失）。</span>所以动能是确定的：<i>E</i> = <i>ħ</i>²<i>k</i>²/2<i>m</i>。</li>
+</ul>
+<p>验证一下：<i>K̂ψ</i> = −(<i>ħ</i>²/2<i>m</i>)·(−<i>k</i>²)<i>ψ</i> = (<i>ħ</i>²<i>k</i>²/2<i>m</i>)<i>ψ</i>。而 <i>ħk</i> = <i>p</i>，所以 <i>E</i> = <i>p</i>²/2<i>m</i>　✔ 正是经典动能公式。</p>
+<p><b>一句话总结</b>：一个态可以是某个算符的本征态、同时不是另一个算符的本征态。<b>这正是"哪些量能同时确定"的问题，答案由对易关系给出（p21–27）。</b></p>
+</div>
+</section>
+
+<section class="slide" id="p18">
+<h2><span class="pno">p18–19</span>正交性与归一化</h2>
+<div class="tr"><span class="lab">原文翻译（p18）</span>
+<ul>
+<li>量子力学算符的本征函数<b>彼此正交</b>：<br>∫<i>ψ</i><sub>i</sub>*(<i>x</i>) <i>ψ</i><sub>j</sub>(<i>x</i>) d<i>x</i> = 0</li>
+<li>正交性保证了所有本征态彼此"完全不同"</li>
+<li>量子力学算符的所有本征函数都是<b>归一化的</b>：<br>∫<i>ψ</i><sub>i</sub>*(<i>x</i>) <i>ψ</i><sub>i</sub>(<i>x</i>) d<i>x</i> = 1</li>
+<li>归一化保证所有本征函数有相同的"振幅"，即<b>在整个空间上积分时，在某个轨道上找到一个电子的概率是 1</b>（即 100% 确定）</li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 正交归一条件</h3>
+<div class="fml"><span class="tag">★ 正交归一性（orthonormality）</span>
+∫ <i>ψ</i><sub><i>i</i></sub>*(<i>x</i>) <i>ψ</i><sub><i>j</i></sub>(<i>x</i>) d<i>x</i> = <i>δ</i><sub><i>ij</i></sub> = { 1 若 <i>i</i> = <i>j</i>　;　0 若 <i>i</i> ≠ <i>j</i> }
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>∫ … d<i>x</i></td><td>积分</td><td>对<b>全空间</b>积分（从 −∞ 到 +∞）。三维时写作 ∫…d<i>τ</i>，<i>τ</i> 表示体积元 d<i>x</i>d<i>y</i>d<i>z</i>。</td></tr>
+<tr><td><i>ψ</i><sub><i>i</i></sub>*</td><td>复共轭</td><td>取共轭是为了保证 <i>ψ</i>*<i>ψ</i> = |<i>ψ</i>|² 是<b>非负实数</b>（概率必须是实的、非负的）</td></tr>
+<tr><td><i>δ</i><sub><i>ij</i></sub></td><td>Kronecker delta</td><td>希腊字母 delta。<span class="key">一个极其常用的速记符号</span>：两个下标相同时等于 1，不同时等于 0。</td></tr>
+<tr><td><i>N</i></td><td>归一化常数</td><td>见下面的练习。用来把任意函数"调整"到积分为 1</td></tr>
+</table>
+
+<h3>讲解 · 用向量类比理解（这是最直观的方式）</h3>
+<table>
+<tr><th style="width:230px">三维空间的向量</th><th>函数空间的波函数</th></tr>
+<tr><td>单位向量 <b>x̂</b>, <b>ŷ</b>, <b>ẑ</b></td><td>本征函数 <i>ψ</i>₁, <i>ψ</i>₂, <i>ψ</i>₃…</td></tr>
+<tr><td>点积 <b>a</b>·<b>b</b> = <i>a</i><sub>x</sub><i>b</i><sub>x</sub>+<i>a</i><sub>y</sub><i>b</i><sub>y</sub>+<i>a</i><sub>z</sub><i>b</i><sub>z</sub></td><td>重叠积分 ∫<i>ψ</i><sub>i</sub>*<i>ψ</i><sub>j</sub> d<i>x</i>（<b>把"求和"换成"积分"</b>）</td></tr>
+<tr><td><b>正交</b>：<b>x̂</b>·<b>ŷ</b> = 0（互相垂直）</td><td><b>正交</b>：∫<i>ψ</i>₁*<i>ψ</i>₂ = 0（"完全不同"）</td></tr>
+<tr><td><b>归一</b>：<b>x̂</b>·<b>x̂</b> = 1（长度为 1）</td><td><b>归一</b>：∫<i>ψ</i>₁*<i>ψ</i>₁ = 1（概率总和为 1）</td></tr>
+</table>
+<p><span class="key">所以"波函数正交"的意思就是"它们在函数空间里互相垂直"。</span>这不是比喻，函数空间（希尔伯特空间）里的"垂直"就是这样定义的。</p>
+
+<div class="warn"><span class="lab">重要提醒：原子轨道基函数并不正交！</span>
+<p>本征函数彼此正交——但这只对<b>同一个算符的本征函数</b>成立。</p>
+<p><span class="key">你在做 LCAO 时用的基函数（不同原子上的原子轨道），<b>不是</b>同一个哈密顿量的本征函数，所以它们<b>不正交</b>。</span></p>
+<p>第 3 讲 p39 明确指出："不同原子上的基函数彼此不正交，重叠积分 <i>S</i>₁₂ = ∫1<i>s</i>₁*1<i>s</i>₂ d<i>τ</i> &gt; 0"。</p>
+<p><b>这就是为什么 Roothaan 方程（p86–87）是 <b>FC</b> = <b>SC</b><i>ε</i> 而不是 <b>FC</b> = <b>C</b><i>ε</i>——多出来的那个重叠矩阵 <b>S</b> 就是"基组不正交"的代价。</b>这是本讲最重要的技术细节之一，务必记住。</p>
+</div>
+
+<h3 class="fm">练习详解 · p19 的归一化</h3>
+<div class="tr"><span class="lab">原文翻译（p19）</span>
+<p>练习：把函数 <i>ψ</i>(<i>x</i>) = <i>a</i>(<i>a</i>+<i>x</i>) 在区间 0 ≤ <i>x</i> ≤ <i>a</i> 上归一化。</p>
+<p><i>N</i>²∫[<i>a</i>(<i>a</i>+<i>x</i>)][<i>a</i>(<i>a</i>+<i>x</i>)]d<i>x</i> = <i>N</i>²∫(<i>a</i>²+<i>ax</i>)(<i>a</i>²+<i>ax</i>)d<i>x</i> = <i>N</i>²<i>a</i>²∫(<i>a</i>²+2<i>ax</i>+<i>x</i>²)d<i>x</i> = 1</p>
+<p>计算定积分给出：<i>N</i>²<i>a</i>²∫₀<sup><i>a</i></sup>(<i>a</i>²+2<i>ax</i>+<i>x</i>²)d<i>x</i> = <i>N</i>²<i>a</i>²[<i>a</i>²<i>x</i> + <i>ax</i>² + <i>x</i>³/3] = <i>N</i>²(7<i>a</i>⁵/3)</p>
+<p><i>N</i>²(7<i>a</i>⁵/3) = 1　⟹　<i>N</i> = √(3/(7<i>a</i>⁵))</p>
+</div>
+<div class="step"><div class="sh">归一化的通用套路（三步，永远一样）</div>
+<ol>
+<li><b>在原函数前面乘一个待定常数 <i>N</i></b>：<i>ψ</i><sub>归一</sub> = <i>N</i>·<i>ψ</i><sub>原</sub></li>
+<li><b>要求 ∫|<i>N</i>ψ<sub>原</sub>|² d<i>x</i> = 1</b>，即 <i>N</i>²∫|<i>ψ</i><sub>原</sub>|² d<i>x</i> = 1</li>
+<li><b>解出 <i>N</i></b>：<i>N</i> = 1/√(∫|<i>ψ</i><sub>原</sub>|² d<i>x</i>)</li>
+</ol>
+</div>
+<div class="step"><div class="sh">这道题的具体计算</div>
+<p><b>第一步</b>，展开被积函数：<br>
+[<i>a</i>(<i>a</i>+<i>x</i>)]² = <i>a</i>²(<i>a</i>+<i>x</i>)² = <i>a</i>²(<i>a</i>² + 2<i>ax</i> + <i>x</i>²)</p>
+<p><b>第二步</b>，逐项积分（<i>a</i> 是常数，只对 <i>x</i> 积分），从 0 积到 <i>a</i>：</p>
+<table>
+<tr><th style="width:120px">被积项</th><th style="width:120px">原函数</th><th>代入 <i>x</i>=<i>a</i> 减 <i>x</i>=0</th></tr>
+<tr><td><i>a</i>²</td><td><i>a</i>²<i>x</i></td><td><i>a</i>²·<i>a</i> − 0 = <i>a</i>³</td></tr>
+<tr><td>2<i>ax</i></td><td><i>ax</i>²</td><td><i>a</i>·<i>a</i>² − 0 = <i>a</i>³</td></tr>
+<tr><td><i>x</i>²</td><td><i>x</i>³/3</td><td><i>a</i>³/3 − 0 = <i>a</i>³/3</td></tr>
+</table>
+<p>三项相加：<i>a</i>³ + <i>a</i>³ + <i>a</i>³/3 = <b>(7/3)<i>a</i>³</b></p>
+<p><b>第三步</b>，别忘了外面还有个 <i>a</i>²：<br>
+<i>N</i>² · <i>a</i>² · (7/3)<i>a</i>³ = <i>N</i>²·(7/3)<i>a</i>⁵ = 1</p>
+<p><b>第四步</b>，解出：<i>N</i>² = 3/(7<i>a</i>⁵)　⟹　<b><i>N</i> = √(3/(7<i>a</i>⁵))</b>　✔</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 归一化在实际计算中的样子</span>
+<p>你以后在基组文件里看到的每个高斯函数，前面都有一个归一化常数。比如一个 s 型高斯 <i>g</i>(<i>r</i>) = <i>N</i>e<sup>−<i>αr</i>²</sup>，它的归一化常数是：</p>
+<div class="fml" style="font-size:16px"><i>N</i> = (2<i>α</i>/π)<sup>3/4</sup></div>
+<p>程序里这些都是预先算好硬编码的。<span class="key">但你需要知道它存在——因为当你看到基组文件里的"收缩系数"时，那些数已经把归一化常数吸收进去了，所以看起来奇奇怪怪。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p20">
+<h2><span class="pno">p20</span>完备性：为什么可以用基组展开</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>一个量子力学算符可以有很多本征函数。</p>
+<p>一个量子力学算符的<b>所有</b>本征函数构成一个<b>完备集</b>：</p>
+<p><i>ψ</i>(<i>x</i>) = Σ<sub><i>n</i>=1</sub><sup>∞</sup> <i>b</i><sub><i>n</i></sub><i>ψ</i><sub><i>n</i></sub>(<i>x</i>)　⟹　线性组合</p>
+<ul>
+<li><i>ψ</i><sub><i>n</i></sub>(<i>x</i>) 也被称为<b>基函数</b>（basis functions）</li>
+<li><i>ψ</i>(<i>x</i>) = 通过混合许多基函数构造出的一个一般函数</li>
+<li><i>b</i><sub><i>n</i></sub> = 基函数 <i>ψ</i><sub><i>n</i></sub>(<i>x</i>) 混入一般波函数的混合系数</li>
+</ul>
+<p>类比于实的三维笛卡尔空间：任何三维向量都可以表示为三个正交（垂直）向量 <b>x</b>、<b>y</b>、<b>z</b> 的线性组合。这三个单位向量 <b>x</b>、<b>y</b>、<b>z</b> 构成一个完备集。</p>
+<p>给定算符的完备本征函数集可以是无穷的，但不是必然如此。</p>
+</div>
+
+<h3 class="fm">公式解析 · 基组展开</h3>
+<div class="fml"><span class="tag">★ 完备性展开（整门课的技术基础）</span>
+<i>ψ</i>(<i>x</i>) = Σ<sub><i>n</i>=1</sub><sup>∞</sup> <i>b</i><sub><i>n</i></sub> <i>ψ</i><sub><i>n</i></sub>(<i>x</i>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ψ</i>(<i>x</i>)</td><td>待展开的函数</td><td>任意一个（合法的）波函数</td></tr>
+<tr><td><i>ψ</i><sub><i>n</i></sub>(<i>x</i>)</td><td>基函数</td><td>已知的、完备的、正交归一的一套函数</td></tr>
+<tr><td><i>b</i><sub><i>n</i></sub></td><td>展开系数</td><td><span class="key">这就是你要求的未知数。</span>整个 HF/CI 计算求的就是这类系数。</td></tr>
+<tr><td>Σ</td><td>求和号</td><td>大写希腊字母 Sigma。下标 <i>n</i>=1 是起点，上标 ∞ 是终点</td></tr>
+</table>
+
+<h3>讲解 · 用向量类比把这件事讲透</h3>
+<figure>
+<svg viewBox="0 0 520 210" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="a2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0b5ea8"/></marker>
+<marker id="a3" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#b3541e"/></marker>
+<style>.lb{font-size:12px;fill:#1c1c1e}.sm{font-size:11.5px;fill:#6b6b70}.ttl{font-size:12.5px;fill:#0b5ea8;font-weight:700}</style></defs>
+<text x="110" y="18" class="ttl" text-anchor="middle">三维向量空间</text>
+<line x1="40" y1="160" x2="180" y2="160" stroke="#c9d4de" stroke-width="1"/>
+<line x1="40" y1="160" x2="40" y2="40" stroke="#c9d4de" stroke-width="1"/>
+<line x1="40" y1="160" x2="105" y2="105" stroke="#0b5ea8" stroke-width="1.6" marker-end="url(#a2)"/>
+<text x="30" y="60" class="sm">y</text><text x="176" y="176" class="sm">x</text>
+<line x1="40" y1="160" x2="80" y2="160" stroke="#b3541e" stroke-width="2.4" marker-end="url(#a3)"/>
+<line x1="40" y1="160" x2="40" y2="122" stroke="#b3541e" stroke-width="2.4" marker-end="url(#a3)"/>
+<text x="112" y="100" class="lb">v</text>
+<text x="62" y="176" class="sm" fill="#b3541e">b₁x̂</text>
+<text x="6" y="140" class="sm" fill="#b3541e">b₂ŷ</text>
+<text x="110" y="198" class="sm" text-anchor="middle">v = b₁x̂ + b₂ŷ + b₃ẑ</text>
+<line x1="245" y1="30" x2="245" y2="185" stroke="#e3e0da" stroke-width="1" stroke-dasharray="4,4"/>
+<text x="395" y="18" class="ttl" text-anchor="middle">函数空间（希尔伯特空间）</text>
+<line x1="300" y1="160" x2="490" y2="160" stroke="#c9d4de" stroke-width="1"/>
+<path d="M300,160 Q325,95 350,160 Q375,225 400,160 Q425,95 450,160" fill="none" stroke="#0b5ea8" stroke-width="0.9" opacity="0.5"/>
+<path d="M300,160 Q340,80 380,160 Q420,240 460,160" fill="none" stroke="#2c6e4f" stroke-width="0.9" opacity="0.5"/>
+<path d="M300,160 Q317,112 334,160 Q351,208 368,160 Q385,112 402,160 Q419,208 436,160 Q453,112 470,160" fill="none" stroke="#b3541e" stroke-width="0.9" opacity="0.5"/>
+<path d="M300,160 Q332,72 366,152 Q400,232 434,150 Q455,105 470,160" fill="none" stroke="#c0392b" stroke-width="2.2"/>
+<text x="395" y="198" class="sm" text-anchor="middle">ψ = b₁ψ₁ + b₂ψ₂ + b₃ψ₃ + …</text>
+<text x="480" y="46" class="sm" fill="#c0392b">ψ</text>
+</svg>
+<figcaption>左：向量用三个基向量展开。右：函数用一套基函数展开——原理完全一样，只是基的个数可能是无穷</figcaption>
+</figure>
+<div class="step"><div class="sh">一句话：任何函数都能"分解"成基函数的加权和</div>
+<p>就像任何颜色都能分解成红绿蓝三原色的组合，任何声音都能分解成不同频率正弦波的组合（傅里叶级数）。<span class="key">"完备"的意思就是：这套基函数够用，任何函数都能被它们精确表示，一个都不会漏。</span></p>
+</div>
+
+<div class="warn"><span class="lab">这一页是整门课最重要的实用概念，因为现实中我们只能用<b>不完备</b>的基组</span>
+<p>理论上求和要到 ∞。<b>实际计算中你只能用有限个基函数</b>（比如 6-31G(d) 对一个碳原子只给 15 个函数）。</p>
+<p><span class="key">这个"截断"就是<b>基组误差（basis set incompleteness error）</b>的来源——它是量子化学两大误差源之一（另一个是方法误差，即电子相关处理不足）。</span></p>
+<table>
+<tr><th style="width:180px">误差来源</th><th>怎么减小</th><th>代价</th></tr>
+<tr><td><b>基组不完备</b></td><td>用更大的基组（DZ→TZ→QZ→…），或外推到完备基组极限 CBS（第 4 讲 p43）</td><td>时间 ∝ <i>N</i>⁴ 或更高</td></tr>
+<tr><td><b>方法不精确</b></td><td>爬精度阶梯（HF→MP2→CCSD→CCSD(T)）</td><td>时间 ∝ <i>N</i>⁵、<i>N</i>⁶、<i>N</i>⁷</td></tr>
+</table>
+<p><b>这就是量化计算里那个著名的"二维收敛"图</b>：你必须同时在"方法"和"基组"两个方向上收敛，缺一不可。只提高一个另一个不动，结果可能反而更差（误差抵消被破坏）。</p>
+</div>
+</section>
+
+<section class="slide" id="p21">
+<h2><span class="pno">p21</span>算符的性质（一）：线性与对易</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>线性：</b></p>
+<ol>
+<li><i>a</i><i>Ôψ</i> = <i>Ô</i>(<i>aψ</i>)　⟹ 线性算符</li>
+<li>log(<i>aψ</i>) ≠ <i>a</i>·log(<i>ψ</i>)　⟹ 非线性算符</li>
+</ol>
+<p><b>对易：</b></p>
+<p>练习：对任意一组算符 <i>Â</i> 和 <i>B̂</i>，是否有 <i>ÂB̂ψ</i> = <i>B̂Âψ</i>？对位置算符（<i>Â</i> = <i>x</i>）和动量算符（<i>B̂</i> = −<i>iħ</i>∂/∂<i>x</i> = <i>p̂</i><sub><i>x</i></sub>）验证这个关系。</p>
+<ul>
+<li><i>ÂB̂ψ</i> = −<i>iħ</i> <i>x</i> (∂/∂<i>x</i>) <i>ψ</i> = −<i>iħ</i> <i>x</i> (∂<i>ψ</i>/∂<i>x</i>)</li>
+<li><i>B̂Âψ</i> = −<i>iħ</i> (∂/∂<i>x</i>)(<i>xψ</i>) = −<i>iħψ</i> − <i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>)</li>
+<li>(<i>ÂB̂</i> − <i>B̂Â</i>)<i>ψ</i> = −<i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>) − [−<i>iħψ</i> − <i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>)] = <i>iħψ</i></li>
+</ul>
+<p>⟹ 算符 <i>x</i> 与 −<i>iħ</i>∂/∂<i>x</i> <b>不对易</b>。这意味着<b>这两个算符作用在函数 <i>ψ</i> 上的先后顺序是有影响的</b>。</p>
+</div>
+
+<h3>讲解 · 什么是"对易"</h3>
+<div class="step"><div class="sh">日常生活中的对易与不对易</div>
+<table>
+<tr><th style="width:150px">操作对</th><th>换顺序结果一样吗</th><th>结论</th></tr>
+<tr><td>穿袜子、戴帽子</td><td>一样</td><td><b>对易</b></td></tr>
+<tr><td>穿袜子、穿鞋</td><td>不一样（先穿鞋就麻烦了）</td><td><b>不对易</b></td></tr>
+<tr><td>3 × 5 和 5 × 3</td><td>一样（都是 15）</td><td><b>对易</b></td></tr>
+<tr><td>矩阵 <b>AB</b> 和 <b>BA</b></td><td>一般不一样</td><td><b>一般不对易</b></td></tr>
+</table>
+</div>
+
+<h3 class="fm">推导详解 · 逐步验证 [<i>x̂</i>, <i>p̂</i>] = <i>iħ</i></h3>
+<p>这是量子力学最著名的一个计算，值得完全看懂。<b>关键技巧：<u>必须</u>让算符作用在一个"试探函数" <i>ψ</i> 上，光看算符本身会算错。</b></p>
+<div class="step"><div class="sh">第一步：算 <i>x̂p̂ψ</i>（先用 <i>p̂</i>，再用 <i>x̂</i>）</div>
+<p>注意：算符从<b>右往左</b>依次作用（离 <i>ψ</i> 最近的先作用）。</p>
+<div class="fml" style="font-size:16px">
+<i>x̂</i> <i>p̂</i> <i>ψ</i> = <i>x</i> · [ −<i>iħ</i> ∂<i>ψ</i>/∂<i>x</i> ] = −<i>iħ</i> <i>x</i> (∂<i>ψ</i>/∂<i>x</i>)
+</div>
+<p>先对 <i>ψ</i> 求导，再乘以 <i>x</i>。就这么简单。</p>
+</div>
+<div class="step"><div class="sh">第二步：算 <i>p̂x̂ψ</i>（先用 <i>x̂</i>，再用 <i>p̂</i>）</div>
+<p>先乘 <i>x</i> 得到 <i>xψ</i>，再对 <b>整个 <i>xψ</i></b> 求导。<span class="key">这里必须用乘积法则（product rule）——这就是全部玄机所在。</span></p>
+<div class="fml" style="font-size:16px">
+<i>p̂</i> <i>x̂</i> <i>ψ</i> = −<i>iħ</i> ∂(<i>xψ</i>)/∂<i>x</i> = −<i>iħ</i> [ <b>(∂<i>x</i>/∂<i>x</i>)·<i>ψ</i></b> + <i>x</i>·(∂<i>ψ</i>/∂<i>x</i>) ] = −<i>iħψ</i> − <i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>)
+</div>
+<p>因为 ∂<i>x</i>/∂<i>x</i> = 1，所以第一项就是 −<i>iħψ</i>。</p>
+</div>
+<div class="step"><div class="sh">第三步：相减</div>
+<div class="fml" style="font-size:16px;line-height:2.2">
+(<i>x̂p̂</i> − <i>p̂x̂</i>)<i>ψ</i> = [−<i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>)] − [−<i>iħψ</i> − <i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>)]<br>
+= −<i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>) + <i>iħψ</i> + <i>iħx</i>(∂<i>ψ</i>/∂<i>x</i>) = <b><i>iħψ</i></b>
+</div>
+<p>含导数的两项<b>刚好抵消</b>，只剩下 <i>iħψ</i>。</p>
+<p>因为对<b>任意</b> <i>ψ</i> 都成立，就可以把 <i>ψ</i> 约掉，写成算符恒等式：</p>
+<div class="fml"><span class="tag">★ 正则对易关系（量子力学的基石）</span>
+[ <i>x̂</i> , <i>p̂</i> ] = <i>x̂p̂</i> − <i>p̂x̂</i> = <i>iħ</i>
+</div>
+</div>
+<div class="warn"><span class="lab">这个结果为什么惊人</span>
+<p>右边<b>不是零，而且不含 <i>ψ</i>、不含 <i>x</i>——是一个纯常数 <i>iħ</i>。</b></p>
+<p>如果 <i>ħ</i> = 0（经典极限），右边就是 0，位置和动量就对易了，一切回到经典力学。<span class="key">所以"经典物理"就是"<i>ħ</i> 小到可以忽略"的极限</span>——讲义 p24 明确说了这一点。</p>
+<p><b><i>ħ</i> ≠ 0 是整个量子世界怪异性的唯一来源。</b></p>
+</div>
+</section>
+
+<section class="slide" id="p22">
+<h2><span class="pno">p22</span>算符的性质（二）：厄米性</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>厄米性 (Hermiticity)：</b></p>
+<p>如果一个算符 <i>Ô</i> 满足下列关系，就称它是厄米的：</p>
+<p>∫<i>ψ</i><sub>i</sub>*(<i>x</i>) <i>Ô</i> <i>ψ</i><sub>j</sub>(<i>x</i>) d<i>x</i> = [∫<i>ψ</i><sub>j</sub>*(<i>x</i>) <i>Ô</i> <i>ψ</i><sub>i</sub>(<i>x</i>) d<i>x</i>]*</p>
+<ul>
+<li><b>厄米算符的所有本征值都是实数。</b>（作为练习证明它。）</li>
+<li>所有对应于物理可观测量的量子力学算符都是厄米的，并且有实数本征值。</li>
+<li>例如，薛定谔方程以能量为本征值。<b>哈密顿矩阵是厄米的。</b></li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 厄米性条件</h3>
+<div class="fml"><span class="tag">厄米算符的定义</span>
+∫ <i>ψ</i><sub><i>i</i></sub>* <i>Ô</i> <i>ψ</i><sub><i>j</i></sub> d<i>x</i> &nbsp;=&nbsp; [ ∫ <i>ψ</i><sub><i>j</i></sub>* <i>Ô</i> <i>ψ</i><sub><i>i</i></sub> d<i>x</i> ]*
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Ô</i></td><td>算符</td><td>被检验的算符</td></tr>
+<tr><td>[ … ]*</td><td>整体复共轭</td><td><span class="key">注意星号在整个积分外面</span>——先算完积分，再取共轭</td></tr>
+<tr><td><i>ψ</i><sub><i>i</i></sub>, <i>ψ</i><sub><i>j</i></sub></td><td>任意两个函数</td><td>关系必须对<b>所有</b>合法函数对成立</td></tr>
+</table>
+<p><b>意思是</b>：<span class="key">把算符"挪到"积分的另一边（从作用于 <i>ψ</i><sub>j</sub> 变成作用于 <i>ψ</i><sub>i</sub>），结果只差一个复共轭。</span>用狄拉克符号写更清楚：⟨<i>i</i>|<i>Ô</i>|<i>j</i>⟩ = ⟨<i>j</i>|<i>Ô</i>|<i>i</i>⟩*。</p>
+
+<h3>讲解 · 为什么物理上必须厄米</h3>
+<div class="step"><div class="sh">一句话理由：因为测量结果必须是实数</div>
+<p>你用尺子量长度，读数是 3.5 cm，不可能是 "3.5 + 2<i>i</i> cm"。<b>任何实验仪器的读数都是实数。</b></p>
+<p>而 p37 的公设 3 说：测量得到的只能是算符的本征值。所以：</p>
+<div class="fml" style="font-size:16px">测量值必须实 ⟹ 本征值必须实 ⟹ <b>算符必须厄米</b></div>
+<p><span class="key">厄米性不是数学上的装饰，它是"这个算符能代表一个可测量的物理量"的准入条件。</span></p>
+</div>
+<div class="ext"><span class="lab">拓展 · 证明"厄米算符的本征值是实数"（讲义留的练习）</span>
+<p>设 <i>Ôψ</i> = <i>aψ</i>，且 <i>ψ</i> 已归一化（∫<i>ψ</i>*<i>ψ</i> = 1）。</p>
+<div class="step"><div class="sh">证明只要三行</div>
+<p><b>① 左边</b>：在厄米性定义里取 <i>i</i> = <i>j</i>：</p>
+<p>∫<i>ψ</i>*<i>Ôψ</i> d<i>x</i> = ∫<i>ψ</i>*(<i>aψ</i>) d<i>x</i> = <i>a</i>∫<i>ψ</i>*<i>ψ</i> d<i>x</i> = <b><i>a</i></b></p>
+<p><b>② 右边</b>：</p>
+<p>[∫<i>ψ</i>*<i>Ôψ</i> d<i>x</i>]* = [<i>a</i>]* = <b><i>a</i>*</b></p>
+<p><b>③ 厄米性要求两者相等</b>：</p>
+<p><i>a</i> = <i>a</i>*　⟹　<span class="key">一个数等于它自己的复共轭，只能说明它的虚部为零</span>　⟹　<i>a</i> 是实数　∎</p>
+</div>
+</div>
+<div class="ext"><span class="lab">拓展 · 厄米性的另外两个后果（都很重要）</span>
+<ol>
+<li><b>不同本征值对应的本征函数自动正交</b>——这就是 p18 那条性质的来源。你不需要额外假设正交，它是厄米性的推论。</li>
+<li><b>厄米矩阵一定可以被酉变换对角化</b>——这保证了 SCF 里每一轮对角化 Fock 矩阵都能成功，且得到实数轨道能。<span class="key">如果 Fock 矩阵不是厄米的，整个量子化学计算就没法做了。</span></li>
+</ol>
+<p><b>实数情形的简化</b>：当所有函数和算符都是实的（分子计算里常见），厄米性退化成<b>对称性</b>：<i>F</i><sub><i>ij</i></sub> = <i>F</i><sub><i>ji</i></sub>。这就是为什么程序里 Fock 矩阵只存下三角——上三角靠对称性推出来，直接省一半内存。</p>
+</div>
+</section>
+
+<section class="slide" id="p23">
+<h2><span class="pno">p23–24</span>对易关系的物理意义</h2>
+<div class="tr"><span class="lab">原文翻译（p23）</span>
+<p>海森堡的建议（由 Born 和 Jordan 表述）等价于要求位置算符 (<i>x</i>) 与动量算符 (<i>p</i>) 满足对易关系：</p>
+<p>[<i>x̂</i>, <i>p̂</i>] = <i>x̂p̂</i> − <i>p̂x̂</i> = <i>iħ</i> = <i>i</i>·<i>h</i>/(2π)</p>
+<p><b>对易关系是量子力学中最重要的关系之一。</b></p>
+<p>这一切意味着什么？</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p24）</span>
+<ul>
+<li>首先，它意味着<b>牛顿定律对微观粒子的描述是错误的</b>，必定只是真实运动方程的一个近似</li>
+<li><b>当近似 <i>h</i> = 0 对所计算的性质影响可忽略时，经典物理才成立</b></li>
+<li>这个对易关系的含义远不止是对可观测量形式的微小修改</li>
+</ul>
+</div>
+
+<h3>讲解 · 对易关系 ⟹ 不确定性原理</h3>
+<p>讲义没有明说这一步，但这是理解 p23 的关键。<b>一般的不确定性关系是：</b></p>
+<div class="fml"><span class="tag">Robertson 不确定性关系</span>
+Δ<i>A</i> · Δ<i>B</i> ≥ ½ |⟨ [<i>Â</i>, <i>B̂</i>] ⟩|
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Δ<i>A</i></td><td>标准差</td><td>对同一个态重复测量 <i>A</i> 很多次，结果的<b>离散程度</b>。Δ<i>A</i> = 0 表示每次测都得同一个值。</td></tr>
+<tr><td>⟨…⟩</td><td>期望值</td><td>多次测量的平均值（p38 会正式定义）</td></tr>
+<tr><td>[<i>Â</i>, <i>B̂</i>]</td><td>对易子</td><td>= <i>ÂB̂</i> − <i>B̂Â</i></td></tr>
+</table>
+<p>把 [<i>x̂</i>,<i>p̂</i>] = <i>iħ</i> 代进去：</p>
+<div class="fml"><span class="tag">★ 海森堡不确定性原理</span>
+Δ<i>x</i> · Δ<i>p</i> ≥ <i>ħ</i>/2
+</div>
+<div class="warn"><span class="lab">这句话的正确理解（初学者极易搞错）</span>
+<p><b>错误理解</b>：❌ "因为我们的仪器不够好"，或 ❌ "因为测量会干扰粒子"。</p>
+<p><b>正确理解</b>：<span class="key">✔ 粒子<u>根本就没有</u>同时确定的位置和动量。</span>这不是"我们不知道"，而是"它本来就不存在"。</p>
+<p>类比：问"C 大调这个和弦的<b>颜色</b>是什么"是没有意义的——不是因为你不会看，而是和弦本来就没有颜色这个属性。</p>
+</div>
+<h3>讲解 · 对易与否，决定了两个量能不能同时确定</h3>
+<table>
+<tr><th style="width:170px">情形</th><th style="width:170px">数学表述</th><th>物理后果</th></tr>
+<tr><td><b>对易</b> [<i>Â</i>,<i>B̂</i>] = 0</td><td>可以有<b>共同的本征函数集</b></td><td><span class="key"><i>A</i> 和 <i>B</i> 可以同时精确确定。</span>Δ<i>A</i>·Δ<i>B</i> 可以是 0。</td></tr>
+<tr><td><b>不对易</b> [<i>Â</i>,<i>B̂</i>] ≠ 0</td><td>没有共同本征函数</td><td>不能同时精确确定，一个越准另一个越不准。</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 这条规则马上就要用（p50–51 的伏笔）</span>
+<p>到 p50，讲义会证明：对中心力场（<i>V</i> 只依赖 <i>r</i>），</p>
+<div class="fml" style="font-size:16px">[<i>Ĥ</i>, <i>L̂</i>²] = 0　且　[<i>Ĥ</i>, <i>L̂</i><sub><i>z</i></sub>] = 0</div>
+<p>三个算符两两对易 ⟹ 它们有<b>共同的本征函数</b> ⟹ 一个态可以同时有确定的能量 <i>E</i>、确定的 <i>L</i>²（由 <i>l</i> 决定）、确定的 <i>L</i><sub><i>z</i></sub>（由 <i>m</i> 决定）。</p>
+<p><span class="key">这就是"一个原子轨道要用三个量子数 <i>n</i>、<i>l</i>、<i>m</i> 标记"的严格来源。</span>你在无机化学里死记的这三个量子数，其数学根源就是这三个算符互相对易。</p>
+<p><b>反过来</b>：<i>L̂</i><sub><i>x</i></sub>、<i>L̂</i><sub><i>y</i></sub>、<i>L̂</i><sub><i>z</i></sub> 彼此<b>不</b>对易（[<i>L̂</i><sub><i>x</i></sub>,<i>L̂</i><sub><i>y</i></sub>] = <i>iħL̂</i><sub><i>z</i></sub>）。所以你只能同时知道角动量的<b>大小</b>和它在<b>一个</b>方向上的分量，另外两个分量永远不确定——这就是教科书上那个"角动量矢量在圆锥面上进动"的图的来源。</p>
+</div>
+</section>
+
+<section class="slide" id="p25">
+<h2><span class="pno">p25–27</span>矩阵力学与对易子代数</h2>
+<div class="tr"><span class="lab">原文翻译（p25）</span>
+<p>数学上有两种可能的诠释：</p>
+<ol>
+<li>可观测量 <i>x</i> 和 <i>p</i> 应被视为<b>算符</b></li>
+<li>可观测量 <i>x</i> 和 <i>p</i> 应被视为<b>矩阵</b></li>
+</ol>
+<p>（然后给出一个矩阵，其第 <i>i</i> 行第 <i>j</i> 列元素是 ∫<i>ψ</i><sub>i</sub>*(<i>x</i>) <i>Ô</i> <i>ψ</i><sub>j</sub>(<i>x</i>) d<i>x</i>）</p>
+<p>矩阵 A 和 B 相乘的顺序会影响结果。AB 不一定等于 BA。</p>
+<p>把 <i>x</i> 和 <i>p</i> 认定为矩阵，就是"矩阵力学"这个名字的来源。</p>
+<p>练习：检验下面两个矩阵是否彼此对易：<b>A</b> = [[−1, 3],[0, 2]]，<b>B</b> = [[0, 5],[3, 1]]</p>
+</div>
+
+<h3 class="fm">公式解析 · 算符的矩阵表示</h3>
+<div class="fml"><span class="tag">★ 把算符变成矩阵（量子化学能用计算机做的关键一步）</span>
+<i>O</i><sub><i>ij</i></sub> = ∫ <i>ψ</i><sub><i>i</i></sub>*(<i>x</i>) <i>Ô</i> <i>ψ</i><sub><i>j</i></sub>(<i>x</i>) d<i>x</i> &nbsp;≡&nbsp; ⟨<i>ψ</i><sub><i>i</i></sub>| <i>Ô</i> |<i>ψ</i><sub><i>j</i></sub>⟩
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>O</i><sub><i>ij</i></sub></td><td>矩阵元</td><td>矩阵第 <i>i</i> 行、第 <i>j</i> 列的那个数</td></tr>
+<tr><td>⟨…|…|…⟩</td><td>狄拉克符号</td><td>bra-ket 记号。<b>⟨<i>i</i>|</b> 叫左矢（bra），<b>|<i>j</i>⟩</b> 叫右矢（ket）。<span class="key">它只是"∫…d<i>x</i>"的速记，可以完全按积分理解。</span>名字来自 bracket（括号）被劈成两半。</td></tr>
+</table>
+<div class="step"><div class="sh">这一步为什么是整门课的枢纽</div>
+<p>薛定谔方程 <i>Ĥψ</i> = <i>Eψ</i> 是<b>微分方程</b>——计算机不会直接解。</p>
+<p>但如果我们：① 选一组基函数 {<i>χ</i>₁, <i>χ</i>₂, …, <i>χ</i><sub><i>N</i></sub>}；② 把 <i>ψ</i> 展开成它们的线性组合（p20 的完备性）；③ 把 <i>Ĥ</i> 算成一个 <i>N</i>×<i>N</i> 矩阵——</p>
+<p>那么薛定谔方程就变成了：</p>
+<div class="fml" style="font-size:17px"><b>H</b> <b>c</b> = <i>E</i> <b>c</b>　　（矩阵本征值问题）</div>
+<p><span class="key">这个计算机极其擅长（LAPACK 一行调用）。整门课后面所有的方程——Roothaan 方程、CI 久期方程——都是这个形式。</span></p>
+</div>
+
+<h3>讲解 · p25 那道矩阵对易练习（做一遍）</h3>
+<div class="step"><div class="sh">计算 AB 和 BA</div>
+<p><b>A</b> = <span class="mn">[ −1&nbsp;&nbsp;3 ; 0&nbsp;&nbsp;2 ]</span>，<b>B</b> = <span class="mn">[ 0&nbsp;&nbsp;5 ; 3&nbsp;&nbsp;1 ]</span>（分号分隔两行）</p>
+<p><b>AB</b>：（第 <i>i</i> 行 × 第 <i>j</i> 列）</p>
+<table>
+<tr><th style="width:130px">位置</th><th style="width:230px">计算</th><th>结果</th></tr>
+<tr><td>(1,1)</td><td>(−1)(0) + (3)(3) = 0 + 9</td><td>9</td></tr>
+<tr><td>(1,2)</td><td>(−1)(5) + (3)(1) = −5 + 3</td><td>−2</td></tr>
+<tr><td>(2,1)</td><td>(0)(0) + (2)(3) = 0 + 6</td><td>6</td></tr>
+<tr><td>(2,2)</td><td>(0)(5) + (2)(1) = 0 + 2</td><td>2</td></tr>
+</table>
+<p><b>AB</b> = <span class="mn">[ 9&nbsp;&nbsp;−2 ; 6&nbsp;&nbsp;2 ]</span></p>
+<p><b>BA</b>：</p>
+<table>
+<tr><th style="width:130px">位置</th><th style="width:230px">计算</th><th>结果</th></tr>
+<tr><td>(1,1)</td><td>(0)(−1) + (5)(0) = 0 + 0</td><td>0</td></tr>
+<tr><td>(1,2)</td><td>(0)(3) + (5)(2) = 0 + 10</td><td>10</td></tr>
+<tr><td>(2,1)</td><td>(3)(−1) + (1)(0) = −3 + 0</td><td>−3</td></tr>
+<tr><td>(2,2)</td><td>(3)(3) + (1)(2) = 9 + 2</td><td>11</td></tr>
+</table>
+<p><b>BA</b> = <span class="mn">[ 0&nbsp;&nbsp;10 ; −3&nbsp;&nbsp;11 ]</span></p>
+<p><b>结论</b>：<b>AB</b> ≠ <b>BA</b>，两个矩阵<b>不对易</b>。对易子 [<b>A</b>,<b>B</b>] = <b>AB</b> − <b>BA</b> = <span class="mn">[ 9&nbsp;&nbsp;−12 ; 9&nbsp;&nbsp;−9 ]</span> ≠ <b>0</b>。</p>
+</div>
+
+<h3 class="fm">公式解析 · p26–27 对易子与反对易子</h3>
+<div class="tr"><span class="lab">原文翻译（p26–27）</span>
+<p>若 <i>ÂB̂</i> − <i>B̂Â</i> = 0 ⟹ 算符 <i>Â</i> 与 <i>B̂</i> 彼此对易</p>
+<p>若 <i>ÂB̂</i> − <i>B̂Â</i> ≠ 0 ⟹ 算符 <i>Â</i> 与 <i>B̂</i> 彼此不对易</p>
+<p>速记：对易子 [<i>Â</i>,<i>B̂</i>] = <i>ÂB̂</i> − <i>B̂Â</i>；反对易子 {<i>Â</i>,<i>B̂</i>}<sub>+</sub> = <i>ÂB̂</i> + <i>B̂Â</i></p>
+<p><b>若 [<i>Â</i>,<i>B̂</i>] = 0，则算符 <i>Â</i> 的所有本征函数也是算符 <i>B̂</i> 的本征函数，反之亦然。</b></p>
+<p>p27 对易子代数：</p>
+<ol style="list-style:none;padding-left:0">
+<li>[<i>Â</i>,<i>B̂</i>] = −[<i>B̂</i>,<i>Â</i>]</li>
+<li>[<i>Â</i>,<i>Â</i><sup><i>n</i></sup>] = 0，对 <i>n</i> = 1,2,3,…</li>
+<li>[<i>αÂ</i>,<i>B̂</i>] = [<i>Â</i>,<i>αB̂</i>] = <i>α</i>[<i>Â</i>,<i>B̂</i>]，<i>α</i> = 常数</li>
+<li>[<i>Â</i>,<i>B̂</i>+<i>Ĉ</i>] = [<i>Â</i>,<i>B̂</i>] + [<i>Â</i>,<i>Ĉ</i>]</li>
+<li>[<i>Â</i>+<i>B̂</i>,<i>Ĉ</i>] = [<i>Â</i>,<i>Ĉ</i>] + [<i>B̂</i>,<i>Ĉ</i>]</li>
+<li>[<i>Â</i>,<i>B̂Ĉ</i>] = [<i>Â</i>,<i>B̂</i>]<i>Ĉ</i> + <i>B̂</i>[<i>Â</i>,<i>Ĉ</i>]</li>
+<li>[<i>ÂB̂</i>,<i>Ĉ</i>] = [<i>Â</i>,<i>Ĉ</i>]<i>B̂</i> + <i>Â</i>[<i>B̂</i>,<i>Ĉ</i>]</li>
+<li>[<i>Â</i>,[<i>B̂</i>,<i>Ĉ</i>]] + [<i>B̂</i>,[<i>Ĉ</i>,<i>Â</i>]] + [<i>Ĉ</i>,[<i>Â</i>,<i>B̂</i>]] = 0　（Jacobi 恒等式）</li>
+</ol>
+</div>
+<div class="ext"><span class="lab">拓展 · 这些恒等式怎么用（不用背，会查就行）</span>
+<p>最有用的是<b>第 6、7 条（乘积法则）</b>，它们让你能把复杂的对易子拆成简单的。规则和求导的乘积法则长得一样：</p>
+<div class="fml" style="font-size:16px">[<i>Â</i>, <i>B̂Ĉ</i>] = [<i>Â</i>,<i>B̂</i>]<i>Ĉ</i> + <i>B̂</i>[<i>Â</i>,<i>Ĉ</i>]　（对比：(<i>fg</i>)′ = <i>f</i>′<i>g</i> + <i>fg</i>′）</div>
+<p><b>用它做 p31 的第一题</b>：算 [<i>x̂</i>, <i>p̂</i>²]</p>
+<div class="step"><div class="sh">三行搞定</div>
+<p>把 <i>p̂</i>² 看成 <i>p̂</i>·<i>p̂</i>，套用规则 6：</p>
+<p>[<i>x̂</i>, <i>p̂p̂</i>] = [<i>x̂</i>,<i>p̂</i>]<i>p̂</i> + <i>p̂</i>[<i>x̂</i>,<i>p̂</i>]</p>
+<p>代入 [<i>x̂</i>,<i>p̂</i>] = <i>iħ</i>（一个纯数，可以随意移动）：</p>
+<p>= <i>iħp̂</i> + <i>p̂</i>(<i>iħ</i>) = <b>2<i>iħp̂</i></b></p>
+<p>再代 <i>p̂</i> = −<i>iħ</i>∂/∂<i>x</i>：= 2<i>iħ</i>(−<i>iħ</i>∂/∂<i>x</i>) = 2<i>ħ</i>²∂/∂<i>x</i>　✔ 与讲义 p31 给的答案一致</p>
+</div>
+</div>
+</section>
+
+<section class="slide" id="p28">
+<h2><span class="pno">p28–31</span>向量代数复习与坐标空间中的算符</h2>
+<div class="tr"><span class="lab">原文翻译（p28）</span>
+<p>在把算符表示到具体空间之前，先复习简单的向量代数运算：</p>
+<p>设 <b>A</b> = (<i>A</i><sub>x</sub>, <i>A</i><sub>y</sub>, <i>A</i><sub>z</sub>)，<b>B</b> = (<i>B</i><sub>x</sub>, <i>B</i><sub>y</sub>, <i>B</i><sub>z</sub>)</p>
+<p><b>点积（标量积）</b>：<b>A</b>·<b>B</b> = <i>A</i><sub>x</sub><i>B</i><sub>x</sub> + <i>A</i><sub>y</sub><i>B</i><sub>y</sub> + <i>A</i><sub>z</sub><i>B</i><sub>z</sub></p>
+<p><b>叉积（矢量积）</b>：<b>A</b>×<b>B</b> = (<i>A</i><sub>y</sub><i>B</i><sub>z</sub>−<i>B</i><sub>y</sub><i>A</i><sub>z</sub>, <i>A</i><sub>z</sub><i>B</i><sub>x</sub>−<i>A</i><sub>x</sub><i>B</i><sub>z</sub>, <i>A</i><sub>x</sub><i>B</i><sub>y</sub>−<i>A</i><sub>y</sub><i>B</i><sub>x</sub>)</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p29）</span>
+<p>坐标空间中的算符表示：</p>
+<table>
+<tr><td style="width:150px">坐标</td><td><i>r̂</i> → <b>r</b> = (<i>x</i>, <i>y</i>, <i>z</i>)</td></tr>
+<tr><td>动量</td><td><i>p̂</i> → (<i>p</i><sub>x</sub>,<i>p</i><sub>y</sub>,<i>p</i><sub>z</sub>) = −<i>iħ</i>∇ = −<i>iħ</i>(∂/∂<i>x</i>, ∂/∂<i>y</i>, ∂/∂<i>z</i>)</td></tr>
+<tr><td>角动量</td><td><i>L̂</i> = <i>r̂</i>×<i>p̂</i> → (<i>yp</i><sub>z</sub>−<i>zp</i><sub>y</sub>, <i>zp</i><sub>x</sub>−<i>xp</i><sub>z</sub>, <i>xp</i><sub>y</sub>−<i>yp</i><sub>x</sub>)</td></tr>
+<tr><td>势能</td><td><i>V̂</i> → <i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>)</td></tr>
+<tr><td>动能</td><td><i>K̂</i> = <i>p</i>²/2<i>m</i> → (1/2<i>m</i>)(−<i>iħ</i>∇)² = −(<i>ħ</i>²/2<i>m</i>)(∂²/∂<i>x</i>²+∂²/∂<i>y</i>²+∂²/∂<i>z</i>²)</td></tr>
+<tr><td>哈密顿量</td><td><i>Ĥ</i> = <i>K̂</i> + <i>V̂</i> = −(<i>ħ</i>²/2<i>m</i>)∇² + <i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>)</td></tr>
+</table>
+</div>
+<div class="tr"><span class="lab">原文翻译（p30）</span>
+<ul>
+<li>动能算符与时间无关（与经典物理相反，经典中 <i>K</i> = <i>p</i>²/2<i>m</i> = <i>mv</i>²/2 = (<i>m</i>/2)(d<b>r</b>/d<i>t</i>)²）</li>
+<li>对不受外场影响的分子和材料体系，势能 <i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>) 与时间无关。这种情况下含时薛定谔方程可以约化为不含时薛定谔方程</li>
+<li>坐标空间中的薛定谔方程是：<br>[−(<i>ħ</i>²/2<i>m</i>)(∂²/∂<i>x</i>²+∂²/∂<i>y</i>²+∂²/∂<i>z</i>²) + <i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>)]<i>ψ</i>(<i>x</i>,<i>y</i>,<i>z</i>) = <i>Eψ</i>(<i>x</i>,<i>y</i>,<i>z</i>)</li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p31）</span>
+<p>验证以下各式：</p>
+<ul>
+<li>[<i>x</i>, <i>p</i>²] = … = 2<i>ħ</i>²∂/∂<i>x</i></li>
+<li>[<i>x</i>, <i>H</i>] = [<i>x</i>, <i>K</i>+<i>V</i>] = [<i>x</i>,<i>K</i>] + [<i>x</i>,<i>V</i>] = … = (<i>ħ</i>²/<i>m</i>)∂/∂<i>x</i> = (<i>iħ</i>/<i>m</i>)<i>p</i></li>
+<li>[<i>p</i>, <i>H</i>] = … = −<i>iħ</i>(∂<i>V</i>/∂<i>x</i>)</li>
+</ul>
+<p>对三维体系，注意 [<i>x</i>,<i>p</i><sub>y</sub>] = [<i>x</i>,<i>p</i><sub>z</sub>] = 0。其余运算与一维体系类似。</p>
+</div>
+
+<h3 class="fm">公式解析 · 关键符号：∇ 和 ∇²</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>∇</td><td>Nabla / del 算符</td><td>念作 "nabla" 或 "del"。<b>∇ = (∂/∂<i>x</i>, ∂/∂<i>y</i>, ∂/∂<i>z</i>)</b>，是个"向量算符"。作用在标量函数上得到<b>梯度</b>（指向函数增长最快的方向）。</td></tr>
+<tr><td>∇²</td><td>Laplace 算符<br>（拉普拉斯算子）</td><td>也写作 Δ。<b>∇² = ∂²/∂<i>x</i>² + ∂²/∂<i>y</i>² + ∂²/∂<i>z</i>²</b>。<span class="key">它是三维的"曲率"，出现在动能算符里。</span></td></tr>
+<tr><td><b>i</b>, <b>j</b>, <b>k</b></td><td>单位向量</td><td>沿 <i>x</i>、<i>y</i>、<i>z</i> 三个轴的单位向量</td></tr>
+<tr><td><i>L̂</i></td><td>角动量算符</td><td>= <i>r̂</i> × <i>p̂</i>，是个矢量算符（有三个分量）</td></tr>
+</table>
+
+<h3>讲解 · 动量算符为什么是 −<i>iħ</i>∂/∂<i>x</i>（这个"−<i>i</i>"哪来的）</h3>
+<div class="step"><div class="sh">从平面波反推</div>
+<p>一个动量确定为 <i>p</i> 的自由粒子，波函数是平面波 <i>ψ</i> = e<sup><i>ikx</i></sup>，其中 <i>k</i> = <i>p</i>/<i>ħ</i>（由 de Broglie）。</p>
+<p>我们希望动量算符作用上去能"取出" <i>p</i>：<i>p̂ψ</i> = <i>pψ</i>。试一试 ∂/∂<i>x</i>：</p>
+<p>∂/∂<i>x</i> e<sup><i>ikx</i></sup> = <i>ik</i>·e<sup><i>ikx</i></sup> = <b><i>i</i>(<i>p</i>/<i>ħ</i>)</b>·e<sup><i>ikx</i></sup></p>
+<p>差了个因子 <i>i</i>/<i>ħ</i>。要抵消它，需要乘以 <i>ħ</i>/<i>i</i> = −<i>iħ</i>（因为 1/<i>i</i> = −<i>i</i>）。所以：</p>
+<div class="fml" style="font-size:16px"><i>p̂</i><sub><i>x</i></sub> = −<i>iħ</i> ∂/∂<i>x</i>　　⟹　　<i>p̂</i><sub><i>x</i></sub> e<sup><i>ikx</i></sup> = −<i>iħ</i>·<i>i</i>(<i>p</i>/<i>ħ</i>)e<sup><i>ikx</i></sup> = <i>p</i> e<sup><i>ikx</i></sup>　✔</div>
+<p><span class="key">那个 −<i>i</i> 的作用就是保证动量算符是<b>厄米的</b>（本征值是实数）。</span>单独的 ∂/∂<i>x</i> 是反厄米的（本征值纯虚），乘上 −<i>i</i> 之后才变厄米。</p>
+</div>
+
+<h3 class="fm">推导 · p31 的第二题 [<i>x̂</i>, <i>Ĥ</i>]（有重要物理含义）</h3>
+<div class="step"><div class="sh">分两部分算</div>
+<p><b>① [<i>x̂</i>, <i>V̂</i>] = 0</b>：因为 <i>V̂</i> 只是"乘以 <i>V</i>(<i>x</i>)"，而"乘以 <i>x</i>"和"乘以 <i>V</i>(<i>x</i>)"顺序无所谓（普通乘法可交换）。</p>
+<p><b>② [<i>x̂</i>, <i>K̂</i>]</b>：<i>K̂</i> = <i>p̂</i>²/2<i>m</i>，用上面刚算过的 [<i>x̂</i>,<i>p̂</i>²] = 2<i>iħp̂</i>：</p>
+<p>[<i>x̂</i>, <i>K̂</i>] = (1/2<i>m</i>)[<i>x̂</i>,<i>p̂</i>²] = (1/2<i>m</i>)(2<i>iħp̂</i>) = <b>(<i>iħ</i>/<i>m</i>)<i>p̂</i></b>　✔ 与讲义一致</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 这个结果就是"量子版的 v = p/m"（Ehrenfest 定理）</span>
+<p>量子力学中，任意可观测量的期望值随时间的变化率是：</p>
+<div class="fml" style="font-size:16px">d⟨<i>Â</i>⟩/d<i>t</i> = (<i>i</i>/<i>ħ</i>)⟨[<i>Ĥ</i>, <i>Â</i>]⟩</div>
+<p>取 <i>Â</i> = <i>x̂</i>，代入我们刚算的 [<i>x̂</i>,<i>Ĥ</i>] = (<i>iħ</i>/<i>m</i>)<i>p̂</i>（注意 [<i>Ĥ</i>,<i>x̂</i>] = −[<i>x̂</i>,<i>Ĥ</i>]）：</p>
+<div class="fml" style="font-size:16px">d⟨<i>x</i>⟩/d<i>t</i> = ⟨<i>p</i>⟩/<i>m</i></div>
+<p><span class="key">这就是"速度 = 动量/质量"，只不过现在是对期望值成立。</span>同理，第三题 [<i>p̂</i>,<i>Ĥ</i>] = −<i>iħ</i>(∂<i>V</i>/∂<i>x</i>) 会给出 d⟨<i>p</i>⟩/d<i>t</i> = −⟨∂<i>V</i>/∂<i>x</i>⟩ = ⟨<i>F</i>⟩，<b>正是牛顿第二定律 <i>F</i> = d<i>p</i>/d<i>t</i>。</b></p>
+<p><b>这就是 Ehrenfest 定理：量子力学的期望值遵守经典力学方程。</b>它解释了为什么宏观物体看起来服从牛顿定律——不是量子力学在宏观失效，而是期望值本来就满足经典方程。</p>
+<p><b>另一个推论</b>：如果某个算符与 <i>Ĥ</i> 对易（[<i>Ĥ</i>,<i>Â</i>] = 0），那么 d⟨<i>Â</i>⟩/d<i>t</i> = 0——<span class="key">这个量守恒。</span>这就是 p59 说"自由原子和离子的角动量 <i>L</i>、<i>S</i> 是守恒的"的来源。</p>
+</div>
+</section>
+
+<section class="slide" id="p32">
+<h2><span class="pno">p32</span>Born 解释：波函数到底是什么</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li>1926 年，Born 提出乘积 Ψ*Ψ 应被视为<b>"概率密度"</b></li>
+<li>Ψ 可以是复函数，因为是它与其复共轭的乘积给出了"在某个特定状态下找到粒子"的真实物理概率</li>
+<li>当它在感兴趣的全空间上积分时，就给出概率</li>
+<li>在全空间上积分时它导出归一化条件：∫Ψ*Ψ d<i>τ</i> = 1</li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · Born 概率解释</h3>
+<div class="fml"><span class="tag">★ Born 概率解释（波函数的物理意义）</span>
+<i>P</i>(<b>r</b>) d<i>τ</i> = Ψ*(<b>r</b>) Ψ(<b>r</b>) d<i>τ</i> = |Ψ(<b>r</b>)|² d<i>τ</i>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Ψ</td><td>波函数</td><td><span class="key">本身<b>没有</b>直接的物理意义</span>，它是"概率幅"（probability amplitude）</td></tr>
+<tr><td>|Ψ|²</td><td>概率密度</td><td><b>这个才有物理意义。</b>单位是"每单位体积的概率"，即 m⁻³</td></tr>
+<tr><td>d<i>τ</i></td><td>体积元</td><td>= d<i>x</i>d<i>y</i>d<i>z</i>（笛卡尔）或 <i>r</i>²sin<i>θ</i> d<i>r</i>d<i>θ</i>d<i>φ</i>（球坐标）</td></tr>
+<tr><td><i>P</i>d<i>τ</i></td><td>概率</td><td>在体积元 d<i>τ</i> 内找到粒子的概率，是个 0~1 之间的<b>无量纲数</b></td></tr>
+</table>
+
+<div class="warn"><span class="lab">这一页是量子力学最难接受、也最重要的一页</span>
+<p>在 Born 之前，薛定谔本人以为 Ψ 是"物质云的密度"——电子真的像雾一样弥散开。<b>Born 说：不，Ψ 是概率的振幅。</b></p>
+<p><span class="key">电子并没有"抹开"，它每次被探测到时都是一个完整的点粒子。|Ψ|² 只是告诉你在哪里探测到它的可能性有多大。</span></p>
+<p>这个诠释（"哥本哈根诠释"）引起了长达一个世纪的争论——爱因斯坦的"上帝不掷骰子"就是针对这个。p42 讲义引用的"你真的认为不看月亮时月亮就不在那儿吗？"也是同一件事。</p>
+</div>
+
+<h3>讲解 · 为什么是 |Ψ|² 而不是 Ψ</h3>
+<ol>
+<li><b>概率必须非负</b>。Ψ 可以是负的、可以是复的；|Ψ|² = Ψ*Ψ 永远 ≥ 0。</li>
+<li><b>概率必须是实数</b>。Ψ*Ψ 的虚部自动为零。</li>
+<li><b>类比波动</b>：在经典波动中，能量密度也正比于振幅的平方（声强 ∝ 压强振幅²，光强 ∝ 电场振幅²）。Born 借用了这个思路。</li>
+</ol>
+
+<div class="ext"><span class="lab">拓展 · 化学家天天在用的其实就是 |Ψ|²</span>
+<p>你在教科书、软件里看到的所有"电子云"图，画的都不是 Ψ 本身，而是：</p>
+<table>
+<tr><th style="width:210px">你看到的图</th><th>它其实是什么</th></tr>
+<tr><td><b>轨道图</b>（有红蓝两色）</td><td>这个是 <b>Ψ 本身</b>的等值面。<span class="key">红蓝两色代表 Ψ 的正负号（相位）</span>——这是化学里唯一直接看 Ψ 的地方，因为成键/反键完全取决于相位是否匹配。</td></tr>
+<tr><td><b>电子密度图</b>（单色）</td><td>ρ(<b>r</b>) = <i>N</i>∫|Ψ|²d<i>τ</i>₂…d<i>τ</i><sub><i>N</i></sub>，第 4 讲 p44 会给出这个式子。<b>这是可以被 X 射线衍射实验直接测到的量。</b></td></tr>
+<tr><td><b>自旋密度图</b></td><td>ρ<sub>α</sub>(<b>r</b>) − ρ<sub>β</sub>(<b>r</b>)，未成对电子在哪里（EPR 实验对应）</td></tr>
+<tr><td><b>径向分布函数</b> 4π<i>r</i>²|<i>R</i>(<i>r</i>)|²</td><td>"在半径 <i>r</i> 处的薄球壳内找到电子的概率"。<span class="key">注意多了 4π<i>r</i>² 这个因子</span>——因为球壳的面积随 <i>r</i>² 增长。这就是为什么 1s 的径向分布在 <i>r</i> = <i>a</i>₀ 处有极大值，而不是在 <i>r</i>=0（尽管 |Ψ|² 在 <i>r</i>=0 最大）。</td></tr>
+</table>
+</div>
+</section>
+
+<section class="slide" id="p33">
+<h2><span class="pno">p33–43</span>量子力学的五大公设</h2>
+<div class="warn"><span class="lab">这一段是整个量子力学的"宪法"</span>
+<p>公设 (postulate) = <b>不能被证明、只能被实验检验的基本假设</b>。就像欧几里得几何的五条公理。<span class="key">量子力学的全部内容都从这五条推出来。考试很可能直接考"陈述公设 X"。</span></p>
+</div>
+
+<h3>公设 1（p33–35）：状态由波函数完全描述</h3>
+<div class="tr"><span class="lab">原文翻译（p33）</span>
+<p>一个量子力学粒子的状态由波函数 Ψ(<i>x</i>,<i>t</i>) 完全确定。</p>
+<p>在时刻 <i>t</i>₀、以 <i>x</i>₀ 为中心、宽度为 d<i>x</i> 的空间区间内找到该粒子的概率由下式给出：</p>
+<p><i>P</i>(<i>x</i>₀,<i>t</i>₀)d<i>x</i> = Ψ*(<i>x</i>₀,<i>t</i>₀)Ψ(<i>x</i>₀,<i>t</i>₀)d<i>x</i> = |Ψ(<i>x</i>₀,<i>t</i>₀)|²d<i>x</i></p>
+<p>∫<sub>−∞</sub><sup>+∞</sup> Ψ*(<i>x</i>₀,<i>t</i>₀)Ψ(<i>x</i>₀,<i>t</i>₀)d<i>x</i> = 1</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p34–35）· 对 Ψ 的要求</span>
+<p><b>p34：Ψ 必须是单值函数。</b>（图示：一个函数对几乎每个 <i>x</i> 有两个值 → 不是好波函数；一个函数对每个 <i>x</i> 只有一个值 → 是好波函数）</p>
+<p><b>p35：Ψ 必须是连续函数。</b></p>
+<ul>
+<li><i>f</i>(<i>x</i>) 存在</li>
+<li>lim<sub><i>x</i>→<i>a</i></sub> <i>f</i>(<i>x</i>) 存在，且从大于 <i>a</i> 和小于 <i>a</i> 两侧趋近时值相同</li>
+<li>lim<sub><i>x</i>→<i>a</i></sub> <i>f</i>(<i>x</i>) = <i>f</i>(<i>a</i>)</li>
+<li><b>波函数在给定区间内不能有无穷大的值。</b></li>
+</ul>
+<p>（图示：sin <i>x</i> 是好的；tan <i>x</i> 在 π/2 处发散，是坏的）</p>
+</div>
+<h3>讲解 · 为什么要有这些"品优波函数"条件</h3>
+<table>
+<tr><th style="width:130px">条件</th><th style="width:180px">数学理由</th><th>物理理由</th></tr>
+<tr><td><b>单值</b></td><td>否则 |Ψ|² 不唯一</td><td><span class="key">"在这一点找到电子的概率"必须只有一个答案</span>，不能既是 0.3 又是 0.7</td></tr>
+<tr><td><b>连续</b></td><td>薛定谔方程里有二阶导数，要求 Ψ 和 Ψ′ 都连续</td><td>概率分布不能突然跳变</td></tr>
+<tr><td><b>有限</b></td><td>否则 ∫|Ψ|²d<i>τ</i> 发散，无法归一化</td><td>总概率必须是 1，不能是无穷</td></tr>
+<tr><td><b>平方可积</b></td><td>∫|Ψ|²d<i>τ</i> &lt; ∞</td><td>粒子必须在某处（概率总和有限）</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 正是这些条件产生了量子化</span>
+<p>回到 p13 的讨论。<b>薛定谔方程对任何 <i>E</i> 都有数学解</b>，但只有特定的 <i>E</i> 能给出满足上述条件的解。</p>
+<p><b>具体机制</b>：以氢原子为例，径向方程的通解在 <i>r</i>→∞ 时一般包含一个 e<sup>+<i>κr</i></sup> 的发散项。<span class="key">只有当 <i>E</i> 取特定值时，这个发散项的系数才恰好为零，解才收敛可归一化。</span>那些特定的 <i>E</i> 就是 <i>E</i><sub><i>n</i></sub> = −13.6/<i>n</i>² eV。</p>
+<p><b>所以：量子化 = 微分方程 + 边界条件。</b>它不是额外塞进去的假设，是自然涌现的。这是量子力学最优美的地方之一。</p>
+</div>
+
+<h3>公设 2（p36）：每个可观测量对应一个算符</h3>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>对系统的每一个可测量性质，比如位置、动量和能量，在量子力学中都存在一个对应的算符。</p>
+<p>实验室里测量这样一个可观测量的实验，在理论中由"用相应算符作用在系统波函数上"来模拟。</p>
+</div>
+<p>（具体的算符清单见 p16 和 p29。）</p>
+
+<h3>公设 3（p37）：测量结果只能是本征值</h3>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>在对可观测量（对应算符 <i>Â</i>）做的任何一次单独测量中，能够被测到的值<b>只能是</b>该算符的本征值。</p>
+<p><i>Ĥ</i>Ψ<sub><i>n</i></sub>(<i>x</i>,<i>t</i>) = <i>E</i><sub><i>n</i></sub>Ψ<sub><i>n</i></sub>(<i>x</i>,<i>t</i>)</p>
+</div>
+<div class="warn"><span class="lab">这条公设的分量</span>
+<p><span class="key">这就是"量子化"的正式陈述。</span>你测能量，只能得到 <i>E</i>₁, <i>E</i>₂, <i>E</i>₃… 中的某一个，绝不可能测到 (<i>E</i>₁+<i>E</i>₂)/2。</p>
+<p><b>注意"单独测量 (single measurement)"这个限定词。</b>它和下一条公设（多次测量的平均）形成对比——这是初学者最容易混淆的地方。</p>
+</div>
+
+<h3>公设 4（p38–41）：期望值与叠加原理</h3>
+<div class="tr"><span class="lab">原文翻译（p38）</span>
+<p>如果一个系统处于由波函数 Ψ(<i>x</i>,<i>t</i>) 描述的状态，并且在许多个同样制备的系统上各测量一次可观测量 <i>a</i>，那么所有这些测量的平均值（也叫期望值）由下式给出：</p>
+<p>⟨<i>a</i>⟩ = ∫<sub>−∞</sub><sup>+∞</sup>Ψ*(<i>x</i>,<i>t</i>) <i>Â</i> Ψ(<i>x</i>,<i>t</i>)d<i>x</i> ⁄ ∫<sub>−∞</sub><sup>+∞</sup>Ψ*(<i>x</i>,<i>t</i>)Ψ(<i>x</i>,<i>t</i>)d<i>x</i></p>
+<p>如果 Ψ(<i>x</i>,<i>t</i>) 是归一化的，分母 ∫Ψ*Ψd<i>x</i> = 1</p>
+</div>
+<h3 class="fm">公式解析 · 期望值</h3>
+<div class="fml"><span class="tag">★ 期望值公式（量子化学里所有性质都靠它算）</span>
+⟨<i>a</i>⟩ = ∫ Ψ* <i>Â</i> Ψ d<i>x</i> ⁄ ∫ Ψ* Ψ d<i>x</i>　　（归一化后分母 = 1）
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>⟨<i>a</i>⟩</td><td>期望值</td><td>expectation value。<span class="key">对<b>大量</b>相同制备的体系各测一次，结果的<b>平均</b>。</span>不是单次测量结果！</td></tr>
+<tr><td>分子</td><td>—</td><td>Ψ* 在左，<i>Â</i> 在中，Ψ 在右。<b>顺序不能换</b>（因为 <i>Â</i> 要作用在右边的 Ψ 上）</td></tr>
+<tr><td>分母</td><td>归一化因子</td><td>如果 Ψ 已归一化就是 1，可以省掉。写上是为了对未归一化的 Ψ 也成立。</td></tr>
+</table>
+
+<div class="tr"><span class="lab">原文翻译（p39）· 情形 1</span>
+<p>情形 1：Ψ(<i>x</i>,<i>t</i>) 是算符 <i>Â</i> 的一个归一化本征态，例如 <i>φ</i><sub><i>i</i></sub>(<i>x</i>,<i>t</i>)：<i>Âφ</i><sub><i>i</i></sub> = <i>a</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub></p>
+<p>期望值是：⟨<i>a</i>⟩ = ∫<i>φ</i><sub><i>i</i></sub>*<i>Âφ</i><sub><i>i</i></sub>d<i>x</i> / ∫<i>φ</i><sub><i>i</i></sub>*<i>φ</i><sub><i>i</i></sub>d<i>x</i> = <i>a</i><sub><i>i</i></sub>∫<i>φ</i><sub><i>i</i></sub>*<i>φ</i><sub><i>i</i></sub>d<i>x</i> / ∫<i>φ</i><sub><i>i</i></sub>*<i>φ</i><sub><i>i</i></sub>d<i>x</i> = <b><i>a</i><sub><i>i</i></sub></b></p>
+</div>
+<p><b>解读</b>：如果体系正好处在某个本征态，那每次测量都得同一个值 <i>a</i><sub><i>i</i></sub>，平均值当然也是 <i>a</i><sub><i>i</i></sub>。<span class="key">这时不确定性 Δ<i>a</i> = 0。</span></p>
+
+<div class="tr"><span class="lab">原文翻译（p40）· 情形 2</span>
+<p>情形 2：Ψ(<i>x</i>,<i>t</i>) <b>不是</b> <i>Â</i> 的本征态。那么 Ψ 可以在 <i>Â</i> 的（正交归一的）本征态完备集上展开：</p>
+<p>Ψ(<i>x</i>,<i>t</i>) = Σ<sub><i>n</i></sub> <i>b</i><sub><i>n</i></sub><i>φ</i><sub><i>n</i></sub>(<i>x</i>,<i>t</i>)</p>
+<p>期望值是：</p>
+<p>⟨<i>a</i>⟩ = ∫Ψ*<i>Â</i>Ψd<i>x</i> = ∫[Σ<sub><i>m</i></sub><i>b</i><sub><i>m</i></sub>*<i>φ</i><sub><i>m</i></sub>*][Σ<sub><i>n</i></sub><i>a</i><sub><i>n</i></sub><i>b</i><sub><i>n</i></sub><i>φ</i><sub><i>n</i></sub>]d<i>x</i> = Σ<sub><i>m</i></sub>Σ<sub><i>n</i></sub><i>b</i><sub><i>m</i></sub>*<i>b</i><sub><i>n</i></sub><i>a</i><sub><i>n</i></sub>∫<i>φ</i><sub><i>m</i></sub>*<i>φ</i><sub><i>n</i></sub>d<i>x</i> = Σ<sub><i>n</i></sub><i>b</i><sub><i>n</i></sub>*<i>b</i><sub><i>n</i></sub><i>a</i><sub><i>n</i></sub> = Σ<sub><i>n</i></sub>|<i>b</i><sub><i>n</i></sub>|²<i>a</i><sub><i>n</i></sub></p>
+<ul>
+<li><i>b</i><sub><i>n</i></sub> = 本征态 <i>n</i> 在 Ψ 中的展开系数</li>
+<li>|<i>b</i><sub><i>n</i></sub>|² = 本征态 <i>n</i> 在 Ψ 中的<b>权重</b></li>
+</ul>
+</div>
+<div class="step"><div class="sh">这个推导的关键一步在哪里</div>
+<p>整个推导只用了一个技巧：<b>正交归一性 ∫<i>φ</i><sub><i>m</i></sub>*<i>φ</i><sub><i>n</i></sub>d<i>x</i> = <i>δ</i><sub><i>mn</i></sub>。</b></p>
+<p>双重求和 Σ<sub><i>m</i></sub>Σ<sub><i>n</i></sub> 本来有 <i>N</i>² 项，但因为 <i>δ</i><sub><i>mn</i></sub> 只在 <i>m</i>=<i>n</i> 时非零，<span class="key">所有交叉项（<i>m</i>≠<i>n</i>）全部死掉</span>，只剩对角项 <i>N</i> 个。</p>
+<p><b>这个"正交性杀死交叉项"的套路，在本讲后面会反复出现</b>——p42 的 Slater 行列式能量、p83 的 <i>J</i>/<i>K</i> 积分推导，全都是同一个技巧。</p>
+</div>
+<div class="fml"><span class="tag">★ 期望值 = 加权平均</span>
+⟨<i>a</i>⟩ = Σ<sub><i>n</i></sub> |<i>b</i><sub><i>n</i></sub>|² <i>a</i><sub><i>n</i></sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>b</i><sub><i>n</i></sub></td><td>展开系数（概率幅）</td><td>复数。本身<b>不是</b>概率。</td></tr>
+<tr><td>|<i>b</i><sub><i>n</i></sub>|²</td><td>概率 / 权重</td><td><span class="key">测量得到 <i>a</i><sub><i>n</i></sub> 的概率。</span>满足 Σ|<i>b</i><sub><i>n</i></sub>|² = 1。</td></tr>
+<tr><td><i>a</i><sub><i>n</i></sub></td><td>本征值</td><td>可能的测量结果</td></tr>
+</table>
+
+<h3>公设 4 的推论：叠加原理（p41–42）</h3>
+<div class="tr"><span class="lab">原文翻译（p41）</span>
+<p>在测量之前，粒子的波函数是未知的。它最好被表示成"与每个能级相关的所有可能波函数的组合"。</p>
+<ul>
+<li><b>期望值是一个加权平均</b></li>
+<li><b>单次测量 = 只能得到一个本征值</b></li>
+<li>我们需要很多次测量才能找到所有 <i>b</i><sub><i>n</i></sub> 的值</li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p42）· 薛定谔的猫</span>
+<p>Ψ<sub>猫</sub> = Ψ<sub>活</sub> + Ψ<sub>非活</sub></p>
+<p><b>量子力学中的测量过程是"主动的"：测量时我们把波函数<u>塌缩</u>到被测性质的算符的某个本征值上！</b>初始波函数因此被摧毁（波函数中包含的所有其他信息都丢失了）。</p>
+<p>爱因斯坦关于测量在量子力学中重要性的一个提问："你真的认为，当我们不看月亮的时候，月亮就不在那里吗？"</p>
+<p>薛定谔猫佯谬：把一只猫和一瓶毒气放进盒子。毒气可以被一个机制随机释放。在打开盒子之前，我们不知道猫是死是活。"打开盒子" = 量子力学中的测量过程。如果重复这个测量很多次，那么大约 50% 的情况下猫是活的。</p>
+</div>
+<div class="warn"><span class="lab">"叠加"的正确理解</span>
+<p><b>错误理解</b>：❌ "猫要么是活的要么是死的，只是我们不知道。"（这是经典的无知，不是量子叠加）</p>
+<p><b>正确理解</b>：<span class="key">✔ 在测量之前，猫<b>处于一个既不是活也不是死的新状态</b>，这个状态由 Ψ<sub>活</sub> 和 Ψ<sub>死</sub> 的<b>相干叠加</b>描述。</span></p>
+<p><b>怎么区分这两者</b>：靠<b>干涉</b>。如果只是"我们不知道"，两种可能性就是简单相加，不会干涉；如果是真正的量子叠加，两个分支之间会产生干涉条纹（双缝实验就是证据）。</p>
+<p><b>为什么现实中的猫不会处于叠加态</b>：<b>退相干 (decoherence)</b>。一个宏观物体与环境（空气分子、光子、热辐射）有海量的相互作用，叠加态在 10⁻²⁰ 秒内就被"测量"掉了。所以薛定谔的猫是一个思想实验，不是可实现的实验。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 叠加原理在量子化学里的具体化身</span>
+<p>不要以为叠加只是哲学问题——<span class="key">它是第 4 讲整讲的技术基础。</span></p>
+<table>
+<tr><th style="width:200px">叠加的形式</th><th>在哪里出现</th></tr>
+<tr><td><b>轨道</b>是原子轨道的叠加</td><td>LCAO：<i>φ</i><sub><i>i</i></sub> = Σ<i>c</i><sub><i>iα</i></sub><i>χ</i><sub><i>α</i></sub>（p86）</td></tr>
+<tr><td><b>波函数</b>是 Slater 行列式的叠加</td><td>CI / CASSCF：Ψ = <i>a</i>₀Ψ<sub>HF</sub> + Σ<i>a</i><sub><i>i</i></sub><sup><i>r</i></sup>Ψ<sub><i>i</i></sub><sup><i>r</i></sup> + …（第 4 讲 p7）</td></tr>
+<tr><td>B 原子基态是<b>三个</b>行列式的叠加</td><td>第 3 讲 p50——HF 用<b>一个</b>行列式，所以对 B 原子从根本上不合适</td></tr>
+</table>
+<p><b>"权重 |<i>b</i><sub><i>n</i></sub>|²"这个概念，在第 4 讲 p16 会直接出现</b>（Ne 原子各激发级别的权重表），你会看到基态行列式占 0.96，双激发占 0.034，其余都很小——这解释了为什么 CISD（只到双激发）就已经足够好。</p>
+</div>
+
+<h3>公设 5（p43）：时间演化</h3>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>量子力学系统随时间的演化由含时薛定谔方程支配：</p>
+<p><i>Ĥ</i>Ψ<sub><i>n</i></sub>(<i>x</i>,<i>t</i>) = <i>iħ</i>·∂Ψ<sub><i>n</i></sub>(<i>x</i>,<i>t</i>)/∂<i>t</i></p>
+</div>
+<p>这条公设在本课的用处主要是理论完备性。<b>本课绝大部分内容处理的是定态（不含时），所以用的是公设 3 里的 <i>Ĥψ</i> = <i>Eψ</i>。</b>含时方程会在讲 TD-DFT（激发态）和分子动力学时才真正用到。</p>
+</section>
+
+<section class="slide" id="p44">
+<h2><span class="pno">p44–45</span>氢原子：唯一能精确求解的量子体系</h2>
+<div class="tr"><span class="lab">原文翻译（p44）</span>
+<p><b>氢原子——唯一可以被精确（解析）求解的量子系统。</b></p>
+<p>两个电荷之间的库仑相互作用：</p>
+<p><i>V</i> = (1/4π<i>ε</i>₀) · <i>Q</i>₁<i>Q</i>₂ / |<b>r</b>₁ − <b>r</b>₂|</p>
+<ul>
+<li><i>Q</i><sub><i>i</i></sub> = 第 <i>i</i> 个电荷的大小</li>
+<li><b>r</b><sub><i>i</i></sub> = 第 <i>i</i> 个电荷在空间中的位置</li>
+<li>|<b>r</b>₁ − <b>r</b>₂| = 两个电荷之间的距离</li>
+<li><i>ε</i>₀ = 常数，真空介电常数</li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p45）· 球坐标系</span>
+<p>球极坐标：</p>
+<p><i>x</i> = <i>r</i> sin<i>θ</i> cos<i>φ</i>　；　<i>y</i> = <i>r</i> sin<i>θ</i> sin<i>φ</i>　；　<i>z</i> = <i>r</i> cos<i>θ</i></p>
+<p><i>r</i>² = <i>x</i>² + <i>y</i>² + <i>z</i>²　；　cos<i>θ</i> = <i>z</i>/√(<i>x</i>²+<i>y</i>²+<i>z</i>²)　；　tan<i>φ</i> = <i>y</i>/<i>x</i></p>
+</div>
+
+<h3 class="fm">公式解析 · 库仑势</h3>
+<div class="fml"><span class="tag">★ 库仑相互作用（本课唯一的相互作用）</span>
+<i>V</i> = (1 / 4π<i>ε</i><sub>0</sub>) · <i>Q</i><sub>1</sub><i>Q</i><sub>2</sub> / |<b>r</b><sub>1</sub> − <b>r</b><sub>2</sub>|
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>V</i></td><td>势能</td><td>单位 J。<b>同号电荷 <i>V</i> &gt; 0（排斥），异号 <i>V</i> &lt; 0（吸引）</b></td></tr>
+<tr><td><i>Q</i><sub>1</sub>, <i>Q</i><sub>2</sub></td><td>电荷量</td><td>对电子 <i>Q</i> = −<i>e</i>，对原子核 <i>Q</i> = +<i>Ze</i></td></tr>
+<tr><td><i>ε</i><sub>0</sub></td><td>真空介电常数</td><td>希腊字母 epsilon-zero。8.854×10⁻¹² F/m。<span class="key">在<b>原子单位</b>下这一整个前置因子 1/4π<i>ε</i>₀ = 1，所以你在讲义后面（p56、p77）会看到势能直接写成 −<i>Z</i>/<i>r</i>。</span></td></tr>
+<tr><td>|<b>r</b><sub>1</sub>−<b>r</b><sub>2</sub>|</td><td>距离</td><td>两个粒子的间距（正数）。<span class="key">分母上的这个距离就是全部麻烦的根源</span>——它把两个粒子的坐标锁死在一起，无法分离变量。</td></tr>
+</table>
+
+<div class="ext"><span class="lab">拓展 · 原子单位 (atomic units, a.u.)：为什么公式突然变干净了</span>
+<p>你会发现讲义从 p56 开始，哈密顿量突然变成 <i>Ĥ</i> = −½∇² − 2/<i>r</i>，所有常数都不见了。这不是笔误，是换了单位制。</p>
+<table>
+<tr><th style="width:130px">物理量</th><th style="width:200px">原子单位的定义</th><th>换算</th></tr>
+<tr><td>质量</td><td><i>m</i><sub>e</sub> = 1</td><td>9.109×10⁻³¹ kg</td></tr>
+<tr><td>电荷</td><td><i>e</i> = 1</td><td>1.602×10⁻¹⁹ C</td></tr>
+<tr><td>作用量</td><td><i>ħ</i> = 1</td><td>1.055×10⁻³⁴ J·s</td></tr>
+<tr><td>库仑常数</td><td>4π<i>ε</i>₀ = 1</td><td>—</td></tr>
+<tr><td><b>长度</b></td><td><b>1 Bohr</b> (<i>a</i>₀)</td><td>0.529177 Å = 5.29177×10⁻¹¹ m</td></tr>
+<tr><td><b>能量</b></td><td><b>1 Hartree</b> (E<sub>h</sub>)</td><td>27.2114 eV = 627.51 kcal/mol = 2625.5 kJ/mol</td></tr>
+</table>
+<p><span class="key">这不只是"省事"——它还是数值稳定性的需要。</span>用 SI 单位算，电子质量是 10⁻³¹，能量是 10⁻¹⁸，浮点数在这些量级上做加减会损失精度。用原子单位，所有量都在 1 附近。</p>
+<p><b>你必须记住的换算</b>：1 Hartree = 27.2 eV；<b>1 kcal/mol = 0.0016 Hartree</b>（"化学精度"的门槛）；1 Bohr = 0.529 Å。看 Gaussian 输出时，能量默认是 Hartree，坐标默认是 Å。</p>
+</div>
+
+<h3>讲解 · 为什么要换成球坐标</h3>
+<figure>
+<svg viewBox="0 0 460 230" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.ax{stroke:#9aa5b1;stroke-width:1.2}.lb{font-size:12.5px;fill:#1c1c1e}.sm{font-size:11.5px;fill:#6b6b70}</style>
+<marker id="av" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#9aa5b1"/></marker></defs>
+<line x1="140" y1="180" x2="140" y2="30" class="ax" marker-end="url(#av)"/>
+<line x1="140" y1="180" x2="330" y2="180" class="ax" marker-end="url(#av)"/>
+<line x1="140" y1="180" x2="55" y2="215" class="ax" marker-end="url(#av)"/>
+<text x="132" y="26" class="sm">z</text><text x="336" y="184" class="sm">y</text><text x="48" y="222" class="sm">x</text>
+<line x1="140" y1="180" x2="248" y2="72" stroke="#0b5ea8" stroke-width="2"/>
+<circle cx="248" cy="72" r="5" fill="#c0392b"/>
+<text x="258" y="68" class="lb" fill="#c0392b">电子 (r, θ, φ)</text>
+<circle cx="140" cy="180" r="6" fill="#1c1c1e"/>
+<text x="112" y="196" class="sm">核</text>
+<path d="M140,120 A 60,60 0 0,1 178,133" fill="none" stroke="#b3541e" stroke-width="1.4"/>
+<text x="163" y="118" class="sm" fill="#b3541e">θ</text>
+<line x1="140" y1="180" x2="248" y2="180" stroke="#c9d4de" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="248" y1="72" x2="248" y2="180" stroke="#c9d4de" stroke-width="1" stroke-dasharray="3,3"/>
+<path d="M170,180 A 30,30 0 0,0 158,192" fill="none" stroke="#2c6e4f" stroke-width="1.4"/>
+<text x="176" y="199" class="sm" fill="#2c6e4f">φ</text>
+<text x="200" y="112" class="sm" fill="#0b5ea8">r</text>
+<text x="230" y="216" class="sm" text-anchor="middle">V 只依赖 r，与 θ、φ 无关 ⟹ 球对称</text>
+</svg>
+<figcaption>球坐标：<i>r</i> 是到核的距离，<i>θ</i> 是极角（从 z 轴量起，0~π），<i>φ</i> 是方位角（在 xy 面内，0~2π）</figcaption>
+</figure>
+<div class="step"><div class="sh">理由只有一个：让势能只依赖一个变量</div>
+<p>在笛卡尔坐标下，氢原子的势能是</p>
+<div class="fml" style="font-size:15px"><i>V</i> = −<i>e</i>²/(4π<i>ε</i>₀√(<i>x</i>²+<i>y</i>²+<i>z</i>²))　—— <b>三个变量纠缠在一起</b></div>
+<p>换成球坐标后：</p>
+<div class="fml" style="font-size:15px"><i>V</i> = −<i>e</i>²/(4π<i>ε</i>₀<i>r</i>)　—— <b>只依赖 <i>r</i>，与 <i>θ</i>、<i>φ</i> 完全无关</b></div>
+<p><span class="key">势能与角度无关 ⟹ 波函数可以写成"径向部分 × 角度部分"的乘积 ⟹ 三维偏微分方程被拆成三个一维常微分方程。</span>这就是 p52 要做的事，也是氢原子能被精确求解的唯一原因。</p>
+</div>
+</section>
+
+<section class="slide" id="p46">
+<h2><span class="pno">p46–52</span>中心力场问题：氢原子求解的完整逻辑链</h2>
+<div class="warn"><span class="lab">这 7 页是一条完整的推导链，先看结构再看细节</span>
+<ol>
+<li><b>p46–47</b>：定义"中心力"，写出哈密顿量 <i>Ĥ</i> = −(<i>ħ</i>²/2<i>m</i><sub>e</sub>)∇² + <i>V</i>(<i>r</i>)</li>
+<li><b>p48–49</b>：把 ∇² 在球坐标下展开，<span class="key">发现其中的角度部分恰好就是角动量算符 <i>L̂</i>²</span></li>
+<li><b>p50</b>：证明 [<i>Ĥ</i>,<i>L̂</i>²] = 0 和 [<i>Ĥ</i>,<i>L̂</i><sub><i>z</i></sub>] = 0</li>
+<li><b>p51</b>：因此三者有共同本征函数 ⟹ 得到量子数 <i>l</i> 和 <i>m</i></li>
+<li><b>p52</b>：分离变量，<i>Ψ</i> = <i>R</i>(<i>r</i>)·<i>Y</i><sub><i>l</i></sub><sup><i>m</i></sup>(<i>θ</i>,<i>φ</i>)，得到径向方程</li>
+</ol>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p46–47）</span>
+<p><b>中心力</b>是从球对称势能函数导出的力。</p>
+<p><b>F</b>(<i>x</i>,<i>y</i>,<i>z</i>) = −∇<i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>) = −(∂<i>V</i>/∂<i>x</i>)<b>i</b> − (∂<i>V</i>/∂<i>y</i>)<b>j</b> − (∂<i>V</i>/∂<i>z</i>)<b>k</b></p>
+<p>其中 (<b>i</b>,<b>j</b>,<b>k</b>) 是沿三个笛卡尔轴的单位向量。</p>
+<p><i>V</i>(<i>x</i>,<i>y</i>,<i>z</i>) 只是 <i>r</i> = √(<i>x</i>²+<i>y</i>²+<i>z</i>²) 的函数 ⟹ 转到球坐标系 (<i>r</i>,<i>θ</i>,<i>φ</i>)</p>
+<p><i>V</i> 的偏导数是：∂<i>V</i>/∂<i>x</i> = (∂<i>V</i>/∂<i>r</i>)(∂<i>r</i>/∂<i>x</i>) = (<i>x</i>/<i>r</i>)(∂<i>V</i>/∂<i>r</i>)，其余类推。</p>
+<p>代入力的方程（p47）：</p>
+<p><b>F</b> = −(1/<i>r</i>)(∂<i>V</i>/∂<i>r</i>)(<i>x</i><b>i</b>+<i>y</i><b>j</b>+<i>z</i><b>k</b>) = −(d<i>V</i>(<i>r</i>)/d<i>r</i>)·(<b>r</b>/<i>r</i>)</p>
+<p><b>中心力是沿径向的。</b></p>
+<p>处于中心力场中的一个电子的量子力学哈密顿量是：</p>
+<p><i>Ĥ</i> = <i>K̂</i> + <i>V̂</i> = −(<i>ħ</i>²/2<i>m</i><sub>e</sub>)∇² + <i>V</i>(<i>r</i>)，其中 ∇² = ∂²/∂<i>x</i>² + ∂²/∂<i>y</i>² + ∂²/∂<i>z</i>²</p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p48–49）· 拉普拉斯算符的球坐标形式</span>
+<p>在球坐标系 (<i>r</i>,<i>θ</i>,<i>φ</i>) 中，梯度 ∇ 是：</p>
+<p>∂/∂<i>x</i> = sin<i>θ</i>cos<i>φ</i>(∂/∂<i>r</i>) + (cos<i>θ</i>cos<i>φ</i>/<i>r</i>)(∂/∂<i>θ</i>) − (sin<i>φ</i>/(<i>r</i>sin<i>θ</i>))(∂/∂<i>φ</i>)</p>
+<p>∂/∂<i>y</i> = sin<i>θ</i>sin<i>φ</i>(∂/∂<i>r</i>) + (cos<i>θ</i>sin<i>φ</i>/<i>r</i>)(∂/∂<i>θ</i>) + (cos<i>φ</i>/(<i>r</i>sin<i>θ</i>))(∂/∂<i>φ</i>)</p>
+<p>∂/∂<i>z</i> = cos<i>θ</i>(∂/∂<i>r</i>) − (sin<i>θ</i>/<i>r</i>)(∂/∂<i>θ</i>)</p>
+<p>把上面三个偏导数平方后相加，得到球坐标下的拉普拉斯算符：</p>
+<p>∇² = ∂²/∂<i>r</i>² + (2/<i>r</i>)(∂/∂<i>r</i>) + (1/<i>r</i>²)(∂²/∂<i>θ</i>²) + (1/<i>r</i>²)cot<i>θ</i>(∂/∂<i>θ</i>) + (1/(<i>r</i>²sin²<i>θ</i>))(∂²/∂<i>φ</i>²)</p>
+<p>另一方面，角动量平方算符是：</p>
+<p><i>L̂</i>² = −<i>ħ</i>²[∂²/∂<i>θ</i>² + cot<i>θ</i>(∂/∂<i>θ</i>) + (1/sin²<i>θ</i>)(∂²/∂<i>φ</i>²)]</p>
+<p>因此拉普拉斯算符可以写成：</p>
+<p><b>∇² = ∂²/∂<i>r</i>² + (2/<i>r</i>)(∂/∂<i>r</i>) − (1/(<i>r</i>²<i>ħ</i>²))<i>L̂</i>²</b></p>
+<p>哈密顿量变成：</p>
+<p><i>Ĥ</i> = −(<i>ħ</i>²/2<i>m</i><sub>e</sub>)[∂²/∂<i>r</i>² + (2/<i>r</i>)(∂/∂<i>r</i>) − (1/(<i>r</i>²<i>ħ</i>²))<i>L̂</i>²] + <i>V</i>(<i>r</i>)</p>
+</div>
+
+<h3>讲解 · p48–49 这一步的意义（不要被公式吓到，重点是结构）</h3>
+<div class="step"><div class="sh">把那一大坨拉普拉斯算符按"是否含角度"分成两组</div>
+<div class="fml" style="font-size:16px;line-height:2.1">
+∇² = <span style="color:#0b5ea8">[ ∂²/∂<i>r</i>² + (2/<i>r</i>)∂/∂<i>r</i> ]</span> &nbsp;+&nbsp; (1/<i>r</i>²)·<span style="color:#b3541e">[ ∂²/∂<i>θ</i>² + cot<i>θ</i>·∂/∂<i>θ</i> + (1/sin²<i>θ</i>)∂²/∂<i>φ</i>² ]</span><br>
+<span style="font-size:13px;font-style:normal;color:#6b6b70">　　　　　　<span style="color:#0b5ea8">只含 r 的部分</span>　　　　　　　　　　　<span style="color:#b3541e">只含角度的部分 = −<i>L̂</i>²/<i>ħ</i>²</span></span>
+</div>
+<p><span class="key">橙色那一坨，正好就是 −<i>L̂</i>²/<i>ħ</i>²。</span>这不是巧合——角动量本来就是描述"转动"的量，而 <i>θ</i>、<i>φ</i> 正是描述转动的坐标。</p>
+</div>
+<div class="fml"><span class="tag">★ 中心力场哈密顿量的最终形式（p50）</span>
+<i>Ĥ</i> = −(<i>ħ</i>²/2<i>m</i><sub>e</sub>)[ ∂²/∂<i>r</i>² + (2/<i>r</i>)∂/∂<i>r</i> ] &nbsp;+&nbsp; <i>L̂</i>²/(2<i>m</i><sub>e</sub><i>r</i>²) &nbsp;+&nbsp; <i>V</i>(<i>r</i>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>第 1 项</td><td>径向动能</td><td>电子沿半径方向"进出"的动能</td></tr>
+<tr><td>第 2 项</td><td>离心项 / 角动能</td><td><span class="key"><i>L̂</i>²/(2<i>m</i><sub>e</sub><i>r</i>²) 就是转动动能</span>（对比经典的 <i>L</i>²/2<i>I</i>，其中转动惯量 <i>I</i> = <i>m</i><sub>e</sub><i>r</i>²）</td></tr>
+<tr><td>第 3 项</td><td>库仑势能</td><td>−<i>Ze</i>²/(4π<i>ε</i>₀<i>r</i>)</td></tr>
+<tr><td><i>m</i><sub>e</sub></td><td>电子质量</td><td>严格说应该用<b>约化质量</b> <i>μ</i> = <i>m</i><sub>e</sub><i>m</i><sub>N</sub>/(<i>m</i><sub>e</sub>+<i>m</i><sub>N</sub>)，但因为核比电子重 1800 倍以上，<i>μ</i> ≈ <i>m</i><sub>e</sub></td></tr>
+<tr><td>cot<i>θ</i></td><td>余切</td><td>= cos<i>θ</i>/sin<i>θ</i></td></tr>
+</table>
+
+<div class="tr"><span class="lab">原文翻译（p50）· 关键的对易关系</span>
+<p>我们注意到以下对易性质：</p>
+<p>[<i>Ĥ</i>, <i>L̂</i>²] = [<i>K̂</i>, <i>L̂</i>²] + [<i>V̂</i>, <i>L̂</i>²] = 0，　若 <i>V</i> = <i>V</i>(<i>r</i>)</p>
+<p>由于 <i>L̂</i><sub><i>z</i></sub> = −<i>iħ</i>(∂/∂<i>φ</i>)，我们还注意到：</p>
+<p>[<i>Ĥ</i>, <i>L̂</i><sub><i>z</i></sub>] = [<i>K̂</i>, <i>L̂</i><sub><i>z</i></sub>] + [<i>V̂</i>, <i>L̂</i><sub><i>z</i></sub>] = 0，　若 <i>V</i> = <i>V</i>(<i>r</i>)</p>
+<p>练习：证明上面两个表达式。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 这两个对易关系为什么成立（讲义留作练习，这里做掉）</span>
+<div class="step"><div class="sh">[<i>V̂</i>, <i>L̂</i><sub><i>z</i></sub>] = 0 —— 一行就够</div>
+<p><i>L̂</i><sub><i>z</i></sub> = −<i>iħ</i>∂/∂<i>φ</i>，而 <i>V</i> 只依赖 <i>r</i>，<b><i>V</i> 对 <i>φ</i> 的导数为零</b>：</p>
+<p>[<i>V</i>, <i>L̂</i><sub><i>z</i></sub>]<i>ψ</i> = <i>V</i>(−<i>iħ</i>∂<i>ψ</i>/∂<i>φ</i>) − (−<i>iħ</i>)∂(<i>Vψ</i>)/∂<i>φ</i> = −<i>iħ</i>[<i>V</i>∂<i>ψ</i>/∂<i>φ</i> − <i>V</i>∂<i>ψ</i>/∂<i>φ</i> − <i>ψ</i>·<b>∂<i>V</i>/∂<i>φ</i></b>] = <i>iħψ</i>·<b>0</b> = 0　∎</p>
+</div>
+<div class="step"><div class="sh">[<i>K̂</i>, <i>L̂</i>²] = 0 —— 用结构论证</div>
+<p>把 <i>K̂</i> 写成 p50 的形式：径向部分 + <i>L̂</i>²/(2<i>m</i><sub>e</sub><i>r</i>²)。</p>
+<ul>
+<li><b>径向部分</b>只含 ∂/∂<i>r</i>，而 <i>L̂</i>² 只含 ∂/∂<i>θ</i>、∂/∂<i>φ</i>。<span class="key">对不同变量的偏导数彼此对易</span>（混合偏导与顺序无关），所以这部分与 <i>L̂</i>² 对易。</li>
+<li><b><i>L̂</i>²/(2<i>m</i><sub>e</sub><i>r</i>²) 部分</b>：显然 [<i>L̂</i>², <i>L̂</i>²] = 0（任何算符与自己对易），而 1/<i>r</i>² 只含 <i>r</i>，与 <i>L̂</i>² 对易。</li>
+</ul>
+<p>所以整体对易　∎</p>
+</div>
+<p><b>物理本质</b>：<span class="key">这两个对易关系是<b>球对称性</b>的数学表达。</span>Noether 定理告诉我们：连续对称性 ⟺ 守恒量。球对称（哈密顿量在任意转动下不变）⟺ 角动量守恒 ⟺ [<i>Ĥ</i>,<i>L̂</i>] = 0。</p>
+<p><b>推论（极其重要）</b>：一旦体系不再球对称，这些对易关系就失效，<i>l</i> 和 <i>m</i> 就不再是"好量子数"。<b>分子里就是这种情况</b>——分子没有球对称性，所以分子轨道不能用 <i>s</i>、<i>p</i>、<i>d</i> 标记，只能用点群的不可约表示（<i>a</i>₁、<i>b</i>₂、<i>e</i>、<i>t</i>₂<sub>g</sub>…）标记。p57 会讲一个类似的失效：He 原子里 1/<i>r</i>₁₂ 破坏了单电子角动量的守恒。</p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p51）· 三个算符的共同本征态</span>
+<p>作为这两个对易关系的结果：[<i>Ĥ</i>,<i>L̂</i>²] = [<i>Ĥ</i>,<i>L̂</i><sub><i>z</i></sub>] = 0（若 <i>V</i> = <i>V</i>(<i>r</i>)）</p>
+<p>对中心力场中的粒子，算符 <i>Ĥ</i>、<i>L̂</i>²、<i>L̂</i><sub><i>z</i></sub> 有一组<b>共同的本征态</b>！因此下列方程都成立：</p>
+<p><i>Ĥ</i>Ψ = <i>E</i>Ψ</p>
+<p><i>L̂</i>²Ψ = <i>l</i>(<i>l</i>+1)<i>ħ</i>²Ψ，　<i>l</i> = 0, 1, 2, 3, …</p>
+<p><i>L̂</i><sub><i>z</i></sub>Ψ = <i>mħ</i>Ψ，　<i>m</i> = −<i>l</i>, −<i>l</i>+1, −<i>l</i>+2, …, <i>l</i>−2, <i>l</i>−1, <i>l</i></p>
+<p>哈密顿算符可以重写为：</p>
+<p><i>Ĥ</i> = −(<i>ħ</i>²/2<i>m</i><sub>e</sub>)[∂²/∂<i>r</i>² + (2/<i>r</i>)∂/∂<i>r</i>] + (<i>ħ</i>²/2<i>m</i><sub>e</sub>)·<i>l</i>(<i>l</i>+1)/<i>r</i>² + <i>V</i>(<i>r</i>)</p>
+</div>
+
+<h3 class="fm">公式解析 · 三个量子数从哪来（这是本页最重要的内容）</h3>
+<table class="vars">
+<tr><th>量子数</th><th>名称</th><th>来源与取值</th></tr>
+<tr><td><i>n</i></td><td>主量子数<br>principal</td><td><b>来自径向方程的边界条件</b>（p52 之后的求解）。<i>n</i> = 1, 2, 3, …　<span class="key">决定能量和轨道大小。</span>氢原子：<i>E</i><sub><i>n</i></sub> = −13.6/<i>n</i>² eV。</td></tr>
+<tr><td><i>l</i></td><td>角量子数<br>azimuthal</td><td><b>来自 <i>L̂</i>² 的本征值方程。</b><i>l</i> = 0,1,2,…,<i>n</i>−1　<span class="key">决定轨道形状。</span><i>l</i>=0→s（球形），1→p（哑铃），2→d，3→f。</td></tr>
+<tr><td><i>m</i>（或 <i>m</i><sub><i>l</i></sub>）</td><td>磁量子数</td><td><b>来自 <i>L̂</i><sub><i>z</i></sub> 的本征值方程。</b><i>m</i> = −<i>l</i>…+<i>l</i>，共 <b>2<i>l</i>+1</b> 个值。<span class="key">决定轨道在空间中的取向。</span>比如 <i>l</i>=1 有 <i>m</i> = −1,0,+1 三个 → 2p<sub>x</sub>, 2p<sub>y</sub>, 2p<sub>z</sub>。</td></tr>
+<tr><td><i>m</i><sub><i>s</i></sub></td><td>自旋磁量子数</td><td><b>不来自这里</b>——自旋不是空间运动，p63 才引入。<i>m</i><sub><i>s</i></sub> = ±½</td></tr>
+</table>
+<div class="warn"><span class="lab">一个容易记混的点：<i>L</i> 的大小是 √[<i>l</i>(<i>l</i>+1)]·<i>ħ</i>，不是 <i>lħ</i></span>
+<p>本征值方程是 <i>L̂</i>²Ψ = <b><i>l</i>(<i>l</i>+1)<i>ħ</i>²</b>Ψ，所以角动量的<b>大小</b>是 |<b>L</b>| = √[<i>l</i>(<i>l</i>+1)]·<i>ħ</i>。</p>
+<p>而 <i>z</i> 分量的最大值只有 <i>lħ</i>。因为 √[<i>l</i>(<i>l</i>+1)] &gt; <i>l</i>，<span class="key">角动量矢量永远不可能完全对齐 <i>z</i> 轴</span>——这正是不确定性原理的体现（如果完全对齐，<i>L</i><sub><i>x</i></sub> 和 <i>L</i><sub><i>y</i></sub> 就都确定为 0 了，违反 [<i>L̂</i><sub><i>x</i></sub>,<i>L̂</i><sub><i>y</i></sub>] ≠ 0）。</p>
+<p>例：<i>l</i> = 1 时，|<b>L</b>| = √2·<i>ħ</i> ≈ 1.41<i>ħ</i>，但 <i>L</i><sub><i>z</i></sub> 最大只能是 1<i>ħ</i>。</p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p52）· 分离变量</span>
+<p><i>L̂</i>² 算符的本征态是<b>球谐函数</b> <i>Y</i><sub><i>l</i></sub><sup><i>m</i></sup>(<i>θ</i>,<i>φ</i>)。由于算符 <i>L̂</i>² 不涉及 <i>r</i>，哈密顿量的解可以写成球谐函数与一个径向函数 <i>R</i>(<i>r</i>) 的乘积：</p>
+<p><b>Ψ = <i>R</i>(<i>r</i>)·<i>Y</i><sub><i>l</i></sub><sup><i>m</i></sup>(<i>θ</i>,<i>φ</i>)</b> = <i>R</i>(<i>r</i>)·√[(2<i>l</i>+1)/4π · (<i>l</i>−<i>m</i>)!/(<i>l</i>+<i>m</i>)!]·<i>P</i><sub><i>l</i></sub><sup><i>m</i></sup>(cos<i>θ</i>)·e<sup><i>imφ</i></sup></p>
+<p>把这个形式的 Ψ 代入哈密顿算符，并把两边同除以 <i>Y</i><sub><i>l</i></sub><sup><i>m</i></sup>(<i>θ</i>,<i>φ</i>)：</p>
+<p>−(<i>ħ</i>²/2<i>m</i><sub>e</sub>)[∂²/∂<i>r</i>² + (2/<i>r</i>)∂/∂<i>r</i> − <i>l</i>(<i>l</i>+1)/<i>r</i>²]<i>R</i>(<i>r</i>) + <i>V</i>(<i>r</i>)<i>R</i>(<i>r</i>) = <i>ER</i>(<i>r</i>)</p>
+<p><b>对任何在球对称势 <i>V</i>(<i>r</i>) 中的单粒子问题，定态波函数都是 <i>R</i>(<i>r</i>)<i>Y</i><sub><i>l</i></sub><sup><i>m</i></sup>(<i>θ</i>,<i>φ</i>)，其中径向函数 <i>R</i>(<i>r</i>) 满足上面的微分方程。</b></p>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Y</i><sub><i>l</i></sub><sup><i>m</i></sup>(<i>θ</i>,<i>φ</i>)</td><td>球谐函数</td><td>spherical harmonics。<span class="key">决定轨道的<b>形状和取向</b>。</span>所有中心力场问题共用同一套 <i>Y</i>，与 <i>V</i>(<i>r</i>) 的具体形式无关。</td></tr>
+<tr><td><i>R</i>(<i>r</i>)</td><td>径向函数</td><td><span class="key">决定轨道的<b>大小和节面数</b>。</span>它<b>依赖</b>于 <i>V</i>(<i>r</i>) 的具体形式——所以氢原子和其它中心力场问题的 <i>R</i> 不同。</td></tr>
+<tr><td><i>P</i><sub><i>l</i></sub><sup><i>m</i></sup>(cos<i>θ</i>)</td><td>连带 Legendre 多项式</td><td>球谐函数中管 <i>θ</i> 的那部分，是一族已知的标准函数</td></tr>
+<tr><td>e<sup><i>imφ</i></sup></td><td>方位角部分</td><td><span class="key">这就是 <i>L̂</i><sub><i>z</i></sub> = −<i>iħ</i>∂/∂<i>φ</i> 的本征函数</span>——求一次导得 <i>im</i>，乘 −<i>iħ</i> 得 <i>mħ</i>　✔</td></tr>
+<tr><td><i>l</i>(<i>l</i>+1)/<i>r</i>²</td><td>离心势垒</td><td>见下面的拓展</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · "离心势垒"解释了一个你早就知道但不知道为什么的事实</span>
+<p>径向方程里那一项 +(<i>ħ</i>²/2<i>m</i><sub>e</sub>)·<i>l</i>(<i>l</i>+1)/<i>r</i>²，符号是<b>正</b>的（排斥性的），而且随 <i>l</i> 增大而增大。它叫<b>离心势垒 (centrifugal barrier)</b>。</p>
+<p>它把有效势变成：<i>V</i><sub>eff</sub>(<i>r</i>) = −<i>Ze</i>²/(4π<i>ε</i>₀<i>r</i>) + <i>ħ</i>²<i>l</i>(<i>l</i>+1)/(2<i>m</i><sub>e</sub><i>r</i>²)</p>
+<p><span class="key">在 <i>r</i>→0 处，1/<i>r</i>² 比 1/<i>r</i> 发散得更快，所以离心项占绝对优势——把电子"推离"原子核。</span></p>
+<p><b>后果</b>：只有 <i>l</i> = 0（s 轨道）没有离心势垒，所以<b>只有 s 电子能真正到达原子核处</b>（<i>ψ</i>(0) ≠ 0）；p、d、f 电子在核处波函数为零。</p>
+<p>这直接解释了三件事：</p>
+<ol>
+<li><b>p75 的"轨道穿透能力 s &gt; p &gt; d &gt; f"</b>——正是离心势垒的强弱顺序，所以 <i>E</i><sub><i>ns</i></sub> &lt; <i>E</i><sub><i>np</i></sub> &lt; <i>E</i><sub><i>nd</i></sub>。</li>
+<li><b>NMR 的费米接触相互作用只对 s 轨道有贡献</b>——因为它需要电子出现在核上。</li>
+<li><b>Mössbauer 谱的同质异能位移只探测 s 电子密度</b>——同理。</li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p53">
+<h2><span class="pno">p53–55</span>球谐函数与径向波函数：氢原子的最终答案</h2>
+<div class="tr"><span class="lab">原文翻译（p53）</span>
+<p>（实值）球谐函数的形状：图中给出 <i>L</i> = 0 到 <i>L</i> = 5、<i>m</i> = −5 到 +5 的一张形状表。</p>
+</div>
+<h3>讲解 · 这张表就是你熟悉的原子轨道形状</h3>
+<table>
+<tr><th style="width:70px"><i>l</i></th><th style="width:90px">符号</th><th style="width:80px">2<i>l</i>+1</th><th>形状</th></tr>
+<tr><td class="c">0</td><td class="c"><b>s</b></td><td class="c">1</td><td><b>球形</b>（各向同性，没有角度节面）</td></tr>
+<tr><td class="c">1</td><td class="c"><b>p</b></td><td class="c">3</td><td><b>哑铃形</b>，1 个角度节面（通过核的平面）。p<sub>x</sub>, p<sub>y</sub>, p<sub>z</sub></td></tr>
+<tr><td class="c">2</td><td class="c"><b>d</b></td><td class="c">5</td><td><b>四叶草形</b>（d<sub><i>z</i>²</sub> 除外，是"甜甜圈+哑铃"），2 个角度节面</td></tr>
+<tr><td class="c">3</td><td class="c"><b>f</b></td><td class="c">7</td><td>更复杂，3 个角度节面</td></tr>
+<tr><td class="c">4, 5</td><td class="c"><b>g, h</b></td><td class="c">9, 11</td><td>不作为占据轨道出现，但<span class="key">作为<b>极化函数</b>出现在高精度基组里</span>（cc-pVQZ 含 g 函数）</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · "实值"球谐函数——为什么教科书上的 p 轨道和数学上的不一样</span>
+<p>严格解出来的球谐函数是<b>复函数</b>（因为含 e<sup><i>imφ</i></sup>）。以 <i>l</i>=1 为例：</p>
+<table>
+<tr><th style="width:80px"><i>m</i></th><th style="width:170px">复球谐函数</th><th>它的问题</th></tr>
+<tr><td class="c">0</td><td><i>Y</i>₁⁰ ∝ cos<i>θ</i></td><td>已经是实的，就是 <b>p<sub><i>z</i></sub></b></td></tr>
+<tr><td class="c">+1</td><td><i>Y</i>₁⁺¹ ∝ sin<i>θ</i>·e<sup>+<i>iφ</i></sup></td><td rowspan="2">是复的，无法画出来，也不对应"沿某个方向的哑铃"</td></tr>
+<tr><td class="c">−1</td><td><i>Y</i>₁⁻¹ ∝ sin<i>θ</i>·e<sup>−<i>iφ</i></sup></td></tr>
+</table>
+<p><b>解决办法</b>：因为 <i>m</i>=+1 和 <i>m</i>=−1 <b>能量相同（简并）</b>，它们的任意线性组合仍是哈密顿量的本征函数。取：</p>
+<div class="fml" style="font-size:15px;line-height:2">
+p<sub><i>x</i></sub> = (1/√2)(<i>Y</i>₁⁻¹ − <i>Y</i>₁⁺¹) ∝ sin<i>θ</i>cos<i>φ</i> ∝ <i>x</i>/<i>r</i><br>
+p<sub><i>y</i></sub> = (<i>i</i>/√2)(<i>Y</i>₁⁻¹ + <i>Y</i>₁⁺¹) ∝ sin<i>θ</i>sin<i>φ</i> ∝ <i>y</i>/<i>r</i>
+</div>
+<p><span class="key">代价：p<sub><i>x</i></sub> 和 p<sub><i>y</i></sub> 不再是 <i>L̂</i><sub><i>z</i></sub> 的本征函数了（<i>m</i> 不再是好量子数），但它们是实函数、能画出来、方向明确，化学上好用得多。</span></p>
+<p><b>什么时候必须用复形式</b>：处理磁性质、轨道角动量、自旋-轨道耦合时（比如镧系配合物的磁各向异性——这正是本课 OpenMOLCAS 部分要算的东西）。</p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p54）</span>
+<p><b>径向波函数只能对单电子体系求解。</b>对 2 个（及更多）电子的体系，径向方程无法解析求解。数值方法可以达到（几乎）任意需要的精度。</p>
+<p><b>径向波函数被列在基组信息里。</b></p>
+<p>（图：氢原子的能级图，<i>n</i>=1,2,3,4；表 6.1：类氢原子波函数的径向因子）</p>
+<p><i>R</i><sub>1s</sub> = 2(<i>Z</i>/<i>a</i>)<sup>3/2</sup> e<sup>−<i>Zr</i>/<i>a</i></sup></p>
+<p><i>R</i><sub>2s</sub> = (1/2√2)(<i>Z</i>/<i>a</i>)<sup>3/2</sup>(1 − <i>Zr</i>/2<i>a</i>)e<sup>−<i>Zr</i>/2<i>a</i></sup></p>
+<p><i>R</i><sub>2p</sub> = (1/2√6)(<i>Z</i>/<i>a</i>)<sup>5/2</sup> <i>r</i> e<sup>−<i>Zr</i>/2<i>a</i></sup></p>
+<p><i>R</i><sub>3s</sub> = (2/3√3)(<i>Z</i>/<i>a</i>)<sup>3/2</sup>(1 − 2<i>Zr</i>/3<i>a</i> + 2<i>Z</i>²<i>r</i>²/27<i>a</i>²)e<sup>−<i>Zr</i>/3<i>a</i></sup></p>
+<p><i>R</i><sub>3p</sub> = (8/27√6)(<i>Z</i>/<i>a</i>)<sup>3/2</sup>(<i>Zr</i>/<i>a</i> − <i>Z</i>²<i>r</i>²/6<i>a</i>²)e<sup>−<i>Zr</i>/3<i>a</i></sup></p>
+<p><i>R</i><sub>3d</sub> = (4/81√30)(<i>Z</i>/<i>a</i>)<sup>7/2</sup> <i>r</i>² e<sup>−<i>Zr</i>/3<i>a</i></sup></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p55）</span>
+<p>（图：1s、2s、2p、3s、3p、3d 的径向函数 <i>a</i><sup>3/2</sup><i>R</i>(<i>r</i>) 对 <i>r</i>/<i>a</i> 作图）</p>
+</div>
+
+<h3 class="fm">公式解析 · 径向函数里的每个符号</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Z</i></td><td>核电荷数</td><td>H 是 1，He⁺ 是 2，Li²⁺ 是 3。<span class="key"><i>Z</i> 越大，e<sup>−<i>Zr</i>/<i>a</i></sup> 衰减越快 → 轨道越收缩。</span></td></tr>
+<tr><td><i>a</i></td><td>玻尔半径</td><td>= <i>a</i>₀ = 0.529 Å。<b>原子尺度的自然长度单位。</b></td></tr>
+<tr><td><i>r</i></td><td>径向距离</td><td>电子到核的距离</td></tr>
+<tr><td>e<sup>−<i>Zr</i>/<i>na</i></sup></td><td>指数衰减因子</td><td><span class="key">所有径向函数的共同"外壳"</span>。注意分母上有 <i>n</i>：<i>n</i> 越大衰减越慢 → 轨道越大。<b>这个 e<sup>−<i>ζr</i></sup> 形式就是 Slater 型轨道 (STO) 的由来（第 3 讲 p72）。</b></td></tr>
+<tr><td>括号里的多项式</td><td>Laguerre 多项式</td><td><span class="key">它的零点就是<b>径向节面</b></span>。比如 <i>R</i><sub>2s</sub> 里的 (1−<i>Zr</i>/2<i>a</i>)，在 <i>r</i> = 2<i>a</i>/<i>Z</i> 处为零 → 2s 有 1 个径向节面。</td></tr>
+<tr><td><i>r</i><sup><i>l</i></sup> 因子</td><td>—</td><td>注意 <i>R</i><sub>2p</sub> 有 <i>r</i>¹，<i>R</i><sub>3d</sub> 有 <i>r</i>²。<b>这保证了 <i>r</i>=0 时 <i>R</i>=0</b>——正是上一页说的离心势垒的后果。</td></tr>
+</table>
+
+<h3>讲解 · 节面的计数规则（考试常考）</h3>
+<div class="fml"><span class="tag">★ 节面计数</span>
+径向节面数 = <i>n</i> − <i>l</i> − 1　；　角度节面数 = <i>l</i>　；　<b>总节面数 = <i>n</i> − 1</b>
+</div>
+<table>
+<tr><th class="c" style="width:80px">轨道</th><th class="c" style="width:60px"><i>n</i></th><th class="c" style="width:60px"><i>l</i></th><th class="c">径向节面<br><i>n</i>−<i>l</i>−1</th><th class="c">角度节面<br><i>l</i></th><th class="c">总计<br><i>n</i>−1</th></tr>
+<tr><td class="c"><b>1s</b></td><td class="c">1</td><td class="c">0</td><td class="c">0</td><td class="c">0</td><td class="c">0</td></tr>
+<tr><td class="c"><b>2s</b></td><td class="c">2</td><td class="c">0</td><td class="c">1</td><td class="c">0</td><td class="c">1</td></tr>
+<tr><td class="c"><b>2p</b></td><td class="c">2</td><td class="c">1</td><td class="c">0</td><td class="c">1</td><td class="c">1</td></tr>
+<tr><td class="c"><b>3s</b></td><td class="c">3</td><td class="c">0</td><td class="c">2</td><td class="c">0</td><td class="c">2</td></tr>
+<tr><td class="c"><b>3p</b></td><td class="c">3</td><td class="c">1</td><td class="c">1</td><td class="c">1</td><td class="c">2</td></tr>
+<tr><td class="c"><b>3d</b></td><td class="c">3</td><td class="c">2</td><td class="c">0</td><td class="c">2</td><td class="c">2</td></tr>
+</table>
+<p>对照 p55 的图：<b>3s 的曲线穿过横轴两次，3p 一次，3d 零次</b>——完全符合。</p>
+
+<div class="warn"><span class="lab">p54 那句话是本讲的转折点</span>
+<p><b>"径向波函数只能对单电子体系求解。对 2 个（及更多）电子的体系，径向方程无法解析求解。"</b></p>
+<p><span class="key">从 p56 开始，这门课就再也没有精确解了。剩下的 46 页全部是在讲：既然解不了，怎么办。</span></p>
+<p>而 p54 的另一句话是本课的实用伏笔：<b>"径向波函数被列在基组信息里。"</b>——你以后写 <code>6-31G(d)</code> 或 <code>cc-pVTZ</code>，本质上就是在选一组用来近似 <i>R</i>(<i>r</i>) 的函数。</p>
+</div>
+</section>
+
+<section class="slide" id="p56">
+<h2><span class="pno">p56–57</span>氦原子：一切困难的开始</h2>
+<div class="tr"><span class="lab">原文翻译（p56）</span>
+<ul>
+<li>对任何多于一个电子的体系，都不可能得到精确波函数；不过我们可以得到任意精确的数值解</li>
+<li>氦原子是第一个、也是最简单的多电子原子。He 原子的哈密顿算符必须包含<b>电子-电子排斥项</b>：</li>
+</ul>
+<p><i>Ĥ</i> = [−½∇₁² − 2/<i>r</i>₁] + [−½∇₂² − 2/<i>r</i>₂] + <b>1/<i>r</i>₁₂</b></p>
+<p>其中 <i>r</i>₁₂ 是两个电子之间的距离：<i>r</i>₁₂ = |<b>r</b>₂ − <b>r</b>₁|</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p57）</span>
+<ul>
+<li>注意我们把电子标记成了 1 和 2。<b>我们真的能区分它们吗？</b></li>
+<li><b>1/<i>r</i>₁₂ 项代表电子间的库仑排斥</b>（电子希望尽可能互相避开）</li>
+<li>这意味着它们各自的角动量会涨落，即它们<b>没有被量子化</b>。因此每个电子各自的轨道量子数 <i>l</i>₁ 和 <i>l</i>₂ <b>不是好量子数</b></li>
+<li>然而，轨道角动量之和 <i>L</i> = <i>l</i>₁ + <i>l</i>₂ 是<b>守恒的</b>（即不随时间变化、是稳定的，代表整个体系的一个好量子数）</li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 氦原子哈密顿量（逐项拆开）</h3>
+<div class="fml"><span class="tag">★ He 原子哈密顿量（原子单位）</span>
+<i>Ĥ</i> = <span style="color:#0b5ea8">(−½∇<sub>1</sub>² − 2/<i>r</i><sub>1</sub>)</span> + <span style="color:#2c6e4f">(−½∇<sub>2</sub>² − 2/<i>r</i><sub>2</sub>)</span> + <span style="color:#c0392b">1/<i>r</i><sub>12</sub></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>−½∇<sub>1</sub>²</td><td>电子 1 的动能</td><td>原子单位下 <i>ħ</i>=1、<i>m</i><sub>e</sub>=1，所以 −<i>ħ</i>²/2<i>m</i><sub>e</sub> 简化为 −½</td></tr>
+<tr><td>−2/<i>r</i><sub>1</sub></td><td>核对电子 1 的吸引</td><td>分子上的 2 是 He 的核电荷 <i>Z</i>=2；负号 = 吸引</td></tr>
+<tr><td><i>r</i><sub>1</sub>, <i>r</i><sub>2</sub></td><td>电子到核的距离</td><td>各自独立</td></tr>
+<tr><td><span style="color:#c0392b"><b>1/<i>r</i><sub>12</sub></b></span></td><td><b>电子-电子排斥</b></td><td><span class="key">正号 = 排斥。这一项就是整个量子化学存在的原因。</span></td></tr>
+<tr><td><i>r</i><sub>12</sub></td><td>电子间距</td><td>= |<b>r</b><sub>2</sub> − <b>r</b><sub>1</sub>|，<b>同时依赖两个电子的坐标</b></td></tr>
+</table>
+
+<h3>讲解 · 为什么加一项就解不出来了</h3>
+<div class="step"><div class="sh">如果<b>没有</b> 1/<i>r</i>₁₂ 会怎样</div>
+<p>哈密顿量就是 <i>Ĥ</i> = <i>ĥ</i>(1) + <i>ĥ</i>(2)，两项完全独立（一个只含电子 1 的坐标，一个只含电子 2 的）。这时可以分离变量：</p>
+<div class="fml" style="font-size:16px">Ψ(1,2) = <i>φ</i>(1)·<i>φ</i>(2)　，　<i>E</i> = <i>ε</i>₁ + <i>ε</i>₂</div>
+<p>每个电子独立地解一个氢原子式的方程 → <span class="key">精确可解，而且答案就是"两个类氢轨道相乘"。</span></p>
+</div>
+<div class="step"><div class="sh">加上 1/<i>r</i>₁₂ 之后</div>
+<p><i>r</i>₁₂ = √[(<i>x</i>₁−<i>x</i>₂)² + (<i>y</i>₁−<i>y</i>₂)² + (<i>z</i>₁−<i>z</i>₂)²]，<b>六个坐标全部纠缠在一个根号里</b>。</p>
+<p><span class="key">你没法把它写成"只含电子 1 的部分 + 只含电子 2 的部分"，所以变量分离失败，乘积形式的波函数不再是精确解。</span></p>
+<p><b>这就是"三体问题"</b>——即使在经典力学里（核 + 2 个电子），三体问题也没有解析解。牛顿以来 300 年都没解决。</p>
+</div>
+<div class="warn"><span class="lab">整门课的主线，一句话</span>
+<p><span class="key">量子化学的全部内容，就是在想办法处理那一项 1/<i>r</i><sub>12</sub>。</span></p>
+<table>
+<tr><th style="width:180px">怎么处理它</th><th style="width:160px">得到什么方法</th><th>在哪讲</th></tr>
+<tr><td><b>完全忽略</b></td><td>独立粒子模型 / Hückel</td><td>—</td></tr>
+<tr><td><b>用"平均场"代替</b>：每个电子只感受其他电子的平均电荷云</td><td><b>Hartree–Fock</b></td><td>本讲 p81–90</td></tr>
+<tr><td>平均场 + 一个近似的相关泛函</td><td><b>DFT</b></td><td>第 4 讲 p6</td></tr>
+<tr><td><b>用微扰论算它的修正</b></td><td><b>MP2/MP3/MP4</b></td><td>第 4 讲 p28–36</td></tr>
+<tr><td><b>用更多 Slater 行列式的叠加把它算准</b></td><td><b>CI / CASSCF / CC</b></td><td>第 4 讲 p10–27</td></tr>
+</table>
+</div>
+
+<h3>讲解 · p57 的三个要点，逐个说清</h3>
+<div class="step"><div class="sh">① "我们真的能区分它们吗？" —— 全同粒子</div>
+<p><span class="key">答案是<b>不能</b>。</span>两个电子是<b>全同粒子 (identical particles)</b>——它们没有任何可以区分的内在标签（质量、电荷、自旋大小全都一样）。</p>
+<p>我们在纸上写"电子 1"和"电子 2"只是记账的需要，<b>物理上这个编号必须没有可观测后果</b>。这个要求会在 p65 变成<b>泡利原理</b>。</p>
+</div>
+<div class="step"><div class="sh">② "个别的 <i>l</i><sub><i>i</i></sub> 不是好量子数"</div>
+<p>回想 p50：<b>[<i>Ĥ</i>,<i>L̂</i>²] = 0 的前提是 <i>V</i> = <i>V</i>(<i>r</i>)，即球对称。</b></p>
+<p>现在 1/<i>r</i>₁₂ 这一项<b>不是</b>球对称的（它依赖于两个电子的相对位置，而 <b>r</b>₁₂ 这个矢量不是从坐标原点出发的——p61 明确说了这一点）。所以：</p>
+<div class="fml" style="font-size:15px">[<i>Ĥ</i>, <i>l̂</i>₁²] ≠ 0　⟹　<i>l</i>₁ 不守恒 ⟹ <b>不是好量子数</b></div>
+</div>
+<div class="step"><div class="sh">③ "但总角动量 <i>L</i> = <i>l</i>₁ + <i>l</i>₂ 守恒"</div>
+<p><b>为什么总的守恒而分量不守恒？</b>因为 1/<i>r</i>₁₂ 只依赖两个电子的<b>相对</b>位置。<span class="key">如果你把整个体系（两个电子一起）绕核转一个角度，<i>r</i>₁₂ 不变，<i>r</i>₁、<i>r</i>₂ 也不变，哈密顿量完全不变。</span></p>
+<p>所以体系<b>整体</b>仍然有球对称性 ⟹ <b>总</b>角动量守恒。但如果你只转一个电子（不动另一个），<i>r</i>₁₂ 就变了，能量就变了 ⟹ <b>单个</b>电子的角动量不守恒。</p>
+<p><b>物理图像</b>：两个电子在互相排斥中不断交换角动量，各自的角动量在涨落，但总和是恒定的——就像两个溜冰者互相推拉，各自转速在变，总角动量守恒。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · "好量子数"的准确定义</span>
+<p><b>好量子数 (good quantum number)</b> = 对应算符与 <i>Ĥ</i> 对易的那个量子数 = 守恒量 = 可以用来标记本征态的标签。</p>
+<table>
+<tr><th style="width:180px">体系</th><th>好量子数</th></tr>
+<tr><td>氢原子（单电子）</td><td><i>n</i>, <i>l</i>, <i>m</i><sub><i>l</i></sub>, <i>m</i><sub><i>s</i></sub>（全都是好的）</td></tr>
+<tr><td>多电子<b>原子</b>（轻元素）</td><td><i>L</i>, <i>S</i>, <i>J</i>, <i>M</i><sub><i>J</i></sub>（<b>总</b>的才好）→ 这就是<b>光谱项符号 <sup>2<i>S</i>+1</sup><i>L</i><sub><i>J</i></sub></b> 的来源</td></tr>
+<tr><td>多电子<b>原子</b>（重元素）</td><td>只有 <i>J</i>, <i>M</i><sub><i>J</i></sub>（自旋-轨道耦合太强，<i>L</i> 和 <i>S</i> 都不再分别守恒 → <b><i>jj</i> 耦合</b>）</td></tr>
+<tr><td><b>分子</b></td><td><i>S</i> 和点群不可约表示（<span class="key">没有球对称，<i>L</i> 完全失效</span>）</td></tr>
+</table>
+<p><b>这解释了一个你可能困惑过的事</b>：为什么原子光谱用 <sup>3</sup>P₂ 这种符号，分子轨道却用 a₁、t₂<sub>g</sub>？因为对称性不同，好量子数就不同。p66 会出现 <sup>1</sup>S₀，p69 会出现 <sup>3</sup>S₁ ——那正是原子的光谱项符号。</p>
+</div>
+</section>
+
+<section class="slide" id="p58">
+<h2><span class="pno">p58–59</span>总角动量与总自旋</h2>
+<div class="tr"><span class="lab">原文翻译（p58）</span>
+<p>多电子原子的<b>总轨道角动量</b>：<i>L</i> = <i>l</i>₁ + <i>l</i>₂ + <i>l</i>₃ + … = Σ<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>l</i><sub><i>i</i></sub></p>
+<p>多电子原子的<b>总自旋角动量</b>：<i>S</i> = <i>s</i>₁ + <i>s</i>₂ + <i>s</i>₃ + … = Σ<sub><i>i</i>=1</sub><sup><i>n</i></sup> <i>s</i><sub><i>i</i></sub></p>
+<p><i>L</i> 和 <i>S</i> 的 <i>z</i> 分量由下式给出：</p>
+<p><i>L</i><sub><i>z</i></sub> = Σ<i>l</i><sub><i>zi</i></sub> = Σ<i>m</i><sub><i>i</i></sub> = <i>M</i>　；　<i>S</i><sub><i>z</i></sub> = Σ<i>s</i><sub><i>zi</i></sub> = Σ<i>m</i><sub><i>si</i></sub> = <i>M</i><sub><i>S</i></sub></p>
+<p><b>注意 <i>L</i> 和 <i>S</i> 的 <i>z</i> 分量是按标量相加的（即像普通数字一样相加）。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p59）</span>
+<ul>
+<li>因此，多电子原子的态可以有如下轨道角动量量子数：<br><i>L</i> = 0,1,2,3…　；　<i>L</i><sub><i>z</i></sub> = <i>M</i><sub><i>L</i></sub> = 0, ±1, ±2, ±3, …, ±<i>L</i></li>
+<li>尽管如此，每个电子的 <i>l</i><sub><i>i</i></sub> 仍是一个有用的量子数，因为它给出了电子 <i>i</i> 的<b>平均</b>轨道角动量</li>
+<li>通过对电子-电子相互作用取平均，我们可以得到一个近似的<b>径向力哈密顿量</b></li>
+<li>对自由原子和离子，角动量 (<i>L</i>, <i>S</i>) 是守恒的</li>
+</ul>
+</div>
+
+<h3>讲解 · "矢量相加"与"标量相加"的区别（p58 特意强调的点）</h3>
+<div class="warn"><span class="lab">这是初学者最容易搞错的地方</span>
+<table>
+<tr><th style="width:200px">量</th><th>怎么加</th><th>为什么</th></tr>
+<tr><td><b><i>z</i> 分量</b>（<i>M</i><sub><i>L</i></sub>, <i>M</i><sub><i>S</i></sub>）</td><td><b>直接相加</b>（标量）<br><i>M</i><sub><i>L</i></sub> = <i>m</i>₁ + <i>m</i>₂ + …</td><td>因为它们是<b>同一个方向</b>（<i>z</i>）上的投影，就是普通数字相加</td></tr>
+<tr><td><b>总量</b>（<i>L</i>, <i>S</i>）</td><td><b>矢量相加</b>，遵守 Clebsch–Gordan 规则：<br><i>L</i> = |<i>l</i>₁−<i>l</i>₂|, |<i>l</i>₁−<i>l</i>₂|+1, …, <i>l</i>₁+<i>l</i>₂</td><td>因为角动量是<b>矢量</b>，两个矢量相加的结果取决于夹角，而夹角在量子力学里是量子化的</td></tr>
+</table>
+</div>
+<div class="step"><div class="sh">例子：两个 p 电子（<i>l</i>₁ = <i>l</i>₂ = 1）</div>
+<p><b>总 <i>L</i> 可以是</b>：|1−1| = 0，到 1+1 = 2，即 <b><i>L</i> = 0, 1, 2</b>（对应 S、P、D 三种项）。</p>
+<p><b>不能</b>简单说"<i>L</i> = 1+1 = 2"——那只是最大的一种可能。</p>
+</div>
+<div class="step"><div class="sh">例子：两个电子的自旋（<i>s</i>₁ = <i>s</i>₂ = ½）</div>
+<p><b>总 <i>S</i></b>：|½−½| = 0，到 ½+½ = 1，即 <b><i>S</i> = 0 或 1</b>。</p>
+<table>
+<tr><th class="c" style="width:80px"><i>S</i></th><th class="c" style="width:130px">多重度 2<i>S</i>+1</th><th class="c" style="width:100px">名称</th><th><i>M</i><sub><i>S</i></sub> 可取值</th></tr>
+<tr><td class="c">0</td><td class="c">1</td><td class="c"><b>单重态</b> singlet</td><td class="c">0（1 个态）</td></tr>
+<tr><td class="c">1</td><td class="c">3</td><td class="c"><b>三重态</b> triplet</td><td class="c">−1, 0, +1（3 个态）</td></tr>
+</table>
+<p><span class="key">这正是 p68–69 要用的：4 个自旋函数，1 个属于单重态，3 个属于三重态。</span></p>
+</div>
+<div class="ext"><span class="lab">拓展 · 光谱项符号 <sup>2<i>S</i>+1</sup><i>L</i><sub><i>J</i></sub> 完全解读</span>
+<p>你在 p66 会看到 <sup>1</sup>S₀，p69 会看到 <sup>3</sup>S₁。这个符号读法是：</p>
+<table>
+<tr><th style="width:140px">部分</th><th style="width:180px">是什么</th><th>怎么读</th></tr>
+<tr><td>左上角 <b>2<i>S</i>+1</b></td><td><b>自旋多重度</b></td><td>1=singlet, 2=doublet, 3=triplet, 4=quartet, 5=quintet</td></tr>
+<tr><td>中间大写字母</td><td><b>总 <i>L</i></b></td><td><i>L</i>=0→<b>S</b>, 1→<b>P</b>, 2→<b>D</b>, 3→<b>F</b>, 4→<b>G</b>（<span class="key">注意：大写字母指总 <i>L</i>，小写 s/p/d 指单电子的 <i>l</i></span>）</td></tr>
+<tr><td>右下角 <b><i>J</i></b></td><td><b>总角动量</b> <i>J</i> = <i>L</i> + <i>S</i></td><td>取 |<i>L</i>−<i>S</i>| 到 <i>L</i>+<i>S</i></td></tr>
+</table>
+<p><b>He 基态 <sup>1</sup>S₀</b>：两个电子都在 1s（<i>l</i>=0），所以 <i>L</i>=0（S）；自旋必须反平行（泡利），<i>S</i>=0，多重度 = 1；<i>J</i> = 0+0 = 0。</p>
+<p><b>He 激发态 1s2s 的三重态 <sup>3</sup>S₁</b>：<i>L</i> 仍是 0（两个 s 轨道），但自旋可以平行，<i>S</i>=1，多重度 = 3；<i>J</i> = 0+1 = 1。</p>
+</div>
+</section>
+
+<section class="slide" id="p60">
+<h2><span class="pno">p60–62</span>轨道近似与平均场近似：本讲的第一个关键近似</h2>
+<div class="tr"><span class="lab">原文翻译（p60）</span>
+<p>多电子哈密顿量的真实波函数依赖于<b>所有</b>电子的坐标。例如 He 的哈密顿量：</p>
+<p><i>Ĥ</i> = [−½∇₁² − 2/<i>r</i>₁] + [−½∇₂² − 2/<i>r</i>₂] + 1/<i>r</i>₁₂</p>
+<p>有如下形式的本征态：<i>ψ</i>(<i>r</i>₁,<i>θ</i>₁,<i>φ</i>₁,<i>σ</i>₁; <i>r</i>₂,<i>θ</i>₂,<i>φ</i>₂,<i>σ</i>₂)</p>
+<p><b>轨道近似</b>在于把上面的波函数写成有效<b>单电子波函数的乘积</b>：</p>
+<p><i>ψ</i>(<i>r</i>₁,<i>θ</i>₁,<i>φ</i>₁,<i>σ</i>₁; <i>r</i>₂,<i>θ</i>₂,<i>φ</i>₂,<i>σ</i>₂) ≈ <i>φ</i>₁(<i>r</i>₁,<i>θ</i>₁,<i>φ</i>₁,<i>σ</i>₁)·<i>φ</i>₂(<i>r</i>₂,<i>θ</i>₂,<i>φ</i>₂,<i>σ</i>₂)</p>
+<p>这是一个近似，因为精确波函数可能有复杂得多的形式（它可能包含二次项、混合变量项等），<b>但如果我们希望对真实分子求解 <i>Ĥ</i>，我们别无选择……</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p61）· 轨道近似的后果</span>
+<ul>
+<li>上述哈密顿量中的 <i>r</i>₁₂ 项<b>破坏了球对称性</b>，因为矢量 <b>r</b>₁₂ = <b>r</b>₁ − <b>r</b>₂ 不是从坐标原点出发的</li>
+<li>这一项使得上述哈密顿量无法精确求解 ⟹ <b>需要进一步的近似</b></li>
+<li><b>平均场近似 (Mean-Field Approximation, MFA)</b>：每个电子在"原子核 + 所有其他电子"产生的<b>平均静电场</b>中运动</li>
+<li>MFA <b>忽略了电子间真正的关联运动</b>（即电子相关）。而在现实中——电子会尽可能地互相避开，因为它们互相排斥</li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p62）</span>
+<ul>
+<li>有了这个近似，就意味着我们仍然可以像对氢原子那样使用 <i>l</i><sub><i>i</i></sub> = 0,1,2,3…</li>
+<li>于是我们对每个电子得到<b>四个量子数</b>：<i>n</i><sub><i>i</i></sub>, <i>l</i><sub><i>i</i></sub>, <i>m</i><sub><i>i</i></sub>, <i>s</i><sub><i>zi</i></sub></li>
+<li>这个单电子近似被称为<b>轨道近似</b>，它与泡利不相容原理一起<b>解释了元素周期表</b></li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 轨道近似</h3>
+<div class="fml"><span class="tag">★ 轨道近似（Hartree 乘积）</span>
+Ψ(1, 2, …, <i>N</i>) ≈ <i>φ</i><sub>1</sub>(1) · <i>φ</i><sub>2</sub>(2) · … · <i>φ</i><sub><i>N</i></sub>(<i>N</i>)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Ψ(1,2,…)</td><td>多电子波函数</td><td>依赖<b>所有</b>电子的坐标，共 4<i>N</i> 个变量（每个电子 3 个空间坐标 + 1 个自旋）</td></tr>
+<tr><td><i>φ</i><sub><i>i</i></sub></td><td><b>轨道</b></td><td><span class="key">这就是"轨道"的严格定义：一个<b>单电子</b>波函数。</span>它只依赖<b>一个</b>电子的坐标。</td></tr>
+<tr><td>数字 (1)</td><td>电子编号</td><td>是"电子 1 的全部 4 个坐标"的速记：(1) ≡ (<i>r</i>₁,<i>θ</i>₁,<i>φ</i>₁,<i>σ</i>₁)</td></tr>
+<tr><td><i>σ</i></td><td>自旋坐标</td><td>希腊字母 sigma。只能取两个值（α 或 β）</td></tr>
+</table>
+
+<div class="warn"><span class="lab">"轨道"这个概念其实是个近似产物 —— 这一点非常重要</span>
+<p><span class="key">严格的多电子波函数<b>不能</b>写成轨道的乘积。"轨道"只在轨道近似下才存在。</span></p>
+<p>所以当你在 GaussView 里看 HOMO 图时，你看的是一个<b>近似模型里的构件</b>，不是一个可以直接测量的物理量。（电子密度 ρ 才是可观测的。）</p>
+<p>这也是为什么第 3 讲 p46、p61 会说"轨道不唯一"——任意幺正变换后的轨道给出<b>完全相同</b>的总能量和电子密度，但轨道的形状可以完全不同（正则轨道 vs 定域轨道 vs 天然轨道）。<b>物理内容在密度里，不在轨道里。</b></p>
+</div>
+
+<h3>讲解 · 平均场近似的直观图像</h3>
+<figure>
+<svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.t{font-size:12px;fill:#1c1c1e}.s{font-size:11px;fill:#6b6b70}.hh{font-size:12.5px;font-weight:700}</style>
+<radialGradient id="cloud"><stop offset="0%" stop-color="#0b5ea8" stop-opacity="0.30"/><stop offset="100%" stop-color="#0b5ea8" stop-opacity="0.02"/></radialGradient></defs>
+<text x="140" y="18" class="hh" fill="#2c6e4f" text-anchor="middle">真实情况（有相关）</text>
+<circle cx="140" cy="105" r="12" fill="#1c1c1e"/><text x="140" y="110" font-size="11" fill="#fff" text-anchor="middle">核</text>
+<circle cx="90" cy="70" r="6" fill="#c0392b"/><text x="80" y="60" class="s" fill="#c0392b">e₁</text>
+<circle cx="192" cy="142" r="6" fill="#c0392b"/><text x="204" y="150" class="s" fill="#c0392b">e₂</text>
+<line x1="96" y1="76" x2="186" y2="136" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="3,3"/>
+<text x="152" y="98" class="s" fill="#c0392b">1/r₁₂</text>
+<circle cx="140" cy="105" r="72" fill="none" stroke="#c9d4de" stroke-width="1" stroke-dasharray="2,3"/>
+<text x="140" y="196" class="s" text-anchor="middle">两个电子<b>时刻感知彼此的位置</b>，主动躲避</text>
+<line x1="285" y1="30" x2="285" y2="180" stroke="#e3e0da" stroke-width="1" stroke-dasharray="4,4"/>
+<text x="425" y="18" class="hh" fill="#b3541e" text-anchor="middle">平均场近似（HF）</text>
+<circle cx="425" cy="105" r="60" fill="url(#cloud)"/>
+<circle cx="425" cy="105" r="12" fill="#1c1c1e"/><text x="425" y="110" font-size="11" fill="#fff" text-anchor="middle">核</text>
+<circle cx="375" cy="70" r="6" fill="#c0392b"/><text x="365" y="60" class="s" fill="#c0392b">e₁</text>
+<text x="490" y="80" class="s" fill="#0b5ea8">e₂ 的平均云</text>
+<line x1="381" y1="76" x2="418" y2="100" stroke="#0b5ea8" stroke-width="1.2"/>
+<text x="425" y="196" class="s" text-anchor="middle">e₁ 只看到 e₂ 的<b>平均电荷分布</b>，不知道它此刻在哪</text>
+</svg>
+<figcaption>平均场近似丢掉的正是"瞬时躲避"这件事——这就是<b>电子相关</b>（第 4 讲的主题）</figcaption>
+</figure>
+<div class="step"><div class="sh">用一个比喻</div>
+<p><b>真实情况</b>：两个人在一个小房间里走动，眼睛盯着对方，随时调整路线避免相撞。</p>
+<p><b>平均场</b>：两个人都蒙上眼，只被告知"对方平均而言在房间中央偏左"。于是各自按这个平均信息规划路线。<span class="key">结果：他们会比实际情况更容易"撞上"——所以 HF 高估了电子间的排斥，能量偏高。</span></p>
+<p>这就是 <b><i>E</i><sub>corr</sub> = <i>E</i><sub>精确</sub> − <i>E</i><sub>HF</sub> &lt; 0</b>（相关能永远是负的）的物理来源。第 4 讲 p3 会正式给出这个定义。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 相关能有多大？（一个必须建立的数量感）</span>
+<table>
+<tr><th style="width:180px">量</th><th>典型大小</th></tr>
+<tr><td>分子总能量</td><td>−100 到 −3000 Hartree</td></tr>
+<tr><td><b>相关能</b></td><td>约占总能量的 <b>1%</b>（每对电子约 −0.04 Hartree ≈ −25 kcal/mol）</td></tr>
+<tr><td>一根化学键</td><td>0.1–0.2 Hartree（60–120 kcal/mol）</td></tr>
+<tr><td>"化学精度"要求</td><td>0.0016 Hartree（1 kcal/mol）</td></tr>
+</table>
+<p><span class="key">关键洞察：相关能虽然只占总能量的 1%，但它和化学键能是<b>同一个量级</b>。</span>所以在"总能量"上 HF 已经对了 99%，但在"化学"上它可能完全错。这就是为什么第 4 讲整讲都在处理这 1%。</p>
+</div>
+</section>
+
+<section class="slide" id="p63">
+<h2><span class="pno">p63–64</span>电子自旋</h2>
+<div class="tr"><span class="lab">原文翻译（p63）</span>
+<ul>
+<li>类比于轨道角动量算符，我们有<b>自旋角动量算符</b> <i>ŝ</i>² 和 <i>ŝ</i><sub><i>z</i></sub>。它们量化"电子绕自身转动轴的角运动"</li>
+<li><i>ŝ</i>² 和 <i>ŝ</i><sub><i>z</i></sub> 对一个电子的本征函数记作 <i>α</i> 和 <i>β</i>：</li>
+</ul>
+<p>∫<i>α</i>*<i>α</i> d<i>σ</i> = ∫<i>β</i>*<i>β</i> d<i>σ</i> = 1　（归一化）</p>
+<p>∫<i>α</i>*<i>β</i> d<i>σ</i> = ∫<i>β</i>*<i>α</i> d<i>σ</i> = 0　（正交）</p>
+<p><i>ŝ</i>²<i>α</i> = <i>s</i>(<i>s</i>+1)<i>α</i>　；　<i>ŝ</i>²<i>β</i> = <i>s</i>(<i>s</i>+1)<i>β</i></p>
+<p><i>ŝ</i><sub><i>z</i></sub><i>α</i> = +½<i>α</i>　；　<i>ŝ</i><sub><i>z</i></sub><i>β</i> = −½<i>β</i></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p64）</span>
+<ul>
+<li>因此，自旋量子数 <i>s</i> = ½ 的自旋波函数有自旋磁量子数 <i>m</i><sub><i>s</i></sub> = +½ 或 <i>m</i><sub><i>s</i></sub> = −½</li>
+<li>我们用<b>小写字母</b>表示单个电子的自旋量子数（<i>s</i> 和 <i>m</i><sub><i>s</i></sub>），用<b>大写字母</b>表示多电子体系的总自旋量子数（<i>S</i> 和 <i>M</i><sub><i>S</i></sub>）</li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 自旋的符号系统</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>α</i></td><td>自旋向上函数</td><td>俗称 "spin up"，↑。<i>m</i><sub><i>s</i></sub> = +½</td></tr>
+<tr><td><i>β</i></td><td>自旋向下函数</td><td>"spin down"，↓。<i>m</i><sub><i>s</i></sub> = −½</td></tr>
+<tr><td><i>σ</i></td><td>自旋坐标</td><td><span class="key">一个只能取两个值的"假坐标"。</span>∫…d<i>σ</i> 实际上是"对两个可能值求和"，不是真的积分。</td></tr>
+<tr><td><i>ŝ</i>²</td><td>自旋平方算符</td><td>本征值 <i>s</i>(<i>s</i>+1)<i>ħ</i>²，对电子 <i>s</i>=½ 恒定，所以 <i>s</i>(<i>s</i>+1) = ¾</td></tr>
+<tr><td><i>ŝ</i><sub><i>z</i></sub></td><td>自旋 z 分量算符</td><td>本征值 ±½<i>ħ</i>（讲义用原子单位，<i>ħ</i>=1）</td></tr>
+<tr><td><i>s</i></td><td>自旋量子数</td><td><span class="key">对电子<b>永远</b>是 ½，不能改变</span>——它是电子的固有属性，像质量和电荷一样</td></tr>
+</table>
+
+<div class="warn"><span class="lab">"电子绕自身转动"这个说法是错的（讲义用了引号，是有原因的）</span>
+<p>讲义写的是 "the angular motion of electron around its own axis of rotation"，<b>加了引号</b>——因为这只是一个历史比喻。</p>
+<p><span class="key">自旋<b>不是</b>真的自转。</span>理由：</p>
+<ul>
+<li>电子是<b>点粒子</b>（实验上半径 &lt; 10⁻¹⁸ m），点没有"轴"可以绕</li>
+<li>如果按经典自转计算，电子表面速度会远超光速</li>
+<li>自转一圈（360°）后自旋波函数会变成 <b>−1 倍</b>，转 720° 才回到原样——经典物体没有这种性质</li>
+</ul>
+<p><b>自旋的真正来源</b>：它是<b>相对论性量子力学</b>的必然结果。Dirac 在 1928 年把相对论和量子力学结合时，自旋 ½ 自动地从方程里冒出来，不需要任何额外假设。<b>在非相对论的薛定谔方程里，自旋只能靠手工塞进去</b>——这正是讲义 p63 在做的事。</p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · 自旋函数的正交归一为什么这么重要</span>
+<p>∫<i>α</i>*<i>β</i> d<i>σ</i> = 0 这一条，看起来平平无奇，但它在后面会<b>反复决定哪些积分等于零</b>：</p>
+<table>
+<tr><th style="width:200px">出现的地方</th><th>它做了什么</th></tr>
+<tr><td><b>p43（H₂ 的双电子积分）</b></td><td>交换积分变成 0，因为两个电子自旋不同</td></tr>
+<tr><td><b>p44（Slater 行列式能量规则）</b></td><td><span class="key">"<i>K</i><sub><i>ij</i></sub> 只对<b>自旋相同</b>的电子对非零"</span>——原因就是这条正交性</td></tr>
+<tr><td><b>第 4 讲 p14</b></td><td>⟨singlet|<i>Ĥ</i>|triplet⟩ = 0，不同自旋态不混合</td></tr>
+<tr><td><b>Hund 第一规则</b></td><td>为什么自旋平行的组态能量更低（见下面）</td></tr>
+</table>
+<p><b>Hund 规则的量子力学解释</b>：交换积分 <i>K</i> &gt; 0，而能量表达式里是 −<i>K</i>（p44）。<span class="key"><i>K</i> 只在自旋相同时出现，所以自旋平行的电子对会得到一个额外的 −<i>K</i> 稳定化。</span>这就是"洪特规则：先单占再配对"的严格来源。p70 会算出 Δ<i>E</i> = −2<i>K</i> 这个具体结果。</p>
+</div>
+</section>
+
+<section class="slide" id="p65">
+<h2><span class="pno">p65</span>泡利原理：反对称性要求</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li><b>泡利原理</b>指出：电子波函数 <i>ψ</i>(1,2,…) 对<b>任意一对电子的交换</b>是<b>反对称的</b>：</li>
+</ul>
+<p><i>P̂</i>₁₂ <i>ψ</i>(1,2,…) = <i>ψ</i>(2,1,…)</p>
+<p><i>ψ</i>(1,2,…) = <b>−</b><i>ψ</i>(2,1,…)</p>
+<ul>
+<li>注意，<b>概率密度 <i>ψ</i>*(1,2,…)<i>ψ</i>(1,2,…) 不因交换算符而改变</b>（只要电子 1 和 2 是全同的）：<br><i>ψ</i>*(1,2,…)<i>ψ</i>(1,2,…) = <i>ψ</i>*(2,1,…)<i>ψ</i>(2,1,…)<br>因为概率密度是物理上可测量的量（可观测量）</li>
+<li>在轨道近似下，反对称性要求由波函数的 <b>Slater 行列式</b>形式来满足</li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 反对称性要求</h3>
+<div class="fml"><span class="tag">★ 泡利原理（费米子的反对称性）</span>
+<i>P̂</i><sub>12</sub> Ψ(1, 2, 3, …) = Ψ(2, 1, 3, …) = <b>−</b> Ψ(1, 2, 3, …)
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>P̂</i><sub>12</sub></td><td>交换算符</td><td>permutation operator。<b>把电子 1 和电子 2 的<u>全部</u>坐标（空间 + 自旋）对调。</b></td></tr>
+<tr><td>负号</td><td><b>反对称</b></td><td><span class="key">这个负号就是泡利原理的全部内容。</span>它是费米子（电子、质子、中子，所有半整数自旋粒子）的普遍性质。</td></tr>
+</table>
+
+<h3>讲解 · 逻辑链条：为什么必须是 ±1，为什么电子选 −1</h3>
+<div class="step"><div class="sh">第一步：交换两次必须回到原样</div>
+<p><i>P̂</i>₁₂<i>P̂</i>₁₂Ψ = Ψ（换两次等于没换）。所以如果 <i>P̂</i>₁₂Ψ = <i>c</i>Ψ，则 <i>c</i>² = 1 ⟹ <b><i>c</i> = +1 或 <i>c</i> = −1</b>。只有两种可能。</p>
+</div>
+<div class="step"><div class="sh">第二步：概率密度必须不变（全同粒子）</div>
+<p>因为电子无法区分，"电子 1 在 A、电子 2 在 B" 和 "电子 2 在 A、电子 1 在 B" 必须是<b>同一个物理状态</b>，概率密度必须相同。</p>
+<p>|<i>c</i>Ψ|² = |<i>c</i>|²|Ψ|² = |Ψ|²　⟹　|<i>c</i>| = 1　✔ 两种可能都满足</p>
+</div>
+<div class="step"><div class="sh">第三步：自然界的选择</div>
+<table>
+<tr><th style="width:110px"><i>c</i> 的值</th><th style="width:130px">粒子类型</th><th style="width:130px">自旋</th><th>例子</th></tr>
+<tr><td class="c"><b>+1</b>（对称）</td><td><b>玻色子</b> boson</td><td>整数（0,1,2…）</td><td>光子、声子、⁴He、W/Z 玻色子</td></tr>
+<tr><td class="c"><b>−1</b>（反对称）</td><td><b>费米子</b> fermion</td><td>半整数（½,3/2…）</td><td><span class="key">电子</span>、质子、中子、³He</td></tr>
+</table>
+<p><b>这是一条实验事实</b>（由"自旋-统计定理"在相对论量子场论中证明）。电子是费米子，所以取 −1。</p>
+</div>
+
+<div class="warn"><span class="lab">"泡利不相容原理"其实是这条的<b>推论</b>，不是原理本身</span>
+<p>你在中学学的"一个轨道最多两个电子、自旋相反"，是反对称性的一个推论：</p>
+<div class="step"><div class="sh">证明只要两行</div>
+<p>假设两个电子处于<b>完全相同</b>的自旋轨道 <i>φ</i>（同样的空间部分 + 同样的自旋）。那么：</p>
+<p>Ψ(1,2) = <i>φ</i>(1)<i>φ</i>(2)</p>
+<p>交换后：Ψ(2,1) = <i>φ</i>(2)<i>φ</i>(1) = Ψ(1,2)（乘法可交换）</p>
+<p>但反对称性要求 Ψ(2,1) = −Ψ(1,2)。两者同时成立只能是：</p>
+<div class="fml" style="font-size:16px">Ψ = −Ψ　⟹　<b>Ψ = 0</b></div>
+<p><span class="key">波函数恒为零 = 这个状态不存在。</span>所以两个电子不能占据完全相同的自旋轨道。∎</p>
+</div>
+<p><b>注意措辞</b>：不是"不允许"，而是"这样的状态在数学上不存在"。这比"禁令"更强。</p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · 反对称性的三个惊人后果</span>
+<ol>
+<li><b>物质的稳定性与体积</b>。如果电子是玻色子，所有电子都会掉进 1s 轨道，原子会小得多，也不会有化学。<span class="key">"物质占据空间"这件事完全来自泡利不相容原理产生的"交换排斥"，而不是电子之间的静电排斥。</span></li>
+<li><b>元素周期表</b>。壳层结构完全来自"每个轨道只能放 2 个电子"。p62 明说了这一点。</li>
+<li><b>费米空穴 (Fermi hole)</b>：<span class="key">反对称性使得<b>自旋相同</b>的两个电子在空间上自动互相避开</span>——因为当 <b>r</b>₁ → <b>r</b>₂ 且自旋相同时，Ψ → 0。这是一种"免费的相关"，HF 已经包含了它（通过交换积分 <i>K</i>）。<b>但 HF 对<b>自旋相反</b>的电子完全没有这种避让——这正是"库仑相关"，是第 4 讲要补的东西。</b></li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p66">
+<h2><span class="pno">p66–71</span>氦原子的基态与激发态：<i>J</i> 与 <i>K</i> 积分登场</h2>
+<div class="tr"><span class="lab">原文翻译（p66）· He 基态</span>
+<ul>
+<li>因为两个电子不可区分，我们不能给它们贴标签。下面两个波函数是等价的：<br>
+<i>ψ</i>(1,2) = 1<i>s</i>(<i>r</i>₁)<i>α</i>₁ · 1<i>s</i>(<i>r</i>₂)<i>β</i>₂<br>
+<i>ψ</i>(2,1) = 1<i>s</i>(<i>r</i>₂)<i>α</i>₂ · 1<i>s</i>(<i>r</i>₁)<i>β</i>₁</li>
+<li>它们之间有两种可能的线性组合：<br>
+Ψ<sub>+</sub> = <i>ψ</i>(1,2) + <i>ψ</i>(2,1)<br>
+Ψ<sub>−</sub> = <i>ψ</i>(1,2) − <i>ψ</i>(2,1)</li>
+<li>交换算符作用在 Ψ<sub>+</sub> 和 Ψ<sub>−</sub> 上给出：<br>
+<i>P̂</i>₁₂Ψ<sub>+</sub> = Ψ<sub>+</sub>　；　<i>P̂</i>₁₂Ψ<sub>−</sub> = −Ψ<sub>−</sub></li>
+</ul>
+<p><b>只有 Ψ<sub>−</sub> 符合泡利原理！</b><i>L</i>=0, <i>S</i>=0, <i>J</i>=0 ⟹ <sup>1</sup>S₀</p>
+<p>Ψ(<sup>1</sup>S₀) = (1/√2)·1<i>s</i>(<i>r</i>₁)1<i>s</i>(<i>r</i>₂)·[<i>α</i>₁<i>β</i>₂ − <i>α</i>₂<i>β</i>₁]</p>
+</div>
+
+<h3>讲解 · 注意基态波函数的结构</h3>
+<div class="fml"><span class="tag">He 基态波函数的分解</span>
+Ψ = <span style="color:#0b5ea8">1<i>s</i>(<i>r</i><sub>1</sub>)1<i>s</i>(<i>r</i><sub>2</sub>)</span> × <span style="color:#b3541e">(1/√2)[<i>α</i><sub>1</sub><i>β</i><sub>2</sub> − <i>α</i><sub>2</sub><i>β</i><sub>1</sub>]</span><br>
+<span style="font-size:13px;font-style:normal;color:#6b6b70">　　　<span style="color:#0b5ea8">空间部分：<b>对称</b></span>　　　　　<span style="color:#b3541e">自旋部分：<b>反对称</b></span></span>
+</div>
+<div class="warn"><span class="lab">这是本讲最需要理解的一个"配对规则"</span>
+<p><b>总波函数 = 空间部分 × 自旋部分，而总波函数必须反对称。</b>所以只有两种搭配：</p>
+<table>
+<tr><th class="c" style="width:150px">空间部分</th><th class="c" style="width:150px">自旋部分</th><th class="c" style="width:130px">总波函数</th><th>自旋态</th></tr>
+<tr><td class="c">对称 (S)</td><td class="c">反对称 (A)</td><td class="c">A ✔</td><td><b>单重态</b> <i>S</i>=0</td></tr>
+<tr><td class="c">反对称 (A)</td><td class="c">对称 (S)</td><td class="c">A ✔</td><td><b>三重态</b> <i>S</i>=1</td></tr>
+<tr><td class="c">对称</td><td class="c">对称</td><td class="c">S ✘</td><td>不允许</td></tr>
+<tr><td class="c">反对称</td><td class="c">反对称</td><td class="c">S ✘</td><td>不允许</td></tr>
+</table>
+<p>（记忆法：对称×反对称 = 反对称，就像 (+1)×(−1) = −1）</p>
+<p><span class="key">这个规则直接导致了 p69–p71 的结论：三重态和单重态<b>空间</b>波函数不同 ⟹ 电子间平均距离不同 ⟹ 能量不同。<b>自旋本身不产生能量，但它通过泡利原理<u>约束了空间分布</u>，从而间接决定了能量。</b></span></p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p67–69）· He 激发态 1s2s</span>
+<p><b>p67：</b>现在考虑 He 的第一激发态 1<i>s</i>2<i>s</i>。这种情况下，因为电子在不同的轨道上且不可区分，空间本征函数必须写成 1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) 和 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁) 的线性组合。这给出对称和反对称两组空间波函数：</p>
+<p>(1/√2)[1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) + 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁)]　—— <b>对称</b></p>
+<p>(1/√2)[1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) − 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁)]　—— <b>反对称</b></p>
+<p><b>p68：</b>可能的自旋本征函数是：</p>
+<p><i>α</i>₁<i>α</i>₂ ；　<i>β</i>₁<i>β</i>₂ ；　(1/√2)[<i>α</i>₁<i>β</i>₂ + <i>α</i>₂<i>β</i>₁] —— 这三个是<b>对称</b>的</p>
+<p>(1/√2)[<i>α</i>₁<i>β</i>₂ − <i>α</i>₂<i>β</i>₁] —— 这个是反对称的</p>
+<p>为了构造满足泡利原理的本征函数，我们必须把一个对称函数和一个反对称函数组合起来。</p>
+<p><b>p69：</b>允许的本征态如下：</p>
+<table>
+<tr><td style="width:60%">(1/√2)[1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) − 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁)]·<i>α</i>₁<i>α</i>₂</td><td><i>S</i>=1, <i>M</i><sub><i>S</i></sub>=+1</td><td rowspan="3" style="vertical-align:middle"><b>三重态 <sup>3</sup>S₁</b></td></tr>
+<tr><td>(1/√2)[1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) − 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁)]·<i>β</i>₁<i>β</i>₂</td><td><i>S</i>=1, <i>M</i><sub><i>S</i></sub>=−1</td></tr>
+<tr><td>½[1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) − 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁)]·[<i>α</i>₁<i>β</i>₂ + <i>α</i>₂<i>β</i>₁]</td><td><i>S</i>=1, <i>M</i><sub><i>S</i></sub>=0</td></tr>
+<tr><td>½[1<i>s</i>(<i>r</i>₁)2<i>s</i>(<i>r</i>₂) <b>+</b> 1<i>s</i>(<i>r</i>₂)2<i>s</i>(<i>r</i>₁)]·[<i>α</i>₁<i>β</i>₂ − <i>α</i>₂<i>β</i>₁]</td><td><i>S</i>=0, <i>M</i><sub><i>S</i></sub>=0</td><td><b>单重态 2<sup>1</sup>S₀</b></td></tr>
+</table>
+<ul>
+<li>自旋三重态的所有态都是<b>简并</b>的</li>
+<li>计算 <sup>3</sup>S₁ 与 2<sup>1</sup>S₀ 之间的能量差是有启发性的</li>
+<li>需要对每个态求哈密顿量的期望值</li>
+</ul>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p70–71）· <i>J</i> 与 <i>K</i></span>
+<p><b>p70：</b>一个态的能量就是哈密顿量的期望值：</p>
+<p><i>E</i> = ⟨Ψ|<i>Ĥ</i>|Ψ⟩ / ⟨Ψ|Ψ⟩</p>
+<p>用氢的 1s 和 2s 原子轨道作为 He 的近似空间本征函数，经过相当多的推导后，我们得到如下能量：</p>
+<p><i>E</i>(<sup>3</sup>S₁) = <i>E</i><sub>1s</sub> + <i>E</i><sub>2s</sub> + <i>J</i> <b>−</b> <i>K</i></p>
+<p><i>E</i>(<sup>1</sup>S₀) = <i>E</i><sub>1s</sub> + <i>E</i><sub>2s</sub> + <i>J</i> <b>+</b> <i>K</i></p>
+<p>Δ<i>E</i> = <i>E</i>(<sup>3</sup>S₁) − <i>E</i>(2<sup>1</sup>S₀) = <b>−2<i>K</i></b></p>
+<p>其中 <i>J</i> = 库仑积分，<i>K</i> = 交换积分</p>
+<p><b>p71：</b><i>E</i><sub>1s</sub>、<i>E</i><sub>2s</sub> 只是单电子 1s 和 2s 轨道的能量。<i>J</i> 是<b>库仑积分</b>：</p>
+<p><i>J</i> = ∫ 1<i>s</i>*(<i>r</i>₁) 2<i>s</i>*(<i>r</i>₂) · (1/<i>r</i>₁₂) · 1<i>s</i>(<i>r</i>₁) 2<i>s</i>(<i>r</i>₂) d<i>τ</i></p>
+<p><i>K</i> 是<b>交换积分</b>：</p>
+<p><i>K</i> = ∫ 1<i>s</i>*(<i>r</i>₁) 2<i>s</i>*(<i>r</i>₂) · (1/<i>r</i>₁₂) · 1<i>s</i>(<i>r</i>₂) 2<i>s</i>(<i>r</i>₁) d<i>τ</i></p>
+<ul>
+<li>因此在这个近似下，2<sup>1</sup>S₀ 态的能量比 <sup>3</sup>S₁ 态高 2<i>K</i></li>
+<li>前面描述的近似的氦原子基态波函数 Ψ(<sup>1</sup>S₀) 的能量是 <b>−2.75 Ha</b></li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · <i>J</i> 与 <i>K</i>（本讲最重要的两个积分）</h3>
+<div class="fml"><span class="tag">★ 库仑积分 J</span>
+<i>J</i><sub><i>ij</i></sub> = ∫∫ <i>φ</i><sub><i>i</i></sub>*(1) <i>φ</i><sub><i>j</i></sub>*(2) · (1/<i>r</i><sub>12</sub>) · <span style="color:#0b5ea8"><i>φ</i><sub><i>i</i></sub>(1) <i>φ</i><sub><i>j</i></sub>(2)</span> d<i>τ</i><sub>1</sub>d<i>τ</i><sub>2</sub>
+</div>
+<div class="fml"><span class="tag">★ 交换积分 K　（注意右边两个函数的编号被<b>对调</b>了）</span>
+<i>K</i><sub><i>ij</i></sub> = ∫∫ <i>φ</i><sub><i>i</i></sub>*(1) <i>φ</i><sub><i>j</i></sub>*(2) · (1/<i>r</i><sub>12</sub>) · <span style="color:#c0392b"><i>φ</i><sub><i>j</i></sub>(1) <i>φ</i><sub><i>i</i></sub>(2)</span> d<i>τ</i><sub>1</sub>d<i>τ</i><sub>2</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>J</i><sub><i>ij</i></sub></td><td>库仑积分</td><td><span class="key">有<b>经典</b>的物理图像</span>：轨道 <i>i</i> 的电荷云与轨道 <i>j</i> 的电荷云之间的静电排斥能。<b><i>J</i> &gt; 0 恒成立。</b></td></tr>
+<tr><td><i>K</i><sub><i>ij</i></sub></td><td>交换积分</td><td><span class="key"><b>没有</b>经典对应物，纯量子效应。</span>来自波函数的反对称性。<b><i>K</i> &gt; 0（对实轨道），且只在两个电子<b>自旋相同</b>时出现。</b></td></tr>
+<tr><td>1/<i>r</i><sub>12</sub></td><td>排斥算符</td><td>就是那个惹祸的项</td></tr>
+<tr><td>d<i>τ</i><sub>1</sub>d<i>τ</i><sub>2</sub></td><td>六重积分</td><td>对<b>两个电子的所有空间坐标</b>积分，共 6 个变量。<span class="key">这就是双电子积分昂贵的原因（第 3 讲 p62）。</span></td></tr>
+</table>
+
+<div class="step"><div class="sh">怎么一眼分辨 J 和 K：看右边两个函数的电子编号</div>
+<table>
+<tr><th style="width:80px"></th><th style="width:190px">左边（带 *）</th><th style="width:190px">右边</th><th>特征</th></tr>
+<tr><td class="c"><b><i>J</i></b></td><td><i>φ</i><sub><i>i</i></sub>*(<b>1</b>) <i>φ</i><sub><i>j</i></sub>*(<b>2</b>)</td><td><i>φ</i><sub><i>i</i></sub>(<b>1</b>) <i>φ</i><sub><i>j</i></sub>(<b>2</b>)</td><td>编号<b>一致</b> → 可写成 ∫∫ρ<sub><i>i</i></sub>(1)ρ<sub><i>j</i></sub>(2)/<i>r</i>₁₂ —— <b>两团电荷云的排斥</b></td></tr>
+<tr><td class="c"><b><i>K</i></b></td><td><i>φ</i><sub><i>i</i></sub>*(<b>1</b>) <i>φ</i><sub><i>j</i></sub>*(<b>2</b>)</td><td><i>φ</i><sub><i>j</i></sub>(<b>1</b>) <i>φ</i><sub><i>i</i></sub>(<b>2</b>)</td><td>编号<b>交换</b> → 无法写成密度乘积 —— <b>没有经典图像</b></td></tr>
+</table>
+</div>
+
+<h3>讲解 · 为什么三重态比单重态低（Hund 第一规则的严格证明）</h3>
+<div class="step"><div class="sh">从 p70 的两个能量式看</div>
+<table>
+<tr><th style="width:150px">态</th><th style="width:120px">空间波函数</th><th style="width:200px">能量</th><th>相对高低</th></tr>
+<tr><td><b><sup>3</sup>S₁</b> 三重态</td><td><b>反对称</b></td><td><i>E</i><sub>1s</sub>+<i>E</i><sub>2s</sub>+<i>J</i> <b>− <i>K</i></b></td><td class="c" style="color:#2c6e4f"><b>低</b></td></tr>
+<tr><td><b><sup>1</sup>S₀</b> 单重态</td><td><b>对称</b></td><td><i>E</i><sub>1s</sub>+<i>E</i><sub>2s</sub>+<i>J</i> <b>+ <i>K</i></b></td><td class="c" style="color:#c0392b"><b>高</b></td></tr>
+</table>
+<p>因为 <i>K</i> &gt; 0，所以 Δ<i>E</i> = −2<i>K</i> &lt; 0，<b>三重态更稳定</b>。</p>
+</div>
+<div class="step"><div class="sh">物理原因（这才是关键，不要只记公式）</div>
+<p><b>三重态的空间波函数是反对称的</b>：Ψ<sub>空间</sub> = (1/√2)[1<i>s</i>(1)2<i>s</i>(2) − 1<i>s</i>(2)2<i>s</i>(1)]</p>
+<p>让两个电子跑到同一点（<b>r</b>₁ = <b>r</b>₂ = <b>r</b>）：</p>
+<div class="fml" style="font-size:15px">Ψ<sub>空间</sub> = (1/√2)[1<i>s</i>(<b>r</b>)2<i>s</i>(<b>r</b>) − 1<i>s</i>(<b>r</b>)2<i>s</i>(<b>r</b>)] = <b>0</b></div>
+<p><span class="key">波函数在"两电子重合"处严格为零 ⟹ 两个电子<b>永远不会靠得太近</b> ⟹ 平均排斥能更低 ⟹ 能量更低。</span></p>
+<p>这个"电子相同自旋时自动互相回避"的区域叫 <b>Fermi 空穴 (Fermi hole)</b>。</p>
+<p><b>对称的单重态则相反</b>：<i>r</i>₁ = <i>r</i>₂ 时 Ψ = √2·1<i>s</i>(<b>r</b>)2<i>s</i>(<b>r</b>) ≠ 0，电子可以靠得很近，排斥能更高。</p>
+</div>
+<div class="warn"><span class="lab">要记住的核心结论</span>
+<p><span class="key">交换能不是一种"新的作用力"。自旋之间没有直接的能量相互作用。</span></p>
+<p><b>真实机制是</b>：自旋 → 通过泡利原理约束了空间波函数的对称性 → 改变了电子的空间分布 → 改变了库仑排斥能。</p>
+<p><b>所以：磁性归根到底是静电现象。</b>这是理解所有磁交换耦合（包括你以后会算的 BS-DFT）的基础。</p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · p71 那个 −2.75 Ha 是怎么来的，以及它有多准</span>
+<table>
+<tr><th style="width:250px">方法</th><th>He 基态能量 (Hartree)</th><th>误差</th></tr>
+<tr><td>忽略 1/<i>r</i>₁₂（纯类氢）</td><td>−4.00</td><td>大错（低太多）</td></tr>
+<tr><td><b>用类氢 1s 轨道 + 一阶微扰</b></td><td><b>−2.75</b>（讲义这个数）</td><td>+0.15（偏高 5%）</td></tr>
+<tr><td>变分法优化 <i>ζ</i>（第 3 讲 p29 的思路）</td><td>−2.848</td><td>+0.05</td></tr>
+<tr><td><b>Hartree–Fock 极限</b></td><td>−2.8617</td><td>+0.042 = <b>相关能</b></td></tr>
+<tr><td>精确（Hylleraas 变分，含 <i>r</i>₁₂）</td><td>−2.9037</td><td>—</td></tr>
+<tr><td>实验值</td><td>−2.9037</td><td>—</td></tr>
+</table>
+<p><span class="key">注意倒数第二行和第三行的差 0.042 Hartree = 26 kcal/mol，这就是 He 原子的<b>相关能</b>。</span>它比一根氢键还大——这就是为什么 HF 不够用。第 4 讲会把这件事讲透。</p>
+</div>
+</section>
+
+<section class="slide" id="p72">
+<h2><span class="pno">p72–73</span>Slater 行列式：把反对称性自动化</h2>
+<div class="tr"><span class="lab">原文翻译（p72）</span>
+<ul>
+<li>1930 年代初，Slater 引入了用<b>行列式</b>来构造反对称波函数的方法</li>
+<li>如果我们有占据的轨道 <i>φ</i><sub><i>a</i></sub>, <i>φ</i><sub><i>b</i></sub>, <i>φ</i><sub><i>c</i></sub>, …，那么 <i>N</i> 电子波函数是：</li>
+</ul>
+<p>Ψ(1,2,3,…) = (1/√(<i>N</i>!)) · det[<i>φ</i><sub><i>a</i></sub>(1) <i>φ</i><sub><i>b</i></sub>(1) … <i>φ</i><sub><i>n</i></sub>(1) ; <i>φ</i><sub><i>a</i></sub>(2) <i>φ</i><sub><i>b</i></sub>(2) … <i>φ</i><sub><i>n</i></sub>(2) ; ⋮ ; <i>φ</i><sub><i>a</i></sub>(<i>N</i>) <i>φ</i><sub><i>b</i></sub>(<i>N</i>) … <i>φ</i><sub><i>n</i></sub>(<i>N</i>)]</p>
+<p>行列式通过两条性质<b>自然地</b>满足泡利反对称原理。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p73）</span>
+<ul>
+<li>第一，当我们<b>交换任意两行或任意两列</b>时，行列式<b>变号</b></li>
+<li>第二，如果<b>任意两行或任意两列相同</b>（或平凡相关，例如相差一个标量因子），行列式<b>等于零</b></li>
+</ul>
+<p>因此氦的基态波函数是：</p>
+<p>Ψ(<sup>1</sup>S₀) = (1/√2)·det[1<i>s</i>(<i>r</i>₁)<i>α</i>₁　1<i>s</i>(<i>r</i>₁)<i>β</i>₁ ; 1<i>s</i>(<i>r</i>₂)<i>α</i>₂　1<i>s</i>(<i>r</i>₂)<i>β</i>₂]</p>
+<p>激发单重态由一个线性组合给出：</p>
+<p>Ψ(2<sup>1</sup>S₀) = ½{det[1<i>s</i>(<i>r</i>₁)<i>α</i>₁ 2<i>s</i>(<i>r</i>₁)<i>β</i>₁; 1<i>s</i>(<i>r</i>₂)<i>α</i>₂ 2<i>s</i>(<i>r</i>₂)<i>β</i>₂] − det[1<i>s</i>(<i>r</i>₁)<i>β</i>₁ 2<i>s</i>(<i>r</i>₁)<i>α</i>₁; 1<i>s</i>(<i>r</i>₂)<i>β</i>₂ 2<i>s</i>(<i>r</i>₂)<i>α</i>₂]}</p>
+</div>
+
+<h3 class="fm">公式解析 · Slater 行列式</h3>
+<div class="fml"><span class="tag">★ Slater 行列式（Hartree–Fock 波函数的形式）</span>
+Ψ(1,…,<i>N</i>) = (1/√(<i>N</i>!)) &nbsp;|&nbsp; <i>φ</i><sub><i>a</i></sub>(1) &nbsp;<i>φ</i><sub><i>b</i></sub>(1) &nbsp;⋯&nbsp; <i>φ</i><sub><i>n</i></sub>(1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>φ</i><sub><i>a</i></sub>(2) &nbsp;<i>φ</i><sub><i>b</i></sub>(2) &nbsp;⋯&nbsp; <i>φ</i><sub><i>n</i></sub>(2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⋮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⋮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⋱&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⋮<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>φ</i><sub><i>a</i></sub>(<i>N</i>) <i>φ</i><sub><i>b</i></sub>(<i>N</i>) ⋯ <i>φ</i><sub><i>n</i></sub>(<i>N</i>) &nbsp;|
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><b>行</b></td><td>电子</td><td><span class="key">第 <i>k</i> 行 = 电子 <i>k</i>。</span>记忆法："<b>行</b>是电子，<b>列</b>是轨道"</td></tr>
+<tr><td><b>列</b></td><td>自旋轨道</td><td>第 <i>j</i> 列 = 自旋轨道 <i>φ</i><sub><i>j</i></sub></td></tr>
+<tr><td>1/√(<i>N</i>!)</td><td>归一化常数</td><td>因为行列式展开后有 <i>N</i>! 项（<i>N</i> 个元素的全排列数）</td></tr>
+<tr><td><i>φ</i><sub><i>a</i></sub></td><td>自旋轨道</td><td>spin-orbital = 空间轨道 × 自旋函数，例如 1<i>s</i>·<i>α</i></td></tr>
+<tr><td>| … |</td><td>行列式</td><td>determinant。两条竖线表示取行列式（不是绝对值）</td></tr>
+</table>
+
+<h3>讲解 · 两条行列式性质如何自动实现泡利原理</h3>
+<table>
+<tr><th style="width:230px">行列式的性质</th><th style="width:200px">对应的物理</th><th>为什么</th></tr>
+<tr><td><b>交换两行 → 变号</b></td><td><b>反对称性</b><br><i>P̂</i>₁₂Ψ = −Ψ</td><td>交换两行 = 交换两个电子的编号（因为行代表电子）</td></tr>
+<tr><td><b>两列相同 → 行列式 = 0</b></td><td><b>泡利不相容</b></td><td>两列相同 = 两个电子占据同一个自旋轨道 → Ψ = 0 → 状态不存在</td></tr>
+</table>
+<div class="step"><div class="sh">用 He 基态的 2×2 行列式验证一遍</div>
+<p>展开 2×2 行列式（规则：主对角线乘积 − 副对角线乘积）：</p>
+<div class="fml" style="font-size:15px;line-height:2">
+Ψ = (1/√2)[ 1<i>s</i>(<i>r</i>₁)<i>α</i>₁ · 1<i>s</i>(<i>r</i>₂)<i>β</i>₂ − 1<i>s</i>(<i>r</i>₁)<i>β</i>₁ · 1<i>s</i>(<i>r</i>₂)<i>α</i>₂ ]<br>
+= (1/√2)·1<i>s</i>(<i>r</i>₁)1<i>s</i>(<i>r</i>₂)·[<i>α</i>₁<i>β</i>₂ − <i>β</i>₁<i>α</i>₂]
+</div>
+<p><span class="key">和 p66 手工构造的结果完全一致</span>——但行列式是<b>自动</b>得到的，不需要人去想"哪个组合是反对称的"。</p>
+<p><b>再验证"两列相同 = 0"</b>：假如两个电子都在 1<i>s</i><i>α</i>（两列一样）：</p>
+<p>Ψ = (1/√2)[1<i>s</i>(<i>r</i>₁)<i>α</i>₁·1<i>s</i>(<i>r</i>₂)<i>α</i>₂ − 1<i>s</i>(<i>r</i>₁)<i>α</i>₁·1<i>s</i>(<i>r</i>₂)<i>α</i>₂] = <b>0</b>　✔</p>
+</div>
+
+<div class="warn"><span class="lab">p73 那个"激发单重态需要<b>两个</b>行列式"是一个重大伏笔</span>
+<p>看 p73 最后一行：Ψ(2<sup>1</sup>S₀) 需要<b>两个行列式的线性组合</b>，一个行列式不够。</p>
+<p><span class="key">而 Hartree–Fock 方法的定义就是"用<b>一个</b> Slater 行列式"（p76 明说）。所以 HF 从根本上无法描述这个态。</span></p>
+<p>同样的问题在第 3 讲 p49–50 会以 B 原子的形式再出现一次（需要<b>三个</b>行列式），并给出结论：<b>必须用 CASSCF。</b>这类问题叫<b>静态相关 (static correlation)</b>，是第 4 讲 p4 的主角之一。</p>
+<p><b>速记规则</b>：单重态的<b>开壳层</b>（两个电子在不同轨道且自旋相反）一定需要至少两个行列式；三重态的 <i>M</i><sub><i>S</i></sub> = ±1 分量只需要一个。<b>这就是为什么算激发单重态比算三重态难。</b></p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · 简写记号（后面会大量使用）</span>
+<p>写完整的行列式太占地方，实践中用简写：</p>
+<div class="fml" style="font-size:16px">Ψ<sub>HF</sub> = |<i>φ</i><sub>1</sub> <span style="text-decoration:overline"><i>φ</i><sub>1</sub></span> <i>φ</i><sub>2</sub> <span style="text-decoration:overline"><i>φ</i><sub>2</sub></span> ⋯⟩</div>
+<p><span class="key">规则：只写对角元；<b>字母上面加一横杠表示 <i>β</i> 自旋</b>，不加杠表示 <i>α</i> 自旋。</span>（第 3 讲 p38 明确写了这条约定。）</p>
+<p>例：He 基态 = |1<i>s</i> <span style="text-decoration:overline">1<i>s</i></span>⟩；Li 基态 = |1<i>s</i> <span style="text-decoration:overline">1<i>s</i></span> 2<i>s</i>⟩</p>
+</div>
+</section>
+
+<section class="slide" id="p74">
+<h2><span class="pno">p74–75</span>轨道能量的 <i>l</i> 依赖：为什么 4s 在 3d 之前填</h2>
+<div class="tr"><span class="lab">原文翻译（p74–75）</span>
+<p><b>p74：</b>碱金属在外层只有一个电子，所以我们可能期望它们的能级与氢原子的相似。</p>
+<p><b>p75：</b>然而，<b>电子-电子排斥项破坏了球对称性</b>，我们看到能量对轨道有很强的依赖。（这个效应在单电子原子中不存在，那里能量只依赖主量子数 <i>n</i>，对所有 2<i>l</i>+1 个轨道态都一样。）</p>
+<p>对给定的 <i>n</i>，<b><i>E</i><sub><i>ns</i></sub> &lt; <i>E</i><sub><i>np</i></sub> &lt; <i>E</i><sub><i>nd</i></sub> &lt; <i>E</i><sub><i>nf</i></sub> …</b>，因为外层电子对原子核的<b>穿透能力</b>按以下顺序递减：</p>
+<p><b><i>s</i> &gt; <i>p</i> &gt; <i>d</i> &gt; <i>f</i> &gt; ⋯</b></p>
+</div>
+
+<h3>讲解 · "简并解除"是多电子原子与氢原子的根本区别</h3>
+<figure>
+<svg viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.lv{stroke:#0b5ea8;stroke-width:2}.lb{font-size:12px;fill:#1c1c1e}.s{font-size:11px;fill:#6b6b70}.hh{font-size:12.5px;font-weight:700;fill:#0b5ea8}</style></defs>
+<text x="120" y="18" class="hh" text-anchor="middle">氢原子（单电子）</text>
+<text x="395" y="18" class="hh" text-anchor="middle">多电子原子</text>
+<line x1="30" y1="215" x2="30" y2="35" stroke="#9aa5b1" stroke-width="1.2"/>
+<text x="14" y="120" class="s" transform="rotate(-90 14,120)">能量</text>
+<line x1="50" y1="200" x2="190" y2="200" class="lv"/><text x="196" y="204" class="lb">1s</text>
+<line x1="50" y1="120" x2="190" y2="120" class="lv"/><text x="196" y="124" class="lb">2s = 2p</text>
+<text x="120" y="112" class="s" text-anchor="middle">4 重简并</text>
+<line x1="50" y1="80" x2="190" y2="80" class="lv"/><text x="196" y="84" class="lb">3s = 3p = 3d</text>
+<text x="120" y="72" class="s" text-anchor="middle">9 重简并</text>
+<text x="120" y="232" class="s" text-anchor="middle">E 只依赖 n</text>
+<line x1="270" y1="215" x2="270" y2="35" stroke="#9aa5b1" stroke-width="1.2"/>
+<line x1="290" y1="205" x2="380" y2="205" class="lv"/><text x="386" y="209" class="lb">1s</text>
+<line x1="290" y1="145" x2="380" y2="145" class="lv"/><text x="386" y="149" class="lb">2s</text>
+<line x1="290" y1="126" x2="380" y2="126" class="lv"/><text x="386" y="130" class="lb">2p</text>
+<line x1="290" y1="96" x2="380" y2="96" class="lv"/><text x="386" y="100" class="lb">3s</text>
+<line x1="290" y1="82" x2="380" y2="82" class="lv"/><text x="386" y="86" class="lb">3p</text>
+<line x1="290" y1="58" x2="380" y2="58" class="lv"/><text x="386" y="62" class="lb">3d</text>
+<line x1="290" y1="68" x2="380" y2="68" class="lv" stroke="#b3541e" stroke-dasharray="4,3"/><text x="440" y="72" class="s" fill="#b3541e">4s（可低于 3d）</text>
+<text x="395" y="232" class="s" text-anchor="middle">E 同时依赖 n 和 l　⟹　简并被解除</text>
+</svg>
+<figcaption>电子-电子排斥解除了 <i>l</i> 简并——这是元素周期表结构的直接来源</figcaption>
+</figure>
+
+<h3>讲解 · 什么是"穿透 (penetration)"</h3>
+<div class="step"><div class="sh">机制：屏蔽 + 穿透</div>
+<p><b>屏蔽 (shielding)</b>：内层电子挡在外层电子和原子核之间，让外层电子感受到的核电荷从 <i>Z</i> 降到<b>有效核电荷</b> <i>Z</i><sub>eff</sub>。</p>
+<div class="fml" style="font-size:16px"><i>Z</i><sub>eff</sub> = <i>Z</i> − <i>σ</i>　（<i>σ</i> = 屏蔽常数）</div>
+<p><b>穿透 (penetration)</b>：如果一个轨道的电子有一部分几率出现在<b>内层电子云的里面</b>（更靠近核），它就"穿透"了屏蔽，感受到更大的 <i>Z</i><sub>eff</sub>，能量更低。</p>
+<p><span class="key">回到 p52 的离心势垒：<i>l</i> 越大，离心势垒越强，电子越被推离核，穿透越差。</span>所以：</p>
+<div class="fml" style="font-size:16px">穿透能力：s (<i>l</i>=0) &gt; p (<i>l</i>=1) &gt; d (<i>l</i>=2) &gt; f (<i>l</i>=3)<br>
+⟹ <i>Z</i><sub>eff</sub>：s &gt; p &gt; d &gt; f　⟹ 能量：<i>E</i><sub><i>ns</i></sub> &lt; <i>E</i><sub><i>np</i></sub> &lt; <i>E</i><sub><i>nd</i></sub> &lt; <i>E</i><sub><i>nf</i></sub></div>
+</div>
+<div class="step"><div class="sh">证据：看 p55 那张径向函数图</div>
+<p><b>3s</b> 有 2 个径向节面，意味着它在靠近核的地方还有<b>两个小的"驼峰"</b>——那些驼峰就是穿透部分。</p>
+<p><b>3p</b> 有 1 个节面（1 个内层驼峰），<b>3d</b> 有 0 个节面（没有内层驼峰，全部集中在外面）。</p>
+<p><span class="key">节面数 = <i>n</i>−<i>l</i>−1，<i>l</i> 越大节面越少，内层驼峰越少，穿透越差。</span>这三件事是同一件事的三种说法。</p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · 4s 与 3d 的著名"陷阱"</span>
+<p>你在中学学的填充顺序是 4s 先于 3d（Aufbau 原理）。但真相更微妙：</p>
+<table>
+<tr><th style="width:230px">情形</th><th>谁的能量低</th></tr>
+<tr><td><b>中性 K、Ca 原子</b>（3d 空）</td><td>4s &lt; 3d ⟹ 电子先填 4s　✔ Aufbau 成立</td></tr>
+<tr><td><b>过渡金属原子</b>（Sc 之后，3d 开始被占据）</td><td><span class="key">3d &lt; 4s！</span>一旦 3d 上有电子，3d 就急剧下降到 4s 以下</td></tr>
+<tr><td><b>所有过渡金属<u>离子</u></b>（Fe²⁺, Cu²⁺…）</td><td>3d &lt; 4s ⟹ <b>电离时<u>先失去 4s</u> 电子</b></td></tr>
+</table>
+<p><b>所以 Fe²⁺ 是 [Ar]3d⁶，不是 [Ar]3d⁴4s²。</b>这是配位化学里的基本事实。</p>
+<p><b>为什么会这样</b>：4s 和 3d 的能量本来就非常接近，谁高谁低取决于 <i>Z</i><sub>eff</sub> 和电子间排斥的细微平衡。<span class="key">3d 轨道比 4s 更紧凑，所以 3d–3d 之间的电子排斥（<i>J</i> 积分）比 4s–4s 大得多。</span>当 3d 上电子多起来时这个排斥就变得重要。</p>
+<p><b>对你的计算的实际影响</b>：这就是过渡金属体系 SCF 难收敛的根本原因——3d 和 4s 几乎简并，SCF 迭代时电子在两者之间来回跳，永远不收敛。第 3 讲 p66–68 的收敛技巧（damping、level shift、DIIS）就是为了对付这个。</p>
+</div>
+</section>
+
+<section class="slide" id="p76">
+<h2><span class="pno">p76–77</span>Hartree–Fock 近似与完整的分子哈密顿量</h2>
+<div class="tr"><span class="lab">原文翻译（p76）</span>
+<ul>
+<li>我们已经看到，多电子体系的基态波函数可以用一个 Slater 行列式表示。也就是说，如果我们有占据的分子轨道 <i>φ</i><sub><i>a</i></sub>, <i>φ</i><sub><i>b</i></sub>, <i>φ</i><sub><i>c</i></sub>, …，那么 <i>N</i> 电子波函数是（Slater 行列式，同 p72）</li>
+<li><b>虽然行列式自动满足了泡利不相容原理，但它并没有考虑电子相关</b></li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p77）· 完整哈密顿量</span>
+<p>Slater 行列式是归一化的：⟨Ψ(1,2,…,<i>N</i>)|Ψ(1,2,…,<i>N</i>)⟩ = 1</p>
+<p>注意多电子体系的<b>总哈密顿量</b>（原子单位）是：</p>
+<p><i>Ĥ</i> = −Σ<sub><i>A</i></sub><sup><i>N</i><sub>核</sub></sup>∇<sub><i>A</i></sub>² + ½Σ<sub><i>A</i></sub><sup><i>N</i><sub>核</sub></sup>Σ<sub><i>B</i>≠<i>A</i></sub><sup><i>N</i><sub>核</sub></sup> <i>Z</i><sub><i>A</i></sub><i>Z</i><sub><i>B</i></sub>/|<b>r</b><sub><i>A</i></sub>−<b>r</b><sub><i>B</i></sub>| − Σ<sub><i>i</i></sub><sup><i>N</i><sub>电子</sub></sup>∇<sub><i>i</i></sub>² − Σ<sub><i>A</i></sub><sup><i>N</i><sub>核</sub></sup>Σ<sub><i>i</i></sub><sup><i>N</i><sub>电子</sub></sup> <i>Z</i><sub><i>A</i></sub>/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>A</i></sub>| + ½Σ<sub><i>i</i></sub><sup><i>N</i><sub>电子</sub></sup>Σ<sub><i>j</i>≠<i>i</i></sub><sup><i>N</i><sub>电子</sub></sup> 1/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>j</i></sub>|</p>
+</div>
+
+<h3 class="fm">公式解析 · 完整分子哈密顿量的五项（务必逐项认清）</h3>
+<div class="fml"><span class="tag">★ 分子的完整非相对论哈密顿量（原子单位）</span>
+<i>Ĥ</i> = <span style="color:#6b6b70">①</span> + <span style="color:#6b6b70">②</span> + <span style="color:#0b5ea8">③</span> + <span style="color:#2c6e4f">④</span> + <span style="color:#c0392b">⑤</span>
+</div>
+<table>
+<tr><th style="width:40px" class="c">项</th><th style="width:200px">数学形式</th><th style="width:130px">名称</th><th>说明</th></tr>
+<tr><td class="c">①</td><td>−Σ<sub><i>A</i></sub>∇<sub><i>A</i></sub>²</td><td><b>核动能</b></td><td>原子核的运动。<span class="key">BO 近似要把它设为 0</span>（p78）</td></tr>
+<tr><td class="c">②</td><td>½Σ<sub><i>A</i></sub>Σ<sub><i>B</i>≠<i>A</i></sub> <i>Z<sub>A</sub>Z<sub>B</sub></i>/<i>R<sub>AB</sub></i></td><td><b>核-核排斥</b></td><td>正号（同为正电荷）。<span class="key">BO 近似下这是一个<b>常数</b></span>，直接加上去就行</td></tr>
+<tr><td class="c">③</td><td>−Σ<sub><i>i</i></sub>∇<sub><i>i</i></sub>²</td><td><b>电子动能</b></td><td>保留</td></tr>
+<tr><td class="c">④</td><td>−Σ<sub><i>A</i></sub>Σ<sub><i>i</i></sub> <i>Z<sub>A</sub></i>/<i>r<sub>iA</sub></i></td><td><b>核-电吸引</b></td><td>负号 = 吸引。<b>这是把分子"粘"在一起的力。</b></td></tr>
+<tr><td class="c">⑤</td><td>½Σ<sub><i>i</i></sub>Σ<sub><i>j</i>≠<i>i</i></sub> 1/<i>r<sub>ij</sub></i></td><td><b>电子-电子排斥</b></td><td><span class="key">唯一无法精确处理的一项。整门课的主角。</span></td></tr>
+</table>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><b>大写 <i>A</i>, <i>B</i></b></td><td>原子核编号</td><td><span class="key">本讲的约定：大写字母数原子核，小写 <i>i</i>, <i>j</i> 数电子。</span>看公式先看下标就知道在讲谁。</td></tr>
+<tr><td><i>Z</i><sub><i>A</i></sub></td><td>核电荷数</td><td>C 是 6，O 是 8</td></tr>
+<tr><td><i>r</i><sub><i>ij</i></sub></td><td>电子间距</td><td>= |<b>r</b><sub><i>i</i></sub> − <b>r</b><sub><i>j</i></sub>|</td></tr>
+<tr><td><b>½ 因子</b></td><td>防重复计数</td><td><span class="key">因为 Σ<sub><i>i</i></sub>Σ<sub><i>j</i>≠<i>i</i></sub> 会把电子对 (1,2) 数两次（一次作为 <i>i</i>=1,<i>j</i>=2，一次作为 <i>i</i>=2,<i>j</i>=1），所以要除以 2。</span></td></tr>
+<tr><td>∇<sub><i>A</i></sub>²</td><td>对核坐标的 Laplace</td><td>注意下标 <i>A</i> 表示是对<b>核</b> A 的坐标求导</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 这个哈密顿量"不含"什么（同样重要）</span>
+<p>它是<b>非相对论</b>的、<b>不含自旋-轨道耦合</b>的、<b>不含外场</b>的。所以它算不出：</p>
+<table>
+<tr><th style="width:220px">缺什么</th><th>后果</th></tr>
+<tr><td>相对论效应</td><td>重元素（第 5、6 周期）会算错。<span class="key">金为什么是黄色的、汞为什么是液体，都是相对论效应。</span>解决办法：ECP 赝势、DKH/ZORA 标量相对论哈密顿量</td></tr>
+<tr><td>自旋-轨道耦合 (SOC)</td><td>算不了系间窜越 (ISC)、磷光、镧系的磁各向异性。<span class="key">这正是本课 OpenMOLCAS 部分要用 SO-RASSI 补上的东西。</span></td></tr>
+<tr><td>外电场/磁场</td><td>算不了 NMR、EPR、极化率。需要额外加微扰项（第 4 讲 p28 的微扰论就是干这个的）</td></tr>
+<tr><td>核的量子效应</td><td>零点能振动需要 BO 之后单独算频率来补</td></tr>
+</table>
+</div>
+</section>
+
+<section class="slide" id="p78">
+<h2><span class="pno">p78–79</span>Born–Oppenheimer 近似：分离电子与核</h2>
+<div class="tr"><span class="lab">原文翻译（p78）</span>
+<ul>
+<li><b>电子比原子核轻得多</b>（H 的核大约比电子重 2000 倍）。因此<b>电子的运动比原子核快得多</b></li>
+<li>我们认为<b>原子核是静止的</b>，即完全不动</li>
+<li>电子被认为能<b>立即</b>适应原子核的任何新构型</li>
+<li>在 BO 近似下，下列项变为：<br>
+Σ<sub><i>A</i></sub>∇<sub><i>A</i></sub>² = <b>0</b>　；　Σ<sub><i>A</i></sub>Σ<sub><i>B</i>≠<i>A</i></sub> <i>Z<sub>A</sub>Z<sub>B</sub></i>/|<b>r</b><sub><i>A</i></sub>−<b>r</b><sub><i>B</i></sub>| = <b>常数</b></li>
+</ul>
+</div>
+<div class="tr"><span class="lab">原文翻译（p79）</span>
+<p>得到的哈密顿量是：</p>
+<p><i>Ĥ</i> = Σ<sub><i>i</i></sub>[−∇<sub><i>i</i></sub>² − Σ<sub><i>A</i></sub> <i>Z<sub>A</sub></i>/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>A</i></sub>|] + ½Σ<sub><i>i</i></sub>Σ<sub><i>j</i>≠<i>i</i></sub> 1/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>j</i></sub>| + ½Σ<sub><i>A</i></sub>Σ<sub><i>B</i>≠<i>A</i></sub> <i>Z<sub>A</sub>Z<sub>B</sub></i>/|<b>r</b><sub><i>A</i></sub>−<b>r</b><sub><i>B</i></sub>|</p>
+<p>= Σ<sub><i>i</i></sub> <i>ĥ</i><sub><i>i</i></sub> + ½Σ<sub><i>i</i></sub>Σ<sub><i>j</i>≠<i>i</i></sub> <i>ĝ</i><sub><i>ij</i></sub> + ½Σ<sub><i>A</i></sub>Σ<sub><i>B</i>≠<i>A</i></sub> <i>Z<sub>A</sub>Z<sub>B</sub></i>/|<b>r</b><sub><i>A</i></sub>−<b>r</b><sub><i>B</i></sub>|</p>
+</div>
+
+<h3 class="fm">公式解析 · BO 近似后的电子哈密顿量</h3>
+<div class="fml"><span class="tag">★ 电子哈密顿量（BO 近似之后，本课后面全部基于这个）</span>
+<i>Ĥ</i> = Σ<sub><i>i</i></sub> <i>ĥ</i><sub><i>i</i></sub> &nbsp;+&nbsp; ½ Σ<sub><i>i</i></sub>Σ<sub><i>j</i>≠<i>i</i></sub> <i>ĝ</i><sub><i>ij</i></sub> &nbsp;+&nbsp; <i>V</i><sub>NN</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ĥ</i><sub><i>i</i></sub></td><td><b>单电子算符</b><br>（core Hamiltonian）</td><td>= −∇<sub><i>i</i></sub>² − Σ<sub><i>A</i></sub><i>Z</i><sub><i>A</i></sub>/<i>r</i><sub><i>iA</i></sub><br><span class="key">只涉及<b>一个</b>电子：它的动能 + 它被所有核吸引的能量。</span>算起来便宜（<i>N</i>² 个积分）</td></tr>
+<tr><td><i>ĝ</i><sub><i>ij</i></sub></td><td><b>双电子算符</b></td><td>= 1/<i>r</i><sub><i>ij</i></sub><br><span class="key">涉及<b>两个</b>电子。算起来昂贵（<i>N</i>⁴ 个积分）。</span></td></tr>
+<tr><td><i>V</i><sub>NN</sub></td><td>核-核排斥能</td><td><b>一个常数</b>（对固定的几何构型）。算一下加上去即可。</td></tr>
+</table>
+
+<h3>讲解 · BO 近似的数量依据与它创造的概念</h3>
+<div class="step"><div class="sh">质量比有多悬殊</div>
+<p><i>m</i><sub>质子</sub>/<i>m</i><sub>电子</sub> = 1836。对碳原子核（12 个核子）就是约 22000 倍。</p>
+<p>动能相同时，速度 ∝ 1/√<i>m</i>，所以电子比核快约 √1836 ≈ <b>43 倍</b>（重核更多）。<span class="key">从电子的角度看，原子核基本是钉死的。</span></p>
+</div>
+<div class="warn"><span class="lab">BO 近似创造了化学里最核心的一个概念：势能面</b></span>
+<p>因为核不动，<b>电子能量就成了核坐标的函数</b>：</p>
+<div class="fml" style="font-size:16px"><i>E</i><sub>total</sub>(<b>R</b>) = <i>E</i><sub>elec</sub>(<b>R</b>) + <i>V</i><sub>NN</sub>(<b>R</b>)</div>
+<p>把不同核构型 <b>R</b> 下的这个能量画出来，就是 <b>势能面 (Potential Energy Surface, PES)</b>。</p>
+<p><span class="key">你在化学里熟悉的一切几何概念，全都活在势能面上：</span></p>
+<table>
+<tr><th style="width:190px">概念</th><th>在 PES 上是什么</th></tr>
+<tr><td><b>平衡结构</b></td><td>极小点（所有方向的二阶导数 &gt; 0 → 全实频率）</td></tr>
+<tr><td><b>过渡态</b></td><td>一阶鞍点（恰好<b>一个</b>方向二阶导数 &lt; 0 → <b>一个虚频</b>）</td></tr>
+<tr><td><b>反应路径</b></td><td>连接两个极小点、经过鞍点的最低能量路径 (IRC)</td></tr>
+<tr><td><b>活化能 <i>E</i><sub>a</sub></b></td><td>鞍点与反应物极小点的能量差</td></tr>
+<tr><td><b>键长、键角</b></td><td>极小点处的核坐标</td></tr>
+<tr><td><b>振动频率</b></td><td>极小点处 Hessian（二阶导矩阵）的本征值开根号</td></tr>
+</table>
+<p><b>没有 BO 近似，就没有"分子结构"这个概念</b>——因为核和电子会纠缠成一个整体，你无法说"这个分子的 C–C 键长是 1.54 Å"。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · BO 近似什么时候崩（第 1 讲 p12 提到的"未来方向 4"）</span>
+<p>BO 的成立条件是：<b>不同电子态之间的能隙远大于核运动的能量尺度。</b>当两个电子态的势能面靠近甚至相交时，它就失效了。</p>
+<table>
+<tr><th style="width:200px">失效场景</th><th>后果</th></tr>
+<tr><td><b>锥形交叉 (conical intersection)</b></td><td>两个势能面在多维空间中相交成锥形。<span class="key">分子在这里可以在 fs 时间内无辐射地从激发态跳回基态。</span>光化学、荧光量子产率、视觉的第一步、DNA 的光稳定性全靠它。</td></tr>
+<tr><td><b>Jahn–Teller 效应</b></td><td>电子简并态与核运动耦合，导致分子自发畸变（如 Cu²⁺ 八面体配合物的四角畸变）。</td></tr>
+<tr><td><b>非绝热跃迁</b> (surface hopping)</td><td>需要专门的动力学方法（如 Tully 表面跳跃）</td></tr>
+</table>
+<p><b>数值上的提示</b>：<span class="key">当你算 TD-DFT 发现 S₀ 和 S₁ 能量非常接近、或者 SCF 在某个几何构型附近怎么都不收敛时，很可能就是撞上了 BO 失效区。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p80">
+<h2><span class="pno">p80–85</span>Hartree–Fock 能量与 Fock 算符</h2>
+<div class="tr"><span class="lab">原文翻译（p80–82）</span>
+<p><b>p80：</b>引入了如下记号：</p>
+<p><i>ĥ</i><sub><i>i</i></sub> = −∇<sub><i>i</i></sub>² − Σ<sub><i>A</i></sub> <i>Z</i><sub><i>A</i></sub>/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>A</i></sub>|　；　<i>ĝ</i><sub><i>ij</i></sub> = 1/|<b>r</b><sub><i>i</i></sub>−<b>r</b><sub><i>j</i></sub>|</p>
+<p>我们现在来求哈密顿量的期望值（即总能量）：<i>E</i> = ⟨Ψ(1,2,…,<i>N</i>)|<i>Ĥ</i>|Ψ(1,2,…,<i>N</i>)⟩</p>
+<p><b>p81（Hartree–Fock 近似的三句话总结）：</b></p>
+<ul>
+<li>电子在"所有原子核和其余电子"产生的<b>平均静电场</b>中运动</li>
+<li>每个电子并不显式地感受到其他电子的存在，也不知道其他电子在哪里</li>
+<li>而事实上，两个电子彼此靠得很近的概率是非常小的</li>
+</ul>
+<p><b>p82：</b>把 <i>Ĥ</i> 的三部分分别代入期望值，得到三项之和（推导略）。</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p83）· ★ 闭壳层 HF 能量表达式</span>
+<p>经过一些数学推导后，前面的方程被简化为（对<b>闭壳层</b>分子）：</p>
+<p><b><i>E</i> = 2Σ<sub><i>i</i></sub><sup><i>N</i>/2</sup> <i>H</i><sub><i>i</i></sub> + Σ<sub><i>i</i></sub><sup><i>N</i>/2</sup>Σ<sub><i>j</i></sub><sup><i>N</i>/2</sup> (2<i>J</i><sub><i>ij</i></sub> − <i>K</i><sub><i>ij</i></sub>) + <i>V</i><sub>NN</sub></b></p>
+<p>其中：</p>
+<p><i>H</i><sub><i>i</i></sub> = ⟨<i>φ</i><sub><i>i</i></sub>(1)|<i>ĥ</i><sub><i>i</i></sub>|<i>φ</i><sub><i>i</i></sub>(1)⟩　—— <b>core Hamiltonian = 单电子积分</b></p>
+<p><i>J</i><sub><i>ij</i></sub> = ⟨<i>φ</i><sub><i>i</i></sub>(1)<i>φ</i><sub><i>j</i></sub>(2)|<i>ĝ</i><sub><i>ij</i></sub>|<i>φ</i><sub><i>i</i></sub>(1)<i>φ</i><sub><i>j</i></sub>(2)⟩</p>
+<p><i>K</i><sub><i>ij</i></sub> = ⟨<i>φ</i><sub><i>i</i></sub>(1)<i>φ</i><sub><i>j</i></sub>(2)|<i>ĝ</i><sub><i>ij</i></sub>|<i>φ</i><sub><i>j</i></sub>(1)<i>φ</i><sub><i>i</i></sub>(2)⟩</p>
+<p>} = <b>电子排斥积分 = 双电子积分</b></p>
+<p><i>V</i><sub>NN</sub> = ½Σ<sub><i>A</i></sub>Σ<sub><i>B</i>≠<i>A</i></sub> <i>Z<sub>A</sub>Z<sub>B</sub></i>/|<b>r</b><sub><i>A</i></sub>−<b>r</b><sub><i>B</i></sub>|</p>
+</div>
+
+<h3 class="fm">公式解析 · 闭壳层 HF 总能量（考试必考，逐项理解）</h3>
+<div class="fml"><span class="tag">★ 闭壳层（RHF）总能量</span>
+<i>E</i> = <span style="color:#0b5ea8">2 Σ<sub><i>i</i></sub><sup><i>N</i>/2</sup> <i>H</i><sub><i>i</i></sub></span> &nbsp;+&nbsp; <span style="color:#c0392b">Σ<sub><i>i</i></sub><sup><i>N</i>/2</sup> Σ<sub><i>j</i></sub><sup><i>N</i>/2</sup> (2<i>J</i><sub><i>ij</i></sub> − <i>K</i><sub><i>ij</i></sub>)</span> &nbsp;+&nbsp; <span style="color:#6b6b70"><i>V</i><sub>NN</sub></span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><b>闭壳层</b></td><td>closed shell</td><td><span class="key">所有电子都成对（每个空间轨道放 2 个自旋相反的电子）</span>。<i>N</i> 个电子占 <i>N</i>/2 个空间轨道。</td></tr>
+<tr><td><i>N</i>/2</td><td>占据轨道数</td><td>求和上限。<b>注意求和是对<u>空间</u>轨道，不是对电子。</b></td></tr>
+<tr><td><b>前面的 2</b></td><td>占据数</td><td>每个空间轨道有 2 个电子，所以单电子能量要 ×2</td></tr>
+<tr><td><i>H</i><sub><i>i</i></sub></td><td>单电子积分</td><td>轨道 <i>i</i> 上一个电子的动能 + 被核吸引的能量。<b>是负数</b>（吸引占优）</td></tr>
+<tr><td><b>2<i>J</i><sub><i>ij</i></sub></b></td><td>库仑排斥</td><td>见下面的计数说明</td></tr>
+<tr><td><b>−<i>K</i><sub><i>ij</i></sub></b></td><td>交换稳定化</td><td><span class="key">负号！交换项<b>降低</b>能量。</span>而且只有 1 个 <i>K</i> 对应 2 个 <i>J</i>——因为交换只发生在自旋相同的电子之间。</td></tr>
+</table>
+
+<h3>讲解 · 为什么是 "2<i>J</i> − <i>K</i>"（数电子对的方法）</h3>
+<div class="step"><div class="sh">考虑两个空间轨道 <i>φ</i><sub><i>i</i></sub>、<i>φ</i><sub><i>j</i></sub>，各放 2 个电子，共 4 个电子</div>
+<p>把它们标记为：<i>i</i>↑、<i>i</i>↓、<i>j</i>↑、<i>j</i>↓。</p>
+<p><b>跨轨道的电子对</b>（<i>i</i> 里的一个 × <i>j</i> 里的一个）共有 2×2 = <b>4 对</b>：</p>
+<table>
+<tr><th style="width:130px">电子对</th><th style="width:120px">自旋关系</th><th style="width:110px">有 <i>J</i>？</th><th>有 <i>K</i>？</th></tr>
+<tr><td class="c"><i>i</i>↑ 与 <i>j</i>↑</td><td class="c"><b>相同</b></td><td class="c">✔</td><td class="c"><b>✔</b></td></tr>
+<tr><td class="c"><i>i</i>↓ 与 <i>j</i>↓</td><td class="c"><b>相同</b></td><td class="c">✔</td><td class="c"><b>✔</b></td></tr>
+<tr><td class="c"><i>i</i>↑ 与 <i>j</i>↓</td><td class="c">相反</td><td class="c">✔</td><td class="c">✘（自旋积分为 0）</td></tr>
+<tr><td class="c"><i>i</i>↓ 与 <i>j</i>↑</td><td class="c">相反</td><td class="c">✔</td><td class="c">✘</td></tr>
+</table>
+<p><b>总计：4 个 <i>J</i><sub><i>ij</i></sub>，2 个 <i>K</i><sub><i>ij</i></sub></b>。</p>
+<p>而公式里 Σ<sub><i>i</i></sub>Σ<sub><i>j</i></sub> 对每一对 (<i>i</i>,<i>j</i>) 数两次（(<i>i</i>,<i>j</i>) 和 (<i>j</i>,<i>i</i>)），所以每次贡献 <b>2<i>J</i><sub><i>ij</i></sub> − <i>K</i><sub><i>ij</i></sub></b>，两次加起来正好是 4<i>J</i> − 2<i>K</i>　✔</p>
+</div>
+<div class="warn"><span class="lab">最重要的一条规则（第 3 讲 p44 会直接考）</span>
+<div class="fml" style="font-size:16px;line-height:1.9">
+<b><i>J</i><sub><i>ij</i></sub> 对<u>任何</u>电子对都非零，与自旋无关</b><br>
+<b><i>K</i><sub><i>ij</i></sub> 只对<u>自旋相同</u>的电子对非零</b>
+</div>
+<p>这条规则来自 p63 的 ∫<i>α</i>*<i>β</i>d<i>σ</i> = 0。<span class="key">记住它，你就能手工写出任何 Slater 行列式的能量表达式</span>——这是本课唯一需要动笔计算的题型。</p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p84）· Fock 算符的引入</span>
+<ul>
+<li>注意 <i>φ</i><sub><i>i</i></sub> 是一个分子轨道，其形式尚待确定。确定 <i>φ</i><sub><i>i</i></sub> 需要<b>按变分原理，对分子轨道系数最小化总能量</b>。这导出下列方程：</li>
+</ul>
+<p><b><i>F̂</i> <i>φ</i><sub><i>i</i></sub>(1) = <i>ε</i><sub><i>i</i></sub> <i>φ</i><sub><i>i</i></sub>(1)</b></p>
+<p>其中 <i>ε</i><sub><i>i</i></sub> 是<b>轨道能</b>，<i>F̂</i> 称为 <b>Fock 算符</b>，可表示为：</p>
+<p><i>F̂</i> = −∇₁² − Σ<sub><i>A</i></sub> <i>Z<sub>A</sub></i>/|<b>r</b>₁−<b>r</b><sub><i>A</i></sub>| + Σ<sub><i>j</i></sub><sup><i>N</i>/2</sup> [2<i>Ĵ</i><sub><i>j</i></sub>(1) − <i>K̂</i><sub><i>j</i></sub>(1)]</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p85）· <i>Ĵ</i> 与 <i>K̂</i> 作为算符</span>
+<p><i>Ĵ</i><sub><i>j</i></sub>(1) <i>f</i>(1) = <i>f</i>(1) ∫ |<i>f</i><sub><i>j</i></sub>(2)|² / |<b>r</b>₁−<b>r</b>₂| d<b>r</b>₂</p>
+<p><i>K̂</i><sub><i>j</i></sub>(1) <i>f</i>(1) = <i>f</i><sub><i>j</i></sub>(1) ∫ <i>f</i><sub><i>j</i></sub>*(2) <i>f</i>(2) / |<b>r</b>₁−<b>r</b>₂| d<b>r</b>₂</p>
+<p>总能量是各个轨道能量之和：<i>E</i> = Σ<sub><i>i</i></sub><sup><i>N</i><sub>MO</sub></sup> <i>γ</i><sub><i>i</i></sub><i>ε</i><sub><i>i</i></sub>，其中 <i>γ</i><sub><i>i</i></sub> 是轨道 <i>i</i> 的占据数。</p>
+</div>
+
+<h3 class="fm">公式解析 · Fock 算符（HF 方法的核心）</h3>
+<div class="fml"><span class="tag">★ Fock 算符</span>
+<i>F̂</i>(1) = <span style="color:#0b5ea8"><i>ĥ</i>(1)</span> &nbsp;+&nbsp; <span style="color:#c0392b">Σ<sub><i>j</i></sub><sup>占据</sup> [ 2<i>Ĵ</i><sub><i>j</i></sub>(1) − <i>K̂</i><sub><i>j</i></sub>(1) ]</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>F̂</i></td><td>Fock 算符</td><td><span class="key">一个<b>有效的单电子哈密顿量</b>。</span>它把"这个电子 + 其他所有电子的平均效应"打包成一个只作用于单个电子的算符。</td></tr>
+<tr><td><i>ĥ</i>(1)</td><td>core 部分</td><td>动能 + 核吸引，与其他电子无关</td></tr>
+<tr><td><i>Ĵ</i><sub><i>j</i></sub></td><td><b>库仑算符</b></td><td>见下面的解释。<b>是个"乘法算符"</b>——先算出一个势场，再乘上去</td></tr>
+<tr><td><i>K̂</i><sub><i>j</i></sub></td><td><b>交换算符</b></td><td><span class="key">是个<b>非局域</b>算符</span>——它把 <i>f</i> 换成了 <i>f</i><sub><i>j</i></sub>，作用结果依赖于 <i>f</i> 在<b>全空间</b>的值</td></tr>
+<tr><td><i>ε</i><sub><i>i</i></sub></td><td>轨道能</td><td>希腊字母 epsilon。<b>Fock 算符的本征值。</b>p47（第 3 讲）的 Koopmans 定理会赋予它物理意义。</td></tr>
+<tr><td><i>γ</i><sub><i>i</i></sub></td><td>占据数</td><td>RHF 里是 2（双占据）或 0（空轨道）</td></tr>
+</table>
+
+<h3>讲解 · <i>Ĵ</i> 和 <i>K̂</i> 作为算符的区别（p85 的两个式子）</h3>
+<div class="step"><div class="sh"><i>Ĵ</i><sub><i>j</i></sub>：局域的、有经典图像的</div>
+<div class="fml" style="font-size:15px"><i>Ĵ</i><sub><i>j</i></sub>(1) <i>f</i>(1) = <b><i>f</i>(1)</b> · [ ∫ |<i>φ</i><sub><i>j</i></sub>(2)|²/<i>r</i><sub>12</sub> d<b>r</b><sub>2</sub> ]</div>
+<p>方括号里的东西是<b>一个普通的函数</b>（依赖 <b>r</b>₁）——它就是"轨道 <i>j</i> 的电荷云在 <b>r</b>₁ 处产生的静电势"。</p>
+<p><span class="key">所以 <i>Ĵ</i> 的作用就是"乘以一个静电势"。完全经典，可以画出来。</span></p>
+</div>
+<div class="step"><div class="sh"><i>K̂</i><sub><i>j</i></sub>：非局域的、没有经典图像的</div>
+<div class="fml" style="font-size:15px"><i>K̂</i><sub><i>j</i></sub>(1) <i>f</i>(1) = <b><i>φ</i><sub><i>j</i></sub>(1)</b> · [ ∫ <i>φ</i><sub><i>j</i></sub>*(2)<i>f</i>(2)/<i>r</i><sub>12</sub> d<b>r</b><sub>2</sub> ]</div>
+<p><span class="key">注意：作用之后出来的是 <i>φ</i><sub><i>j</i></sub>(1)，<b>不是</b> <i>f</i>(1)！被作用的函数 <i>f</i> 跑到积分里面去了。</span></p>
+<p>这意味着 <i>K̂</i> 在 <b>r</b>₁ 处的作用效果，取决于 <i>f</i> 在<b>所有</b> <b>r</b>₂ 处的值——这就是"非局域"。</p>
+<p><b>后果</b>：</p>
+<ul>
+<li>交换项<b>算起来贵</b>（不能像库仑项那样用多极展开或快速多极方法加速）</li>
+<li><span class="key">DFT 的最大卖点之一就是把这个非局域的 <i>K̂</i> 换成一个<b>局域的</b>交换泛函</span>——这就是 DFT 比 HF 快、但也因此有"自相互作用误差"的根源</li>
+<li>杂化泛函（B3LYP 含 20% HF 交换）就是在"精确但贵的非局域交换"和"便宜但近似的局域交换"之间取折中</li>
+</ul>
+</div>
+
+<div class="warn"><span class="lab">HF 方程的"鸡生蛋"困境 —— 这是理解 SCF 的关键</span>
+<p>看清楚这个逻辑循环：</p>
+<div class="fml" style="font-size:15px;line-height:2">
+要解 <i>F̂φ</i><sub><i>i</i></sub> = <i>ε</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub> 得到轨道 <i>φ</i><sub><i>i</i></sub><br>
+↓ 但是<br>
+<i>F̂</i> 里含有 <i>Ĵ</i><sub><i>j</i></sub> 和 <i>K̂</i><sub><i>j</i></sub>，它们由<b>轨道 <i>φ</i><sub><i>j</i></sub> 构造</b><br>
+↓ 所以<br>
+<b>要知道轨道，才能构造 <i>F̂</i>；要有 <i>F̂</i>，才能求出轨道</b>
+</div>
+<p><span class="key">HF 方程<b>不是</b>一个普通的本征值方程，而是一个<b>非线性的、自洽的</b>方程。</span></p>
+<p><b>解法就是迭代</b>：猜一组轨道 → 建 <i>F̂</i> → 解出新轨道 → 再建 <i>F̂</i> → …… 直到轨道不再变化（"自洽"）。这就是 <b>SCF (Self-Consistent Field，自洽场)</b>，p89 的流程图。</p>
+</div>
+</section>
+
+<section class="slide" id="p86">
+<h2><span class="pno">p86–88</span>Hartree–Fock–Roothaan 方程：从微分方程到矩阵</h2>
+<div class="tr"><span class="lab">原文翻译（p86）</span>
+<p>Hartree–Fock 方程很难求解。1955 年 Roothaan 提出用<b>原子轨道的线性组合（LCAO）</b>来表示分子轨道：</p>
+<p><i>φ</i><sub><i>i</i></sub> = Σ<sub><i>s</i></sub><sup><i>N</i></sup> <i>c</i><sub><i>si</i></sub><i>χ</i><sub><i>s</i></sub></p>
+<p>把这个形式的 MO 代入 Hartree–Fock 方程：</p>
+<p>Σ<sub><i>s</i></sub><sup><i>N</i></sup> <i>c</i><sub><i>si</i></sub> <i>F̂χ</i><sub><i>s</i></sub> = <i>ε</i><sub><i>i</i></sub> Σ<sub><i>s</i></sub><sup><i>N</i></sup> <i>c</i><sub><i>si</i></sub><i>χ</i><sub><i>s</i></sub></p>
+<p>两边乘以 <i>χ</i><sub><i>t</i></sub>* 并积分，得到：</p>
+<p>Σ<sub><i>s</i></sub><sup><i>N</i></sup> <i>c</i><sub><i>si</i></sub>(<i>F</i><sub><i>ts</i></sub> − <i>ε</i><sub><i>i</i></sub><i>S</i><sub><i>ts</i></sub>) = 0，　<i>t</i> = 1,2,3,…,<i>N</i></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p87）</span>
+<p>其中：<i>F</i><sub><i>ts</i></sub> = ⟨<i>χ</i><sub><i>t</i></sub>|<i>F̂</i>|<i>χ</i><sub><i>s</i></sub>⟩　；　<i>S</i><sub><i>ts</i></sub> = ⟨<i>χ</i><sub><i>t</i></sub>|<i>χ</i><sub><i>s</i></sub>⟩</p>
+<p>为使 HFR 方程有非平凡解，<b>久期行列式必须为零</b>：</p>
+<p>|<i>F</i><sub><i>ts</i></sub> − <i>ε</i><sub><i>i</i></sub><i>S</i><sub><i>ts</i></sub>| = 0</p>
+<p>前面几页高亮的方程可以用<b>自洽场 (SCF) 过程</b>迭代求解，使总能量收敛到一个容许的数值。<b>这些方程构成了现代量子化学与计算化学的基础。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p88）</span>
+<p>由 HFR 方程，我们需要计算积分 <i>J</i> 和 <i>K</i>，并得到系数 <i>c</i><sub><i>si</i></sub>（<i>s</i>, <i>i</i> = 1,2,3,…,<i>N</i>）。</p>
+<p>（重复给出 <i>F̂</i>、<i>Ĵ</i><sub><i>j</i></sub>、<i>K̂</i><sub><i>j</i></sub>、<i>φ</i><sub><i>i</i></sub> = Σ<i>c</i><sub><i>si</i></sub><i>χ</i><sub><i>s</i></sub> 的表达式）</p>
+<p><b>这些方程仍然相当难解，因为必须计算大量的积分。于是人们设计了更多的近似。</b></p>
+</div>
+
+<h3 class="fm">公式解析 · LCAO 展开</h3>
+<div class="fml"><span class="tag">★ LCAO：分子轨道 = 原子轨道的线性组合</span>
+<i>φ</i><sub><i>i</i></sub> = Σ<sub><i>s</i>=1</sub><sup><i>N</i><sub>basis</sub></sup> <i>c</i><sub><i>si</i></sub> <i>χ</i><sub><i>s</i></sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>φ</i><sub><i>i</i></sub></td><td>分子轨道 (MO)</td><td>要求的东西。小写 phi</td></tr>
+<tr><td><i>χ</i><sub><i>s</i></sub></td><td><b>基函数</b> / 原子轨道</td><td>希腊字母 chi（念"卡伊"）。<span class="key">这就是"基组"里的那些函数——你写 6-31G(d) 时选定的就是这些 <i>χ</i>。它们是<b>已知的、固定的</b>。</span></td></tr>
+<tr><td><i>c</i><sub><i>si</i></sub></td><td><b>MO 系数</b></td><td><span class="key">整个 HF 计算真正要求的<b>唯一未知数</b>。</span>下标读法：基函数 <i>s</i> 在分子轨道 <i>i</i> 中的贡献。</td></tr>
+<tr><td><i>N</i><sub>basis</sub></td><td>基函数总数</td><td>决定计算量的那个 <i>N</i>。<b>MO 的个数 = 基函数的个数</b>（占据的 + 空的）</td></tr>
+</table>
+<div class="step"><div class="sh">为什么 LCAO 是天才的一步</div>
+<p><span class="key">它把"求一个未知<b>函数</b>"（无穷维的难题）变成了"求一组未知<b>数</b>"（有限维的线性代数）。</span></p>
+<p>化学上它也非常自然：分子里的电子大部分时间还是在某个原子附近，所以用原子轨道来搭分子轨道是合理的。你在无机化学里画的 MO 能级图，就是 LCAO 的定性版本。</p>
+</div>
+
+<h3 class="fm">公式解析 · Roothaan 方程（矩阵形式）</h3>
+<div class="fml"><span class="tag">★ Roothaan–Hall 方程（现代量子化学的中心方程）</span>
+<b>F</b> <b>C</b> = <b>S</b> <b>C</b> <b>ε</b>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义与维度</th></tr>
+<tr><td><b>F</b></td><td><b>Fock 矩阵</b></td><td><i>N</i>×<i>N</i>。<i>F</i><sub><i>ts</i></sub> = ⟨<i>χ</i><sub><i>t</i></sub>|<i>F̂</i>|<i>χ</i><sub><i>s</i></sub>⟩。<span class="key">依赖于 <b>C</b>（这就是非线性的来源）</span></td></tr>
+<tr><td><b>C</b></td><td><b>系数矩阵</b></td><td><i>N</i>×<i>N</i>。<b>第 <i>i</i> 列就是第 <i>i</i> 个分子轨道的系数向量。</b>要求的东西。</td></tr>
+<tr><td><b>S</b></td><td><b>重叠矩阵</b></td><td><i>N</i>×<i>N</i>。<i>S</i><sub><i>ts</i></sub> = ⟨<i>χ</i><sub><i>t</i></sub>|<i>χ</i><sub><i>s</i></sub>⟩。<span class="key">它出现的唯一原因是<b>基函数不正交</b>（见 p18 的警告）。</span>对角元恒为 1（基函数归一化）。</td></tr>
+<tr><td><b>ε</b></td><td>轨道能对角矩阵</td><td><i>N</i>×<i>N</i>，只有对角线非零，元素是各个轨道能 <i>ε</i><sub><i>i</i></sub></td></tr>
+</table>
+
+<div class="step"><div class="sh">这个方程是怎么来的（p86 的三步，讲清楚）</div>
+<p><b>第一步</b>：把 <i>φ</i><sub><i>i</i></sub> = Σ<i>c</i><sub><i>si</i></sub><i>χ</i><sub><i>s</i></sub> 代进 <i>F̂φ</i><sub><i>i</i></sub> = <i>ε</i><sub><i>i</i></sub><i>φ</i><sub><i>i</i></sub>：</p>
+<p>Σ<sub><i>s</i></sub><i>c</i><sub><i>si</i></sub>·<i>F̂χ</i><sub><i>s</i></sub> = <i>ε</i><sub><i>i</i></sub>Σ<sub><i>s</i></sub><i>c</i><sub><i>si</i></sub>·<i>χ</i><sub><i>s</i></sub>　（<i>c</i> 是常数，可以提到算符外面）</p>
+<p><b>第二步</b>：左乘 <i>χ</i><sub><i>t</i></sub>* 并对全空间积分（这叫"投影"，就是 p36 那个技巧）：</p>
+<p>Σ<sub><i>s</i></sub><i>c</i><sub><i>si</i></sub>·<u>⟨<i>χ</i><sub><i>t</i></sub>|<i>F̂</i>|<i>χ</i><sub><i>s</i></sub>⟩</u> = <i>ε</i><sub><i>i</i></sub>Σ<sub><i>s</i></sub><i>c</i><sub><i>si</i></sub>·<u>⟨<i>χ</i><sub><i>t</i></sub>|<i>χ</i><sub><i>s</i></sub>⟩</u></p>
+<p>下划线的两个积分<b>就是数</b>（矩阵元），分别记作 <i>F</i><sub><i>ts</i></sub> 和 <i>S</i><sub><i>ts</i></sub>。</p>
+<p><b>第三步</b>：移项，对每个 <i>t</i> = 1…<i>N</i> 都成立，写成矩阵形式即得 <b>FC</b> = <b>SC</b><b>ε</b>。</p>
+<p><span class="key">整个过程把一个微分方程变成了 <i>N</i> 个联立线性方程。这就是量子化学能在计算机上做的全部秘密。</span></p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · <b>S</b> 矩阵怎么被消掉（程序里真实的做法）</span>
+<p><b>FC</b> = <b>SC</b><b>ε</b> 是"广义本征值问题"，比标准的 <b>Ax</b> = <i>λ</i><b>x</b> 麻烦。实际程序会先做<b>正交化</b>：</p>
+<div class="step"><div class="sh">对称正交化（Löwdin 正交化）</div>
+<ol>
+<li>对角化 <b>S</b>，求出 <b>S</b><sup>−1/2</sup></li>
+<li>定义 <b>F</b>′ = <b>S</b><sup>−1/2</sup><b>FS</b><sup>−1/2</sup>，<b>C</b>′ = <b>S</b><sup>1/2</sup><b>C</b></li>
+<li>方程变成标准形式：<b>F</b>′<b>C</b>′ = <b>C</b>′<b>ε</b>　✔ 直接调 LAPACK 对角化</li>
+<li>算完再变回去：<b>C</b> = <b>S</b><sup>−1/2</sup><b>C</b>′</li>
+</ol>
+</div>
+<div class="warn"><span class="lab">这里藏着一个实际会遇到的错误</span>
+<p>如果基组里有<b>近乎线性相关</b>的函数（比如加了太多很弥散的 diffuse 函数），<b>S</b> 会有接近 0 的本征值，<b>S</b><sup>−1/2</sup> 就会数值爆炸。</p>
+<p>症状：Gaussian 会打印 <code>Warning! Small eigenvalue of overlap matrix</code> 或直接报 <code>linear dependence</code>，SCF 崩溃或收敛到胡说八道的结果。</p>
+<p><b>解法</b>：换小一点的基组、去掉多余的 diffuse 函数、或让程序自动丢掉那些病态的组合（Gaussian 的 <code>IOp(3/59=...)</code>、ORCA 的自动处理）。</p>
+</div>
+</div>
+</section>
+
+<section class="slide" id="p89">
+<h2><span class="pno">p89–90</span>SCF 自洽场过程</h2>
+<div class="tr"><span class="lab">原文翻译（p89）</span>
+<p>在"所有其他电子的平均电场"中求解一个电子的问题相对容易，HF 方法就是按一个循环依次处理每个电子（见右侧示意图）。</p>
+<p>流程：GUESS（猜测）→ 求解电子 1 → 求解电子 2 → 求解电子 3 → … → 求解电子 <i>N</i> → 回到开头</p>
+<p><b>算法不断更新每个电子的波函数，直到解不再变化。这个过程被称为自洽场方法。</b></p>
+<p><b>p90：</b>富勒烯衍生物的一个 Hartree–Fock 轨道（图）。</p>
+</div>
+
+<h3>讲解 · SCF 循环的完整图解</h3>
+<figure>
+<svg viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><marker id="ax" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0b5ea8"/></marker>
+<style>.bx{fill:#eef4fb;stroke:#0b5ea8;stroke-width:1.5}.t{font-size:12.5px;fill:#1c1c1e}.s{font-size:11px;fill:#6b6b70}.ar{stroke:#0b5ea8;stroke-width:1.5;fill:none}</style></defs>
+<rect x="180" y="12" width="200" height="38" rx="7" fill="#fff8ee" stroke="#b3541e" stroke-width="1.5"/>
+<text x="280" y="30" class="t" text-anchor="middle" font-weight="700">① 初始猜测</text>
+<text x="280" y="45" class="s" text-anchor="middle">给一组初始系数 C ⟹ 密度矩阵 D</text>
+<line x1="280" y1="52" x2="280" y2="74" class="ar" marker-end="url(#ax)"/>
+<rect x="180" y="76" width="200" height="42" rx="7" class="bx"/>
+<text x="280" y="94" class="t" text-anchor="middle" font-weight="700">② 构造 Fock 矩阵</text>
+<text x="280" y="109" class="s" text-anchor="middle">F = h + G(D)　（需要双电子积分）</text>
+<rect x="405" y="76" width="140" height="42" rx="7" fill="#fdeeee" stroke="#c0392b" stroke-width="1.3"/>
+<text x="475" y="94" class="s" text-anchor="middle" font-weight="700" fill="#c0392b">双电子积分</text>
+<text x="475" y="109" class="s" text-anchor="middle" fill="#c0392b">N⁴ 个，最贵</text>
+<line x1="403" y1="97" x2="384" y2="97" class="ar" stroke="#c0392b" marker-end="url(#ax)"/>
+<line x1="280" y1="120" x2="280" y2="142" class="ar" marker-end="url(#ax)"/>
+<rect x="180" y="144" width="200" height="42" rx="7" class="bx"/>
+<text x="280" y="162" class="t" text-anchor="middle" font-weight="700">③ 对角化 Fock 矩阵</text>
+<text x="280" y="177" class="s" text-anchor="middle">FC = SCε　⟹ 得到新的 C 和 ε</text>
+<rect x="405" y="144" width="140" height="42" rx="7" fill="#fdeeee" stroke="#c0392b" stroke-width="1.3"/>
+<text x="475" y="162" class="s" text-anchor="middle" font-weight="700" fill="#c0392b">O(N³) 且难并行</text>
+<text x="475" y="177" class="s" text-anchor="middle" fill="#c0392b">见第1讲 p26</text>
+<line x1="403" y1="165" x2="384" y2="165" class="ar" stroke="#c0392b" marker-end="url(#ax)"/>
+<line x1="280" y1="188" x2="280" y2="210" class="ar" marker-end="url(#ax)"/>
+<rect x="180" y="212" width="200" height="42" rx="7" class="bx"/>
+<text x="280" y="230" class="t" text-anchor="middle" font-weight="700">④ 构造新密度矩阵</text>
+<text x="280" y="245" class="s" text-anchor="middle">D<tspan font-size="9">αβ</tspan> = Σ<tspan font-size="9">占据</tspan> c<tspan font-size="9">αi</tspan> c<tspan font-size="9">βi</tspan></text>
+<line x1="280" y1="256" x2="280" y2="278" class="ar" marker-end="url(#ax)"/>
+<path d="M280,280 L344,300 L280,320 L216,300 Z" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.5"/>
+<text x="280" y="298" class="s" text-anchor="middle" font-weight="700" fill="#2c6e4f">收敛了吗?</text>
+<text x="280" y="312" class="s" text-anchor="middle" fill="#2c6e4f">ΔE, ΔD &lt; 阈值</text>
+<path d="M216,300 L120,300 L120,97 L176,97" class="ar" marker-end="url(#ax)"/>
+<text x="122" y="200" class="s" fill="#0b5ea8" text-anchor="middle" transform="rotate(-90 122,200)">否 ⟹ 迭代</text>
+<line x1="344" y1="300" x2="410" y2="300" class="ar" stroke="#2c6e4f" marker-end="url(#ax)"/>
+<text x="480" y="296" class="s" fill="#2c6e4f" font-weight="700">是 ⟹ 输出</text>
+<text x="480" y="310" class="s" fill="#2c6e4f">E, 轨道, 密度</text>
+</svg>
+<figcaption>SCF 自洽场循环（对应第 3 讲 p60 的流程图）· 红色标出两个计算瓶颈</figcaption>
+</figure>
+
+<div class="step"><div class="sh">"自洽 (self-consistent)"到底是什么意思</div>
+<p><b>自洽 = 输入和输出一致。</b></p>
+<p>你用密度 <b>D</b> 构造出 <b>F</b>，解 <b>F</b> 又得到新的密度 <b>D</b>′。<span class="key">如果 <b>D</b>′ = <b>D</b>，说明这组轨道"产生的平均场"恰好就是"造出这组轨道的平均场"——首尾自洽，找到了不动点。</span></p>
+<p>数学上这叫<b>不动点迭代 (fixed-point iteration)</b>，和用牛顿法解方程是同一类思想。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 怎么判断收敛（看 Gaussian 输出时用得上）</span>
+<p>Gaussian 每一轮 SCF 会打印一行：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:12.5px;line-height:1.6">Cycle   3  Pass 1  IDiag  1:
+ E= -76.0107465392  Delta-E=       -0.000234  Rises=F  Damp=F
+ RMSDP= 1.23D-05 MaxDP= 8.91D-05</pre>
+<table>
+<tr><td style="width:130px"><code>E=</code></td><td>当前总能量（Hartree）</td></tr>
+<tr><td><code>Delta-E=</code></td><td><span class="key">能量变化。默认要求 &lt; 10⁻⁶ 或 10⁻⁸（tight）</span></td></tr>
+<tr><td><code>RMSDP=</code></td><td>密度矩阵变化的均方根（Root Mean Square Density Ptot）</td></tr>
+<tr><td><code>MaxDP=</code></td><td>密度矩阵元的最大变化</td></tr>
+<tr><td><code>Rises=</code></td><td>能量是否上升了（<code>T</code> 是坏信号——变分原理下能量应该单调下降到极小）</td></tr>
+</table>
+<p>收敛后打印：<code>SCF Done: E(RB3LYP) = -76.4089532 A.U. after 9 cycles</code></p>
+<p><b>典型迭代次数</b>：有机小分子 8–15 轮；<span class="key">过渡金属配合物可能 50–100 轮甚至不收敛</span>（原因见 p75 的拓展：3d/4s 近简并）。第 3 讲 p66–68 有一整套救急技巧。</p>
+</div>
+</section>
+
+<section class="slide" id="p91">
+<h2><span class="pno">p91</span>自旋限制 (RHF) 与自旋非限制 (UHF)</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>自旋限制 (Spin-restricted)</b>：每个占据分子轨道有两个电子。α 自旋密度与 β 自旋密度<b>完全相同</b>。α 自旋轨道的形状与 β 自旋轨道相同。</p>
+<p><b>自旋非限制 (Spin-unrestricted)</b>：优化<b>两套独立的</b>分子轨道——α 自旋轨道和 β 自旋轨道。大体上，在电子基态和平衡几何构型下，RHF 和 UHF 是等价的。然而，<b>UHF 在解离极限附近表现好得多</b>。UHF 波函数存在<b>自旋污染</b>问题。</p>
+</div>
+
+<h3>讲解 · 三种 SCF 的对比（第 3 讲 p51–53 会再讲一遍，这里先建立框架）</h3>
+<table>
+<tr><th style="width:80px">方法</th><th style="width:170px">全称</th><th style="width:200px">做法</th><th>适用</th></tr>
+<tr><td class="c"><b>RHF</b></td><td>Restricted HF</td><td>α 和 β <b>共用</b>同一套空间轨道，每个轨道放 2 个电子</td><td><b>闭壳层</b>：所有电子成对。绝大多数稳定有机分子</td></tr>
+<tr><td class="c"><b>ROHF</b></td><td>Restricted Open-shell HF</td><td>成对的电子共用空间轨道，未成对的单独占据</td><td>开壳层，且<span class="key">要求自旋纯净</span>（无自旋污染）</td></tr>
+<tr><td class="c"><b>UHF</b></td><td>Unrestricted HF</td><td><b>α 和 β 各有一套<u>独立</u>的空间轨道</b>，分别优化</td><td>开壳层、自由基、解离过程、过渡金属</td></tr>
+</table>
+<figure>
+<svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.lv{stroke:#0b5ea8;stroke-width:2.2}.s{font-size:11px;fill:#6b6b70}.hh{font-size:12.5px;font-weight:700;fill:#1c1c1e}.e{font-size:14px;fill:#c0392b}</style></defs>
+<text x="90" y="18" class="hh" text-anchor="middle">RHF（单重态）</text>
+<line x1="45" y1="150" x2="135" y2="150" class="lv"/>
+<text x="82" y="146" class="e">↑</text><text x="96" y="146" class="e">↓</text>
+<line x1="45" y1="110" x2="135" y2="110" class="lv"/>
+<text x="82" y="106" class="e">↑</text><text x="96" y="106" class="e">↓</text>
+<line x1="45" y1="60" x2="135" y2="60" class="lv" stroke-dasharray="5,3"/>
+<text x="90" y="180" class="s" text-anchor="middle">α 与 β 共用轨道</text>
+<text x="270" y="18" class="hh" text-anchor="middle">ROHF（双重态）</text>
+<line x1="225" y1="150" x2="315" y2="150" class="lv"/>
+<text x="262" y="146" class="e">↑</text><text x="276" y="146" class="e">↓</text>
+<line x1="225" y1="110" x2="315" y2="110" class="lv"/>
+<text x="268" y="106" class="e">↑</text>
+<line x1="225" y1="60" x2="315" y2="60" class="lv" stroke-dasharray="5,3"/>
+<text x="270" y="180" class="s" text-anchor="middle">成对电子仍共用轨道</text>
+<text x="460" y="18" class="hh" text-anchor="middle">UHF（双重态）</text>
+<text x="418" y="34" class="s" text-anchor="middle">α 组</text><text x="505" y="34" class="s" text-anchor="middle">β 组</text>
+<line x1="390" y1="150" x2="445" y2="150" class="lv"/><text x="415" y="146" class="e">↑</text>
+<line x1="478" y1="156" x2="533" y2="156" class="lv" stroke="#b3541e"/><text x="503" y="152" class="e">↓</text>
+<line x1="390" y1="108" x2="445" y2="108" class="lv"/><text x="415" y="104" class="e">↑</text>
+<line x1="478" y1="118" x2="533" y2="118" class="lv" stroke="#b3541e"/><text x="503" y="114" class="e">↓</text>
+<line x1="390" y1="76" x2="445" y2="76" class="lv"/><text x="415" y="72" class="e">↑</text>
+<line x1="478" y1="60" x2="533" y2="60" class="lv" stroke="#b3541e" stroke-dasharray="5,3"/>
+<text x="460" y="180" class="s" text-anchor="middle">两套独立轨道，能量也不同</text>
+</svg>
+<figcaption>三种 SCF 的轨道占据方式（对应第 3 讲 p51 的图）· 虚线为空轨道</figcaption>
+</figure>
+
+<div class="warn"><span class="lab">UHF 的代价：自旋污染 (spin contamination)</span>
+<p><span class="key">UHF 波函数<b>不是</b> <i>Ŝ</i>² 算符的本征函数。</span>意思是：你想算一个纯的双重态（<i>S</i>=½），但得到的波函数里混进了四重态（<i>S</i>=3/2）、六重态的成分。</p>
+<div class="fml"><span class="tag">自旋污染的判据（第 3 讲 p53 给出）</span>
+⟨<i>Ŝ</i>²⟩<sub>UHF</sub> ≥ ⟨<i>Ŝ</i>²⟩<sub>精确</sub> = <i>S</i>(<i>S</i>+1) = (<i>n</i><sub>unpaired</sub>/2)(<i>n</i><sub>unpaired</sub>/2 + 1)
+</div>
+<table>
+<tr><th style="width:150px">体系</th><th class="c" style="width:110px"><i>S</i></th><th class="c" style="width:130px">理论 ⟨<i>Ŝ</i>²⟩</th><th>可接受范围</th></tr>
+<tr><td>单重态</td><td class="c">0</td><td class="c"><b>0.00</b></td><td>&lt; 0.1</td></tr>
+<tr><td>双重态（自由基）</td><td class="c">1/2</td><td class="c"><b>0.75</b></td><td>&lt; 0.79（偏差 &lt; 5%）</td></tr>
+<tr><td>三重态</td><td class="c">1</td><td class="c"><b>2.00</b></td><td>&lt; 2.1</td></tr>
+<tr><td>四重态</td><td class="c">3/2</td><td class="c"><b>3.75</b></td><td>&lt; 3.9</td></tr>
+</table>
+<p><b>怎么看</b>：Gaussian 每次 UHF/UDFT 计算结束会打印一行 <code>&lt;S**2&gt;= 0.7601</code>。<span class="key">如果这个数比理论值大 10% 以上，你的结果就不可信了。</span></p>
+<p><b>污染严重意味着什么</b>：第 3 讲 p53 说得很准——<b>"严重的自旋污染通常意味着单个行列式对基态是一个很差的近似 → 应该考虑 MCSCF 方法。"</b>它是一个"该换方法了"的诊断信号，而不只是一个技术瑕疵。</p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · "UHF 在解离极限表现好得多"是什么意思（第 4 讲 p4、p21 的核心）</span>
+<p>这是本课最经典的一个例子，一定要理解。以 H₂ 拉断为例：</p>
+<table>
+<tr><th style="width:80px">方法</th><th style="width:230px">在 <i>R</i> → ∞ 时给出什么</th><th>对不对</th></tr>
+<tr><td class="c"><b>RHF</b></td><td>因为强制两个电子共用同一个 <i>σ</i><sub><i>g</i></sub> 轨道，波函数里永远保留 50% 的<b>离子项</b>（H⁻ + H⁺）</td><td class="c" style="color:#c0392b"><b>错</b>：能量比正确值高约 <b>140 kcal/mol</b></td></tr>
+<tr><td class="c"><b>UHF</b></td><td>α 电子可以塌到左边的 H 上，β 电子塌到右边 → 得到两个中性 H 原子</td><td class="c" style="color:#2c6e4f"><b>能量对了</b></td></tr>
+<tr><td class="c"><b>FCI</b></td><td>正确混入双激发组态，离子项自动消掉</td><td class="c" style="color:#2c6e4f"><b>完全正确</b></td></tr>
+</table>
+<p><b>但 UHF "对得有点侥幸"</b>（第 3 讲 p52 原话："treats bond breaking correctly <b>although for the wrong reasons</b>"）：</p>
+<ul>
+<li>它是靠<b>破坏自旋对称性</b>换来的正确能量</li>
+<li>在解离极限，UHF 的 ⟨<i>Ŝ</i>²⟩ 会从 0 涨到 1.0（一半是单重态、一半是三重态）——<span class="key">严重自旋污染</span></li>
+<li>而且 UHF 的势能曲线在某个键长处会出现一个不自然的"扭结"（RHF→UHF 解开始出现的那一点，叫 <b>Coulson–Fischer 点</b>）</li>
+</ul>
+<p><span class="key">这正是第 2 讲 p101 那道作业题的全部内容：扫描 H₂ 的势能面，对比 RHF 和 UHF，解释为什么不同。答案就是这一段。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p92">
+<h2><span class="pno">p92–100</span>实践环节：Linux 与环境变量</h2>
+<div class="tr"><span class="lab">原文翻译（要点汇总）</span>
+<p><b>p93 Linux 简介：</b>源自 Unix。主要开发者 Linus Torvalds 起初为自己写，后来开源。存在很多 Linux 发行版，但"Linux 内核"（含核心功能）是相同的。</p>
+<p><b>优点</b>：免费开源，很多软件也免费开源；命令行（终端）允许直接与硬件交互：创建文件、执行程序、杀掉某个进程等。</p>
+<p><b>缺点</b>：PC 游戏和一些专业软件没有 Linux 版本：MS Office、Adobe、Corel、EndNote、OriginLab 等。等效的免费程序可能功能不如专业软件。用户需要学习不少东西才能变得高效。</p>
+<p><b>p94 目录约定：</b>登录后用户到达 <code>$HOME</code>（或 <code>~/</code>）。用户在自己的 <code>$HOME</code> 内有完全权限。根目录 <code>/</code> 是"底层"目录，只有超级用户（root）能修改其内容。</p>
+<ul>
+<li><code>/boot/</code> —— 包含启动信息</li>
+<li><code>/usr/</code> —— 包含由包管理器编译安装的各种软件</li>
+<li><code>/bin/</code> —— 包含操作系统自身需要的基本工具</li>
+<li><code>/etc/</code> —— 包含常见的自定义配置和本地数据库</li>
+<li><code>/opt/</code> —— 放置本地编译软件的地方，便于追踪</li>
+</ul>
+<p><b>p95–96 环境变量</b>（<code>$HOME</code>、<code>$PATH</code>、<code>$LD_LIBRARY_PATH</code>，示例见第 1 讲 p42）</p>
+<p><b>p97–98 用户自定义：</b><code>$HOME/.bash_profile</code>（用户定义的命令、别名、PATH 和 LD_LIBRARY_PATH 等）；<code>$HOME/.bashrc</code>（某些程序变量的非默认值）；<code>$HOME/.vimrc</code>。许多程序把自定义配置藏在以 "rc" 结尾的隐藏文件或文件夹中。<b>不要删除这些文件</b>，删了会导致各种问题：程序找不到、模块未初始化等。</p>
+<p><b>p99 vi 编辑器：</b>大多数超算的 Linux 安装非常简朴——更多时候连 emacs 这样的富编辑器都没有。但所有 Unix 系统都有一个引导性编辑器 vi。</p>
+<ul>
+<li><code>vi &lt;文件名&gt;</code> —— 用 vi 打开文件</li>
+<li><code>:q</code> —— 关闭文件（不保存更改）</li>
+<li><code>:ZZ</code> —— 关闭并保存更改</li>
+<li><code>Shift-I</code> —— 进入"插入模式"（可以插入/删除文本）</li>
+<li><code>Shift-V</code> —— 选中一行</li>
+<li><code>Shift-Y</code> —— 复制选中文本到活动内存，可以粘贴到别处</li>
+</ul>
+<p><b>p100 基本命令：</b><code>cp</code>、<code>mv</code>、<code>rm</code>、<code>cd</code>、<code>cd ../</code>、<code>chmod +x</code>、<code>touch</code>、<code>zip</code>、<code>sh script.sh</code>、<code>qsub script.sh</code>、<code>qdel JOBID</code></p>
+</div>
+<p>这一段与第 1 讲 p27–42 高度重叠，那边已经详细讲过（<a href="L01-课程概览与计算平台.html#p42">见第 1 讲 p42 的 $PATH / $LD_LIBRARY_PATH 详解</a>）。这里只补充两点讲义没展开的实用内容。</p>
+
+<div class="ext"><span class="lab">拓展 1 · vi 的核心心智模型（不理解这个就永远用不好 vi）</span>
+<p><span class="key">vi 是<b>模式编辑器</b>——同一个按键在不同模式下做完全不同的事。</span>这是它和记事本最大的区别，也是初学者被劝退的原因。</p>
+<table>
+<tr><th style="width:130px">模式</th><th style="width:150px">怎么进入</th><th>在这个模式下按键的含义</th></tr>
+<tr><td><b>普通模式</b><br>(Normal)</td><td>打开就是；<br>任何时候按 <code>Esc</code></td><td>按键是<b>命令</b>。<code>dd</code>=删除一行，<code>yy</code>=复制一行，<code>p</code>=粘贴，<code>u</code>=撤销，<code>/词</code>=搜索</td></tr>
+<tr><td><b>插入模式</b><br>(Insert)</td><td>按 <code>i</code>（或 <code>a</code>、<code>o</code>）</td><td>按键就是<b>输入文字</b>，和普通编辑器一样</td></tr>
+<tr><td><b>命令行模式</b></td><td>按 <code>:</code></td><td><code>:w</code>=保存，<code>:q</code>=退出，<code>:wq</code>=保存并退出，<code>:q!</code>=<b>强制退出不保存</b></td></tr>
+</table>
+<div class="warn"><span class="lab">最小可用组合（记住这 6 个就够改输入文件了）</span>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:13px;line-height:1.8">vi file.gjf      打开文件
+i                进入插入模式,开始打字
+Esc              退回普通模式
+dd               删掉光标所在行
+:wq              保存并退出
+:q!              不保存,强制退出(改坏了就用这个)</pre>
+<p><b>被 vi 卡住时的万能解法</b>：连按几次 <code>Esc</code>，再输入 <code>:q!</code> 回车。</p>
+</div>
+</div>
+
+<div class="ext"><span class="lab">拓展 2 · <code>.bashrc</code> 和 <code>.bash_profile</code> 的区别（p97 没说清楚）</span>
+<table>
+<tr><th style="width:170px">文件</th><th style="width:200px">什么时候被执行</th><th>该往里写什么</th></tr>
+<tr><td><code>.bash_profile</code></td><td><b>登录时</b>执行一次<br>（ssh 进来的时候）</td><td><code>export PATH=...</code> 等<b>环境变量</b>（会被子进程继承，只需设一次）</td></tr>
+<tr><td><code>.bashrc</code></td><td><b>每开一个新 shell</b> 就执行<br>（包括你在终端里再敲 <code>bash</code>）</td><td><code>alias</code> 别名、shell 函数、提示符样式（这些<b>不会</b>被继承，每个 shell 都要重设）</td></tr>
+</table>
+<p>实际上大多数发行版的 <code>.bash_profile</code> 里会有一行 <code>source ~/.bashrc</code>，所以两者常常混用。<span class="key">保险的做法：环境变量写 <code>.bash_profile</code>，别名写 <code>.bashrc</code>。</span></p>
+<p><b>几个值得设的别名</b>：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7">alias q='qstat -u $USER'                        # 看自己的作业
+alias ll='ls -lhtr'                             # 按时间排序,人类可读的大小
+alias scfdone="grep 'SCF Done' "                # 快速抓能量
+alias rm='rm -i'                                # 删除前确认(防手滑)</pre>
+<p><b>改完之后要生效</b>：<code>source ~/.bashrc</code>（或重新登录）。</p>
+</div>
+<div class="warn"><span class="lab">p97 那句"DO NOT DELETE these files"是认真的</span>
+<p>这些以 <code>.</code> 开头的隐藏文件（<code>ls</code> 默认看不到，要用 <code>ls -a</code>）控制着你的整个 shell 环境。<span class="key">删掉 <code>.bashrc</code> 后果通常是：<code>module</code> 命令失效、软件全部找不到、提示符变成一个光秃秃的 <code>$</code>。</span></p>
+<p><b>改之前先备份</b>：<code>cp ~/.bashrc ~/.bashrc.bak</code>。这一个动作能省掉很多麻烦。</p>
+</div>
+</section>
+
+<section class="slide" id="p101">
+<h2><span class="pno">p101–102</span>作业：H₂ 的势能面（RHF vs UHF）</h2>
+<div class="tr"><span class="lab">原文翻译（p101）</span>
+<p>1) 在 RHF 理论水平上研究 H₂ 在 0.5–10 Å 范围内的势能面，至少取 20 个点。</p>
+<p>用下面的 bash 循环自动化计算（在 HPC 上提交 Gaussian 作业）：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto">input=Gaussian_PES_H2_UB3LYP
+for R in 0.50 0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95 1.00 1.05 1.10 1.15 1.20 1.25 ; do
+  sed -e "s/DISTANCE/$R/g" $input.gjf   &gt; "$input"_R_"$R".gjf
+  g16 &lt; "$input"_R_"$R".gjf        &gt; "$input"_R_"$R".log
+  echo "The calculation is done!"
+done
+grep 'SCF Done' "$input"_*.log &gt; results.txt</pre>
+<p>Gaussian PES/H2 的输入文件已上传到 Canvas。</p>
+<p>1) 与 UHF 结果比较。</p>
+<p>2) 两种情况用<b>完全相同的基组</b>。<b>你能解释为什么结果不同吗？</b></p>
+<p>作为替代方案，你也可以使用 Gaussian/GaussView 里的 scan 功能。</p>
+<p><b>p102：</b>结果（图）</p>
+</div>
+
+<h3 class="fm">脚本解析 · 逐行拆开这个 bash 循环</h3>
+<table>
+<tr><th style="width:290px">这一行</th><th>做了什么</th></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">input=Gaussian_PES_H2_UB3LYP</td><td>定义一个 shell 变量存文件名前缀。<span class="key">注意等号两边<b>不能有空格</b></span>——<code>input = xxx</code> 在 bash 里是错的。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">for R in 0.50 0.55 … ; do</td><td>循环。变量 <code>R</code> 依次取列表里的每个值，执行 <code>do…done</code> 之间的内容。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">sed -e "s/DISTANCE/$R/g" $input.gjf &gt; …</td><td><b>核心的一行。</b><code>sed</code> = stream editor（流编辑器）。<code>s/A/B/g</code> = 把所有（<code>g</code>=global）<code>A</code> 替换成 <code>B</code>。<span class="key">所以它读模板文件，把里面的占位符 <code>DISTANCE</code> 全部换成当前的 R 值，写出一个新输入文件。</span></td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">g16 &lt; xxx.gjf &gt; xxx.log</td><td>运行 Gaussian 16。<code>&lt;</code> 把输入文件喂给它，<code>&gt;</code> 把输出存成 log。</td></tr>
+<tr><td style="font-family:var(--mono);font-size:12px">grep 'SCF Done' "$input"_*.log &gt; results.txt</td><td>循环结束后，从所有 log 里抓出能量行汇总。<code>*</code> 是通配符，匹配任意字符。</td></tr>
+</table>
+<div class="warn"><span class="lab">用双引号而不是单引号：<code>"s/DISTANCE/$R/g"</code></span>
+<p>bash 里：<span class="key"><b>双引号</b>内的 <code>$R</code> 会被<b>展开</b>成变量的值；<b>单引号</b>内的 <code>$R</code> 保持字面量。</span></p>
+<p>如果这里写成单引号 <code>'s/DISTANCE/$R/g'</code>，sed 会把字符串 <code>$R</code> 本身写进文件，而不是 0.50、0.55…——生成的输入文件全是坏的。<b>这是最常见的脚本错误之一。</b></p>
+</div>
+<div class="ext"><span class="lab">拓展 · 模板文件长什么样</span>
+<p>模板 <code>Gaussian_PES_H2_UB3LYP.gjf</code> 里应该有一个占位符：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7">%Mem=2GB
+%NProcShared=4
+#p rhf/6-31G(d,p) guess=mix
+
+H2 PES scan
+
+0 1
+H   0.0   0.0   0.0
+H   0.0   0.0   DISTANCE        &lt;- sed 会把这个词替换掉
+
+</pre>
+<p><b>注意最后一行必须是空行</b>——Gaussian 用空行作为坐标段结束的标志，少了它会报 <code>End of file in ZSymb</code>。</p>
+<p><b>做 UHF 版本时的关键</b>：只把 <code>rhf</code> 改成 <code>uhf</code> 是<b>不够</b>的。因为 UHF 从对称的初始猜测出发，会一路收敛到与 RHF 完全相同的解（<i>α</i> 和 <i>β</i> 轨道保持相同）。<span class="key">必须加 <code>guess=mix</code> 关键词</span>，它把 HOMO 和 LUMO 混合起来打破 α/β 对称性，UHF 才能找到那个更低的破缺解。</p>
+<p>这一点讲义没提，但不加的话你会发现"RHF 和 UHF 曲线完全重合"，然后无法回答那道题。</p>
+</div>
+
+<h3>讲解 · 这道题的标准答案（p101 那个"你能解释为什么结果不同吗？"）</h3>
+<figure>
+<svg viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.ax{stroke:#9aa5b1;stroke-width:1.2}.s{font-size:11px;fill:#6b6b70}.lb{font-size:12px}</style></defs>
+<line x1="55" y1="235" x2="470" y2="235" class="ax"/>
+<line x1="55" y1="235" x2="55" y2="25" class="ax"/>
+<text x="262" y="262" class="s" text-anchor="middle">H–H 距离 R (Å)</text>
+<text x="22" y="130" class="s" text-anchor="middle" transform="rotate(-90 22,130)">能量</text>
+<text x="90" y="250" class="s">0.5</text><text x="190" y="250" class="s">1.5</text><text x="300" y="250" class="s">2.5</text><text x="420" y="250" class="s">4.0</text>
+<path d="M75,55 C 95,175 110,196 125,197 C 160,199 200,150 250,105 C 300,70 370,58 460,55" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+<text x="400" y="45" class="lb" fill="#c0392b" font-weight="700">RHF</text>
+<text x="395" y="72" class="s" fill="#c0392b">→ H⁻ + H⁺（错）</text>
+<path d="M75,55 C 95,175 110,196 125,197 C 155,199 180,180 205,168 C 245,150 300,146 460,145" fill="none" stroke="#2c6e4f" stroke-width="2.4"/>
+<text x="400" y="136" class="lb" fill="#2c6e4f" font-weight="700">UHF</text>
+<text x="392" y="162" class="s" fill="#2c6e4f">→ H· + H·（对）</text>
+<path d="M75,58 C 95,178 110,199 125,200 C 155,202 180,184 205,173 C 245,157 300,152 460,151" fill="none" stroke="#0b5ea8" stroke-width="1.6" stroke-dasharray="5,4"/>
+<text x="300" y="180" class="s" fill="#0b5ea8">Full CI（精确）</text>
+<circle cx="205" cy="168" r="4.5" fill="none" stroke="#b3541e" stroke-width="2"/>
+<line x1="205" y1="168" x2="235" y2="205" stroke="#b3541e" stroke-width="1"/>
+<text x="238" y="218" class="s" fill="#b3541e">Coulson–Fischer 点</text>
+<text x="238" y="230" class="s" fill="#b3541e">UHF 从此偏离 RHF</text>
+<line x1="460" y1="55" x2="460" y2="145" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="466" y="103" class="s" fill="#c0392b" writing-mode="tb">误差</text>
+<circle cx="125" cy="197" r="4" fill="#1c1c1e"/>
+<text x="112" y="218" class="s">平衡键长 0.74 Å</text>
+</svg>
+<figcaption>H₂ 解离曲线：RHF 在长距离处灾难性地偏高（约 140 kcal/mol）</figcaption>
+</figure>
+<div class="step"><div class="sh">答案（分四步说）</div>
+<p><b>① RHF 强制两个电子共用同一个空间轨道 <i>σ</i><sub><i>g</i></sub></b>。它的波函数展开后（第 4 讲 p19 会精确推导）是：</p>
+<div class="fml" style="font-size:15px">Ψ<sub>RHF</sub> ∝ <span style="color:#c0392b">[<i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2)]</span> + <span style="color:#2c6e4f">[<i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)]</span><br>
+<span style="font-size:13px;font-style:normal;color:#6b6b70">　　　　<span style="color:#c0392b">离子项（两个电子在同一个 H 上）50%</span>　　　<span style="color:#2c6e4f">共价项 50%</span></span></div>
+<p><b>② 这个 50:50 的比例是<u>固定</u>的，无论 R 多大</b>——因为 RHF 只有一个行列式，没有可调的混合系数。</p>
+<p><b>③ 在 <i>R</i> → ∞ 时，"离子项"意味着 H⁻ + H⁺</b>，它比 H· + H· 高出 <b>(IE − EA) ≈ 13.6 − 0.75 = 12.8 eV ≈ 295 kcal/mol</b>。乘以 50% 的权重，就是约 <b>147 kcal/mol</b> 的能量高估——正是图上那个巨大的误差。</p>
+<p><b>④ UHF 允许 α 和 β 用不同的空间轨道</b>，于是 α 电子可以完全塌到左边的 H 原子上、β 电子塌到右边，得到两个中性 H 原子 → 能量正确。</p>
+</div>
+<div class="warn"><span class="lab">要说清楚的关键概念名词（答题时要点到）</span>
+<ul>
+<li><b>静态相关 (static correlation)</b>：这个失败的根源。<span class="key">在解离极限，<i>σ</i><sub><i>g</i></sub>² 和 <i>σ</i><sub><i>u</i></sub>² 两个组态变成简并，<b>单个 Slater 行列式从原理上就不够用了</b>。</span>（第 4 讲 p4 的定义）</li>
+<li><b>UHF 的解法是"破缺对称性"</b>：牺牲自旋纯度（⟨<i>Ŝ</i>²⟩ 从 0 涨到 1）来换取正确的能量。所以第 3 讲 p52 说它 "correct <b>for the wrong reasons</b>"。</li>
+<li><b>真正的解法是多组态方法</b>：CASSCF(2,2) 或 Full CI，把 <i>σ</i><sub><i>u</i></sub>² 组态混进来，让离子项在长距离处自动消掉（第 4 讲 p20：<i>R</i>→∞ 时 <i>a</i>₂ = −<i>a</i>₁，离子项系数 <i>a</i>₁+<i>a</i>₂ = 0）。</li>
+</ul>
+</div>
+</section>
+
+<section class="slide" id="sum">
+<h2>本讲小结</h2>
+<h3>一、近似的层层递进（这是本讲的骨架，务必能背下来）</h3>
+<table>
+<tr><th class="c" style="width:60px">步骤</th><th style="width:180px">近似</th><th style="width:200px">丢掉了什么</th><th>换来了什么</th></tr>
+<tr><td class="c">0</td><td>精确的分子 <i>Ĥ</i>（p77）</td><td>—（只丢了相对论）</td><td>无法求解</td></tr>
+<tr><td class="c">1</td><td><b>Born–Oppenheimer</b>（p78）</td><td>核与电子的耦合运动</td><td><span class="key">"分子结构"和"势能面"两个概念</span></td></tr>
+<tr><td class="c">2</td><td><b>轨道近似</b>（p60）</td><td>波函数的复杂关联形式</td><td><span class="key">"轨道"这个概念</span></td></tr>
+<tr><td class="c">3</td><td><b>Slater 行列式</b>（p72）</td><td>—（这一步不丢东西，是<b>加上</b>反对称性）</td><td>泡利原理自动满足；<b>交换能 <i>K</i></b></td></tr>
+<tr><td class="c">4</td><td><b>平均场 (HF)</b>（p81）</td><td><span class="key"><b>电子相关</b>（瞬时躲避）</span></td><td>方程可以自洽求解</td></tr>
+<tr><td class="c">5</td><td><b>LCAO / 有限基组</b>（p86）</td><td>基组不完备性</td><td><span class="key">变成矩阵问题，计算机可解</span></td></tr>
+</table>
+<p><b>第 4 讲整讲就是在<u>撤销第 4 步</u>（把相关能补回来）；第 3 讲 p70–76 讲的是<u>改善第 5 步</u>（基组的选择）。</b></p>
+
+<h3>二、必须记住的公式清单</h3>
+<table>
+<tr><th style="width:190px">公式</th><th style="width:110px">页码</th><th>用途</th></tr>
+<tr><td><i>Ĥψ</i> = <i>Eψ</i></td><td class="c">p13, p15</td><td>一切的出发点</td></tr>
+<tr><td>[<i>x̂</i>,<i>p̂</i>] = <i>iħ</i></td><td class="c">p21, p23</td><td>不确定性原理的来源</td></tr>
+<tr><td>⟨<i>a</i>⟩ = Σ|<i>b</i><sub><i>n</i></sub>|²<i>a</i><sub><i>n</i></sub></td><td class="c">p40</td><td>期望值 = 加权平均</td></tr>
+<tr><td><i>P̂</i><sub>12</sub>Ψ = −Ψ</td><td class="c">p65</td><td>泡利原理</td></tr>
+<tr><td><b><i>E</i> = 2Σ<i>H</i><sub><i>i</i></sub> + Σ(2<i>J</i><sub><i>ij</i></sub>−<i>K</i><sub><i>ij</i></sub>) + <i>V</i><sub>NN</sub></b></td><td class="c"><b>p83</b></td><td><span class="key">闭壳层 HF 能量——最可能考的一条</span></td></tr>
+<tr><td><i>F̂</i> = <i>ĥ</i> + Σ(2<i>Ĵ</i><sub><i>j</i></sub> − <i>K̂</i><sub><i>j</i></sub>)</td><td class="c">p84</td><td>Fock 算符</td></tr>
+<tr><td><b>FC</b> = <b>SC</b><b>ε</b></td><td class="c"><b>p86–87</b></td><td><span class="key">Roothaan 方程——第二可能考的一条</span></td></tr>
+</table>
+
+<h3>三、最可能出现的概念题（配一句话答案）</h3>
+<table>
+<tr><th style="width:44%">问题</th><th>答题要点</th></tr>
+<tr><td>什么时候需要量子力学而不是经典力学？</td><td>当 Δ<i>E</i> ≫ <i>k</i><sub>B</sub><i>T</i>，能谱是分立的时候（p9）。电子跃迁 Δ<i>E</i> ≈ 100–400 <i>k</i><sub>B</sub><i>T</i>，必须量子。</td></tr>
+<tr><td>陈述并解释 Born 解释</td><td>|Ψ|² 是概率密度，Ψ 本身没有直接物理意义（p32）</td></tr>
+<tr><td>陈述泡利原理，并推出"每轨道 2 电子"</td><td>Ψ 对交换任意两电子反对称；若两电子占同一自旋轨道则 Ψ ≡ 0（p65）</td></tr>
+<tr><td><b><i>J</i> 和 <i>K</i> 的区别？</b></td><td><i>J</i> 有经典对应（电荷云排斥），对所有电子对非零；<b><i>K</i> 无经典对应，来自反对称性，只对自旋相同的电子对非零，且降低能量</b>（p71, p83）</td></tr>
+<tr><td>为什么三重态比单重态低（Hund 规则）？</td><td>Δ<i>E</i> = −2<i>K</i>；三重态空间波函数反对称 → 两电子重合处 Ψ=0（Fermi 空穴）→ 排斥能更低（p70）</td></tr>
+<tr><td>陈述 BO 近似及其后果</td><td>核质量 ≫ 电子 → 核视为静止；核动能项 = 0，核排斥 = 常数；<span class="key">后果是产生了"势能面"概念</span>（p78）</td></tr>
+<tr><td>HF 方法为什么需要迭代？</td><td><i>F̂</i> 依赖于轨道，而轨道又由 <i>F̂</i> 解出 → 非线性 → 自洽迭代（p84, p89）</td></tr>
+<tr><td>Roothaan 方程里为什么有 <b>S</b> 矩阵？</td><td>因为原子轨道基函数不正交（p18, p87）</td></tr>
+<tr><td><b>RHF 与 UHF 在 H₂ 解离时为何不同？</b></td><td>RHF 强制双占据 → 保留 50% 离子项 → 能量高约 140 kcal/mol；UHF 允许 α/β 用不同轨道 → 正确解离，但有自旋污染（p91, p101）</td></tr>
+<tr><td>什么是自旋污染？怎么判断？</td><td>UHF 波函数不是 <i>Ŝ</i>² 本征函数；看 ⟨<i>Ŝ</i>²⟩ 与 <i>S</i>(<i>S</i>+1) 的偏差（p91）</td></tr>
+</table>
+</section>
+
+<footer>
+CM5235 复习解析 · 第 2 讲　|　源文件：<code>CM5235_Lecture_02.pdf</code>（102 页）<br>
+上一讲：<a href="L01-课程概览与计算平台.html">第 1 讲　课程概览与计算平台</a>　·
+下一讲：<a href="L03-变分原理与SCF实现.html">第 3 讲　软件工具、变分原理、SCF 与基组</a>
+</footer>
+
+
+
+
+</div>
+</body>
+</html>

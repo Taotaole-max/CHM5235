@@ -1,0 +1,19 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> ex6a_md_DFT_PBE 开始  Sun Sep 20 01:09:00 +08 2026
+>>> ORCA 结束  Sun Sep 20 05:56:11 +08 2026
+>>> 轨迹 ex6a_trajectory_DFT_PBE.xyz：201 帧（含第 0 步），每帧 60 个原子
+>>> 全部完成  Sun Sep 20 05:56:12 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-20 05:56:12.254304:
+     JobId: 1009611.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 10gb 				 Memory Used: 413860kb 
+     Vmem Used: 1881184kb
+     CPU Time Used: 03:43:45 
+     Walltime requested: 12:00:00 			 Walltime Used: 04:47:13
+     Submit Time:  Sun Sep 20 00:42:45 2026 		 Start Time: Sun Sep 20 01:08:59 2026 
+     End Time: Sun Sep 20 05:56:12 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=10485760kb)
+     ======================================================================================

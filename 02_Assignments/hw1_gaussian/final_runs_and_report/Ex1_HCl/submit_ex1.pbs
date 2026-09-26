@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -N hw1_ex1_hcl
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=4gb
+#PBS -l walltime=03:00:00
+#PBS -j oe
+
+# atlas9 (NUS HPC): serial queue, 1 core. HCl is a diatomic; even cc-pVQZ
+# finishes in a few minutes. No -P needed (default project confirmed by test).
+
+cd "$PBS_O_WORKDIR"
+
+module purge
+module load Gaussian/g16
+
+# Gaussian .rwf/.int temp files can be several GB -> put on /hpctmp, not the 20G home
+export GAUSS_SCRDIR=/hpctmp/zhangxubo/gauss_${PBS_JOBID}
+mkdir -p "$GAUSS_SCRDIR"
+
+echo ">>> single point (input given by the assignment)  $(date)"
+g16 < 01_hcl_sp_rhf_sto3g.gjf > 01_hcl_sp_rhf_sto3g.log 2>&1
+
+echo ">>> six basis sets, opt+freq (--Link1-- chained)  $(date)"
+g16 < 02_hcl_optfreq_all_basis.gjf > 02_hcl_optfreq_all_basis.log 2>&1
+
+echo ">>> formchk for GaussView orbital plots  $(date)"
+formchk hcl_6311pgd.chk hcl_6311pgd.fchk
+
+rm -rf "$GAUSS_SCRDIR"
+echo ">>> all done  $(date)"

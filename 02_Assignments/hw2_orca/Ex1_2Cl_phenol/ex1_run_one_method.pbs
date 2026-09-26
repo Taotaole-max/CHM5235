@@ -1,0 +1,60 @@
+#!/bin/bash
+#PBS -N ex1
+#PBS -q serial
+#PBS -l select=1:ncpus=1:mem=10gb
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+# Ex1：跑一个方法的"结构优化 + 频率"。由 ex1_submit_4_methods.sh 提交，
+# 通过 METHOD 告诉它跑哪个子文件夹（PBE_gas / B3LYP_gas / PBE_water / B3LYP_water）。
+# 所有输出都写进那个子文件夹，四个方法互不混杂。
+# 13 个原子、def2-TZVP、单核，每个预计几十分钟到两小时。
+
+: "${METHOD:?没传 METHOD，用 ex1_submit_4_methods.sh 提交}"
+cd "$PBS_O_WORKDIR/$METHOD" || exit 1
+source "$PBS_O_WORKDIR/../01_cluster_setup/orca_env_settings.sh" || exit 1
+
+INP="ex1_optfreq_$METHOD"
+echo ">>> $INP 开始  $(date)"
+"$ORCA_EXE" "$INP.inp" > "$INP.out" 2>&1
+echo ">>> ORCA 结束  $(date)"
+
+if ! grep -q 'ORCA TERMINATED NORMALLY' "$INP.out"; then
+    echo "!!! ORCA 没有正常结束，看 $METHOD/$INP.out 末尾"
+    exit 1
+fi
+
+# 虚频检查：优化完的结构不该有负频率（HW1 Ex6 就是在这里栽的）
+# 没有虚频才把结构另存成 ex1_optimized_geometry_*.xyz（Ex4 的 TD-DFT 要用），
+# 有虚频就不生成这个文件，免得鞍点结构被当成优化好的结构拿去用
+if grep -q '\*\*\*imaginary mode\*\*\*' "$INP.out"; then
+    echo "!!! 有虚频，结构是鞍点，不能用："
+    grep '\*\*\*imaginary mode\*\*\*' "$INP.out"
+else
+    echo ">>> 无虚频"
+    cp -f "$INP.xyz" "ex1_optimized_geometry_$METHOD.xyz"
+fi
+
+# 画 HOMO、LUMO、电子密度+静电势用的波函数文件（Avogadro / Chemcraft 直接打开）
+orca_2mkl "$INP" -molden > /dev/null && mv -f "$INP.molden.input" "ex1_orbitals_density_$METHOD.molden"
+
+# 振动模式动画（多帧 xyz，Avogadro / Chemcraft / VMD 打开就能播放、录屏）。
+# ORCA 的模式编号从 0 开始，0–5 是平动和转动：
+#   ORCA 编号 12 = 输出里标着 "12:" 的那个模式
+#   ORCA 编号 17 = 第 12 个真振动
+# 题目的 "mode 12" 指哪个不确定，两个都生成，写报告时选一个并注明。
+orca_pltvib "$INP.hess" 12 > /dev/null && mv -f "$INP.hess.v012.xyz" "ex1_mode12_animation_ORCAindex12_$METHOD.xyz"
+orca_pltvib "$INP.hess" 17 > /dev/null && mv -f "$INP.hess.v017.xyz" "ex1_mode12_animation_12thVibration_$METHOD.xyz"
+
+rm -f "$INP".*.tmp*
+
+# 整理：写报告用得上的留在外面（.inp、.out 和上面改过名的几个），
+# ORCA 其余的中间文件（.gbw .hess .engrad .opt .densities _trj.xyz _property.txt 等）收进 orca_raw_files/
+mkdir -p orca_raw_files
+for f in "$INP"*; do
+    case "$f" in
+        "$INP.inp"|"$INP.out") ;;
+        *) mv -f "$f" orca_raw_files/ ;;
+    esac
+done
+echo ">>> 全部完成  $(date)"

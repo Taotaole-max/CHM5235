@@ -1,0 +1,19 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> ex1_optfreq_PBE_gas 开始  Sat Sep 19 23:14:31 +08 2026
+>>> ORCA 结束  Sat Sep 19 23:34:40 +08 2026
+>>> 无虚频
+>>> 全部完成  Sat Sep 19 23:34:43 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-19 23:34:43.562511:
+     JobId: 1009578.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 10gb 				 Memory Used: 508984kb 
+     Vmem Used: 1632996kb
+     CPU Time Used: 00:15:15 
+     Walltime requested: 24:00:00 			 Walltime Used: 00:20:14
+     Submit Time:  Sat Sep 19 22:57:15 2026 		 Start Time: Sat Sep 19 23:14:29 2026 
+     End Time: Sat Sep 19 23:34:43 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=10485760kb)
+     ======================================================================================

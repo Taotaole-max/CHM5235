@@ -1,0 +1,71 @@
+%chk=hcl_sto3g.chk
+%mem=3GB
+%nprocshared=1
+#p hf/sto-3g opt=tight freq pop=full scf=tight
+
+HCl RHF opt+freq  /  STO-3G
+
+0 1
+Cl
+H 1 1.30
+
+--Link1--
+%chk=hcl_631g.chk
+%mem=3GB
+%nprocshared=1
+#p hf/6-31g opt=tight freq pop=full scf=tight
+
+HCl RHF opt+freq  /  6-31G
+
+0 1
+Cl
+H 1 1.28
+
+--Link1--
+%chk=hcl_ccpvdz.chk
+%mem=3GB
+%nprocshared=1
+#p hf/cc-pVDZ opt=tight freq pop=full scf=tight
+
+HCl RHF opt+freq  /  cc-pVDZ
+
+0 1
+Cl
+H 1 1.28
+
+--Link1--
+%chk=hcl_6311pgd.chk
+%mem=3GB
+%nprocshared=1
+#p hf/6-311+g(d) opt=tight freq pop=full scf=tight
+
+HCl RHF opt+freq  /  6-311+G(d)  -- used for the orbital energy diagram in Ex1 part 2
+
+0 1
+Cl
+H 1 1.27
+
+--Link1--
+%chk=hcl_ccpvtz.chk
+%mem=3GB
+%nprocshared=1
+#p hf/cc-pVTZ opt=tight freq pop=full scf=tight
+
+HCl RHF opt+freq  /  cc-pVTZ
+
+0 1
+Cl
+H 1 1.27
+
+--Link1--
+%chk=hcl_ccpvqz.chk
+%mem=3GB
+%nprocshared=1
+#p hf/cc-pVQZ opt=tight freq pop=full scf=tight
+
+HCl RHF opt+freq  /  cc-pVQZ
+
+0 1
+Cl
+H 1 1.27
+

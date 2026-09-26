@@ -1,0 +1,31 @@
+>>> ORCA_MODULE=orca/5.2  ORCA_EXE=/app1/centos7/ORCA-5.2/orca
+>>> 单点 + cube 开始  Sun Sep 20 01:45:41 +08 2026
+FINAL SINGLE POINT ENERGY      -766.974052222850
+   Ex1 里的最终能量：FINAL SINGLE POINT ENERGY      -766.974052219195
+>>> orca_vpot 静电势开始  Sun Sep 20 01:49:17 +08 2026
+Electrostatic potential evaluated in    51.205 sec
+
+Maximum memory used throughout the entire VPOT-calculation: 17.9 MB
+>>> 静电势点数：131157
+total 20232
+drwxr-xr-x 2 zhangxubo svuusers      195 Sep 20 01:50 .
+drwx------ 4 zhangxubo svuusers      335 Sep 20 01:50 ..
+-rw-r--r-- 1 zhangxubo svuusers  8269978 Sep 20 01:49 ex1_cube_density_B3LYP_gas.cube
+-rw-r--r-- 1 zhangxubo svuusers  8270001 Sep 20 01:48 ex1_cube_HOMO_B3LYP_gas.cube
+-rw-r--r-- 1 zhangxubo svuusers  8270001 Sep 20 01:48 ex1_cube_LUMO_B3LYP_gas.cube
+-rw-r--r-- 1 zhangxubo svuusers 13115707 Sep 20 01:50 ex1_esp_values_on_grid_B3LYP_gas.txt
+>>> 全部完成  Sun Sep 20 01:50:10 +08 2026
+      ======================================================================================
+     Resource Usage on 2026-09-20 01:50:11.073781:
+     JobId: 1009618.venus01  				 Project: _pbs_project_default 
+     Submission Host: atlas9-c01 
+     Exit Status: 0
+     NCPUs Requested: 1 				 NCPUs Used: 1
+     Memory Requested: 6gb 				 Memory Used: 203912kb 
+     Vmem Used: 1195764kb
+     CPU Time Used: 00:03:14 
+     Walltime requested: 02:00:00 			 Walltime Used: 00:04:30
+     Submit Time:  Sun Sep 20 00:59:52 2026 		 Start Time: Sun Sep 20 01:45:40 2026 
+     End Time: Sun Sep 20 01:50:11 2026 
+     Execution Nodes Used: (cnode-33-43-49:ncpus=1:mem=6291456kb)
+     ======================================================================================

@@ -1,0 +1,1587 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CM5235 第4讲 · 电子相关方法</title>
+<style>:root{
+  --bg:#faf9f7; --card:#ffffff; --ink:#1c1c1e; --muted:#6b6b70;
+  --line:#e3e0da; --accent:#0b5ea8; --accent2:#b3541e; --accent3:#2c6e4f;
+  --box-tr:#eef4fb; --box-ex:#fff8ee; --box-warn:#fdeeee; --box-fml:#f5f8fc;
+  --mono:"Cascadia Mono",Consolas,Menlo,monospace;
+  --math:"Cambria Math","Latin Modern Math",Cambria,Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:16px;line-height:1.78;}
+.wrap{max-width:940px;margin:0 auto;padding:32px 22px 120px;}
+header.top{border-bottom:3px solid var(--accent);padding-bottom:18px;margin-bottom:8px}
+header.top .kicker{color:var(--accent);font-weight:700;letter-spacing:.14em;font-size:13px}
+header.top h1{margin:6px 0 4px;font-size:30px;line-height:1.3}
+header.top .sub{color:var(--muted);font-size:14px}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:14px 20px;margin:26px 0 40px;font-size:14px}
+nav.toc b{display:block;margin-bottom:8px;color:var(--accent)}
+nav.toc a{color:var(--ink);text-decoration:none;display:inline-block;margin:3px 14px 3px 0}
+nav.toc a:hover{color:var(--accent);text-decoration:underline}
+section.slide{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:24px 26px;margin:0 0 30px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+section.slide>h2{margin:0 0 4px;font-size:21px;line-height:1.4;color:var(--accent)}
+.pno{display:inline-block;background:var(--accent);color:#fff;border-radius:6px;
+  font-size:12px;font-weight:700;padding:2px 9px;margin-right:10px;vertical-align:3px;
+  font-family:var(--mono)}
+.entitle{color:var(--muted);font-size:14px;font-style:italic;margin:0 0 16px}
+h3{font-size:15.5px;margin:24px 0 8px;padding-left:11px;border-left:4px solid var(--accent);
+  letter-spacing:.02em}
+h3.ex{border-left-color:var(--accent2)}
+h3.fm{border-left-color:var(--accent3)}
+h4{font-size:14.5px;margin:16px 0 6px;color:#333}
+p{margin:9px 0}
+ul,ol{margin:9px 0 9px 4px;padding-left:22px}
+li{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f2f4f7;font-weight:600}
+td.c,th.c{text-align:center}
+code,.f{font-family:var(--mono);background:#f2f2ef;padding:1px 5px;border-radius:4px;
+  font-size:.93em}
+.m{font-family:var(--math);font-size:1.06em;font-style:italic}
+.mn{font-family:var(--math);font-size:1.06em;font-style:normal}
+.tr{background:var(--box-tr);border-left:4px solid var(--accent);padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.tr .lab{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.ext{background:var(--box-ex);border-left:4px solid var(--accent2);padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.ext .lab{font-size:12px;color:var(--accent2);font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.warn{background:var(--box-warn);border-left:4px solid #c0392b;padding:12px 16px;
+  border-radius:0 8px 8px 0;margin:12px 0}
+.warn .lab{font-size:12px;color:#c0392b;font-weight:700;letter-spacing:.1em;
+  display:block;margin-bottom:4px}
+.fml{background:var(--box-fml);border:1px solid #dbe5f0;border-radius:8px;
+  padding:16px 18px;margin:14px 0;text-align:center;overflow-x:auto;
+  font-family:var(--math);font-size:18px;line-height:2.0}
+.fml .tag{display:block;font-family:var(--mono);font-size:11px;color:var(--accent);
+  letter-spacing:.08em;text-align:left;margin-bottom:8px;font-style:normal}
+.fml i{font-style:italic}
+table.vars{font-size:14px;margin:10px 0 16px}
+table.vars th{background:#eef3f8;font-size:13px}
+table.vars td:first-child{font-family:var(--math);font-size:16px;text-align:center;
+  width:74px;background:#fbfcfe;white-space:nowrap}
+table.vars td:nth-child(2){width:150px;font-weight:600}
+.step{background:#fbfbf9;border:1px dashed var(--line);border-radius:8px;
+  padding:12px 16px;margin:12px 0}
+.step .sh{font-weight:700;color:var(--accent3);font-size:14px;margin-bottom:4px}
+figure{margin:20px 0;text-align:center;overflow-x:auto}
+figure svg{max-width:100%;height:auto}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+.key{background:linear-gradient(transparent 62%,#ffe9a8 62%);font-weight:600}
+hr.sep{border:0;border-top:1px dashed var(--line);margin:26px 0}
+details{margin:10px 0;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
+  background:#fbfbf9}
+details summary{cursor:pointer;font-weight:600;color:var(--accent2);font-size:14.5px}
+details[open] summary{margin-bottom:8px}
+footer{color:var(--muted);font-size:13px;text-align:center;margin-top:50px;
+  border-top:1px solid var(--line);padding-top:20px}
+footer a{color:var(--accent)}
+@media print{body{background:#fff}section.slide{break-inside:avoid;box-shadow:none}}
+
+@page{size:A4;margin:11mm}@media print{body{background:#fff;font-size:13px}.wrap{max-width:none;padding:0}section.slide{break-inside:auto!important;box-shadow:none;padding:14px 16px}tr,figure,.fml,.kp,.tr,.step{break-inside:avoid}h2,h3{break-after:avoid}nav.toc{display:none}}</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">CM5235 · APPLIED COMPUTATIONAL CHEMISTRY</div>
+  <h1>第 4 讲　电子相关方法</h1>
+  <div class="sub">对应讲义 <code>CM5235_Lecture_04.pdf</code>（45 页）· 逐页翻译 + 零基础讲解 + 每个符号标注 + 拓展</div>
+</header>
+
+<nav class="toc">
+<b>本讲导航</b>
+<a href="#p2">p2 精确波函数</a><a href="#p3">p3 相关能的定义</a><a href="#p4">p4 ★静态 vs 动态相关</a>
+<a href="#p5">p5 变分原理的局限</a><a href="#p6">p6 两条技术路线</a><a href="#p7">p7–8 单参考 vs 多参考</a>
+<a href="#p9">p9 MCSCF</a><a href="#p10">p10–13 CI 与久期方程</a><a href="#p14">p14 CSF 自旋适配</a>
+<a href="#p14">p15–16 CI 的规模与权重</a><a href="#p17">p17–20 ★CI 如何让电子分开</a>
+<a href="#p21">p21 RHF/UHF/FCI 对比</a><a href="#p22">p22 ★尺寸一致性</a>
+<a href="#p23">p23–27 ★耦合簇 CC</a><a href="#p28">p28–35 微扰论</a><a href="#p36">p36 ★MP2 公式</a>
+<a href="#p37">p37–38 BSSE 与 counterpoise</a><a href="#p39">p39 方法总结表</a><a href="#p39">p40 标度</a>
+<a href="#p41">p41–42 实际表现</a><a href="#p43">p43 CBS 外推</a><a href="#p44">p44 各种密度</a>
+<a href="#p45">p45 实践练习</a><a href="#sum">本讲小结</a>
+</nav>
+
+<div class="warn"><span class="lab">这一讲的地图：只讲一件事</span>
+<p><b>Hartree–Fock 丢掉了"电子相关"，这一讲讲怎么把它捡回来。</b></p>
+<table>
+<tr><td class="c" style="width:90px"><b>p2–p6</b></td><td><b>问题定义</b>：什么是相关能，为什么分"静态"和"动态"两种，有哪两条技术路线</td></tr>
+<tr><td class="c"><b>p7–p22</b></td><td><b>组态相互作用 (CI)</b>。<span class="key">p17–p20 用 H₂ 把"CI 到底怎么让电子躲开"讲透了，是全讲最精彩的一段。</span>p22 引出 CI 的致命缺陷</td></tr>
+<tr><td class="c"><b>p23–p27</b></td><td><b>耦合簇 (CC)</b>：修好 CI 缺陷的方法。CCSD(T) 是"黄金标准"</td></tr>
+<tr><td class="c"><b>p28–p36</b></td><td><b>微扰论 → MP2</b>：最便宜的相关方法</td></tr>
+<tr><td class="c"><b>p37–p45</b></td><td><b>实用问题</b>：BSSE、标度、精度、基组外推</td></tr>
+</table>
+<p><b>考试重点</b>：<span class="key">静态 vs 动态相关的区别（p4）、CI 的尺寸不一致性（p22）、CC 为什么尺寸一致（p23）、各方法的标度（p40）。</span></p>
+</div>
+
+<section class="slide" id="p2">
+<h2><span class="pno">p2</span>精确波函数的形式</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>当<b>所有</b>可能的 Slater 行列式都被包含进波函数、且它们各自的权重由变分方法确定时，就得到了精确波函数：</p>
+<p>Ψ<sub>exact</sub> = <i>a</i>₀<i>ψ</i><sub>HF</sub> + Σ<sub><i>i</i></sub><sup>occ</sup>Σ<sub><i>r</i></sub><sup>virt</sup> <i>a</i><sub><i>i</i></sub><sup><i>r</i></sup><i>ψ</i><sub><i>i</i></sub><sup><i>r</i></sup> + Σ<sub><i>i</i>&lt;<i>j</i></sub><sup>occ</sup>Σ<sub><i>r</i>&lt;<i>s</i></sub><sup>virt</sup> <i>a</i><sub><i>ij</i></sub><sup><i>rs</i></sup><i>ψ</i><sub><i>ij</i></sub><sup><i>rs</i></sup> + Σ<sub><i>i</i>&lt;<i>j</i>&lt;<i>k</i></sub>Σ<sub><i>r</i>&lt;<i>s</i>&lt;<i>t</i></sub> <i>a</i><sub><i>ijk</i></sub><sup><i>rst</i></sup><i>ψ</i><sub><i>ijk</i></sub><sup><i>rst</i></sup> + ⋯</p>
+<p>这样的波函数被称为<b>薛定谔方程的精确非相对论解</b>。</p>
+<p>通过把激发的 Slater 行列式加入 HF 波函数，电子开始"感受"到彼此并互相回避（增大电子间距离），这就计入了所谓的<b>"电子相关"</b>。</p>
+<p>这样的波函数只对非常小的分子（主要是双原子分子）、小基组下才可能。它被称为 <b>Full CI</b>。</p>
+<p>实践中，通常对激发电子的数目施加一个限制（相对于基态 HF 行列式），通常是 <b>2</b>。</p>
+</div>
+
+<h3 class="fm">公式解析 · Full CI 展开（本讲通用的记号）</h3>
+<div class="fml"><span class="tag">★ Full CI 波函数</span>
+Ψ = <i>a</i><sub>0</sub>Ψ<sub>HF</sub> + Σ <i>a</i><sub><i>i</i></sub><sup><i>r</i></sup>Ψ<sub><i>i</i></sub><sup><i>r</i></sup> + Σ <i>a</i><sub><i>ij</i></sub><sup><i>rs</i></sup>Ψ<sub><i>ij</i></sub><sup><i>rs</i></sup> + Σ <i>a</i><sub><i>ijk</i></sub><sup><i>rst</i></sup>Ψ<sub><i>ijk</i></sub><sup><i>rst</i></sup> + ⋯<br>
+<span style="font-size:13px;font-style:normal;color:#6b6b70">　参考态　　　　单激发 (S)　　　　双激发 (D)　　　　三激发 (T)</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>Ψ<sub>HF</sub></td><td>参考行列式</td><td>Hartree–Fock 基态那个 Slater 行列式。<span class="key">在良好体系中它的权重 <i>a</i><sub>0</sub>² ≈ 0.95–0.99</span></td></tr>
+<tr><td><i>i</i>, <i>j</i>, <i>k</i></td><td>占据轨道下标</td><td><b>电子从哪来</b>（occupied）</td></tr>
+<tr><td><i>r</i>, <i>s</i>, <i>t</i></td><td>虚轨道上标</td><td><b>电子到哪去</b>（virtual / empty）</td></tr>
+<tr><td>Ψ<sub><i>i</i></sub><sup><i>r</i></sup></td><td>单激发行列式</td><td>把 Ψ<sub>HF</sub> 里的轨道 <i>i</i> 换成 <i>r</i>，其余不动</td></tr>
+<tr><td><i>a</i><sub><i>ij</i></sub><sup><i>rs</i></sup></td><td>CI 系数</td><td><span class="key">要变分求解的未知数。|<i>a</i>|² 是该组态的权重</span></td></tr>
+<tr><td><i>i</i>&lt;<i>j</i>, <i>r</i>&lt;<i>s</i></td><td>求和限制</td><td>避免把同一个激发数两次（(<i>i</i>,<i>j</i>) 和 (<i>j</i>,<i>i</i>) 是同一件事）</td></tr>
+</table>
+
+<h3>讲解 · "激发"到底是什么意思（零基础版）</h3>
+<figure>
+<svg viewBox="0 0 540 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.lv{stroke:#0b5ea8;stroke-width:2}.lvv{stroke:#9aa5b1;stroke-width:1.6;stroke-dasharray:5,3}.e{font-size:13px;fill:#c0392b}.s{font-size:11px;fill:#6b6b70}.h{font-size:12px;font-weight:700;fill:#1c1c1e}</style>
+<marker id="up" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto"><path d="M0,7 L4,0 L8,7" fill="none" stroke="#b3541e" stroke-width="1.4"/></marker></defs>
+<text x="70" y="18" class="h" text-anchor="middle">Ψ<tspan font-size="9">HF</tspan></text>
+<line x1="30" y1="160" x2="110" y2="160" class="lv"/><text x="63" y="156" class="e">↑↓</text>
+<line x1="30" y1="130" x2="110" y2="130" class="lv"/><text x="63" y="126" class="e">↑↓</text>
+<line x1="30" y1="80" x2="110" y2="80" class="lvv"/>
+<line x1="30" y1="52" x2="110" y2="52" class="lvv"/>
+<text x="70" y="188" class="s" text-anchor="middle">参考态</text>
+<text x="212" y="18" class="h" text-anchor="middle">Ψ<tspan font-size="9">i</tspan><tspan font-size="9" dy="-6">r</tspan></text>
+<line x1="172" y1="160" x2="252" y2="160" class="lv"/><text x="205" y="156" class="e">↑↓</text>
+<line x1="172" y1="130" x2="252" y2="130" class="lv"/><text x="209" y="126" class="e">↑</text>
+<line x1="172" y1="80" x2="252" y2="80" class="lvv"/><text x="209" y="76" class="e">↓</text>
+<line x1="172" y1="52" x2="252" y2="52" class="lvv"/>
+<path d="M228,124 L228,86" stroke="#b3541e" stroke-width="1.4" marker-end="url(#up)"/>
+<text x="212" y="188" class="s" text-anchor="middle">单激发 (S)</text>
+<text x="354" y="18" class="h" text-anchor="middle">Ψ<tspan font-size="9">ij</tspan><tspan font-size="9" dy="-6">rs</tspan></text>
+<line x1="314" y1="160" x2="394" y2="160" class="lv"/><text x="351" y="156" class="e">↑</text>
+<line x1="314" y1="130" x2="394" y2="130" class="lv"/><text x="351" y="126" class="e">↑</text>
+<line x1="314" y1="80" x2="394" y2="80" class="lvv"/><text x="351" y="76" class="e">↓</text>
+<line x1="314" y1="52" x2="394" y2="52" class="lvv"/><text x="351" y="48" class="e">↓</text>
+<path d="M374,124 L374,86" stroke="#b3541e" stroke-width="1.4" marker-end="url(#up)"/>
+<path d="M330,154 L330,58" stroke="#b3541e" stroke-width="1.4" marker-end="url(#up)"/>
+<text x="354" y="188" class="s" text-anchor="middle"><b>双激发 (D)</b></text>
+<text x="480" y="70" class="s" text-anchor="middle">虚轨道</text>
+<text x="480" y="86" class="s" text-anchor="middle">(空)</text>
+<text x="480" y="140" class="s" text-anchor="middle">占据轨道</text>
+</svg>
+<figcaption>"激发行列式"就是把电子从占据轨道挪到空轨道后得到的新 Slater 行列式</figcaption>
+</figure>
+<div class="warn"><span class="lab">重要澄清：这里的"激发"不是物理上的电子跃迁</span>
+<p><span class="key">Ψ<sub><i>ij</i></sub><sup><i>rs</i></sup> 并不表示"分子真的被激发了"。</span>它们只是一组<b>数学上的基函数</b>——用来把真实的基态波函数展开。</p>
+<p>类比：用正弦波展开一个方波（傅里叶级数），高频正弦波并不意味着方波"真的在高频振动"，它们只是构造这个形状的零件。</p>
+<p><b>所以：基态的 CI 波函数里混入双激发行列式，描述的仍然是基态</b>，只是描述得更准确了。</p>
+</div>
+</section>
+
+<section class="slide" id="p3">
+<h2><span class="pno">p3</span>Hartree–Fock 回顾与相关能的定义</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ul>
+<li>每个电子在所有其余电子和核产生的<b>平均静电场</b>中运动（平均场近似）</li>
+<li>每个分子（自旋）轨道描述<b>一个</b>电子的运动（单电子近似）</li>
+<li>多电子波函数 Ψ<sub>HF</sub> 写成单电子分子轨道的<b>反对称化乘积</b>（即单个 Slater 行列式），以满足泡利不相容原理</li>
+<li>Hartree–Fock 能量作为哈密顿量的期望值得到：<br><i>E</i><sub>HF</sub> = ∫Ψ<sub>HF</sub>*<i>Ĥ</i>Ψ<sub>HF</sub>d<i>τ</i> = ⟨Ψ<sub>HF</sub>|<i>Ĥ</i>|Ψ<sub>HF</sub>⟩</li>
+<li><b>Hartree–Fock 解的能量比精确能量高。</b><br><i>E</i><sub>exact</sub> = ⟨Ψ<sub>exact</sub>|<i>Ĥ</i>|Ψ<sub>exact</sub>⟩</li>
+<li><b>精确能量与 HF 能量之差称为相关能</b>：<br><i>E</i><sub>corr</sub> = <i>E</i><sub>exact</sub> − <i>E</i><sub>HF</sub></li>
+</ul>
+</div>
+
+<h3 class="fm">公式解析 · 相关能</h3>
+<div class="fml"><span class="tag">★ 相关能的定义（Löwdin 定义）</span>
+<i>E</i><sub>corr</sub> = <i>E</i><sub>exact</sub> − <i>E</i><sub>HF</sub>　&lt;&nbsp;0
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>E</i><sub>HF</sub></td><td>Hartree–Fock 能量</td><td><span class="key">严格说是"HF 极限"——完备基组下的 HF 能量</span>。有限基组的 HF 能量还要更高</td></tr>
+<tr><td><i>E</i><sub>exact</sub></td><td>精确能量</td><td>同一个（非相对论、BO 近似）哈密顿量的真实基态本征值</td></tr>
+<tr><td><i>E</i><sub>corr</sub></td><td><b>相关能</b></td><td><span class="key"><b>永远是负数</b></span>（因为变分原理保证 <i>E</i><sub>HF</sub> ≥ <i>E</i><sub>exact</sub>）</td></tr>
+</table>
+<figure>
+<svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.lv{stroke-width:2.4}.s{font-size:11.5px;fill:#6b6b70}.t{font-size:12px;fill:#1c1c1e}</style></defs>
+<line x1="60" y1="180" x2="60" y2="25" stroke="#9aa5b1" stroke-width="1.2"/>
+<text x="34" y="105" class="s" text-anchor="middle" transform="rotate(-90 34,105)">能量</text>
+<line x1="80" y1="45" x2="260" y2="45" class="lv" stroke="#c0392b"/>
+<text x="270" y="42" class="t" fill="#c0392b" font-weight="700">E(有限基组 HF)</text>
+<text x="270" y="57" class="s" fill="#c0392b">基组误差</text>
+<line x1="80" y1="90" x2="260" y2="90" class="lv" stroke="#b3541e"/>
+<text x="270" y="94" class="t" fill="#b3541e" font-weight="700">E<tspan font-size="9">HF</tspan>（HF 极限，完备基组）</text>
+<line x1="80" y1="165" x2="260" y2="165" class="lv" stroke="#2c6e4f"/>
+<text x="270" y="169" class="t" fill="#2c6e4f" font-weight="700">E<tspan font-size="9">exact</tspan>（Full CI / 完备基组）</text>
+<line x1="170" y1="90" x2="170" y2="165" stroke="#0b5ea8" stroke-width="1.6"/>
+<line x1="164" y1="96" x2="176" y2="96" stroke="#0b5ea8" stroke-width="1.6"/>
+<line x1="164" y1="159" x2="176" y2="159" stroke="#0b5ea8" stroke-width="1.6"/>
+<text x="182" y="130" class="t" fill="#0b5ea8" font-weight="700">E<tspan font-size="9">corr</tspan></text>
+<text x="182" y="146" class="s" fill="#0b5ea8">约占总能量 1%</text>
+<line x1="120" y1="45" x2="120" y2="90" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="3,2"/>
+<text x="112" y="70" class="s" fill="#c0392b" text-anchor="end">基组</text>
+<text x="240" y="192" class="s" text-anchor="middle">两个正交的改进方向：<b>往下</b>=补相关　<b>往下</b>=扩基组</text>
+</svg>
+<figcaption>相关能的定义 · 注意"扩大基组"和"补相关"是两个独立的方向（第 3 讲 p28 的 a) 和 b)）</figcaption>
+</figure>
+
+<div class="warn"><span class="lab">数量感：相关能虽小，却决定化学</span>
+<table>
+<tr><th style="width:200px">量</th><th>大小</th></tr>
+<tr><td>分子总能量</td><td>−100 到 −3000 Hartree</td></tr>
+<tr><td><b>相关能</b></td><td>约总能量的 <b>1%</b>；每对电子约 <b>−0.04 Hartree = −25 kcal/mol</b></td></tr>
+<tr><td>一根 C–C 键</td><td>约 0.13 Hartree（83 kcal/mol）</td></tr>
+<tr><td>一个氢键</td><td>约 0.008 Hartree（5 kcal/mol）</td></tr>
+<tr><td><b>化学精度</b></td><td><b>0.0016 Hartree（1 kcal/mol）</b></td></tr>
+</table>
+<p><span class="key">关键：相关能和化学键能是同一个量级。所以"HF 已经对了 99%"这句话在化学上毫无意义——那剩下的 1% 正好是全部化学。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p4">
+<h2><span class="pno">p4</span>★ 静态相关与动态相关（本讲最重要的一页）</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>电子相关实际上被定义为：<b>Hartree–Fock 理论没有正确处理的那部分电子间相互作用</b>。</p>
+<p><b>静态相关 (Static correlation)</b> 指的是这样一种情形：单个 Slater 行列式（即单一的分子轨道占据模式）可能不是基态的好近似。<b>这常常发生在基态是简并或变成简并的时候。</b></p>
+<p><b>例子：H₂ 的解离。</b>一个著名的例子是氢分子的解离，其中<b>限制性 Hartree–Fock 方法产生的是一对离子而不是一对自由基</b>。</p>
+<p>（图示：正确（精确解）H···H；错误（RHF 解）H⁻···H⁺）</p>
+<p><b>动态相关 (Dynamic correlation)</b> 是由库仑排斥导致的<b>电子之间关联的运动</b>。作为平均场理论，HF 方法没有正确处理这个效应。</p>
+<p>非弹性 X 射线散射的描述如果不包含动态相关效应就无法得到。</p>
+</div>
+
+<h3>讲解 · 用两幅图理解两种相关</h3>
+<figure>
+<svg viewBox="0 0 540 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.t{font-size:12px;fill:#1c1c1e}.s{font-size:11px;fill:#6b6b70}.h{font-size:13px;font-weight:700}</style>
+<radialGradient id="cl"><stop offset="0%" stop-color="#0b5ea8" stop-opacity="0.28"/><stop offset="100%" stop-color="#0b5ea8" stop-opacity="0.02"/></radialGradient></defs>
+<text x="135" y="20" class="h" fill="#c0392b" text-anchor="middle">静态相关</text>
+<text x="135" y="38" class="s" text-anchor="middle">"一个行列式根本不够"</text>
+<rect x="30" y="50" width="90" height="52" rx="5" fill="#fdeeee" stroke="#c0392b" stroke-width="1.3"/>
+<text x="75" y="70" class="s" text-anchor="middle">组态 A</text>
+<text x="75" y="90" class="s" text-anchor="middle">σ<tspan font-size="9">g</tspan>²　权重 50%</text>
+<text x="135" y="80" class="t">+</text>
+<rect x="150" y="50" width="90" height="52" rx="5" fill="#fdeeee" stroke="#c0392b" stroke-width="1.3"/>
+<text x="195" y="70" class="s" text-anchor="middle">组态 B</text>
+<text x="195" y="90" class="s" text-anchor="middle">σ<tspan font-size="9">u</tspan>²　权重 50%</text>
+<text x="135" y="125" class="s" text-anchor="middle">两个组态权重<b>相当</b> ⟹ 缺一不可</text>
+<text x="135" y="145" class="s" text-anchor="middle">解法：<b>CASSCF</b>（少量组态，必须选对）</text>
+<text x="135" y="170" class="s" text-anchor="middle" fill="#c0392b">场景：断键、简并、过渡金属、双自由基</text>
+<line x1="278" y1="30" x2="278" y2="230" stroke="#e3e0da" stroke-dasharray="4,4"/>
+<text x="410" y="20" class="h" fill="#2c6e4f" text-anchor="middle">动态相关</text>
+<text x="410" y="38" class="s" text-anchor="middle">"一个行列式定性对，细节缺"</text>
+<circle cx="410" cy="90" r="42" fill="url(#cl)"/>
+<circle cx="410" cy="90" r="9" fill="#1c1c1e"/>
+<circle cx="378" cy="70" r="5.5" fill="#c0392b"/><circle cx="442" cy="110" r="5.5" fill="#c0392b"/>
+<path d="M383,74 Q410,90 437,106" stroke="#c0392b" stroke-width="1.1" stroke-dasharray="3,2" fill="none"/>
+<text x="410" y="152" class="s" text-anchor="middle">电子<b>瞬时</b>互相躲避</text>
+<text x="410" y="170" class="s" text-anchor="middle">需要<b>海量</b>组态，每个权重都很小</text>
+<text x="410" y="190" class="s" text-anchor="middle">解法：<b>MP2 / CCSD(T)</b></text>
+<text x="410" y="212" class="s" text-anchor="middle" fill="#2c6e4f">场景：<b>所有</b>体系都有</text>
+</svg>
+</figure>
+<table>
+<tr><th style="width:110px"></th><th style="width:44%">静态相关 (static / non-dynamical)</th><th>动态相关 (dynamic)</th></tr>
+<tr><td><b>本质</b></td><td><span class="key">参考波函数<b>本身</b>就是错的</span>——有几个组态权重相当</td><td>参考波函数定性正确，缺的是电子<b>瞬时</b>躲避的细节</td></tr>
+<tr><td><b>组态特征</b></td><td><b>少数几个</b>组态，权重<b>都很大</b>（0.3–0.7）</td><td><b>海量</b>组态，每个权重<b>都很小</b>（&lt;0.05）</td></tr>
+<tr><td><b>典型场景</b></td><td>断键、简并/近简并、过渡金属 d 轨道、镧系 f 轨道、双自由基、激发态、过渡态</td><td>所有体系；主要来自电子对的短程排斥</td></tr>
+<tr><td><b>解法</b></td><td><b>CASSCF / MCSCF / RASSCF</b></td><td><b>MP2 / CCSD / CCSD(T)</b></td></tr>
+<tr><td><b>诊断</b></td><td>天然轨道占据数偏离 0/2；⟨<i>Ŝ</i>²⟩ 污染；<i>T</i>₁ &gt; 0.02；SCF 难收敛</td><td>—（总是存在，不需要诊断）</td></tr>
+<tr><td><b>顺序</b></td><td colspan="2"><span class="key">必须<b>先</b>处理静态，再处理动态。</span>标准做法：CASSCF（静态）→ CASPT2/NEVPT2（动态）</td></tr>
+</table>
+
+<div class="warn"><span class="lab">为什么 RHF 会把 H₂ 解离成一对离子（p4 那张图）</span>
+<p>这是全课最经典的例子，p17–p21 会详细推导，这里先给结论：</p>
+<p>RHF 强制两个电子共用同一个 <i>σ</i><sub><i>g</i></sub> 轨道。展开后：</p>
+<div class="fml" style="font-size:15px">Ψ<sub>RHF</sub> ∝ <span style="color:#c0392b">[χ<sub>A</sub>(1)χ<sub>A</sub>(2) + χ<sub>B</sub>(1)χ<sub>B</sub>(2)]</span> + <span style="color:#2c6e4f">[χ<sub>A</sub>(1)χ<sub>B</sub>(2) + χ<sub>B</sub>(1)χ<sub>A</sub>(2)]</span><br>
+<span style="font-size:12.5px;font-style:normal;color:#6b6b70">　　　<span style="color:#c0392b">离子项 50%（两个电子在同一个 H 上 ⟹ H⁻ + H⁺）</span>　<span style="color:#2c6e4f">共价项 50%</span></span></div>
+<p><span class="key">这个 50:50 比例是<b>固定</b>的，不随距离变化——因为单个行列式没有可调的混合系数。</span></p>
+<p>而 <i>R</i>→∞ 时，H⁻+H⁺ 比 H·+H· 高出 (IE−EA) ≈ 12.8 eV，乘以 50% 权重 ≈ <b>147 kcal/mol</b> 的能量高估。</p>
+<p><b>修复方法</b>：混入双激发组态 <i>σ</i><sub><i>u</i></sub>²，让离子项的系数在长距离处趋于零（p20 会精确给出）。</p>
+</div>
+</section>
+
+<section class="slide" id="p5">
+<h2><span class="pno">p5</span>变分原理及其局限</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>应用到量子化学计算中，变分原理指出：<b>在给定的一类函数中，能量期望值最低的那个是量子体系基态的最佳近似。</b></p>
+<p>实践中，变分原理保证<b>更大的基组会给出更好的近似</b>，虽然收益递减规律确实适用。</p>
+<table>
+<tr><th style="width:190px">基组</th><th>能量 / Hartree</th></tr>
+<tr><td>STO-3G</td><td>−0.49491</td></tr>
+<tr><td>STO-4G</td><td>−0.49848</td></tr>
+<tr><td>STO-5G</td><td>−0.49951</td></tr>
+<tr><td>STO-6G</td><td>−0.49983</td></tr>
+</table>
+<p><b>由于误差抵消效应，变分原理一般不适用于能量以外的性质，甚至不适用于能量差</b>（如左图所示）。</p>
+<p>因此对性质计算而言，<b>更大的基组不一定意味着更准确的答案</b>，但一定意味着更长的计算时间。</p>
+</div>
+
+<h3>讲解 · 那张表在演示什么</h3>
+<p>这是氢原子（精确解 −0.5 Hartree）用不同数目高斯函数拟合的结果：</p>
+<table>
+<tr><th class="c" style="width:130px">基组</th><th class="c" style="width:150px">能量</th><th class="c" style="width:130px">距精确值</th><th>每加一个高斯的收益</th></tr>
+<tr><td class="c">STO-3G</td><td class="c">−0.49491</td><td class="c">+0.00509</td><td>—</td></tr>
+<tr><td class="c">STO-4G</td><td class="c">−0.49848</td><td class="c">+0.00152</td><td>改善 0.0036</td></tr>
+<tr><td class="c">STO-5G</td><td class="c">−0.49951</td><td class="c">+0.00049</td><td>改善 0.0010</td></tr>
+<tr><td class="c">STO-6G</td><td class="c">−0.49983</td><td class="c">+0.00017</td><td>改善 0.0003</td></tr>
+</table>
+<p><b>两个观察</b>：</p>
+<ol>
+<li><span class="key">能量<b>单调下降</b>，永远不越过 −0.5</span> ⟹ 变分原理 ✔</li>
+<li><span class="key">改善幅度每次约减小到 1/3</span> ⟹ <b>收益递减</b>。从 5G 到 6G 只改善 0.0003 Hartree，但计算量增加 20%</li>
+</ol>
+
+<div class="warn"><span class="lab">"变分原理不适用于性质和能量差" —— 这是最容易被忽视的一句话</span>
+<p><b>为什么能量差不受保护</b>：设有两个结构 A 和 B，你想算 Δ<i>E</i> = <i>E</i><sub>B</sub> − <i>E</i><sub>A</sub>。</p>
+<div class="fml" style="font-size:15px">
+真实：Δ<i>E</i><sub>真</sub> = <i>E</i><sub>B,真</sub> − <i>E</i><sub>A,真</sub><br>
+计算：Δ<i>E</i><sub>算</sub> = (<i>E</i><sub>B,真</sub> + <i>δ</i><sub>B</sub>) − (<i>E</i><sub>A,真</sub> + <i>δ</i><sub>A</sub>) = Δ<i>E</i><sub>真</sub> + (<i>δ</i><sub>B</sub> − <i>δ</i><sub>A</sub>)
+</div>
+<p>变分原理只保证 <i>δ</i><sub>A</sub> &gt; 0 和 <i>δ</i><sub>B</sub> &gt; 0，<span class="key">但对它们的<b>差</b> (<i>δ</i><sub>B</sub>−<i>δ</i><sub>A</sub>) 一无所知</span>。</p>
+<p><b>实际后果（非常重要）</b>：</p>
+<ul>
+<li>如果 A 和 B 很相似（同分异构体、反应物与产物），误差高度抵消 ⟹ 小基组也能给出好的 Δ<i>E</i>。<span class="key">这就是为什么 B3LYP/6-31G(d) 这么好用。</span></li>
+<li>如果 A 和 B 差别很大（比如"分子" vs "两个分开的碎片"，即 BSSE 的场景 p37），抵消被破坏 ⟹ 必须用大基组或做校正。</li>
+<li><b>"平衡的基组"比"大的基组"更重要</b>——不要给分子的一部分用大基组、另一部分用小基组。</li>
+</ul>
+</div>
+</section>
+
+<section class="slide" id="p6">
+<h2><span class="pno">p6</span>处理电子相关的两条技术路线</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>在计算化学中，我们有两条主要途径来处理电子相关效应：</p>
+<p><b>多组态波函数方法</b>：</p>
+<ul>
+<li>在原有的基态 Hartree–Fock Slater 行列式之外，<b>再考虑额外的 Slater 行列式</b>，以扩充 Hartree–Fock 波函数</li>
+<li>这些额外的 Slater 行列式描述各种激发-去激发过程，从而计入动态电子相关</li>
+<li>我们随后将分析额外 SD 对"保证电子分开"的效果</li>
+</ul>
+<p><b>密度泛函理论方法</b>：</p>
+<ul>
+<li>这个方法以近似的方式描述交换与相关效应。该方法仍然使用与 Hartree–Fock 类似的<b>单 Slater 行列式</b>形式，但<b>修改了 Fock 算符</b>的版本——它现在包含一个"更软"的势，其中含有近似的电子间相关项（这一项在 HF 中是缺失的）</li>
+</ul>
+</div>
+
+<h3>讲解 · 两条路线的根本区别</h3>
+<table>
+<tr><th style="width:120px"></th><th style="width:44%">波函数方法 (WFT)</th><th>密度泛函方法 (DFT)</th></tr>
+<tr><td><b>基本变量</b></td><td>波函数 Ψ(<b>r</b>₁,…,<b>r</b><sub><i>N</i></sub>)，<span class="key">3<i>N</i> 个变量</span></td><td>电子密度 <i>ρ</i>(<b>r</b>)，<span class="key">只有 3 个变量</span></td></tr>
+<tr><td><b>怎么补相关</b></td><td>加更多 Slater 行列式（显式地）</td><td>用一个近似的<b>交换-相关泛函</b> <i>E</i><sub>xc</sub>[<i>ρ</i>]（隐式地）</td></tr>
+<tr><td><b>行列式数目</b></td><td>10³ – 10¹⁰ 个</td><td><b>仍然只有 1 个</b></td></tr>
+<tr><td><b>标度</b></td><td>O(<i>N</i>⁵) – O(<i>N</i>!)</td><td><b>O(<i>N</i>³) – O(<i>N</i>⁴)</b>，和 HF 差不多</td></tr>
+<tr><td><b>可系统改进？</b></td><td><span class="key">✔ 可以</span>（S→SD→SDT→…→FCI，有明确的收敛阶梯）</td><td><span class="key">✘ 不可以</span>（换泛函不保证更好，没有系统路径）</td></tr>
+<tr><td><b>变分？</b></td><td>CI 是变分的；CC、MPn 不是</td><td>对精确泛函是变分的，对近似泛函不严格</td></tr>
+<tr><td><b>能算多大</b></td><td>20–100 原子</td><td><b>数百到数千原子</b></td></tr>
+</table>
+<div class="warn"><span class="lab">DFT 的核心权衡（本课不细讲，但要知道）</span>
+<p><span class="key">DFT 用 HF 的价格买到了（部分）相关能。</span>这是它统治了实际计算化学的原因。</p>
+<p><b>但代价是</b>：</p>
+<ul>
+<li><b>没有系统改进的路径</b>。B3LYP 算不准，换成 M06-2X 可能更好也可能更差，只能靠经验和 benchmark。</li>
+<li><b>自相互作用误差 (SIE)</b>：近似泛函里，一个电子会跟自己排斥。后果：高估离域、低估反应能垒、带隙偏小。</li>
+<li><b>算不出色散</b>（第 1 讲 p12），必须外加 D3/D4 修正。</li>
+<li><b>对静态相关基本无能为力</b>——DFT 只有一个行列式，遇到 p4 那种情况同样失败。</li>
+</ul>
+<p><b>所以</b>：<span class="key">DFT 不是"更好的方法"，是"性价比不同的方法"。做机理研究用 DFT，做基准和小体系高精度用 CCSD(T)，做多参考体系用 CASPT2。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p7">
+<h2><span class="pno">p7–8</span>单参考方法与多参考方法</h2>
+<div class="tr"><span class="lab">原文翻译（p7–8）</span>
+<p>（重复 p2 的 Full CI 展开式与符号说明）</p>
+<p>精确波函数包含所有可能的激发 Slater 行列式。它只能对非常非常小的分子和轻原子、在中小基组下计算。它有时被称为 Full CI 波函数。</p>
+<p><b>p8</b>：通过把激发 Slater 行列式加入 HF 波函数，电子开始感受到彼此并互相回避（增大电子间距离），从而计入<b>动态相关</b>。</p>
+<p>可以区分两大类方法：</p>
+<ol>
+<li><b>单参考方法</b>（MP2, MP3, MP4, CCSD, CCSDT, CISD, CISDT 等）</li>
+<li><b>多参考方法</b>（CASPT2, NEVPT2 等；MRCI, MRCC, CASSCF, MCSCF, RASSCF 等）</li>
+</ol>
+</div>
+<h3>讲解 · "参考"是什么意思，怎么区分这两类</h3>
+<div class="step"><div class="sh">参考 (reference) = 展开的起点</div>
+<table>
+<tr><th style="width:150px">类型</th><th style="width:220px">从什么出发</th><th>什么时候用</th></tr>
+<tr><td><b>单参考</b><br>(single-reference)</td><td><span class="key"><b>一个</b> HF 行列式</span>，然后在它基础上加激发</td><td>参考态权重 <i>a</i>₀² &gt; 0.9 时（"良好体系"）</td></tr>
+<tr><td><b>多参考</b><br>(multi-reference)</td><td><span class="key"><b>一组</b>行列式（CASSCF 波函数）</span>，然后在<b>每一个</b>上面加激发</td><td>有静态相关时（p4 的场景）</td></tr>
+</table>
+</div>
+<figure>
+<svg viewBox="0 0 520 175" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.h{font-size:12.5px;font-weight:700}</style>
+<marker id="ag" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#6b6b70"/></marker></defs>
+<text x="125" y="18" class="h" fill="#0b5ea8" text-anchor="middle">单参考（如 CCSD(T)）</text>
+<rect x="75" y="34" width="100" height="30" rx="5" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.6"/>
+<text x="125" y="53" class="s" text-anchor="middle" font-weight="700">1 个 HF 行列式</text>
+<line x1="125" y1="66" x2="125" y2="86" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#ag)"/>
+<rect x="35" y="88" width="180" height="30" rx="5" fill="#f7f9fc" stroke="#9aa5b1" stroke-width="1.2"/>
+<text x="125" y="107" class="s" text-anchor="middle">在它上面加 S、D、T… 激发</text>
+<text x="125" y="140" class="s" text-anchor="middle">便宜，但参考态错了就全错</text>
+<line x1="258" y1="25" x2="258" y2="160" stroke="#e3e0da" stroke-dasharray="4,4"/>
+<text x="390" y="18" class="h" fill="#b3541e" text-anchor="middle">多参考（如 CASPT2）</text>
+<rect x="300" y="34" width="52" height="30" rx="5" fill="#fff8ee" stroke="#b3541e" stroke-width="1.5"/>
+<text x="326" y="53" class="s" text-anchor="middle">Φ₁</text>
+<rect x="364" y="34" width="52" height="30" rx="5" fill="#fff8ee" stroke="#b3541e" stroke-width="1.5"/>
+<text x="390" y="53" class="s" text-anchor="middle">Φ₂</text>
+<rect x="428" y="34" width="52" height="30" rx="5" fill="#fff8ee" stroke="#b3541e" stroke-width="1.5"/>
+<text x="454" y="53" class="s" text-anchor="middle">Φ₃…</text>
+<line x1="390" y1="66" x2="390" y2="86" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#ag)"/>
+<rect x="300" y="88" width="180" height="30" rx="5" fill="#f7f9fc" stroke="#9aa5b1" stroke-width="1.2"/>
+<text x="390" y="107" class="s" text-anchor="middle">在<b>每一个</b>上面加激发</text>
+<text x="390" y="140" class="s" text-anchor="middle">贵得多，但能处理静态相关</text>
+</svg>
+</figure>
+<div class="warn"><span class="lab">怎么判断该用哪一类（实用诊断）</span>
+<table>
+<tr><th style="width:190px">诊断量</th><th style="width:150px">阈值</th><th>结论</th></tr>
+<tr><td><b><i>T</i>₁ 诊断</b>（CCSD 输出）</td><td>&lt; 0.02（闭壳层）<br>&lt; 0.045（过渡金属）</td><td>超过就说明单参考不可靠</td></tr>
+<tr><td><b>最大 <i>T</i>₂ 振幅</b></td><td>&lt; 0.05</td><td>某个双激发振幅很大 = 有一个组态特别重要 = 静态相关</td></tr>
+<tr><td><b>天然轨道占据数</b></td><td>都接近 0 或 2</td><td>有 0.1–1.9 之间的 = 多参考</td></tr>
+<tr><td><b>CASSCF 主组态权重</b></td><td>&gt; 0.9</td><td>低于 0.9 = 显著多组态</td></tr>
+<tr><td><b>⟨<i>Ŝ</i>²⟩ 污染</b></td><td>偏差 &lt; 10%</td><td>污染严重 = 单行列式差（第 3 讲 p53）</td></tr>
+</table>
+</div>
+</section>
+
+<section class="slide" id="p9">
+<h2><span class="pno">p9</span>多组态自洽场 (MCSCF)</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>如果单个 Slater 行列式对体系的描述很差，可以使用<b>多个</b>行列式（它们在电子于轨道中的排布上不同），其权重用变分原理调整。</p>
+<p>（图：虚轨道/占据轨道，三种组态；以及烯丙基阴离子的 conf 1 和 conf 2）</p>
+<p><b>在芳香与共轭体系、以及涉及成键或断键的体系中，MCSCF 描述常常是必需的。</b></p>
+</div>
+<h3 class="fm">公式解析 · MCSCF 与 CI 的关键区别</h3>
+<div class="fml"><span class="tag">MCSCF 同时优化两组参数</span>
+Ψ<sub>MCSCF</sub> = Σ<sub><i>I</i></sub> <span style="color:#c0392b"><i>a</i><sub><i>I</i></sub></span> Φ<sub><i>I</i></sub>[<span style="color:#0b5ea8"><i>c</i><sub><i>μi</i></sub></span>]
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><span style="color:#c0392b"><i>a</i><sub><i>I</i></sub></span></td><td><b>CI 系数</b></td><td>各个组态的权重</td></tr>
+<tr><td><span style="color:#0b5ea8"><i>c</i><sub><i>μi</i></sub></span></td><td><b>轨道系数</b></td><td><span class="key">MCSCF 的特点：连轨道本身也一起优化</span></td></tr>
+<tr><td>Φ<sub><i>I</i></sub></td><td>组态（CSF 或行列式）</td><td>一种电子排布方式</td></tr>
+</table>
+<table>
+<tr><th style="width:130px">方法</th><th style="width:170px">优化 <i>a</i><sub><i>I</i></sub>？</th><th>优化轨道 <i>c</i><sub><i>μi</i></sub>？</th></tr>
+<tr><td><b>HF</b></td><td class="c">只有一个组态</td><td class="c">✔</td></tr>
+<tr><td><b>CI</b>（如 CISD）</td><td class="c">✔</td><td class="c"><span class="key">✘ 用 HF 的轨道，冻结不动</span></td></tr>
+<tr><td><b>MCSCF / CASSCF</b></td><td class="c">✔</td><td class="c"><span class="key">✔ 同时优化</span></td></tr>
+</table>
+<p><b>为什么"同时优化轨道"重要</b>：HF 轨道是为<b>单个</b>行列式优化的。<span class="key">一旦你要用多个组态描述体系，最优的轨道形状就变了。</span>比如 H₂ 解离时，最优的 <i>σ</i><sub><i>g</i></sub>/<i>σ</i><sub><i>u</i></sub> 轨道和 HF 给的不一样。</p>
+<div class="ext"><span class="lab">拓展 · 烯丙基阴离子为什么需要 MCSCF（p9 的例子）</span>
+<p>烯丙基阴离子 [CH₂–CH–CH₂]⁻ 有 4 个 π 电子分布在 3 个 p 轨道上（<i>π</i>₁ 成键、<i>π</i>₂ 非键、<i>π</i>₃ 反键）。</p>
+<p>HF 给出 <i>π</i>₁²<i>π</i>₂²。但 <span class="key"><i>π</i>₂（非键）和 <i>π</i>₃（反键）能量差不大</span>，所以 <i>π</i>₁²<i>π</i>₃² 这个组态也有可观权重。</p>
+<p><b>更一般的规律</b>：<b>所有共轭 π 体系都有可观的静态相关</b>——因为 π 轨道之间的能隙比 σ 小得多。这就是为什么算多烯、卟啉、富勒烯的激发态特别难。</p>
+</div>
+</section>
+
+<section class="slide" id="p10">
+<h2><span class="pno">p10–13</span>组态相互作用 (CI) 与久期方程</h2>
+<div class="tr"><span class="lab">原文翻译（p10）</span>
+<p>我们可以把 MCSCF 推到极限，把<b>所有</b>激发行列式都包含进计算。这非常昂贵（组合原因），常常需要某种截断。</p>
+<table>
+<tr><th style="width:110px">方法</th><th style="width:44%">组态</th><th>随基组大小的标度</th></tr>
+<tr><td>CID</td><td>所有双激发行列式</td><td>O(<i>n</i>⁵)</td></tr>
+<tr><td><b>CISD</b></td><td>所有单激发和双激发行列式</td><td>O(<i>n</i>⁶)</td></tr>
+<tr><td>CISDT</td><td>所有单、双、三激发行列式</td><td>O(<i>n</i>⁸)</td></tr>
+<tr><td><b>full CI</b></td><td>所有组态</td><td><b>O(<i>n</i>!)</b></td></tr>
+</table>
+<p>对全部轨道的一个<b>子集</b>做 full CI，这个极限被称为 <b>CASSCF</b>（完全活性空间 SCF）。<b>轨道的选择不是一件简单的事。</b></p>
+<p>由于组态数目天文数字般巨大，full CI 只对非常小的（双原子）体系可行。<b>幸运的是，full CI 很少必需，因为 CISD 对大多数实际目的已经足够准确。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p12–13）· CI 久期方程</span>
+<p>把 Full CI 展开简记为：Ψ = <i>a</i>₀Ψ<sub>HF</sub> + Σ<sub><i>S</i></sub><i>a</i><sub><i>S</i></sub>Ψ<sub><i>S</i></sub> + Σ<sub><i>D</i></sub><i>a</i><sub><i>D</i></sub>Ψ<sub><i>D</i></sub> + Σ<sub><i>T</i></sub><i>a</i><sub><i>T</i></sub>Ψ<sub><i>T</i></sub> + ⋯</p>
+<p>波函数的优化需要使 ⟨Ψ|<i>Ĥ</i>|Ψ⟩ → 最小，约束条件是 ⟨Ψ|Ψ⟩ = 1。使用<b>拉格朗日乘子法</b>。</p>
+<p><b>步骤 1</b>：设置拉格朗日函数 <i>L</i>：</p>
+<p><i>L</i> = ⟨Ψ|<i>Ĥ</i>|Ψ⟩ − <i>λ</i>(⟨Ψ|Ψ⟩ − 1) = Σ<sub><i>i</i></sub>Σ<sub><i>j</i></sub><i>a</i><sub><i>i</i></sub><i>a</i><sub><i>j</i></sub>⟨Ψ<sub><i>i</i></sub>|<i>Ĥ</i>|Ψ<sub><i>j</i></sub>⟩ − <i>λ</i>(Σ<sub><i>i</i></sub><i>a</i><sub><i>i</i></sub>² − 1)</p>
+<p><b>步骤 2</b>：对所有参数 <i>a</i><sub><i>i</i></sub> 和 <i>λ</i> 求导：</p>
+<p>∂<i>L</i>/∂<i>a</i><sub><i>i</i></sub> = 2Σ<sub><i>j</i></sub><i>a</i><sub><i>j</i></sub>⟨Ψ<sub><i>i</i></sub>|<i>Ĥ</i>|Ψ<sub><i>j</i></sub>⟩ − 2<i>λa</i><sub><i>i</i></sub> = 2<i>a</i><sub><i>i</i></sub>(<i>E</i><sub><i>i</i></sub> − <i>λ</i>) + 2Σ<sub><i>j</i>≠<i>i</i></sub><i>a</i><sub><i>j</i></sub>⟨Ψ<sub><i>i</i></sub>|<i>Ĥ</i>|Ψ<sub><i>j</i></sub>⟩ = 0</p>
+<p><b>步骤 3</b>：把所有 <i>a</i><sub><i>i</i></sub> 的方程写成矩阵形式（CI 久期方程），记 ⟨Ψ<sub><i>i</i></sub>|<i>Ĥ</i>|Ψ<sub><i>j</i></sub>⟩ = <i>H</i><sub><i>ij</i></sub>：</p>
+<p>（给出 (<b>H</b> − <i>E</i><b>I</b>)<b>a</b> = <b>0</b> 的矩阵形式）</p>
+<p>可以写成简写形式：<b>(H − <i>E</i>I)a = 0</b>　或　<b>Ha = <i>E</i>a</b></p>
+<p>这就是常见的<b>本征值问题</b>。这个方程的解原则上给出精确答案。<b>CI 方法的唯一困难是 CI 矩阵的规模随分子和基组增长得非常快。</b></p>
+<p>实践中通常实现截断的 CI 方法：CISD = HF + 单激发和双激发；CISDT = HF + 单、双、三激发</p>
+</div>
+
+<h3 class="fm">公式解析 · CI 久期方程</h3>
+<div class="fml"><span class="tag">★ CI 久期方程</span>
+<b>H</b> <b>a</b> = <i>E</i> <b>a</b>　，　<i>H</i><sub><i>ij</i></sub> = ⟨Ψ<sub><i>i</i></sub>|<i>Ĥ</i>|Ψ<sub><i>j</i></sub>⟩
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><b>H</b></td><td><b>CI 矩阵</b></td><td>维度 = <b>组态数</b>（可以是 10⁶–10¹⁰！）。元素是两个行列式之间的哈密顿矩阵元</td></tr>
+<tr><td><b>a</b></td><td>CI 系数向量</td><td>要求的东西</td></tr>
+<tr><td><i>E</i></td><td>能量</td><td><span class="key">本征值。最低的那个就是基态能量；其余的是<b>激发态</b>能量</span>——这是 CI 的一个大优点</td></tr>
+<tr><td><i>λ</i></td><td>拉格朗日乘子</td><td><span class="key">推导过程中出现，最后发现它<b>就是能量</b> <i>E</i></span>（这在变分法里很常见）</td></tr>
+</table>
+<div class="step"><div class="sh">拉格朗日乘子法在干什么（如果你没学过）</div>
+<p><b>问题</b>：最小化 <i>f</i>(<b>a</b>) = ⟨Ψ|<i>Ĥ</i>|Ψ⟩，但 <b>a</b> 不能随便取——必须满足 ⟨Ψ|Ψ⟩ = 1（归一化）。</p>
+<p><b>技巧</b>：构造 <i>L</i> = <i>f</i> − <i>λ</i>·(约束条件)，然后对<b>所有</b>变量（包括 <i>λ</i>）求偏导置零。</p>
+<p><span class="key">为什么管用：对 <i>λ</i> 求导会自动还原出约束条件；对 <b>a</b> 求导给出的是"在约束曲面上的极值条件"。</span></p>
+<p><b>为什么必须加约束</b>：不加的话，直接令 <b>a</b> = 0 就能让能量"最小"（等于 0），毫无意义。</p>
+</div>
+
+<h3>讲解 · CI 与 HF 的对比（一张表看清）</h3>
+<table>
+<tr><th style="width:130px"></th><th style="width:200px">Hartree–Fock</th><th>CI</th></tr>
+<tr><td><b>要求的东西</b></td><td>轨道系数 <i>c</i><sub><i>μi</i></sub></td><td>组态系数 <i>a</i><sub><i>I</i></sub></td></tr>
+<tr><td><b>方程</b></td><td><b>FC</b> = <b>SC</b><i>ε</i></td><td><b>Ha</b> = <i>E</i><b>a</b></td></tr>
+<tr><td><b>矩阵维度</b></td><td><i>N</i><sub>basis</sub>（10²–10³）</td><td><span class="key"><i>N</i><sub>配置</sub>（10⁶–10¹⁰）</span></td></tr>
+<tr><td><b>非线性？</b></td><td><span class="key">是</span>（<b>F</b> 依赖 <b>C</b>）⟹ 需要 SCF 迭代</td><td><span class="key">否</span>（<b>H</b> 固定）⟹ <b>一次对角化就出结果</b></td></tr>
+<tr><td><b>怎么解</b></td><td>SCF 循环</td><td><b>Davidson 迭代</b>（只求最低几个本征值，不存整个矩阵）</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · CI 的两个优点（讲义没强调）</span>
+<ol>
+<li><b>变分的</b>：CI 能量永远 ≥ 精确能量（因为它是一个试探函数的期望值）。<span class="key">CC 和 MPn 都<b>不</b>是变分的</span>——它们的能量可能低于精确值。</li>
+<li><b>同时给出激发态</b>：对角化 <b>H</b> 得到的第 2、3、4… 个本征值就是第一、二、三激发态的能量。<b>这是 CI 相比 CC 和 MP2 的独特优势</b>（CC 要用 EOM-CC 才能算激发态）。</li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p14">
+<h2><span class="pno">p14–16</span>自旋适配、CI 的规模与激发级别的权重</h2>
+<div class="tr"><span class="lab">原文翻译（p14）</span>
+<p>波函数通常由一个总自旋值 (<i>S</i>) 表征：单重态、三重态、五重态等。把 Slater 行列式组合成<b>自旋适配的组态状态函数 (CSF)</b> 可以显著节省计算量。<b>不同自旋态在非相对论哈密顿量下不混合：</b></p>
+<p>⟨singlet|<i>Ĥ</i>|triplet⟩ = 0</p>
+<p>轨道数 = <i>n</i>；自旋轨道数 = 2<i>n</i>；电子数 = <i>N</i>；总自旋 = <i>S</i></p>
+<p>Slater 行列式数目 = C(2<i>n</i>, <i>N</i>) = (2<i>n</i>)! / [<i>N</i>!(2<i>n</i>−<i>N</i>)!]</p>
+<p>CSF 数目 = [(2<i>S</i>+1)/(<i>n</i>+1)] × C(<i>n</i>+1, <i>N</i>/2−<i>S</i>) × C(<i>n</i>+1, <i>N</i>/2+<i>S</i>+1)</p>
+<p><b>Slater 行列式数目 ≥ CSF 数目</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p15）· CI 的计算难度</span>
+<table>
+<tr><th class="c" style="width:170px">激发级别 <i>n</i></th><th class="c" style="width:190px">第 <i>n</i> 级激发的 CSF 数</th><th class="c">CSF 累计总数</th></tr>
+<tr><td class="c">1</td><td class="c">71</td><td class="c">71</td></tr>
+<tr><td class="c">2</td><td class="c">2 485</td><td class="c">2 556</td></tr>
+<tr><td class="c">3</td><td class="c">40 040</td><td class="c">42 596</td></tr>
+<tr><td class="c">4</td><td class="c">348 530</td><td class="c">391 126</td></tr>
+<tr><td class="c">5</td><td class="c">1 723 540</td><td class="c">2 114 666</td></tr>
+<tr><td class="c">6</td><td class="c">5 033 210</td><td class="c">7 147 876</td></tr>
+<tr><td class="c">7</td><td class="c">8 688 680</td><td class="c">15 836 556</td></tr>
+<tr><td class="c">8</td><td class="c">8 653 645</td><td class="c">24 490 201</td></tr>
+<tr><td class="c">9</td><td class="c">4 554 550</td><td class="c">29 044 751</td></tr>
+<tr><td class="c">10</td><td class="c">1 002 001</td><td class="c">30 046 752</td></tr>
+</table>
+</div>
+<div class="tr"><span class="lab">原文翻译（p16）· ★ 各激发级别的权重</span>
+<p>Ne 原子在 [5s4p3d] 基组下各激发级别的权重：</p>
+<table>
+<tr><th class="c" style="width:190px">激发级别</th><th class="c">权重</th></tr>
+<tr><td class="c">0（HF 参考态）</td><td class="c"><b>9.6 × 10⁻¹</b></td></tr>
+<tr><td class="c">1（单激发）</td><td class="c">9.8 × 10⁻⁴</td></tr>
+<tr><td class="c"><b>2（双激发）</b></td><td class="c"><b>3.4 × 10⁻²</b></td></tr>
+<tr><td class="c">3</td><td class="c">3.7 × 10⁻⁴</td></tr>
+<tr><td class="c">4</td><td class="c">4.5 × 10⁻⁴</td></tr>
+<tr><td class="c">5</td><td class="c">1.9 × 10⁻⁵</td></tr>
+<tr><td class="c">6</td><td class="c">1.7 × 10⁻⁶</td></tr>
+<tr><td class="c">7</td><td class="c">1.4 × 10⁻⁷</td></tr>
+<tr><td class="c">8</td><td class="c">1.1 × 10⁻⁹</td></tr>
+</table>
+</div>
+
+<h3>讲解 · p16 这张表是全讲最有信息量的一张</h3>
+<div class="warn"><span class="lab">三个必须读出来的结论</span>
+<table>
+<tr><th class="c" style="width:130px">观察</th><th style="width:190px">数据</th><th>结论</th></tr>
+<tr><td class="c"><b>①</b></td><td>参考态权重 <b>0.96</b></td><td><span class="key">HF 已经是一个很好的出发点</span> ⟹ 单参考方法适用（Ne 是闭壳层稀有气体，理所应当）</td></tr>
+<tr><td class="c"><b>②</b></td><td><b>双激发 (0.034) 比单激发 (0.00098) 大 35 倍</b></td><td><span class="key">双激发是相关能的绝对主力。</span>这就是为什么截断在 CISD/CCSD 而不是 CIS</td></tr>
+<tr><td class="c"><b>③</b></td><td>权重从 4 级开始<b>断崖下跌</b></td><td>截断在双激发损失很小 ⟹ <b>CISD/CCSD 已经够用</b>（p10 那句话的数据依据）</td></tr>
+</table>
+</div>
+<div class="step"><div class="sh">为什么单激发这么不重要？—— Brillouin 定理</div>
+<div class="fml"><span class="tag">★ Brillouin 定理</span>
+⟨Ψ<sub>HF</sub>| <i>Ĥ</i> |Ψ<sub><i>i</i></sub><sup><i>r</i></sup>⟩ = 0
+</div>
+<p><span class="key">单激发行列式<b>不直接</b>与 HF 参考态混合。</span></p>
+<p><b>为什么</b>：因为 HF 轨道已经是"能量对轨道变化的一阶导数为零"的解。而单激发正好对应"轨道的微小变化"——所以它的一阶效应已经被 HF 优化掉了。</p>
+<p><b>那单激发还有用吗</b>：有，但只通过<b>间接</b>路径（与双激发混合，二阶效应）。所以它的权重是 10⁻³ 量级而不是 10⁻²。</p>
+<p><b>重要推论</b>：<span class="key">MP2 里<b>没有</b>单激发项</span>（p36 的公式只有双激发），正是因为 Brillouin 定理。p25 里 CC 能量表达式中那一项也因此消失。</p>
+</div>
+
+<h3 class="fm">公式解析 · p14 的组合数公式</h3>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>C(<i>m</i>,<i>k</i>)</td><td>组合数</td><td>= <i>m</i>!/[<i>k</i>!(<i>m</i>−<i>k</i>)!]，"从 <i>m</i> 个里选 <i>k</i> 个"的方式数</td></tr>
+<tr><td><i>n</i></td><td>空间轨道数</td><td>= 基函数数目</td></tr>
+<tr><td>2<i>n</i></td><td>自旋轨道数</td><td>每个空间轨道能放 α 和 β 两个</td></tr>
+<tr><td><b>CSF</b></td><td>组态状态函数</td><td><b>C</b>onfiguration <b>S</b>tate <b>F</b>unction。<span class="key">若干个 Slater 行列式的固定线性组合，具有确定的总自旋 <i>S</i></span></td></tr>
+</table>
+<div class="step"><div class="sh">为什么用 CSF 而不是行列式（p14 的要点）</div>
+<p>回想第 2 讲 p68：He 的 1s2s 组态有 4 个自旋函数，但只有 <b>1 个单重态 + 3 个三重态</b>。</p>
+<p><span class="key">如果你用行列式，单重态和三重态混在一起，矩阵里有大量"注定为零"的块（因为 ⟨singlet|<i>Ĥ</i>|triplet⟩ = 0）。</span></p>
+<p>用 CSF 预先按自旋分好组，就能：</p>
+<ul>
+<li><b>矩阵变小</b>（只算你想要的那个自旋态）</li>
+<li><b>保证自旋纯净</b>（没有自旋污染）</li>
+</ul>
+<p>代价：CSF 的矩阵元公式比行列式复杂得多（要用 Slater–Condon 规则的推广）。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · Full CI 到底有多大（把 p15 的数字放大来看）</span>
+<p>Full CI 的组态数近似为：</p>
+<div class="fml" style="font-size:15px"><i>N</i><sub>det</sub> ≈ [C(<i>n</i>, <i>N</i><sub>α</sub>)]²</div>
+<table>
+<tr><th class="c" style="width:150px">体系</th><th class="c" style="width:130px">轨道数 <i>n</i></th><th class="c" style="width:130px">电子数</th><th>Full CI 行列式数</th></tr>
+<tr><td class="c">H₂O / 6-31G</td><td class="c">13</td><td class="c">10</td><td class="c">~10⁶</td></tr>
+<tr><td class="c">H₂O / cc-pVDZ</td><td class="c">24</td><td class="c">10</td><td class="c">~10⁹</td></tr>
+<tr><td class="c">N₂ / cc-pVTZ</td><td class="c">60</td><td class="c">14</td><td class="c"><span class="key">~10¹⁵（不可能）</span></td></tr>
+</table>
+<p>目前 Full CI 的世界纪录约 10¹²–10¹³ 个行列式（用随机方法 FCIQMC）。<b>而一个中等有机分子需要 10⁵⁰ 以上——永远做不到。</b></p>
+</div>
+</section>
+
+<section class="slide" id="p17">
+<h2><span class="pno">p17–20</span>★ CI 到底怎么让电子分开（全讲最精彩的推导）</h2>
+<div class="tr"><span class="lab">原文翻译（p17）</span>
+<p>考虑最小基组下的 H₂ 分子（每个原子上只用 1 个函数）：</p>
+<p><i>φ</i>₁ = <i>χ</i><sub>A</sub> + <i>χ</i><sub>B</sub>　（成键）；　<i>φ</i>₂ = <i>χ</i><sub>A</sub> − <i>χ</i><sub>B</sub>　（反键）</p>
+<p>基态 Slater 行列式：Ψ₀ = |<i>φ</i>₁(1) <span style="text-decoration:overline">φ₁</span>(1); <i>φ</i>₁(2) <span style="text-decoration:overline">φ₁</span>(2)|</p>
+<p>这个基组下的 Full CI 矩阵包含 Ψ₀、四个单激发 SD 和一个双激发 SD：</p>
+<p>Ψ₁ = 双激发（两个电子都到 <i>φ</i>₂）；Ψ₂, Ψ₃, Ψ₄, Ψ₅ = 四个单激发</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p18）· CI 矩阵的结构</span>
+<p>通过波函数的自旋适配，我们可以把自旋三重态和自旋单重态分开：</p>
+<p><i>S</i> = 0：Ψ₀，Ψ₁，(Ψ₂−Ψ₃)</p>
+<p><i>S</i> = 1：Ψ₄，Ψ₅，(Ψ₂+Ψ₃)</p>
+<p>CI 矩阵是（6×6 的块对角矩阵，只有 <i>H</i>₀₁ 和 <i>H</i>₁₀ 两个非对角元非零，其余全为 0）</p>
+<p><b>自旋单重态不与自旋三重态混合。此外，单激发的单重态 SD (Ψ₂−Ψ₃) 因为 Brillouin 定理不与 Ψ₀ 混合（所有单激发组态都不与 Hartree–Fock 基态混合）。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p19）· ★ 核心推导</span>
+<p>结果是，CI 矩阵的对角化导致 Ψ₀（HF 基态）与<b>双激发</b> Ψ₁ 之间的混合。</p>
+<p>Ψ₀ = <i>φ</i>₁(1)<i>φ</i>₁(2)(<i>αβ</i>−<i>βα</i>)</p>
+<p>= (<i>χ</i><sub>A</sub>(1)+<i>χ</i><sub>B</sub>(1))(<i>χ</i><sub>A</sub>(2)+<i>χ</i><sub>B</sub>(2))</p>
+<p>= <b><i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2)</b> + <b><i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)</b></p>
+<p>　　　　　　　　　　<b>离子项</b>　　　　　　　　　　　　　　　　<b>共价项</b></p>
+<p>Ψ₁ = <i>φ</i>₂(1)<i>φ</i>₂(2)(<i>αβ</i>−<i>βα</i>)</p>
+<p>= (<i>χ</i><sub>A</sub>(1)−<i>χ</i><sub>B</sub>(1))(<i>χ</i><sub>A</sub>(2)−<i>χ</i><sub>B</sub>(2))</p>
+<p>= <i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2) <b>−</b> <i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) <b>−</b> <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)</p>
+<p>Full CI 是 Ψ₀ 与 Ψ₁ 的线性组合：</p>
+<p>Ψ<sub>FCI</sub> = <i>a</i>₀Ψ₀ + <i>a</i>₁Ψ₁，其中 <i>a</i>₀² + <i>a</i>₁² = 1</p>
+<p><b>Ψ<sub>FCI</sub> = (<i>a</i>₀ + <i>a</i>₁)[<i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2)] + (<i>a</i>₀ − <i>a</i>₁)[<i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)]</b></p>
+<p><b>HF 波函数 Ψ₀ 有 50% 离子和 50% 共价贡献。通过把 Ψ₁ 混入 Ψ₀，共价贡献通常会增加。</b></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p20）</span>
+<p>HF 波函数 Ψ₀ 有 50% 离子和 50% 共价贡献。通过把 Ψ₁ 混入 Ψ₀，共价贡献增加。这允许两个电子的运动发生关联（<b>左-右相关 left-right correlation</b>）。</p>
+<p><b>激发组态混入的百分比强烈依赖于 H–H 距离。</b></p>
+<p><b>在无穷远距离处 <i>a</i>₁ = −<i>a</i>₀ ⟹ 离子项变为零！</b></p>
+</div>
+
+<h3 class="fm">推导详解 · 一步步把 p19 算清楚</h3>
+<div class="step"><div class="sh">第一步：为什么 <i>φ</i>₁(1)<i>φ</i>₁(2) 展开后会有离子项</div>
+<p><i>φ</i>₁ = <i>χ</i><sub>A</sub> + <i>χ</i><sub>B</sub>（省略归一化常数）。所以：</p>
+<div class="fml" style="font-size:15px;line-height:2">
+<i>φ</i><sub>1</sub>(1)·<i>φ</i><sub>1</sub>(2) = [<i>χ</i><sub>A</sub>(1)+<i>χ</i><sub>B</sub>(1)]·[<i>χ</i><sub>A</sub>(2)+<i>χ</i><sub>B</sub>(2)]<br>
+= <span style="color:#c0392b"><i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2)</span> + <span style="color:#2c6e4f"><i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2)</span> + <span style="color:#2c6e4f"><i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)</span> + <span style="color:#c0392b"><i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2)</span>
+</div>
+<table>
+<tr><th style="width:200px">项</th><th style="width:230px">物理含义</th><th>叫什么</th></tr>
+<tr><td style="color:#c0392b"><i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2)</td><td><span class="key">电子 1 <b>和</b> 电子 2 <b>都在 A 原子上</b></span> ⟹ H<sub>A</sub>⁻ + H<sub>B</sub>⁺</td><td rowspan="2" style="vertical-align:middle;color:#c0392b"><b>离子项</b><br>ionic</td></tr>
+<tr><td style="color:#c0392b"><i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2)</td><td>都在 B 上 ⟹ H<sub>A</sub>⁺ + H<sub>B</sub>⁻</td></tr>
+<tr><td style="color:#2c6e4f"><i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2)</td><td>电子 1 在 A、电子 2 在 B ⟹ H· + H·</td><td rowspan="2" style="vertical-align:middle;color:#2c6e4f"><b>共价项</b><br>covalent</td></tr>
+<tr><td style="color:#2c6e4f"><i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)</td><td>反过来</td></tr>
+</table>
+<p><span class="key">四项系数完全相同（都是 1）⟹ 离子 : 共价 = <b>50 : 50</b>，而且这个比例被<b>锁死</b>了，因为 Ψ₀ 里没有任何可调参数。</span></p>
+</div>
+<div class="step"><div class="sh">第二步：双激发 Ψ₁ 展开后符号相反</div>
+<p><i>φ</i>₂ = <i>χ</i><sub>A</sub> − <i>χ</i><sub>B</sub>，所以：</p>
+<div class="fml" style="font-size:15px;line-height:2">
+<i>φ</i><sub>2</sub>(1)·<i>φ</i><sub>2</sub>(2) = [<i>χ</i><sub>A</sub>(1)−<i>χ</i><sub>B</sub>(1)]·[<i>χ</i><sub>A</sub>(2)−<i>χ</i><sub>B</sub>(2)]<br>
+= <span style="color:#c0392b">+<i>χ</i><sub>A</sub>(1)<i>χ</i><sub>A</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>B</sub>(2)</span> <span style="color:#2c6e4f">− <i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) − <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)</span>
+</div>
+<p><span class="key">关键：离子项<b>同号</b>（都是 +），共价项<b>反号</b>（变成 −）。</span></p>
+<p><b>为什么</b>：因为交叉项来自 (+<i>χ</i><sub>A</sub>)×(−<i>χ</i><sub>B</sub>)，多了一个负号；而 <i>χ</i><sub>A</sub><i>χ</i><sub>A</sub> 项来自 (+<i>χ</i><sub>A</sub>)×(+<i>χ</i><sub>A</sub>)，符号不变。</p>
+</div>
+<div class="step"><div class="sh">第三步：线性组合 ⟹ 两个可调的系数</div>
+<div class="fml" style="font-size:15px;line-height:2.1">
+Ψ<sub>FCI</sub> = <i>a</i><sub>0</sub>Ψ<sub>0</sub> + <i>a</i><sub>1</sub>Ψ<sub>1</sub><br>
+= <span style="color:#c0392b">(<i>a</i><sub>0</sub> + <i>a</i><sub>1</sub>)</span>·[离子项] + <span style="color:#2c6e4f">(<i>a</i><sub>0</sub> − <i>a</i><sub>1</sub>)</span>·[共价项]
+</div>
+<p><span class="key">这就是全部秘密：混入双激发之后，离子项和共价项的系数<b>不再被锁死为相等</b>了。</span></p>
+<p>因为 <i>a</i>₁ 通常是<b>负数</b>（双激发是稳定化的），所以：</p>
+<ul>
+<li>离子系数 (<i>a</i>₀+<i>a</i>₁) <b>变小</b></li>
+<li>共价系数 (<i>a</i>₀−<i>a</i>₁) <b>变大</b></li>
+</ul>
+<p><b>物理效果</b>：<span class="key">两个电子"同时出现在同一个原子上"的概率降低了 ⟹ 它们更倾向于一人一边 ⟹ 这就是电子在<b>躲避</b>。</span>这种沿键轴方向的躲避叫 <b>左-右相关 (left-right correlation)</b>。</p>
+</div>
+<div class="step"><div class="sh">第四步：解离极限（p20 的高潮）</div>
+<p>当 <i>R</i> → ∞ 时，变分优化会给出 <b><i>a</i>₁ = −<i>a</i>₀</b>（即 <i>a</i>₀ = 1/√2，<i>a</i>₁ = −1/√2）。代入：</p>
+<div class="fml" style="font-size:16px;line-height:2">
+离子系数 = <i>a</i><sub>0</sub> + <i>a</i><sub>1</sub> = <i>a</i><sub>0</sub> − <i>a</i><sub>0</sub> = <b>0</b>　　✔ 离子项完全消失<br>
+共价系数 = <i>a</i><sub>0</sub> − <i>a</i><sub>1</sub> = 2<i>a</i><sub>0</sub>　　　　✔ 纯共价
+</div>
+<p><span class="key">Ψ<sub>FCI</sub> → <i>χ</i><sub>A</sub>(1)<i>χ</i><sub>B</sub>(2) + <i>χ</i><sub>B</sub>(1)<i>χ</i><sub>A</sub>(2)　—— 正好是 Heitler–London 的价键波函数（第 1 讲 p11 的拓展）！</span></p>
+<p><b>解离产物：两个中性的 H 原子 ✔ 完全正确。</b></p>
+</div>
+
+<div class="warn"><span class="lab">这四步串起来就是本讲的核心情节</span>
+<table>
+<tr><th class="c" style="width:60px">距离</th><th style="width:130px"><i>a</i>₁ 的大小</th><th style="width:170px">离子项比例</th><th>物理</th></tr>
+<tr><td class="c"><b><i>R</i> 小</b><br>(平衡键长)</td><td>小（约 −0.1）</td><td>约 40%（略低于 50%）</td><td>成键，离子项确实存在（键有部分极性涨落）</td></tr>
+<tr><td class="c"><b><i>R</i> 中</b></td><td>逐渐变大</td><td>逐渐下降</td><td>过渡</td></tr>
+<tr><td class="c"><b><i>R</i>→∞</b></td><td><b>−<i>a</i>₀</b></td><td><b>0%</b></td><td>两个中性 H 原子</td></tr>
+</table>
+<p><span class="key">RHF 做不到这一点，因为它只有一个行列式，<i>a</i>₁ 恒等于 0，离子项永远卡在 50%。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p21">
+<h2><span class="pno">p21</span>RHF、UHF 与 Full CI 的对比</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>（图：H₂ 的解离曲线，能量 (kJ/mol) 对 <i>R</i><sub>HH</sub> (Å)，纵轴从 −400 到 +400，横轴 0.0 到 3.0。三条曲线：RHF、UHF、Full CI。）</p>
+</div>
+<figure>
+<svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.ax{stroke:#9aa5b1;stroke-width:1.2}.s{font-size:11px;fill:#6b6b70}.t{font-size:12px}</style></defs>
+<line x1="60" y1="255" x2="490" y2="255" class="ax"/>
+<line x1="60" y1="255" x2="60" y2="30" class="ax"/>
+<text x="275" y="285" class="s" text-anchor="middle">H–H 距离 R (Å)</text>
+<text x="26" y="140" class="s" text-anchor="middle" transform="rotate(-90 26,140)">能量 (kJ/mol)</text>
+<text x="86" y="270" class="s">0.5</text><text x="186" y="270" class="s">1.0</text><text x="286" y="270" class="s">1.5</text><text x="386" y="270" class="s">2.0</text><text x="470" y="270" class="s">2.5</text>
+<line x1="60" y1="175" x2="490" y2="175" stroke="#e3e0da" stroke-dasharray="3,3"/>
+<text x="48" y="179" class="s" text-anchor="end">0</text>
+<line x1="60" y1="230" x2="490" y2="230" stroke="#e3e0da" stroke-dasharray="3,3"/>
+<text x="48" y="234" class="s" text-anchor="end">−200</text>
+<line x1="60" y1="120" x2="490" y2="120" stroke="#e3e0da" stroke-dasharray="3,3"/>
+<text x="48" y="124" class="s" text-anchor="end">+200</text>
+<path d="M78,55 C 100,180 118,224 136,227 C 175,231 230,175 300,120 C 360,85 430,68 488,62" fill="none" stroke="#c0392b" stroke-width="2.6"/>
+<text x="425" y="52" class="t" fill="#c0392b" font-weight="700">RHF</text>
+<text x="418" y="88" class="s" fill="#c0392b">→ ½(H⁻+H⁺)</text>
+<path d="M78,55 C 100,180 118,224 136,227 C 168,231 195,214 218,201 C 260,182 320,175 488,174" fill="none" stroke="#2c6e4f" stroke-width="2.6"/>
+<text x="430" y="164" class="t" fill="#2c6e4f" font-weight="700">UHF</text>
+<path d="M78,58 C 100,183 118,228 136,231 C 168,235 195,219 218,207 C 260,189 320,180 488,178" fill="none" stroke="#0b5ea8" stroke-width="1.8" stroke-dasharray="6,4"/>
+<text x="330" y="200" class="t" fill="#0b5ea8" font-weight="700">Full CI（精确）</text>
+<circle cx="218" cy="201" r="5" fill="none" stroke="#b3541e" stroke-width="2"/>
+<line x1="218" y1="201" x2="248" y2="243" stroke="#b3541e" stroke-width="1"/>
+<text x="252" y="252" class="s" fill="#b3541e">Coulson–Fischer 点</text>
+<line x1="488" y1="62" x2="488" y2="174" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="500" y="120" class="s" fill="#c0392b" transform="rotate(-90 500,120)">≈600 kJ/mol</text>
+<circle cx="136" cy="228" r="4" fill="#1c1c1e"/>
+<text x="118" y="248" class="s">0.74 Å</text>
+</svg>
+<figcaption>三条曲线的对比 —— 这张图是全课最需要能默画出来的一张</figcaption>
+</figure>
+<div class="warn"><span class="lab">三条曲线，三句话</span>
+<table>
+<tr><th style="width:100px">方法</th><th style="width:190px">平衡区（<i>R</i> ≈ 0.74 Å）</th><th>解离区（<i>R</i> → ∞）</th></tr>
+<tr><td class="c"><b>Full CI</b></td><td>精确 ✔</td><td>精确 ✔ → 2 个中性 H</td></tr>
+<tr><td class="c"><b>UHF</b></td><td>与 RHF 重合（<span class="key">因为闭壳层平衡区 UHF 塌回 RHF</span>）</td><td class="c" style="color:#2c6e4f"><b>能量基本正确</b>，但自旋污染 ⟨<i>Ŝ</i>²⟩ → 1.0</td></tr>
+<tr><td class="c"><b>RHF</b></td><td>与 UHF 重合，误差只有相关能</td><td class="c" style="color:#c0392b"><b>灾难：高约 600 kJ/mol（≈140 kcal/mol）</b></td></tr>
+</table>
+<p><b>Coulson–Fischer 点</b>：UHF 曲线开始偏离 RHF 的那一点。<span class="key">在这一点之前 UHF 的最优解就是 RHF 解（α/β 轨道相同）；之后破缺对称的解才变得更低。</span>对 H₂/最小基组约在 1.2 Å。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 为什么 UHF 曲线在解离处仍比 Full CI 略高</span>
+<p>图上 UHF 和 FCI 在长距离处几乎重合但不完全重合。原因：</p>
+<ul>
+<li><b>UHF 的解离极限能量是对的</b>（两个 HF 级别的 H 原子，而 H 原子 HF = 精确，因为只有一个电子没有相关）</li>
+<li><span class="key">但在<b>中间区域</b>（1–2 Å），UHF 缺少动态相关，仍然偏高</span></li>
+<li>而且 UHF 曲线在 Coulson–Fischer 点有一个不光滑的<b>扭结</b>，会导致算出的振动频率不对</li>
+</ul>
+<p><b>结论</b>：<span class="key">UHF 修好了解离极限，但没有修好整条曲线。真正正确的做法是 CASSCF(2,2) 或 FCI。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p22">
+<h2><span class="pno">p22</span>★ 截断 CI 的致命缺陷：尺寸不一致性</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>假设我们需要计算两个相距 100 Å 的水分子的能量。可以做两个计算：</p>
+<ol>
+<li>把两个水分子放在<b>同一个</b>计算里一起算（给全部 2 个 O 和 4 个 H 分配基组）⟹ 得到总能量 <i>E</i><sub>together</sub></li>
+<li>计算<b>一个</b>水分子，然后把结果<b>乘以 2</b> ⟹ 得到总能量 <i>E</i><sub>sum</sub></li>
+</ol>
+<p>我们期望 <i>E</i><sub>together</sub> = <i>E</i><sub>sum</sub>。<b>然而，这个等式只被 Full CI 方法满足</b>（当两个计算中都包含所有激发时）。</p>
+<p>当使用任何<b>截断的</b> CI 方法（如 CISD）时，我们会发现 <b><i>E</i><sub>sum</sub> &lt; <i>E</i><sub>together</sub></b>。</p>
+<p>这种行为的原因在于：<i>E</i><sub>together</sub> 对<b>两个分子的整个基组</b>只包含了单激发和双激发，而 <i>E</i><sub>sum</sub> 对<b>每个片段各自</b>包含了单激发和双激发。当我们把一个水分子的能量乘以 2 时，本质上是取了两个水分子 CISD 波函数的<b>乘积</b>。这样两个 CISD 波函数的乘积必然包含单、双、<b>三</b>、<b>四</b>重激发的 SD，比情形 (1) 得到的 CISD 波函数<b>更多</b>。</p>
+</div>
+
+<h3>讲解 · 用一个具体例子把这件事讲透</h3>
+<div class="step"><div class="sh">思想实验：两个相距 100 Å 的水分子</div>
+<p>100 Å 相当于 10 纳米——<span class="key">两个分子之间没有任何物理相互作用。</span>所以正确答案必须是 <i>E</i>(2 个 H₂O) = 2 × <i>E</i>(1 个 H₂O)。</p>
+</div>
+<figure>
+<svg viewBox="0 0 540 230" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;fill:#1c1c1e}.h{font-size:12.5px;font-weight:700}</style></defs>
+<text x="135" y="18" class="h" fill="#0b5ea8" text-anchor="middle">情形 1：一起算 CISD</text>
+<rect x="30" y="32" width="210" height="82" rx="6" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.4"/>
+<text x="135" y="52" class="t" text-anchor="middle">H₂O ⋯⋯ 100 Å ⋯⋯ H₂O</text>
+<text x="135" y="74" class="s" text-anchor="middle">整个超分子体系里，</text>
+<text x="135" y="92" class="s" text-anchor="middle">最多只允许 <b>2 个电子</b>被激发</text>
+<text x="135" y="108" class="s" text-anchor="middle" fill="#c0392b">⟹ 不能"每个分子各激发 2 个"</text>
+<line x1="272" y1="25" x2="272" y2="215" stroke="#e3e0da" stroke-dasharray="4,4"/>
+<text x="405" y="18" class="h" fill="#2c6e4f" text-anchor="middle">情形 2：分开算再乘 2</text>
+<rect x="300" y="32" width="100" height="82" rx="6" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.4"/>
+<text x="350" y="52" class="t" text-anchor="middle">H₂O (A)</text>
+<text x="350" y="74" class="s" text-anchor="middle">激发 2 个电子</text>
+<rect x="412" y="32" width="100" height="82" rx="6" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.4"/>
+<text x="462" y="52" class="t" text-anchor="middle">H₂O (B)</text>
+<text x="462" y="74" class="s" text-anchor="middle">激发 2 个电子</text>
+<text x="405" y="108" class="s" text-anchor="middle" fill="#2c6e4f">⟹ 合起来相当于激发了 <b>4 个</b></text>
+<rect x="60" y="140" width="420" height="66" rx="6" fill="#fff8ee" stroke="#b3541e" stroke-width="1.4"/>
+<text x="270" y="162" class="t" text-anchor="middle" font-weight="700" fill="#b3541e">两边包含的组态不一样多 ⟹ 能量不相等</text>
+<text x="270" y="182" class="s" text-anchor="middle">E<tspan font-size="9">sum</tspan> 相当于 CISDTQ 级别（含四激发）</text>
+<text x="270" y="199" class="s" text-anchor="middle">E<tspan font-size="9">together</tspan> 只有 CISD 级别　⟹　<b>E<tspan font-size="9">sum</tspan> &lt; E<tspan font-size="9">together</tspan></b></text>
+</svg>
+<figcaption>尺寸不一致性的根源：截断的激发级别在"合并体系"里不够用</figcaption>
+</figure>
+
+<h3 class="fm">概念辨析 · 两个容易混淆的术语</h3>
+<table>
+<tr><th style="width:170px">术语</th><th style="width:230px">定义</th><th>谁满足</th></tr>
+<tr><td><b>尺寸一致性</b><br>(size consistency)</td><td><span class="key"><i>E</i>(A···B, 相距无穷) = <i>E</i>(A) + <i>E</i>(B)</span></td><td>HF ✔　MPn ✔　<b>CC ✔</b>　FCI ✔<br><span style="color:#c0392b">截断 CI ✘</span>　CASSCF ✔（若活性空间选得当）</td></tr>
+<tr><td><b>尺寸可延展性</b><br>(size extensivity)</td><td>能量随体系大小<b>线性</b>增长（更严格的数学要求）</td><td>基本同上</td></tr>
+</table>
+<div class="warn"><span class="lab">为什么这是"致命"缺陷（不只是理论洁癖）</span>
+<p><span class="key">化学关心的几乎全是<b>能量差</b>：反应能、结合能、活化能。而这些都涉及"体系被拆开或合并"。</span></p>
+<table>
+<tr><th style="width:200px">你想算</th><th>尺寸不一致会怎样</th></tr>
+<tr><td><b>反应能</b> A + B → C</td><td>左边是两个片段，右边是一个分子 ⟹ <span class="key">两边的"有效相关水平"不同 ⟹ 反应能系统性偏差</span></td></tr>
+<tr><td><b>结合能</b> A + B → A···B</td><td>同上，而且这个误差<b>随体系增大而增大</b></td></tr>
+<tr><td><b>解离能</b></td><td>解离产物的能量被高估</td></tr>
+</table>
+<p><b>误差有多大</b>：对 CISD，误差随电子数增长。<span class="key">一个 20 个重原子的分子，CISD 的尺寸不一致性误差可以达到几十 kcal/mol——完全掩盖了它相对于 MP2 的精度优势。</span></p>
+<p><b>这就是为什么今天几乎没人用 CISD 了</b>，而 CCSD 成了标准——下一页解释 CC 怎么修好这个问题。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · Davidson 修正（一个便宜的补丁）</span>
+<p>历史上有人用一个经验公式给 CISD 打补丁，叫 <b>Davidson 修正</b>（记作 CISD+Q 或 CISD(Q)）：</p>
+<div class="fml" style="font-size:15px">Δ<i>E</i><sub>Q</sub> = (1 − <i>a</i><sub>0</sub>²) · <i>E</i><sub>corr</sub><sup>CISD</sup></div>
+<table class="vars">
+<tr><td><i>a</i><sub>0</sub>²</td><td>参考态权重</td><td>CISD 波函数里 HF 行列式的权重</td></tr>
+</table>
+<p>它<b>估算</b>四激发的贡献，近似恢复尺寸一致性。但它是经验的、不严格的。<span class="key">CC 从理论上彻底解决了这个问题，所以 CISD+Q 现在也基本被淘汰了。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p23">
+<h2><span class="pno">p23–27</span>★ 耦合簇 (Coupled Cluster)：黄金标准</h2>
+<div class="tr"><span class="lab">原文翻译（p23）</span>
+<p>耦合簇理论对某一特定类型的<b>所有</b>激发求和。也就是说，在 CI 理论中被参数化的是<b>每一个行列式</b>，而在 CC 理论中被参数化的是<b>激发这个过程</b>。CC 包含更高的激发，但它们的系数是<b>低阶激发系数的乘积</b>。</p>
+<p><b>CC 理论是尺寸一致的</b>，即对两个体系：<i>E</i><sub>CC</sub>(1+2) = <i>E</i><sub>CC</sub>(1) + <i>E</i><sub>CC</sub>(2)</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p24）</span>
+<p>耦合簇方法（和 CI 一样）旨在把激发的 Slater 行列式加入基态 HF 波函数。CC 与 CI 的区别在于<b>选择哪些激发 SD 被包含在波函数中</b>。</p>
+<p><i>T</i> = <i>T</i>₁ + <i>T</i>₂ + <i>T</i>₃ + ⋯ + <i>T</i><sub><i>N</i>elec</sub></p>
+<ul>
+<li><i>T</i>₁ —— 生成单激发组态的算符</li>
+<li><i>T</i>₂ —— 生成双激发组态的算符</li>
+</ul>
+<p>CI 波函数可以写成：Ψ<sub>CI</sub> = (1 + <i>T</i>)Ψ₀ = (1 + <i>T</i>₁ + <i>T</i>₂ + <i>T</i>₃ + ⋯ + <i>T</i><sub><i>N</i>elec</sub>)Ψ₀</p>
+<p>相应的耦合簇波函数定义为：</p>
+<p><b>Ψ<sub>CC</sub> = e<sup><i>T</i></sup>Ψ₀</b> ⟹ 对 e<sup><i>T</i></sup> 做 Taylor 展开</p>
+<p>= (1 + <i>T</i>₁ + <i>T</i>₂ + ½<i>T</i>₁² + <i>T</i>₃ + <i>T</i>₂<i>T</i>₁ + ⅙<i>T</i>₁³ + ⋯)Ψ₀</p>
+<p>与 CI 波函数相比，<b>CC 波函数在每个激发级别上都包含由激发的乘积产生的额外项</b>。薛定谔方程变为：</p>
+<p><i>Ĥ</i>Ψ<sub>CC</sub> = <i>E</i><sub>CC</sub>Ψ<sub>CC</sub> ⟹ <i>Ĥ</i>e<sup><i>T</i></sup>Ψ₀ = <i>E</i><sub>CC</sub>e<sup><i>T</i></sup>Ψ₀</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p25–26）· CC 能量方程</span>
+<p>左乘 Ψ₀* 并对全空间积分：</p>
+<p>⟨Ψ₀|<i>Ĥ</i>e<sup><i>T</i></sup>|Ψ₀⟩ = <i>E</i><sub>CC</sub>⟨Ψ₀|e<sup><i>T</i></sup>|Ψ₀⟩ = <i>E</i><sub>CC</sub>⟨Ψ₀|(1+<i>T</i>₁+<i>T</i>₂+⋯)|Ψ₀⟩ = <i>E</i><sub>CC</sub></p>
+<p>因此，为了得到 <i>E</i><sub>CC</sub>，我们只需计算一个积分（这里假设指数截断在二阶）：</p>
+<p><i>E</i><sub>CC</sub> = ⟨Ψ₀|<i>Ĥ</i>(1 + <i>T</i>₁ + <i>T</i>₂ + ½<i>T</i>₁²)|Ψ₀⟩</p>
+<p>= <i>E</i>₀ + Σ<i>t</i><sub><i>i</i></sub><sup><i>a</i></sup>⟨Ψ₀|<i>Ĥ</i>|Ψ<sub><i>i</i></sub><sup><i>a</i></sup>⟩ + Σ(<i>t</i><sub><i>ij</i></sub><sup><i>ab</i></sup> + <i>t</i><sub><i>i</i></sub><sup><i>a</i></sup><i>t</i><sub><i>j</i></sub><sup><i>b</i></sup> − <i>t</i><sub><i>i</i></sub><sup><i>b</i></sup><i>t</i><sub><i>j</i></sub><sup><i>a</i></sup>)⟨Ψ₀|<i>Ĥ</i>|Ψ<sub><i>ij</i></sub><sup><i>ab</i></sup>⟩</p>
+<p><b>其中 Σ<i>t</i><sub><i>i</i></sub><sup><i>a</i></sup>⟨Ψ₀|<i>Ĥ</i>|Ψ<sub><i>i</i></sub><sup><i>a</i></sup>⟩ = 0，由 Brillouin 定理。</b></p>
+<p><b>p26</b>：要计算上式，我们需要知道振幅 <i>t</i><sub><i>ij</i></sub><sup><i>ab</i></sup>、<i>t</i><sub><i>i</i></sub><sup><i>a</i></sup><i>t</i><sub><i>j</i></sub><sup><i>b</i></sup> 以及变换到 MO 基的积分 ⟨<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>j</i></sub>|<i>φ</i><sub><i>a</i></sub><i>φ</i><sub><i>b</i></sub>⟩。</p>
+<p>振幅通过求解如下方程得到：</p>
+<p>⟨Ψ<sub><i>i</i></sub><sup><i>a</i></sup>|<i>Ĥ</i>e<sup><i>T</i></sup>|Ψ₀⟩ = <i>E</i><sub>CC</sub>⟨Ψ<sub><i>i</i></sub><sup><i>a</i></sup>|e<sup><i>T</i></sup>|Ψ₀⟩</p>
+<p>⟨Ψ<sub><i>ij</i></sub><sup><i>ab</i></sup>|<i>Ĥ</i>e<sup><i>T</i></sup>|Ψ₀⟩ = <i>E</i><sub>CC</sub>⟨Ψ<sub><i>ij</i></sub><sup><i>ab</i></sup>|e<sup><i>T</i></sup>|Ψ₀⟩</p>
+<p>实践中 CC 方法在某个级别截断：</p>
+<ul>
+<li><b>CCSD</b> = 耦合簇 单激发 + 双激发</li>
+<li><b>CCSDT</b> = 单、双、三激发 ⟹ 量子化学的黄金标准是 <b>CCSDTQ</b></li>
+</ul>
+<p><b>耦合簇即使在截断的级别上也是尺寸一致的。</b></p>
+</div>
+
+<h3 class="fm">公式解析 · CC 与 CI 的根本区别</h3>
+<div class="fml"><span class="tag">★ 两个波函数拟设 (ansatz)</span>
+Ψ<sub>CI</sub> = (<b>1</b> + <i>T</i>) Ψ<sub>0</sub>　　vs　　Ψ<sub>CC</sub> = <b>e</b><sup><i>T</i></sup> Ψ<sub>0</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>T</i></td><td><b>簇算符</b><br>(cluster operator)</td><td>= <i>T</i>₁ + <i>T</i>₂ + <i>T</i>₃ + …　<span class="key">它是一个"激发操作"，作用在 Ψ₀ 上产生激发行列式的线性组合</span></td></tr>
+<tr><td><i>T</i><sub>1</sub></td><td>单激发算符</td><td><i>T</i>₁Ψ₀ = Σ<i>t</i><sub><i>i</i></sub><sup><i>a</i></sup>Ψ<sub><i>i</i></sub><sup><i>a</i></sup></td></tr>
+<tr><td><i>T</i><sub>2</sub></td><td>双激发算符</td><td><i>T</i>₂Ψ₀ = Σ<i>t</i><sub><i>ij</i></sub><sup><i>ab</i></sup>Ψ<sub><i>ij</i></sub><sup><i>ab</i></sup></td></tr>
+<tr><td><b><i>t</i><sub><i>ij</i></sub><sup><i>ab</i></sup></b></td><td><b>振幅</b> (amplitude)</td><td><span class="key">CC 里要求的未知数</span>，相当于 CI 里的系数 <i>a</i></td></tr>
+<tr><td>e<sup><i>T</i></sup></td><td>指数算符</td><td>用 Taylor 展开定义：e<sup><i>T</i></sup> = 1 + <i>T</i> + <i>T</i>²/2! + <i>T</i>³/3! + …</td></tr>
+</table>
+
+<h3>讲解 · 指数拟设为什么能解决尺寸一致性</h3>
+<div class="step"><div class="sh">数学根源：指数函数的性质 e<sup><i>A</i>+<i>B</i></sup> = e<sup><i>A</i></sup>·e<sup><i>B</i></sup></div>
+<p>考虑两个相距无穷远的分子 A 和 B。它们的簇算符可以分开：<i>T</i> = <i>T</i><sub>A</sub> + <i>T</i><sub>B</sub>（因为没有相互作用）。</p>
+<div class="fml" style="font-size:16px;line-height:2">
+Ψ<sub>CC</sub>(A+B) = e<sup><i>T</i><sub>A</sub>+<i>T</i><sub>B</sub></sup>Ψ<sub>0</sub> = <b>e<sup><i>T</i><sub>A</sub></sup>·e<sup><i>T</i><sub>B</sub></sup></b>Ψ<sub>0</sub> = Ψ<sub>CC</sub>(A)·Ψ<sub>CC</sub>(B)　✔
+</div>
+<p><span class="key">波函数自动分解成两个片段波函数的<b>乘积</b>——这正是"两个独立体系"的正确形式。</span>能量因此自动可加：<i>E</i>(A+B) = <i>E</i>(A) + <i>E</i>(B)。</p>
+<p><b>对比 CI</b>：(1 + <i>T</i><sub>A</sub> + <i>T</i><sub>B</sub>) ≠ (1 + <i>T</i><sub>A</sub>)(1 + <i>T</i><sub>B</sub>) = 1 + <i>T</i><sub>A</sub> + <i>T</i><sub>B</sub> + <b><i>T</i><sub>A</sub><i>T</i><sub>B</sub></b></p>
+<p><span class="key">CI 少了那个 <i>T</i><sub>A</sub><i>T</i><sub>B</sub> 交叉项——这正好就是 p22 说的"两个分子各激发 2 个电子"的四激发项。</span>CC 因为指数展开，自动包含了它。</p>
+</div>
+<div class="step"><div class="sh">Taylor 展开里每一项的含义（p24 的关键）</div>
+<div class="fml" style="font-size:15px;line-height:2.2">
+e<sup><i>T</i></sup> = 1 + <span style="color:#0b5ea8">(<i>T</i><sub>1</sub>)</span> + <span style="color:#2c6e4f">(<i>T</i><sub>2</sub> + ½<i>T</i><sub>1</sub>²)</span> + <span style="color:#b3541e">(<i>T</i><sub>3</sub> + <i>T</i><sub>2</sub><i>T</i><sub>1</sub> + ⅙<i>T</i><sub>1</sub>³)</span> + ⋯
+</div>
+<table>
+<tr><th class="c" style="width:110px">激发级别</th><th style="width:230px">CC 里包含的项</th><th>说明</th></tr>
+<tr><td class="c">单激发</td><td style="color:#0b5ea8"><i>T</i>₁</td><td>"连接的"(connected)——真正的单激发</td></tr>
+<tr><td class="c"><b>双激发</b></td><td style="color:#2c6e4f"><i>T</i>₂ + <b>½<i>T</i>₁²</b></td><td><span class="key">除了真正的双激发，还有"两个独立的单激发同时发生"</span></td></tr>
+<tr><td class="c"><b>四激发</b></td><td>… + <b>½<i>T</i>₂²</b></td><td><b>这就是 CCSD 里"免费送"的四激发</b>——两对电子各自独立地双激发。它修复了尺寸一致性</td></tr>
+</table>
+<p><span class="key">关键洞察：CCSD 虽然只求解 <i>T</i>₁ 和 <i>T</i>₂ 的振幅，但通过 ½<i>T</i>₂²、⅙<i>T</i>₂³ 这些项，波函数里<b>隐含</b>了四激发、六激发……而且它们的系数不是独立参数，是 <i>t</i>₂ 的乘积。</span></p>
+<p><b>物理上这非常合理</b>：两对相距很远的电子对，各自独立地关联——它们的联合概率就是各自概率的乘积。这正是指数函数在描述的东西。</p>
+</div>
+
+<div class="warn"><span class="lab">CC 的代价：它不是变分的</span>
+<p>看 p26 的求解方式：<span class="key">CC 的振幅方程不是通过"最小化能量"得到的，而是通过"把薛定谔方程投影到各个激发行列式上"得到的。</span></p>
+<table>
+<tr><th style="width:130px"></th><th style="width:190px">CI</th><th>CC</th></tr>
+<tr><td><b>怎么定系数</b></td><td>变分（最小化能量）</td><td><b>投影</b>（要求方程在子空间内成立）</td></tr>
+<tr><td><b>变分？</b></td><td class="c">✔ <i>E</i> ≥ <i>E</i><sub>exact</sub></td><td class="c"><span class="key">✘ 能量可能低于精确值</span></td></tr>
+<tr><td><b>尺寸一致？</b></td><td class="c"><span style="color:#c0392b">✘（截断时）</span></td><td class="c"><b>✔（即使截断）</b></td></tr>
+</table>
+<p><b>为什么大家选 CC</b>：<span class="key">在化学里，尺寸一致性比变分性重要得多。</span>因为我们关心的是能量差，而不是能量的绝对上界。</p>
+</div>
+
+<div class="ext"><span class="lab">拓展 · CCSD(T)：为什么括号里的 T 是"黄金标准"</span>
+<p><b>CCSD(T)</b> 的读法是 "CCSD with perturbative triples"（带微扰三激发的 CCSD）。</p>
+<table>
+<tr><th style="width:150px">方法</th><th style="width:130px">标度</th><th>说明</th></tr>
+<tr><td>CCSD</td><td class="c">O(<i>N</i>⁶)</td><td>迭代求解 <i>T</i>₁, <i>T</i>₂</td></tr>
+<tr><td><b>CCSD(T)</b></td><td class="c"><b>O(<i>N</i>⁷)</b></td><td><span class="key">在 CCSD 之上，用<b>微扰论</b>（非迭代）估算三激发的贡献</span></td></tr>
+<tr><td>CCSDT</td><td class="c">O(<i>N</i>⁸)</td><td>完全迭代地求解 <i>T</i>₃，贵得多，精度提升有限</td></tr>
+</table>
+<p><b>为什么 (T) 这么成功</b>：</p>
+<ul>
+<li>只加了一个 <i>N</i>⁷ 的非迭代步骤，比完整 CCSDT (<i>N</i>⁸ 迭代) 便宜一个数量级</li>
+<li>精度却几乎和 CCSDT 一样好（p27 的表：CCSDT 误差 0.000493，CCSDTQ 0.000019）</li>
+<li><span class="key">存在一定的误差抵消：(T) 的近似误差恰好部分补偿了 CCSD 缺少的高阶效应</span></li>
+</ul>
+<p><b>所以</b>：<b>CCSD(T)/CBS 是目前公认的"黄金标准"</b>——对单参考体系，它的精度通常在 1 kcal/mol 以内，被用作检验 DFT 泛函的基准。</p>
+<div class="warn"><span class="lab">但 CCSD(T) 有一个致命场景</span>
+<p><span class="key">当体系有强静态相关时（p4），CCSD(T) 会<b>灾难性地失败</b>——甚至给出发散的结果</span>（因为 (T) 的微扰修正分母上有轨道能差，简并时分母趋零）。</p>
+<p>p39 的原文明确警告："In systems with homolytic bond cleavage or degeneracies, MPn, CI and CC methods can fail dramatically."</p>
+<p><b>判断标准</b>：算完看 <i>T</i>₁ 诊断。> 0.02（有机分子）就要警惕。</p>
+</div>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p27）· 精度数据</span>
+<table>
+<tr><th style="width:170px">方法</th><th>水分子在 cc-pVDZ 下的 <i>E</i><sub>CC</sub> − <i>E</i><sub>FCI</sub>（Hartree）</th></tr>
+<tr><td>RHF</td><td>0.217822</td></tr>
+<tr><td><b>CCSD</b></td><td><b>0.003744</b></td></tr>
+<tr><td>CCSDT</td><td>0.000493</td></tr>
+<tr><td>CCSDTQ</td><td>0.000019</td></tr>
+<tr><td>CCSDTQP</td><td>0.000003</td></tr>
+</table>
+<p>在多参考体系中（如扭曲的双键、拉伸的单键等），随激发级别的收敛可能慢得多——就像 CI 一样，<b>如果单个行列式不是基态的好初始近似，就应该改用 CASSCF / CASPT 方法。</b></p>
+<table>
+<tr><th style="width:200px">方法</th><th>键长的 RMS 误差（Å，相对 XRD）</th></tr>
+<tr><td>HF/6-31G(d,p)</td><td>0.021</td></tr>
+<tr><td>HF/6-311G(d,p)</td><td>0.022</td></tr>
+<tr><td>MP2/6-31G(d,p)</td><td>0.014</td></tr>
+<tr><td>MP2/6-311G(d,p)</td><td>0.014</td></tr>
+<tr><td>QCISD/6-311G(d,p)</td><td>0.013</td></tr>
+<tr><td>CCSD(T)/6-311G(d,p)</td><td>0.013</td></tr>
+</table>
+<table>
+<tr><th style="width:200px">方法</th><th>原子化能的 RMS 误差（kcal/mol，相对实验）</th></tr>
+<tr><td>HF/6-31G(d)</td><td>85.9</td></tr>
+<tr><td>HF/6-311G(2df,p)</td><td>82.0</td></tr>
+<tr><td>MP2/6-31G(d)</td><td>22.4</td></tr>
+<tr><td>MP2/6-311G(d,p)</td><td>23.7</td></tr>
+<tr><td>QCISD/6-311G(d)</td><td>28.8</td></tr>
+<tr><td>CCSD(T)/6-311G(2df,p)</td><td>11.5</td></tr>
+</table>
+</div>
+<div class="warn"><span class="lab">p27 那三张表的三个教训</span>
+<ol>
+<li><b>相关能收敛得很快</b>：RHF 差 0.218，CCSD 就只差 0.0037（<span class="key">CCSD 抓到了 98.3% 的相关能</span>），CCSDT 差 0.0005。</li>
+<li><b>几何结构对方法不敏感，能量对方法极敏感</b>：<span class="key">键长误差从 HF 的 0.021 Å 到 CCSD(T) 的 0.013 Å，只改善了 40%；而原子化能从 86 kcal/mol 改善到 11.5，改善了 87%。</span><br><b>这就是为什么实践中常用"低水平优化结构 + 高水平算单点能"的组合</b>（比如 <code>CCSD(T)/cc-pVTZ // B3LYP/6-31G(d)</code>，双斜杠前是能量方法，后是几何方法）。</li>
+<li><b>HF 的原子化能误差 86 kcal/mol，加大基组没用（82）</b>：<span class="key">这是<b>方法误差</b>，不是基组误差。基组再大也补不了缺失的相关能。</span>必须换方法。</li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p28">
+<h2><span class="pno">p28–35</span>微扰论：从"小修正"到 MP2</h2>
+<div class="tr"><span class="lab">原文翻译（p28–29）</span>
+<p><b>p28</b>：微扰论是物理学、特别是量子力学中最重要最有用的方法之一，它允许处理复杂体系的复杂哈密顿量。为简单起见，我们只概述这个方法的基本思想。</p>
+<p>假设一个更简单的哈密顿量 <i>Ĥ</i>₀，它在某个特定态的波函数和能量是已知的：</p>
+<p><i>Ĥ</i>₀|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩ = <i>E</i><sub><i>n</i></sub><sup>(0)</sup>|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩</p>
+<p>假设新的哈密顿量可以写成：<b><i>Ĥ</i> = <i>Ĥ</i>₀ + <i>λĤ</i>₁</b></p>
+<p>例如 <i>Ĥ</i>₀ = <i>K̂</i> + <i>V̂</i>₀。我们假定相互作用力 <i>V̂</i>₀ <b>远强于</b>微扰力 <i>λĤ</i>₁。</p>
+<p><b>p29</b>：<i>Ĥ</i>₁ 可以是例如外加的电场或磁场。<i>Ĥ</i>₁ 作用在原波函数上会改变态和它的能量。</p>
+<p>第 <i>n</i> 个态的新（受微扰）波函数可以写成：</p>
+<p>|<i>ψ̃</i><sub><i>n</i></sub>⟩ = Σ<sub><i>k</i>=0</sub><sup>∞</sup> <i>λ</i><sup><i>k</i></sup>|<i>ψ</i><sub><i>n</i></sub><sup>(<i>k</i>)</sup>⟩，　<i>n</i> = 1,2,3,…</p>
+<p>对应的能量是：<i>E</i><sub><i>n</i></sub> = Σ<sub><i>k</i>=0</sub><sup>∞</sup> <i>λ</i><sup><i>k</i></sup><i>E</i><sub><i>n</i></sub><sup>(<i>k</i>)</sup></p>
+<p>其中 |<i>ψ</i><sub><i>n</i></sub><sup>(<i>k</i>)</sup>⟩ 和 <i>E</i><sub><i>n</i></sub><sup>(<i>k</i>)</sup> 是波函数与能量的第 <i>k</i> 阶修正。</p>
+</div>
+
+<h3 class="fm">公式解析 · 微扰论的基本设定</h3>
+<div class="fml"><span class="tag">★ 微扰论的出发点</span>
+<i>Ĥ</i> = <i>Ĥ</i><sub>0</sub> + <i>λ</i><i>Ĥ</i><sub>1</sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>Ĥ</i><sub>0</sub></td><td><b>零阶哈密顿量</b></td><td><span class="key">一个我们<b>已经会解</b>的简单问题</span></td></tr>
+<tr><td><i>Ĥ</i><sub>1</sub></td><td><b>微扰</b></td><td>真实哈密顿量与 <i>Ĥ</i>₀ 的差。<b>要求它"小"</b></td></tr>
+<tr><td><i>λ</i></td><td>微扰参数</td><td><span class="key">一个记账用的形式参数</span>：<i>λ</i>=0 是未微扰体系，<i>λ</i>=1 是真实体系。<b>它的作用是给各阶修正"贴标签"</b>，让我们能按 <i>λ</i> 的幂次分类</td></tr>
+<tr><td>上标 (0),(1),(2)</td><td>阶数</td><td><span class="key">不是幂次！</span>是"第几阶修正"。<i>E</i><sup>(2)</sup> 读作"二阶能量修正"</td></tr>
+</table>
+<div class="step"><div class="sh">日常类比</div>
+<p>你要算"地球绕太阳的轨道 + 木星的引力扰动"。</p>
+<ul>
+<li><b><i>Ĥ</i>₀</b> = 只有太阳的两体问题 ⟹ 精确可解（椭圆轨道）</li>
+<li><b><i>λĤ</i>₁</b> = 木星的引力 ⟹ 小，但会让轨道慢慢进动</li>
+</ul>
+<p><span class="key">微扰论的精神：先解简单问题，再一层层加修正。</span>只在"微扰确实很小"时才有效。</p>
+</div>
+
+<div class="tr"><span class="lab">原文翻译（p30–33）· 逐阶推导</span>
+<p><b>p30</b>：完整哈密顿量成为 (<i>Ĥ</i>₀ + <i>λĤ</i>₁)<i>ψ</i><sub><i>n</i></sub> = <i>E</i><sub><i>n</i></sub><i>ψ</i><sub><i>n</i></sub>。把 <i>ψ̃</i><sub><i>n</i></sub> 和 <i>E</i><sub><i>n</i></sub> 的展开代入，并把 <i>λ</i> 的幂次小于 2 的项显式写出、合并同幂次的项：</p>
+<p><i>Ĥ</i>₀<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup> + <i>λ</i>[<i>Ĥ</i>₀<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> + <i>Ĥ</i>₁<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>] + <i>λ</i>²[<i>Ĥ</i>₀<i>ψ</i><sub><i>n</i></sub><sup>(2)</sup> + <i>Ĥ</i>₁<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup>] + ⋯</p>
+<p>= <i>E</i><sub><i>n</i></sub><sup>(0)</sup><i>ψ</i><sub><i>n</i></sub><sup>(0)</sup> + <i>λ</i>[<i>E</i><sub><i>n</i></sub><sup>(0)</sup><i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> + <i>E</i><sub><i>n</i></sub><sup>(1)</sup><i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>] + <i>λ</i>²[<i>E</i><sub><i>n</i></sub><sup>(0)</sup><i>ψ</i><sub><i>n</i></sub><sup>(2)</sup> + <i>E</i><sub><i>n</i></sub><sup>(1)</sup><i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> + <i>E</i><sub><i>n</i></sub><sup>(2)</sup><i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>] + ⋯</p>
+<p><b>p31</b>：令相同幂次的项相等：</p>
+<p><i>λ</i>⁰：<i>Ĥ</i>₀<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup> = <i>E</i><sub><i>n</i></sub><sup>(0)</sup><i>ψ</i><sub><i>n</i></sub><sup>(0)</sup></p>
+<p><i>λ</i>¹：<i>Ĥ</i>₀<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> + <i>Ĥ</i>₁<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup> = <i>E</i><sub><i>n</i></sub><sup>(0)</sup><i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> + <i>E</i><sub><i>n</i></sub><sup>(1)</sup><i>ψ</i><sub><i>n</i></sub><sup>(0)</sup></p>
+<p><i>λ</i>²：<i>Ĥ</i>₀<i>ψ</i><sub><i>n</i></sub><sup>(2)</sup> + <i>Ĥ</i>₁<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> = <i>E</i><sub><i>n</i></sub><sup>(0)</sup><i>ψ</i><sub><i>n</i></sub><sup>(2)</sup> + <i>E</i><sub><i>n</i></sub><sup>(1)</sup><i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> + <i>E</i><sub><i>n</i></sub><sup>(2)</sup><i>ψ</i><sub><i>n</i></sub><sup>(0)</sup></p>
+<p>用 ⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>| 左乘第二个方程，并利用 <i>Ĥ</i>₀ 的厄米性，得到：</p>
+<p><b>p32</b>：(<i>E</i><sub><i>m</i></sub><sup>(0)</sup> − <i>E</i><sub><i>n</i></sub><sup>(0)</sup>)⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>|<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup>⟩ = <i>E</i><sub><i>n</i></sub><sup>(1)</sup><i>δ</i><sub><i>mn</i></sub> − ⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>|<i>Ĥ</i>₁|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩</p>
+<p>若 <i>m</i> = <i>n</i>，左边为 0：</p>
+<p><b><i>E</i><sub><i>n</i></sub><sup>(1)</sup> = ⟨<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>|<i>Ĥ</i>₁|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩</b>　；　<i>E</i><sub><i>n</i></sub> ≈ <i>E</i><sub><i>n</i></sub><sup>(0)</sup> + <i>E</i><sub><i>n</i></sub><sup>(1)</sup></p>
+<p>若 <i>m</i> ≠ <i>n</i>，把 <i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> 在未微扰函数的完备集上展开，得到：</p>
+<p><b>p33</b>：<i>a</i><sub><i>m</i></sub> = ⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>|<i>Ĥ</i>₁|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩ / (<i>E</i><sub><i>n</i></sub><sup>(0)</sup> − <i>E</i><sub><i>m</i></sub><sup>(0)</sup>)</p>
+<p>完整波函数：<i>ψ</i><sub><i>n</i></sub> = <i>ψ</i><sub><i>n</i></sub><sup>(0)</sup> + Σ<sub><i>m</i></sub> [⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>|<i>Ĥ</i>₁|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩ / (<i>E</i><sub><i>n</i></sub><sup>(0)</sup> − <i>E</i><sub><i>m</i></sub><sup>(0)</sup>)] <i>ψ</i><sub><i>m</i></sub><sup>(0)</sup></p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p34–35）· 二阶能量</span>
+<p>选择对应 <i>λ</i>² 的方程，用 ⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>| 左乘。若 <i>m</i> = <i>n</i>，左边为 0，且 ⟨<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>|<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup>⟩ = 0：</p>
+<p><i>E</i><sub><i>n</i></sub><sup>(2)</sup> = ⟨<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>|<i>Ĥ</i>₁|<i>ψ</i><sub><i>n</i></sub><sup>(1)</sup>⟩</p>
+<p>把 <i>ψ</i><sub><i>n</i></sub><sup>(1)</sup> 的表达式代入：</p>
+<p><b><i>E</i><sub><i>n</i></sub><sup>(2)</sup> = Σ<sub><i>m</i></sub> |⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>|<i>Ĥ</i>₁|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩|² / (<i>E</i><sub><i>n</i></sub><sup>(0)</sup> − <i>E</i><sub><i>m</i></sub><sup>(0)</sup>)</b></p>
+<p><i>E</i><sub><i>n</i></sub> ≈ <i>E</i><sub><i>n</i></sub><sup>(0)</sup> + <i>E</i><sub><i>n</i></sub><sup>(1)</sup> + <i>E</i><sub><i>n</i></sub><sup>(2)</sup></p>
+</div>
+
+<h3 class="fm">公式解析 · 一阶和二阶能量修正</h3>
+<div class="fml"><span class="tag">★ 一阶能量修正</span>
+<i>E</i><sub><i>n</i></sub><sup>(1)</sup> = ⟨<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>| <i>Ĥ</i><sub>1</sub> |<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩
+</div>
+<p><b>解读</b>：<span class="key">用<b>没有被扰动的</b>波函数，去算微扰算符的期望值。</span>直观、便宜、只需要已知的东西。</p>
+<div class="fml"><span class="tag">★ 二阶能量修正（本讲最重要的公式）</span>
+<i>E</i><sub><i>n</i></sub><sup>(2)</sup> = Σ<sub><i>m</i>≠<i>n</i></sub> <span style="color:#0b5ea8">|⟨<i>ψ</i><sub><i>m</i></sub><sup>(0)</sup>|<i>Ĥ</i><sub>1</sub>|<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup>⟩|²</span> ⁄ <span style="color:#c0392b">(<i>E</i><sub><i>n</i></sub><sup>(0)</sup> − <i>E</i><sub><i>m</i></sub><sup>(0)</sup>)</span>
+</div>
+<table class="vars">
+<tr><th>部分</th><th>名称</th><th>含义</th></tr>
+<tr><td style="color:#0b5ea8">分子</td><td>耦合矩阵元的平方</td><td><span class="key">衡量微扰把态 <i>n</i> 和态 <i>m</i> "混合"得有多强。</span>因为取了平方，<b>永远 ≥ 0</b></td></tr>
+<tr><td style="color:#c0392b">分母</td><td>能量差</td><td><span class="key">对<b>基态</b>（<i>n</i>=0），所有 <i>E</i><sub><i>m</i></sub> &gt; <i>E</i><sub>0</sub>，所以分母<b>永远为负</b></span></td></tr>
+<tr><td>整体</td><td>二阶修正</td><td><b>对基态永远是负的</b>（分子正，分母负）⟹ <span class="key">基态永远被二阶微扰<b>稳定化</b></span></td></tr>
+</table>
+<div class="warn"><span class="lab">这个公式的三条通用规律（在整个物理化学里都成立）</span>
+<ol>
+<li><b>能量越接近，混合越强</b>（分母越小，贡献越大）。<span class="key">这就是"能量相近的轨道容易相互作用"这条化学直觉的数学来源</span>——分子轨道理论、微扰分子轨道理论 (PMO)、前线轨道理论全靠它。</li>
+<li><b>基态总是被推低，激发态总是被推高</b>（能级的"互相排斥"）。<span class="key">这是"避免交叉规则 (avoided crossing)"的来源。</span></li>
+<li><b>简并时公式失效</b>：<i>E</i><sub><i>n</i></sub><sup>(0)</sup> = <i>E</i><sub><i>m</i></sub><sup>(0)</sup> ⟹ 分母为零 ⟹ <b>发散</b>。<span class="key">这就是为什么 MP2 对近简并体系（过渡金属、断键）会崩溃</span>——它是 p39 那句警告的数学根源。这时必须用<b>简并微扰论</b>或多参考方法。</li>
+</ol>
+</div>
+</section>
+
+<section class="slide" id="p36">
+<h2><span class="pno">p36</span>★ Møller–Plesset 微扰论（MP2）</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>这是把微扰论直接应用到闭壳层 HF 波函数上：<i>ψ</i><sub><i>n</i></sub><sup>(0)</sup> = Ψ₀ = Ψ<sub>HF</sub>。</p>
+<p><i>E</i> ≈ <i>E</i><sub>MP0</sub> + <i>E</i><sub>MP1</sub> + <i>E</i><sub>MP2</sub> = <i>E</i>₀ + Σ<sub><i>i</i>&lt;<i>j</i></sub><sup>occ</sup>Σ<sub><i>a</i>&lt;<i>b</i></sub><sup>virt</sup> |⟨<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>j</i></sub>|<i>φ</i><sub><i>a</i></sub><i>φ</i><sub><i>b</i></sub>⟩ − ⟨<i>φ</i><sub><i>i</i></sub><i>φ</i><sub><i>j</i></sub>|<i>φ</i><sub><i>b</i></sub><i>φ</i><sub><i>a</i></sub>⟩|² / (<i>ε</i><sub><i>i</i></sub> + <i>ε</i><sub><i>j</i></sub> − <i>ε</i><sub><i>a</i></sub> − <i>ε</i><sub><i>b</i></sub>)</p>
+<p><i>ε</i><sub><i>i</i></sub>, <i>ε</i><sub><i>j</i></sub> —— HF 波函数中<b>占据</b>轨道的能量</p>
+<p><i>ε</i><sub><i>a</i></sub>, <i>ε</i><sub><i>b</i></sub> —— HF 波函数中<b>空</b>轨道的能量</p>
+</div>
+
+<h3 class="fm">公式解析 · MP2 相关能</h3>
+<div class="fml"><span class="tag">★ MP2 相关能（做实际计算最常用的相关方法）</span>
+<i>E</i><sub>MP2</sub> = Σ<sub><i>i</i>&lt;<i>j</i></sub><sup>占据</sup> Σ<sub><i>a</i>&lt;<i>b</i></sub><sup>虚</sup> <span style="color:#0b5ea8">|⟨<i>ij</i>||<i>ab</i>⟩|²</span> ⁄ <span style="color:#c0392b">(<i>ε</i><sub><i>i</i></sub> + <i>ε</i><sub><i>j</i></sub> − <i>ε</i><sub><i>a</i></sub> − <i>ε</i><sub><i>b</i></sub>)</span>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>i</i>, <i>j</i></td><td>占据轨道</td><td>电子从这里被激发走</td></tr>
+<tr><td><i>a</i>, <i>b</i></td><td>虚（空）轨道</td><td>电子被激发到这里</td></tr>
+<tr><td><i>ε</i></td><td>轨道能</td><td><span class="key">HF 计算直接给出的东西</span>——所以 MP2 不需要额外迭代</td></tr>
+<tr><td>⟨<i>ij</i>||<i>ab</i>⟩</td><td>反对称化的<br>双电子积分</td><td>= ⟨<i>ij</i>|<i>ab</i>⟩ − ⟨<i>ij</i>|<i>ba</i>⟩　<span class="key">（库仑项 − 交换项）</span></td></tr>
+<tr><td style="color:#c0392b">分母</td><td>轨道能差</td><td><span class="key">恒为<b>负</b></span>：<i>ε</i><sub>占据</sub> &lt; <i>ε</i><sub>虚</sub>，所以 (<i>ε</i><sub><i>i</i></sub>+<i>ε</i><sub><i>j</i></sub>) − (<i>ε</i><sub><i>a</i></sub>+<i>ε</i><sub><i>b</i></sub>) &lt; 0</td></tr>
+</table>
+
+<h3>讲解 · 三个必须注意的点</h3>
+<div class="step"><div class="sh">① 为什么公式里只有<b>双</b>激发，没有单激发</div>
+<p>因为 <b>Brillouin 定理</b>（p25 明说）：⟨Ψ<sub>HF</sub>|<i>Ĥ</i>|Ψ<sub><i>i</i></sub><sup><i>a</i></sup>⟩ = 0。</p>
+<p><span class="key">代入 p35 的二阶公式，单激发项的分子恒为零 ⟹ 整项消失。</span></p>
+<p>所以 <b>MP2 = "所有双激发的二阶微扰贡献之和"</b>。而 p16 的数据告诉我们双激发本来就是主力，这解释了 MP2 为什么这么便宜又这么好用。</p>
+</div>
+<div class="step"><div class="sh">② <i>E</i><sub>MP1</sub> 去哪了？</div>
+<p>公式里 <i>E</i><sub>MP0</sub> + <i>E</i><sub>MP1</sub> 被合并写成了 <i>E</i>₀。原因：</p>
+<div class="fml" style="font-size:15px"><i>E</i><sub>MP0</sub> + <i>E</i><sub>MP1</sub> = <i>E</i><sub>HF</sub></div>
+<p><span class="key">零阶 + 一阶恰好就是 Hartree–Fock 能量。</span>所以<b>真正的相关能修正从二阶才开始</b>——这就是"MP<b>2</b>"这个名字的来历，也是为什么没有"MP1 方法"。</p>
+<p><b>为什么会这样</b>：Møller–Plesset 选的零阶哈密顿量是 <i>Ĥ</i>₀ = Σ<i>F̂</i><sub><i>i</i></sub>（Fock 算符之和）。它的本征值是 Σ<i>ε</i><sub><i>i</i></sub>，而这个值把电子间排斥<b>数了两遍</b>。一阶修正 <i>E</i><sup>(1)</sup> 恰好把多数的那一遍减掉，还原成正确的 <i>E</i><sub>HF</sub>。</p>
+</div>
+<div class="step"><div class="sh">③ MP2 不是变分的</div>
+<p><span class="key">MP2 能量可能<b>低于</b>精确能量（"过冲"）。</span>这是它和 CI 的关键区别。</p>
+<p>典型表现：MP2 <b>高估</b>相关能，导致它<b>高估</b>弱相互作用（π–π 堆积能常被高估 50%）。<b>SCS-MP2</b>（自旋分量标度 MP2）就是为了修正这个而设计的——把同自旋和反自旋的贡献分别乘上不同的经验因子。</p>
+</div>
+
+<div class="warn"><span class="lab">MP2 的适用范围与失效场景</span>
+<table>
+<tr><th style="width:170px">场景</th><th>MP2 表现</th></tr>
+<tr><td><b>闭壳层有机分子的几何、能量</b></td><td class="c" style="color:#2c6e4f">✔ 很好（p27 表：键长误差 0.014 Å，接近 CCSD(T)）</td></tr>
+<tr><td><b>氢键、极性相互作用</b></td><td class="c" style="color:#2c6e4f">✔ 好</td></tr>
+<tr><td><b>色散、π–π 堆积</b></td><td class="c" style="color:#b3541e">⚠ 系统性<b>高估</b>（要用 SCS-MP2）</td></tr>
+<tr><td><b>HOMO-LUMO gap 很小的体系</b></td><td class="c" style="color:#c0392b"><span class="key">✘ 分母趋零 ⟹ 发散</span></td></tr>
+<tr><td><b>过渡金属、断键、双自由基</b></td><td class="c" style="color:#c0392b">✘ 灾难性失败</td></tr>
+<tr><td><b>UHF 参考态自旋污染严重</b></td><td class="c" style="color:#c0392b">✘ 污染会被 MP2 放大</td></tr>
+</table>
+<p><b>诊断口诀</b>：<span class="key">MP2 好不好，先看 HF 参考态好不好。参考态好，MP2 是性价比之王；参考态坏，MP2 比 HF 还糟。</span></p>
+</div>
+<div class="ext"><span class="lab">拓展 · MPn 序列不收敛（p39 表格里那个反常数据）</span>
+<p>看 p39 的表：Be 原子的相关能回收率</p>
+<table>
+<tr><th class="c" style="width:110px">MP2</th><th class="c" style="width:110px">MP3</th><th class="c" style="width:110px">MP4</th><th class="c" style="width:110px">MP5</th><th class="c" style="width:110px">MP6</th><th class="c">MP7</th></tr>
+<tr><td class="c">67.85%</td><td class="c">86.90%</td><td class="c">94.58%</td><td class="c">98.15%</td><td class="c">99.64%</td><td class="c" style="color:#c0392b"><b>100.15%</b></td></tr>
+</table>
+<p><span class="key">注意 MP7 超过了 100%！</span>这不是笔误——它说明 MPn 级数<b>不是单调收敛的</b>，而是在真值附近振荡，甚至可能发散。</p>
+<p><b>后果</b>：<b>"用更高阶的 MPn 不一定更准"</b>。实践中 MP3、MP5 基本没人用（MP3 的性价比不如 MP2，MP4 又太贵）。<span class="key">所以序列是：MP2（便宜够用）→ 直接跳到 CCSD(T)（贵但可靠）。</span>这就是为什么 p40 的实际方法只有 MP2 和 CCSD(T) 常用。</p>
+</div>
+</section>
+
+<section class="slide" id="p37">
+<h2><span class="pno">p37–38</span>BSSE 与 Counterpoise 校正</h2>
+<div class="tr"><span class="lab">原文翻译（p37）</span>
+<p><b>基组重叠误差 (BSSE)</b>：</p>
+<p>当分子被一起模拟时，<b>每个分子都获得了新的激发可能性</b>，导致 CI 子空间中更大的变分灵活性。</p>
+<p>当分子被靠近时，它们<b>互相扩充了对方的基组</b>，从而增加了变分灵活性。<b>即使不存在任何相互作用，能量也会下降。这导致非物理的吸引。</b></p>
+<p><i>E</i>(proximate) &lt; <i>E</i>(distant)</p>
+<p><b>CI 中的尺寸一致性问题</b>：<i>E</i><sub>CI</sub>(1+2) ≠ <i>E</i><sub>CI</sub>(1) + <i>E</i><sub>CI</sub>(2)；<i>E</i><sub>CI</sub>(1+2) &gt; <i>E</i><sub>CI</sub>(1) + <i>E</i><sub>CI</sub>(2)</p>
+</div>
+<div class="tr"><span class="lab">原文翻译（p38）· Counterpoise 校正</span>
+<p>以原子为中心的基组很少大到能避免基组重叠误差。<b>Counterpoise（均衡）校正</b>旨在补偿这个误差。</p>
+<ol>
+<li>用通常的方式计算复合物的能量</li>
+<li><b>对每个片段，在<u>另一个片段的轨道（但没有电子和原子核）</u>存在的情况下，各做一次额外的计算</b></li>
+</ol>
+<p>Δ<i>E</i><sub>AB</sub><sup>CP</sup> = <i>E</i><sub>AB</sub> − <i>E</i><sub>A</sub>(<i>A</i>+<i>B</i>) − <i>E</i><sub>B</sub>(<i>A</i>+<i>B</i>)</p>
+</div>
+
+<h3>讲解 · BSSE 的机制与校正（图解）</h3>
+<figure>
+<svg viewBox="0 0 540 260" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;fill:#1c1c1e}.h{font-size:12.5px;font-weight:700}</style></defs>
+<text x="270" y="16" class="h" fill="#c0392b" text-anchor="middle">问题：算 E(A) 和 E(AB) 时用的基组不一样大</text>
+<rect x="30" y="30" width="230" height="90" rx="6" fill="#fdeeee" stroke="#c0392b" stroke-width="1.4"/>
+<circle cx="90" cy="72" r="20" fill="#0b5ea8" opacity="0.25"/><text x="90" y="77" class="t" text-anchor="middle">A</text>
+<text x="90" y="108" class="s" text-anchor="middle">只有 A 自己的基函数</text>
+<text x="152" y="76" class="t">vs</text>
+<circle cx="196" cy="72" r="20" fill="#0b5ea8" opacity="0.25"/><text x="196" y="77" class="t" text-anchor="middle">A</text>
+<circle cx="230" cy="72" r="16" fill="#b3541e" opacity="0.20" stroke="#b3541e" stroke-dasharray="3,2"/><text x="230" y="77" class="s" text-anchor="middle">B</text>
+<text x="212" y="108" class="s" text-anchor="middle">A 可以"借"B 的基函数</text>
+<text x="145" y="136" class="s" text-anchor="middle" fill="#c0392b" font-weight="700">⟹ E(AB) 被人为降低 ⟹ 结合能被高估</text>
+<text x="270" y="166" class="h" fill="#2c6e4f" text-anchor="middle">解法：Counterpoise —— 让两边基组一样大</text>
+<rect x="30" y="178" width="480" height="66" rx="6" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.4"/>
+<circle cx="90" cy="208" r="18" fill="#0b5ea8" opacity="0.25"/><text x="90" y="213" class="t" text-anchor="middle">A</text>
+<circle cx="124" cy="208" r="14" fill="none" stroke="#9aa5b1" stroke-dasharray="3,2"/><text x="124" y="212" class="s" text-anchor="middle">👻</text>
+<text x="107" y="238" class="s" text-anchor="middle">E(A) 加幽灵 B</text>
+<circle cx="230" cy="208" r="14" fill="none" stroke="#9aa5b1" stroke-dasharray="3,2"/><text x="230" y="212" class="s" text-anchor="middle">👻</text>
+<circle cx="264" cy="208" r="18" fill="#b3541e" opacity="0.25"/><text x="264" y="213" class="t" text-anchor="middle">B</text>
+<text x="247" y="238" class="s" text-anchor="middle">E(B) 加幽灵 A</text>
+<text x="400" y="200" class="s" text-anchor="middle">幽灵原子 (ghost atom)：</text>
+<text x="400" y="216" class="s" text-anchor="middle"><b>保留基函数，去掉核和电子</b></text>
+<text x="400" y="234" class="s" text-anchor="middle">⟹ 三次计算用同一套基组 ⟹ 误差抵消</text>
+</svg>
+</figure>
+<div class="fml"><span class="tag">★ Counterpoise 校正的结合能</span>
+Δ<i>E</i><sup>CP</sup> = <i>E</i><sub>AB</sub><sup>[AB基]</sup> − <i>E</i><sub>A</sub><sup>[<b>AB基</b>]</sup> − <i>E</i><sub>B</sub><sup>[<b>AB基</b>]</sup>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td>上标 [AB基]</td><td>用的基组</td><td><span class="key">关键：<b>三次计算都用完整的 AB 基组</b></span></td></tr>
+<tr><td>幽灵原子</td><td>ghost atom</td><td>只提供基函数、<b>不提供核电荷和电子</b>的虚拟原子</td></tr>
+</table>
+<div class="warn"><span class="lab">怎么在软件里做</span>
+<table>
+<tr><th style="width:130px">软件</th><th>写法</th></tr>
+<tr><td><b>Gaussian</b></td><td><code>#p b3lyp/6-31G(d) counterpoise=2</code>，坐标后每个原子加 <code>(Fragment=1)</code> 或 <code>(Fragment=2)</code>。<span class="key">程序自动做完 3（或 5）次计算并打印校正后的结合能</span></td></tr>
+<tr><td><b>ORCA</b></td><td>手工做：在坐标里把某个原子的元素符号前加 <code>:</code>（如 <code>O: 0.0 0.0 0.0</code>）表示幽灵原子</td></tr>
+</table>
+</div>
+<div class="ext"><span class="lab">拓展 · BSSE 有多大？什么时候必须校正？</span>
+<table>
+<tr><th style="width:190px">情况</th><th style="width:150px">BSSE 大小</th><th>建议</th></tr>
+<tr><td>6-31G(d)，水二聚体</td><td>约 1.5 kcal/mol<br>（结合能约 5 kcal/mol）</td><td class="c" style="color:#c0392b"><b>占 30%！必须校正</b></td></tr>
+<tr><td>aug-cc-pVTZ，水二聚体</td><td>约 0.3 kcal/mol</td><td class="c">建议校正</td></tr>
+<tr><td>aug-cc-pV5Z</td><td>&lt; 0.1 kcal/mol</td><td class="c" style="color:#2c6e4f">可以忽略</td></tr>
+<tr><td>CBS 极限</td><td class="c">0</td><td class="c">不需要（BSSE 定义上就是基组不完备的产物）</td></tr>
+</table>
+<p><b>三条实用规则</b>：</p>
+<ol>
+<li><span class="key">算<b>任何</b>非共价相互作用（氢键、π 堆积、主客体结合），BSSE 校正是标配。</span></li>
+<li><b>基组越小、方法相关水平越高，BSSE 越大</b>（MP2 的 BSSE 比 HF 大，因为虚轨道也参与了）。</li>
+<li><b>不要只报告一个数</b>：好的做法是同时报告未校正值和 CP 校正值，真值通常在两者之间（CP 有轻微过校正的倾向）。</li>
+</ol>
+</div>
+<div class="warn"><span class="lab">BSSE 与尺寸一致性：两个不同的问题，别搞混</span>
+<table>
+<tr><th style="width:170px"></th><th style="width:190px">BSSE</th><th>尺寸不一致性</th></tr>
+<tr><td><b>根源</b></td><td><b>基组</b>不完备</td><td><b>方法</b>（激发级别截断）</td></tr>
+<tr><td><b>谁有</b></td><td><span class="key">所有用原子中心基组的方法（含 HF、DFT）</span></td><td>只有截断 CI（HF、MP2、CC 都没有）</td></tr>
+<tr><td><b>怎么消</b></td><td>Counterpoise 校正；或用完备基组</td><td>换方法（用 CC 而不是 CI）</td></tr>
+<tr><td><b>误差方向</b></td><td>高估结合（能量偏低）</td><td>低估相关（合并体系能量偏高）</td></tr>
+</table>
+<p>p37 把这两件事放在同一页，容易让人混淆——<span class="key">记住：BSSE 是基组问题，尺寸一致性是方法问题。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p39">
+<h2><span class="pno">p39–40</span>各方法的精度与标度总表</h2>
+<div class="tr"><span class="lab">原文翻译（p39）</span>
+<p><b>注意</b>：<span class="key">单参考方法非常准确——<b>当且仅当</b> HF 参考态是一个好的出发点。</span></p>
+<p><b>在有均裂断键或简并的体系中，MPn、CI 和 CC 方法可能灾难性地失败。</b></p>
+<table>
+<tr><th class="c" style="width:110px">方法</th><th class="c" style="width:110px">Be 的 <i>E</i><sub>corr</sub></th><th class="c" style="width:110px">方法</th><th class="c" style="width:110px">Be 的 <i>E</i><sub>corr</sub></th><th class="c" style="width:110px">方法</th><th class="c">Be 的 <i>E</i><sub>corr</sub></th></tr>
+<tr><td class="c">MP2</td><td class="c">67.85%</td><td class="c">MP3</td><td class="c">86.90%</td><td class="c">CISD</td><td class="c">96.05%</td></tr>
+<tr><td class="c">MP4</td><td class="c">94.58%</td><td class="c"><b>CCSD</b></td><td class="c"><b>99.75%</b></td><td class="c">CCSD(T)</td><td class="c"><b>99.99%</b></td></tr>
+<tr><td class="c">MP5</td><td class="c">98.15%</td><td class="c">CISDT</td><td class="c">96.29%</td><td class="c">CCSDT</td><td class="c">99.99%</td></tr>
+<tr><td class="c">MP6</td><td class="c">99.64%</td><td class="c">MP7</td><td class="c">100.15%</td><td class="c">CISDTQ</td><td class="c">100%</td></tr>
+<tr><td class="c" colspan="4"></td><td class="c">CCSDTQ</td><td class="c">100%</td></tr>
+</table>
+</div>
+<div class="tr"><span class="lab">原文翻译（p40）· 标度表</span>
+<table>
+<tr><th style="width:190px">方法（无基组筛选）</th><th>随基函数数目的标度</th></tr>
+<tr><td>HF</td><td>O(<i>n</i>⁴)</td></tr>
+<tr><td>MP2</td><td>O(<i>n</i>⁵)</td></tr>
+<tr><td>MP3, CISD, CCSD, QCISD</td><td>O(<i>n</i>⁶)</td></tr>
+<tr><td><b>MP4, CCSD(T), QCISD(T)</b></td><td><b>O(<i>n</i>⁷)</b></td></tr>
+<tr><td>MP5, CISDT, CCSDT</td><td>O(<i>n</i>⁸)</td></tr>
+<tr><td>MP6</td><td>O(<i>n</i>⁹)</td></tr>
+<tr><td>MP7, CISDTQ, CCSDTQ</td><td>O(<i>n</i>¹⁰)</td></tr>
+<tr><td><b>FCI</b></td><td><b>O(<i>n</i>!)</b></td></tr>
+</table>
+<p><b>Hartree–Fock</b>：最多几百个原子；对常见微扰的一阶和二阶解析导数都容易获得。</p>
+<p><b>MP2, MP4</b>：高效实现可以做到 MP2 约 100 原子、MP4 约 20 原子；MP2 的一阶二阶解析导数容易获得，MP4 只有数值导数。</p>
+<p><b>CISD, CCSD</b>：高效实现可以做到约 20 个原子；一阶解析导数通常可用，二阶导数目前多为数值。</p>
+<p><b>FCI</b>：最多 3–4 个简单原子；所有导数都是数值的。</p>
+</div>
+
+<h3>讲解 · 把两张表合起来看（这是选方法的地图）</h3>
+<table>
+<tr><th style="width:130px">方法</th><th class="c" style="width:110px">标度</th><th class="c" style="width:130px">相关能回收</th><th class="c" style="width:130px">可算体系</th><th>什么时候用</th></tr>
+<tr><td><b>HF</b></td><td class="c">O(<i>n</i>⁴)</td><td class="c">0%</td><td class="c">几百原子</td><td>只作为参考态；单独用意义不大</td></tr>
+<tr><td><b>DFT</b></td><td class="c">O(<i>n</i>³⁻⁴)</td><td class="c">~90%*</td><td class="c">数百–数千</td><td><span class="key">机理研究、大体系的主力</span></td></tr>
+<tr><td><b>MP2</b></td><td class="c">O(<i>n</i>⁵)</td><td class="c">68–90%</td><td class="c">~100 原子</td><td>最便宜的从头算相关方法；氢键、极性体系</td></tr>
+<tr><td><b>CCSD</b></td><td class="c">O(<i>n</i>⁶)</td><td class="c">99.75%</td><td class="c">~20 原子</td><td>—（通常直接上 (T)）</td></tr>
+<tr><td><b>CCSD(T)</b></td><td class="c">O(<i>n</i>⁷)</td><td class="c"><b>99.99%</b></td><td class="c">~20–30 原子</td><td><span class="key"><b>黄金标准</b>；做基准、验证 DFT</span></td></tr>
+<tr><td><b>CASSCF+PT2</b></td><td class="c">取决活性空间</td><td class="c">—</td><td class="c">~20 原子</td><td><span class="key">多参考体系的唯一选择</span></td></tr>
+<tr><td><b>FCI</b></td><td class="c">O(<i>n</i>!)</td><td class="c">100%</td><td class="c"><b>3–4 个原子</b></td><td>只用于给方法做基准</td></tr>
+</table>
+<p style="font-size:13px;color:#6b6b70">* DFT 的"相关能回收率"不严格适用——它用的是不同的能量分解方式。</p>
+
+<div class="warn"><span class="lab">CI 与 CC 的对比（p39 表格里最值得注意的一组数）</span>
+<table>
+<tr><th class="c" style="width:170px">方法</th><th class="c" style="width:150px">相关能回收</th><th class="c">标度</th></tr>
+<tr><td class="c"><b>CISD</b></td><td class="c" style="color:#c0392b">96.05%</td><td class="c">O(<i>n</i>⁶)</td></tr>
+<tr><td class="c"><b>CCSD</b></td><td class="c" style="color:#2c6e4f"><b>99.75%</b></td><td class="c">O(<i>n</i>⁶)</td></tr>
+</table>
+<p><span class="key">同样的截断级别（S+D）、<b>同样的计算量</b>（都是 <i>n</i>⁶），但 CCSD 好得多（误差小 16 倍）。</span></p>
+<p><b>原因就是 p23–24 讲的指数拟设</b>：CCSD 通过 ½<i>T</i>₂² 等项隐含了四激发、六激发……而 CISD 完全没有。</p>
+<p><b>结论</b>：<span class="key">在同等成本下 CC 完胜 CI。这就是为什么今天实际计算里 CI 基本只剩下 CASSCF（多参考）和 CIS（激发态定性）两个用途。</span></p>
+</div>
+<div class="ext"><span class="lab">拓展 · p40 提到的"解析导数"为什么重要</span>
+<p><b>解析导数</b> = 能量对坐标的梯度有闭式公式，一次计算就能拿到全部 3<i>N</i> 个分量。</p>
+<p><b>数值导数</b> = 只能靠"挪动每个原子一点点，看能量变多少"来估算，需要 <b>6<i>N</i> 次</b>单点计算（每个坐标正负各一次）。</p>
+<table>
+<tr><th style="width:190px">对一个 20 原子的分子</th><th>做一次几何优化步</th></tr>
+<tr><td>有解析梯度（HF、DFT、MP2）</td><td class="c" style="color:#2c6e4f"><b>1 次</b>计算</td></tr>
+<tr><td>只有数值梯度（MP4、CCSDT）</td><td class="c" style="color:#c0392b"><b>120 次</b>计算</td></tr>
+</table>
+<p><span class="key">这就是为什么"CCSD(T) 几何优化"在实践中很少做——大家用 DFT 或 MP2 优化结构，再用 CCSD(T) 算单点能。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p41">
+<h2><span class="pno">p41–42</span>实际表现：方法 vs 基组</h2>
+<div class="tr"><span class="lab">原文翻译（p41–42，两页内容相同）</span>
+<p>（三张图：31 个分子相对 X 射线几何的偏差分布（pm），分别作为<b>方法</b>的函数和<b>基组大小</b>的函数；以及 N₂ 分子的解离曲线作为方法的函数。）</p>
+<p><b>对能量以外的性质，更高的相关水平不一定意味着更准确的答案——当心误差抵消的情形。</b></p>
+</div>
+<h3>讲解 · 这三张图在说三件事</h3>
+<table>
+<tr><th style="width:190px">图</th><th>结论</th></tr>
+<tr><td><b>几何 vs 方法</b></td><td>从 HF 到 MP2 有明显改善，<span class="key">从 MP2 到 CCSD(T) 改善很小</span>（对应 p27 表：0.014 → 0.013 Å）</td></tr>
+<tr><td><b>几何 vs 基组</b></td><td>从 DZ 到 TZ 有改善，<span class="key">TZ 之后基本饱和</span></td></tr>
+<tr><td><b>N₂ 解离曲线</b></td><td><span class="key">平衡区所有方法都差不多；<b>解离区差别巨大</b></span>——N₂ 要断三根键，是静态相关的极端情形，MP2 和 CCSD 都会崩</td></tr>
+</table>
+<div class="warn"><span class="lab">这两页的核心警告（和 p5 呼应）</span>
+<p><b>"For properties other than energy, a higher correlation level method does not necessarily mean a more accurate answer – beware of error compensation situations."</b></p>
+<p><span class="key">这句话在整个课程中出现了三次（p5、p41、p42），说明它非常重要。</span></p>
+<p><b>误差抵消的典型例子</b>：</p>
+<ul>
+<li><b>HF/小基组的键长意外地准</b>：HF 缺少相关能会让键<b>偏短</b>，而小基组的不完备会让键<b>偏长</b>——两者抵消。<span class="key">用 HF/大基组反而更差！</span></li>
+<li><b>B3LYP/6-31G(d) 是"甜点"</b>：它的成功很大程度上来自误差抵消，而不是因为它在物理上最正确。这也是为什么"升级到 B3LYP/6-311++G(3df,3pd)"有时结果反而变糟。</li>
+</ul>
+<p><b>实用建议</b>：<span class="key">用一个在你的体系类别上被 benchmark 验证过的方法/基组<b>组合</b>，不要自己随意搭配"更好的方法 + 更好的基组"。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p43">
+<h2><span class="pno">p43</span>完备基组极限 (CBS) 外推</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p>能量（但通常不包括其他参数）可以外推到基组极限——实际上就是外推到完备基组。下面给出 Dunning–Feller 外推方案，其中 <i>n</i> 是 (aug-)cc-pV<i>n</i>Z 基组的 zeta 指数：</p>
+<p><b><i>E</i><sub><i>n</i></sub> = <i>E</i><sub>CBS</sub> + <i>α</i>e<sup>−<i>βn</i></sup></b></p>
+<p><i>α</i>, <i>β</i> 是可以针对具体情形/分子类别拟合的参数</p>
+<p><b>快速的近似方法</b>（但抓住了要点）：HF/6-31G(d,p) 或 HF/cc-pVDZ</p>
+<p><b>慢而准确的方法</b>：MP2/6-311G(2d,2p) 或 MP2/cc-pVTZ</p>
+<p><b>非常慢、非常准确的方法</b>：CCSD(T)/cc-pVQZ 及更高</p>
+<p><b>专门的高精度复合方法</b>：MP2-R12、G1-G3、G2MP2、G3MP2 等</p>
+</div>
+
+<h3 class="fm">公式解析 · CBS 外推</h3>
+<div class="fml"><span class="tag">★ Dunning–Feller 外推（HF 部分）</span>
+<i>E</i><sub><i>n</i></sub> = <i>E</i><sub>CBS</sub> + <i>α</i> e<sup>−<i>βn</i></sup>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>n</i></td><td>zeta 指数</td><td><span class="key">cc-pVDZ → <i>n</i>=2；cc-pVTZ → <i>n</i>=3；cc-pVQZ → <i>n</i>=4；cc-pV5Z → <i>n</i>=5</span></td></tr>
+<tr><td><i>E</i><sub><i>n</i></sub></td><td>用第 <i>n</i> 级基组算的能量</td><td>实际算出来的数</td></tr>
+<tr><td><b><i>E</i><sub>CBS</sub></b></td><td><b>完备基组极限</b></td><td><span class="key">要外推得到的东西——理论上 <i>n</i>→∞ 时的能量</span></td></tr>
+<tr><td><i>α</i>, <i>β</i></td><td>拟合参数</td><td>用三个不同 <i>n</i> 的计算结果拟合出来</td></tr>
+</table>
+<div class="step"><div class="sh">怎么用（实际操作）</div>
+<ol>
+<li>用 cc-pVDZ、cc-pVTZ、cc-pVQZ 各算一次单点能，得到 <i>E</i>₂, <i>E</i>₃, <i>E</i>₄</li>
+<li>三个方程三个未知数（<i>E</i><sub>CBS</sub>, <i>α</i>, <i>β</i>），解出 <i>E</i><sub>CBS</sub></li>
+</ol>
+<p><span class="key">这样得到的能量比任何单一基组的结果都更接近真值，而且不需要真的去算 cc-pV6Z（那会贵几十倍）。</span></p>
+</div>
+<div class="ext"><span class="lab">拓展 · 实践中更常用的分离外推（讲义只给了一个公式，但实际做法不同）</span>
+<p><b>关键洞察</b>：<span class="key">HF 能量和相关能的收敛速度<b>完全不同</b>，应该分开外推。</span></p>
+<table>
+<tr><th style="width:170px">部分</th><th style="width:190px">收敛行为</th><th>常用外推式</th></tr>
+<tr><td><b>HF 能量</b></td><td><b>指数</b>收敛（快）</td><td><i>E</i><sub><i>n</i></sub><sup>HF</sup> = <i>E</i><sub>CBS</sub><sup>HF</sup> + <i>α</i>e<sup>−<i>βn</i></sup>（讲义给的这个）</td></tr>
+<tr><td><b>相关能</b></td><td><span class="key"><b>幂律</b>收敛（慢！）</span></td><td><i>E</i><sub><i>n</i></sub><sup>corr</sup> = <i>E</i><sub>CBS</sub><sup>corr</sup> + <i>A</i>/<i>n</i>³</td></tr>
+</table>
+<p><b>为什么相关能收敛得慢</b>：相关能的核心是描述"电子对靠得很近时的行为"（电子尖点 cusp）。<span class="key">而以原子为中心的基函数<b>永远</b>无法正确描述 <i>r</i>₁₂ → 0 的行为</span>——因为那需要显式含 <i>r</i>₁₂ 的函数。</p>
+<p><b>解法：显式相关方法 (F12)</b>。在波函数里直接加入依赖 <i>r</i>₁₂ 的项：</p>
+<div class="fml" style="font-size:15px">Ψ ~ Ψ<sub>CC</sub> × (1 + ½<i>r</i><sub>12</sub> + …)</div>
+<p><span class="key"><b>CCSD(T)-F12</b> 用 cc-pVTZ-F12 基组就能达到常规 CCSD(T)/cc-pV5Z 的精度</b>——省一个数量级的时间。</span>这是近 15 年最重要的进展之一。讲义 p43 提到的 <b>MP2-R12</b> 就是这一类方法的先驱。</p>
+</div>
+<div class="ext"><span class="lab">拓展 · 复合方法 (composite methods)：G3、CBS-QB3、W1</span>
+<p>思路：<span class="key">把一个"理想上要用 CCSD(T)/极大基组"的计算，拆成若干个便宜的计算再拼起来。</span></p>
+<div class="fml" style="font-size:14px">
+<i>E</i> ≈ <i>E</i>[MP2/大基组] + {<i>E</i>[CCSD(T)/小基组] − <i>E</i>[MP2/小基组]} + 零点能 + 经验校正
+</div>
+<p><b>假设</b>：高阶相关效应（CCSD(T) 相对 MP2 的改进）对基组不敏感，所以可以用小基组算这个"差值"。</p>
+<table>
+<tr><th style="width:150px">方法</th><th>典型精度（原子化能）</th></tr>
+<tr><td><b>G3 / G4</b></td><td>约 1 kcal/mol</td></tr>
+<tr><td><b>CBS-QB3</b></td><td>约 1.1 kcal/mol（Gaussian 里最常用）</td></tr>
+<tr><td><b>W1 / W2</b></td><td>&lt; 0.5 kcal/mol（非常贵）</td></tr>
+</table>
+<p>Gaussian 里直接写 <code>#p G4</code> 或 <code>#p CBS-QB3</code>，程序自动跑完整个流程。<span class="key">做热化学（生成焓、键解离能）时这是标准工具。</span></p>
+</div>
+</section>
+
+<section class="slide" id="p44">
+<h2><span class="pno">p44</span>各种"密度"</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<p><b>密度</b>指的是某个性质在空间中的连续分布。常见的感兴趣的密度有：</p>
+<p><b>概率密度</b>：<i>p</i>(<i>x</i>,<i>y</i>,<i>z</i>) = |<i>ψ</i>(<i>x</i>,<i>y</i>,<i>z</i>)|²</p>
+<p><b>电子密度</b>：<i>ρ</i>(<b>r</b>) = <i>N</i>∫∫⋯∫ |Ψ(<b>r</b>,<b>r</b>₂,<b>r</b>₃,…,<b>r</b><sub><i>N</i></sub>)|² d³<i>r</i>₂ d³<i>r</i>₃ ⋯ d³<i>r</i><sub><i>N</i></sub></p>
+<p><b>自旋密度</b>：<i>σ</i>(<b>r</b>) = <i>ρ</i><sub>↑</sub>(<b>r</b>) − <i>ρ</i><sub>↓</sub>(<b>r</b>)</p>
+<p><b>电荷密度</b>：<i>ρ</i><sub>C</sub>(<b>r</b>) = <i>Ne</i>∫∫⋯∫ |Ψ(<b>r</b>,<b>r</b>₂,…,<b>r</b><sub><i>N</i></sub>)|² d³<i>r</i>₂⋯d³<i>r</i><sub><i>N</i></sub></p>
+<p>（三张图：映射了静电势的电子等密度面；修饰硅表面的电荷密度图；氧化铈中氧空位周围的自旋密度）</p>
+</div>
+
+<h3 class="fm">公式解析 · 电子密度</h3>
+<div class="fml"><span class="tag">★ 电子密度（唯一可以被实验直接测量的量）</span>
+<i>ρ</i>(<b>r</b>) = <i>N</i> ∫ |Ψ(<b>r</b>, <b>r</b><sub>2</sub>, …, <b>r</b><sub><i>N</i></sub>)|² d<b>r</b><sub>2</sub> ⋯ d<b>r</b><sub><i>N</i></sub>
+</div>
+<table class="vars">
+<tr><th>符号</th><th>名称</th><th>含义</th></tr>
+<tr><td><i>ρ</i>(<b>r</b>)</td><td>电子密度</td><td><span class="key">在空间点 <b>r</b> 处，单位体积内的电子数</span>。单位 e/Bohr³ 或 e/Å³</td></tr>
+<tr><td><b>因子 <i>N</i></b></td><td>电子总数</td><td><span class="key">为什么要乘 <i>N</i>：因为积分后得到的是"某<b>一个</b>电子在 <b>r</b> 的概率"，而电子不可区分，任何一个都可能在那 ⟹ 乘以 <i>N</i></span></td></tr>
+<tr><td>∫d<b>r</b><sub>2</sub>⋯d<b>r</b><sub><i>N</i></sub></td><td>积掉其余电子</td><td><span class="key">只保留电子 1 的坐标 <b>r</b>，把其他 <i>N</i>−1 个电子的坐标全部积掉</span>——这个操作叫"约化"</td></tr>
+<tr><td><i>ρ</i><sub>↑</sub>, <i>ρ</i><sub>↓</sub></td><td>α/β 自旋密度</td><td>分别只数自旋向上/向下的电子</td></tr>
+</table>
+<div class="warn"><span class="lab">这一页的核心信息：从 3<i>N</i> 维降到 3 维</span>
+<table>
+<tr><th style="width:170px">对象</th><th style="width:150px">变量数</th><th>可观测？</th></tr>
+<tr><td><b>波函数</b> Ψ</td><td class="c"><b>3<i>N</i></b>（苯：3×42 = 126）</td><td class="c" style="color:#c0392b">✘ 不可观测</td></tr>
+<tr><td><b>电子密度</b> <i>ρ</i>(<b>r</b>)</td><td class="c"><b>3</b>（永远是 3）</td><td class="c" style="color:#2c6e4f"><span class="key">✔ X 射线衍射直接测</span></td></tr>
+</table>
+<p><span class="key">这个巨大的降维正是 DFT 的立身之本</span>（第 1 讲 p9 的 Hohenberg–Kohn 定理：基态的一切性质都由 <i>ρ</i>(<b>r</b>) 唯一决定）。</p>
+</div>
+<h3>讲解 · 四种密度各对应什么实验</h3>
+<table>
+<tr><th style="width:150px">密度</th><th style="width:190px">物理含义</th><th>对应实验 / 用途</th></tr>
+<tr><td><b>电子密度</b> <i>ρ</i></td><td>电子在哪里</td><td><span class="key">X 射线衍射</span>；分子体积、静电势、AIM 拓扑分析</td></tr>
+<tr><td><b>自旋密度</b> <i>σ</i></td><td><span class="key">未成对电子在哪里</span></td><td><b>EPR 超精细耦合</b>、中子衍射、磁性材料</td></tr>
+<tr><td><b>电荷密度</b> <i>ρ</i><sub>C</sub></td><td>电子密度 × 电荷 <i>e</i></td><td>静电势、偶极矩</td></tr>
+<tr><td><b>差分密度</b><br><i>ρ</i>(分子) − Σ<i>ρ</i>(原子)</td><td><span class="key">成键引起的电子重排</span></td><td>直观展示"化学键在哪里、电子往哪流"</td></tr>
+</table>
+<div class="ext"><span class="lab">拓展 · 你在作业里会画的几种图</span>
+<table>
+<tr><th style="width:210px">图</th><th>怎么看</th></tr>
+<tr><td><b>ESP 映射的等密度面</b><br>（p44 第一张图）</td><td>先画一个电子密度等值面（通常 0.001 e/Bohr³，代表"分子表面"），再把<b>静电势</b>用颜色映射上去。<span class="key">红色 = 负电位（亲电试剂喜欢去的地方）；蓝色 = 正电位（亲核试剂的靶点）</span></td></tr>
+<tr><td><b>自旋密度</b><br>（p44 第三张图）</td><td>正值区（一种颜色）= α 电子多；负值区 = β 电子多。<span class="key">做 BS-DFT 时看两个金属中心的自旋是不是一正一负</span></td></tr>
+<tr><td><b>轨道等值面</b></td><td><b>注意：这画的是 <i>ψ</i> 本身，不是 |<i>ψ</i>|²</b>——所以有红蓝两色代表相位正负</td></tr>
+<tr><td><b>RDG / NCI 图</b></td><td>约化密度梯度分析，用来<b>可视化弱相互作用</b>（蓝=氢键，绿=范德华，红=位阻排斥）。Multiwfn 的招牌功能</td></tr>
+</table>
+</div>
+</section>
+
+<section class="slide" id="p45">
+<h2><span class="pno">p45</span>实践练习</h2>
+<div class="tr"><span class="lab">原文翻译</span>
+<ol>
+<li>打开 GAUSSVIEW（本地或远程 HPC）</li>
+<li>画一个小分子，例如<b>乙烷</b>或<b>乙烯</b></li>
+<li>设置 Gaussian 计算：严格收敛的几何优化；自旋非限制 DFT，PBE 泛函；超细格点；计算振动频率；检查计算正常且几何处于全局极小</li>
+<li>用 Gaussian 打开检查点文件并可视化：总电子密度、alpha 自旋密度；检查原子电荷、键级、振动频率</li>
+<li>用<b>若干不同基组</b>对同一分子做单点能计算，作图 "总能量 = f(基组大小)"</li>
+<li>用 <b>cc-pVTZ</b> 基组和下列相关方法对同一分子做单点能计算：<b>MP2、MP3、MP4、CCSD、CCSD(T)、CCSDT、CISD、CISDT</b>，作图 "总能量 = f(计算方法)"。所有计算用<b>相同核数</b>，记录每个方法所需时间，作图 "总时间 = f(计算方法)"</li>
+<li>检查考虑电子相关方法后原子电荷、键级等的变化，并与最先做的 UHF 计算比较</li>
+<li>评估<b>乙烷 + 水</b>体系所需的 counterpoise 校正。水的氧原子放在四条 C–H–O 连线中任意一条上、距离 2.0 Å 处（即乙烷的 H 距水的 O 为 2.0 Å）</li>
+</ol>
+</div>
+<h3>讲解 · 这几个任务各自在验证本讲的哪个知识点</h3>
+<table>
+<tr><th class="c" style="width:60px">任务</th><th style="width:190px">你会看到什么</th><th>对应本讲哪一页</th></tr>
+<tr><td class="c"><b>5</b></td><td><span class="key">能量随基组增大<b>单调下降</b>，且逐渐饱和</span></td><td><b>p5</b>（变分原理 + 收益递减）</td></tr>
+<tr><td class="c"><b>6a</b></td><td>能量随相关水平提高而下降；<span class="key">但 MP3、MP5 可能出现<b>非单调</b>行为</span></td><td><b>p39</b>（MPn 不单调收敛）</td></tr>
+<tr><td class="c"><b>6b</b></td><td><b>时间呈爆炸式增长</b>：CCSDT 可能是 MP2 的几百倍</td><td><b>p40</b>（标度表）</td></tr>
+<tr><td class="c"><b>7</b></td><td>相关方法后电荷通常<span class="key">变得<b>不那么极化</b></span>（HF 高估离子性，见 p19）</td><td><b>p19</b>（HF 有 50% 离子成分）</td></tr>
+<tr><td class="c"><b>8</b></td><td><span class="key">CP 校正会让结合能变<b>小</b>（更弱）</span></td><td><b>p37–38</b>（BSSE）</td></tr>
+</table>
+<div class="warn"><span class="lab">做任务 6 前必读的三个提醒</span>
+<ol>
+<li><b>先估算时间</b>。乙烷 (C₂H₆) 在 cc-pVTZ 下 <i>N</i><sub>basis</sub> ≈ 144。<span class="key">CCSDT 是 O(<i>N</i>⁸)——可能要跑很久甚至跑不完。<b>建议改用乙烯或先用 cc-pVDZ 试跑。</b></span></li>
+<li><b>用 <code>freeze core</code>（默认开启）</b>：不激发内层 1s 电子。这几乎不影响结果但省很多时间。Gaussian 默认就是这样，写 <code>full</code> 才会包含内层。</li>
+<li><b>要公平比较时间，必须</b>：同样的核数、同样的 <code>%Mem</code>、同样的几何、同样的基组。<span class="key">从 log 文件末尾的 <code>Job cpu time:</code> 一行读取时间。</span></li>
+</ol>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7">grep 'SCF Done'          *.log     # HF 能量
+grep 'EUMP2'             *.log     # MP2 总能量
+grep 'CCSD(T)='          *.log     # CCSD(T) 总能量
+grep 'Job cpu time'      *.log     # 各方法耗时</pre>
+</div>
+<div class="ext"><span class="lab">任务 8 的具体做法（Gaussian counterpoise 输入）</span>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto">%Mem=8GB
+%NProcShared=8
+#p mp2/6-31G(d,p) counterpoise=2
+
+ethane + water BSSE
+
+0,1 0,1 0,1                    &lt;- 总体 / 片段1 / 片段2 的电荷,多重度
+C(Fragment=1)   0.000  0.000  0.000
+C(Fragment=1)   1.530  0.000  0.000
+H(Fragment=1)  -0.360  1.020  0.000
+... (乙烷其余原子, 都标 Fragment=1)
+O(Fragment=2)  -0.360  3.020  0.000     &lt;- 距某个 H 为 2.0 Å
+H(Fragment=2)  ...
+H(Fragment=2)  ...
+
+</pre>
+<p><b>输出里会打印</b>：</p>
+<pre style="background:#f5f5f2;border:1px solid #e3e0da;border-radius:6px;padding:10px;font-family:var(--mono);font-size:12.5px;line-height:1.7">Counterpoise: corrected energy =     -xxx.xxxxxx
+Counterpoise: BSSE energy =             0.00xxx     &lt;- 这就是 BSSE 大小
+Counterpoise corrected E =           ...</pre>
+<p><span class="key">预期结果：BSSE 在 6-31G(d,p) 下约 0.5–1.5 kcal/mol，而乙烷-水的相互作用本身只有约 1–2 kcal/mol（很弱的 C–H···O）——<b>BSSE 和真实相互作用同量级！</b></span>这正是 p37 想让你亲眼看到的东西。</p>
+</div>
+</section>
+
+<section class="slide" id="sum">
+<h2>本讲小结</h2>
+<h3>一、一张图看懂全讲</h3>
+<figure>
+<svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,PingFang SC,sans-serif">
+<defs><style>.s{font-size:11px;fill:#6b6b70}.t{font-size:12px;fill:#1c1c1e}.h{font-size:12px;font-weight:700}</style>
+<marker id="a9" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#6b6b70"/></marker></defs>
+<rect x="185" y="18" width="170" height="34" rx="6" fill="#fdeeee" stroke="#c0392b" stroke-width="1.5"/>
+<text x="270" y="33" class="h" text-anchor="middle" fill="#c0392b">HF 丢掉了电子相关</text>
+<text x="270" y="47" class="s" text-anchor="middle">E_corr = E_exact − E_HF ≈ 1%</text>
+<line x1="270" y1="54" x2="270" y2="74" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<rect x="200" y="76" width="140" height="28" rx="5" fill="#f7f9fc" stroke="#9aa5b1"/>
+<text x="270" y="95" class="t" text-anchor="middle">相关分成两类</text>
+<line x1="230" y1="106" x2="150" y2="128" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<line x1="310" y1="106" x2="392" y2="128" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<rect x="35" y="130" width="200" height="46" rx="6" fill="#fff8ee" stroke="#b3541e" stroke-width="1.5"/>
+<text x="135" y="148" class="h" text-anchor="middle" fill="#b3541e">静态相关</text>
+<text x="135" y="166" class="s" text-anchor="middle">几个组态权重相当（简并、断键）</text>
+<rect x="305" y="130" width="200" height="46" rx="6" fill="#f2f7f4" stroke="#2c6e4f" stroke-width="1.5"/>
+<text x="405" y="148" class="h" text-anchor="middle" fill="#2c6e4f">动态相关</text>
+<text x="405" y="166" class="s" text-anchor="middle">海量组态，每个权重都很小</text>
+<line x1="135" y1="178" x2="135" y2="198" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<line x1="405" y1="178" x2="405" y2="198" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<rect x="35" y="200" width="200" height="46" rx="6" fill="#fff" stroke="#b3541e" stroke-width="1.2"/>
+<text x="135" y="219" class="t" text-anchor="middle" font-weight="700">CASSCF / MCSCF</text>
+<text x="135" y="236" class="s" text-anchor="middle">同时优化组态系数和轨道</text>
+<rect x="305" y="200" width="200" height="46" rx="6" fill="#fff" stroke="#2c6e4f" stroke-width="1.2"/>
+<text x="405" y="219" class="t" text-anchor="middle" font-weight="700">MP2 / CCSD(T)</text>
+<text x="405" y="236" class="s" text-anchor="middle">在单个参考态上加激发</text>
+<line x1="135" y1="248" x2="230" y2="268" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<line x1="405" y1="248" x2="310" y2="268" stroke="#6b6b70" stroke-width="1.2" marker-end="url(#a9)"/>
+<rect x="180" y="268" width="180" height="26" rx="5" fill="#eef4fb" stroke="#0b5ea8" stroke-width="1.4"/>
+<text x="270" y="286" class="t" text-anchor="middle" font-weight="700">两者都要：CASPT2 / NEVPT2</text>
+</svg>
+</figure>
+
+<h3>二、必须记住的公式与结论</h3>
+<table>
+<tr><th style="width:180px">内容</th><th style="width:100px">页码</th><th>要点</th></tr>
+<tr><td><b>相关能定义</b></td><td class="c">p3</td><td><i>E</i><sub>corr</sub> = <i>E</i><sub>exact</sub> − <i>E</i><sub>HF</sub> &lt; 0；约占总能量 1%，但与化学键能同量级</td></tr>
+<tr><td><b>静态 vs 动态</b></td><td class="c"><b>p4</b></td><td><span class="key">静态：单行列式原理上不够（简并/断键）→ CASSCF<br>动态：瞬时躲避 → MP2/CC</span></td></tr>
+<tr><td><b>Brillouin 定理</b></td><td class="c">p16, p25</td><td>⟨Ψ<sub>HF</sub>|<i>Ĥ</i>|Ψ<sub><i>i</i></sub><sup><i>r</i></sup>⟩ = 0 ⟹ <b>MP2 里没有单激发项</b></td></tr>
+<tr><td><b>双激发是主力</b></td><td class="c">p16</td><td>Ne 的权重：参考 0.96、双激发 0.034、单激发 0.001</td></tr>
+<tr><td><b>CI 展开 H₂</b></td><td class="c"><b>p19</b></td><td>Ψ<sub>FCI</sub> = (<i>a</i>₀+<i>a</i>₁)[离子] + (<i>a</i>₀−<i>a</i>₁)[共价]；<i>R</i>→∞ 时 <i>a</i>₁ = −<i>a</i>₀ ⟹ 离子项归零</td></tr>
+<tr><td><b>尺寸一致性</b></td><td class="c"><b>p22</b></td><td>截断 CI ✘；CC ✔（因为 e<sup><i>T</i><sub>A</sub>+<i>T</i><sub>B</sub></sup> = e<sup><i>T</i><sub>A</sub></sup>e<sup><i>T</i><sub>B</sub></sup>）</td></tr>
+<tr><td><b>CC 拟设</b></td><td class="c"><b>p24</b></td><td>Ψ<sub>CC</sub> = e<sup><i>T</i></sup>Ψ₀，隐含高阶激发（½<i>T</i>₂² 等）</td></tr>
+<tr><td><b>MP2 公式</b></td><td class="c"><b>p36</b></td><td>分子 = 反对称化双电子积分平方；<span class="key">分母 = <i>ε</i><sub><i>i</i></sub>+<i>ε</i><sub><i>j</i></sub>−<i>ε</i><sub><i>a</i></sub>−<i>ε</i><sub><i>b</i></sub>，简并时发散</span></td></tr>
+<tr><td><b>BSSE</b></td><td class="c">p37–38</td><td>基函数互相借用 ⟹ 高估结合；Counterpoise + 幽灵原子</td></tr>
+<tr><td><b>标度</b></td><td class="c"><b>p40</b></td><td>HF <i>N</i>⁴ · MP2 <i>N</i>⁵ · CCSD <i>N</i>⁶ · <b>CCSD(T) <i>N</i>⁷</b> · FCI <i>N</i>!</td></tr>
+</table>
+
+<h3>三、最可能考的概念题</h3>
+<table>
+<tr><th style="width:44%">问题</th><th>答题要点</th></tr>
+<tr><td><b>定义相关能，说明它为什么重要</b></td><td><i>E</i><sub>corr</sub> = <i>E</i><sub>exact</sub>−<i>E</i><sub>HF</sub>；只占 1% 但与键能同量级（p3）</td></tr>
+<tr><td><b>区分静态相关与动态相关，各举一例</b></td><td>静态：H₂ 解离、B 原子、过渡金属 → CASSCF；动态：所有体系的瞬时躲避 → MP2/CC（p4）</td></tr>
+<tr><td><b>RHF 为什么把 H₂ 解离成离子？CI 怎么修复？</b></td><td>单行列式锁死 50% 离子项；混入 <i>σ</i><sub><i>u</i></sub>² 后系数变成 (<i>a</i>₀±<i>a</i>₁)，<i>R</i>→∞ 时离子项归零（p19–20）</td></tr>
+<tr><td><b>什么是尺寸一致性？为什么 CISD 没有而 CCSD 有？</b></td><td><i>E</i>(A+B) = <i>E</i>(A)+<i>E</i>(B)；CI 是 (1+<i>T</i>) 缺交叉项，CC 是 e<sup><i>T</i></sup> 自动分解成乘积（p22–23）</td></tr>
+<tr><td><b>CISD 和 CCSD 计算量相同，为何 CCSD 好得多？</b></td><td>CCSD 通过 ½<i>T</i>₂² 隐含四激发；96.05% vs 99.75%（p39）</td></tr>
+<tr><td>MP2 为什么没有单激发贡献？</td><td>Brillouin 定理（p25, p36）</td></tr>
+<tr><td><b>MP2 什么时候会失败？为什么？</b></td><td>近简并时二阶公式分母趋零 ⟹ 发散（p35, p39）</td></tr>
+<tr><td>什么是 BSSE？怎么校正？</td><td>基函数互借；Counterpoise，三次计算都用完整基组 + 幽灵原子（p37–38）</td></tr>
+<tr><td>为什么 CCSD(T) 是"黄金标准"？</td><td>99.99% 相关能，<i>N</i>⁷ 非迭代三激发，误差抵消好；<span class="key">但对多参考体系失败</span>（p27, p39）</td></tr>
+<tr><td><b>为什么"更高的相关水平"不保证更准的性质？</b></td><td>变分原理只管能量；误差抵消（p5, p41–42）</td></tr>
+<tr><td>什么是 CBS 外推？为什么相关能收敛比 HF 慢？</td><td>指数 vs 幂律 <i>A</i>/<i>n</i>³；根源是电子尖点无法用原子中心基组描述（p43）</td></tr>
+</table>
+
+<h3>四、四讲串起来的一条主线</h3>
+<table>
+<tr><th class="c" style="width:80px">讲</th><th>它在整条链上的位置</th></tr>
+<tr><td class="c"><b>第 1 讲</b></td><td>为什么算得慢（硬件、标度、存储层级）+ 精度阶梯的总览</td></tr>
+<tr><td class="c"><b>第 2 讲</b></td><td>建立近似的层层递进：BO → 轨道近似 → Slater 行列式 → <b>平均场 (HF)</b> → LCAO</td></tr>
+<tr><td class="c"><b>第 3 讲</b></td><td>把 HF 真正<b>做出来</b>：变分原理、SCF、基组、收敛技巧；并指出 HF 在哪些体系上原理性失效</td></tr>
+<tr><td class="c"><b>第 4 讲</b></td><td><span class="key">撤销第 2 讲的第 4 步——把平均场丢掉的相关能补回来</span></td></tr>
+</table>
+</section>
+
+<footer>
+CM5235 复习解析 · 第 4 讲　|　源文件：<code>CM5235_Lecture_04.pdf</code>（45 页）<br>
+上一讲：<a href="L03-变分原理与SCF实现.html">第 3 讲　软件工具、变分原理、SCF 与基组</a>　·
+下一讲：<a href="L05-密度泛函理论DFT.html">第 5 讲　密度泛函理论 (DFT)</a>　·
+<a href="index.html">总目录</a>
+</footer>
+
+
+
+</div>
+</body>
+</html>

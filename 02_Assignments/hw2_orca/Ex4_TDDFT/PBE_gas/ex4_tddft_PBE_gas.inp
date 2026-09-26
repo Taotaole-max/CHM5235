@@ -1,0 +1,16 @@
+# Ex4  2-chlorophenol  TD-DFT, first 5 excited states  --  PBE/def2-TZVP, gas phase
+# Geometry: the optimized structure of the same method in Ex1, copied here by ex4_run_one_method.pbs
+# as ex4_input_geometry_from_ex1_PBE_gas.xyz.
+# RKS instead of UKS: the molecule is closed-shell, so the ground state is identical, and TD-DFT on
+# RKS gives pure singlet states. With UKS the 5 roots would mix in triplets (zero oscillator
+# strength) and the UV spectrum would lose peaks.
+! RKS PBE def2-TZVP def2/J TightSCF
+
+%maxcore 6000
+
+%tddft
+  NRoots 5        # first 5 excited states
+  TDA    false    # full TD-DFT instead of the Tamm-Dancoff approximation: better oscillator strengths
+end
+
+* xyzfile 0 1 ex4_input_geometry_from_ex1_PBE_gas.xyz

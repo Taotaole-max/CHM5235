@@ -23,6 +23,7 @@
 | `04_Projects/` | 课程项目或课题相关计算 |
 | `05_Papers_References/` | 相关文献、综述、方法论文的笔记与 PDF（大文件建议不入库，见下） |
 | `06_Cheatsheets/` | 命令速查（`pbs.md` PBS 调度、`tools.md` 工具清单）、单位换算等 |
+| `07_Exam_Review/` | 期中复习：L1–L6 逐页解析网页和 PDF、题库、开卷知识点汇总 |
 | `scratch/` | 临时计算文件（已在 .gitignore 中忽略，不会提交） |
 
 `03_Software_Methods/` 下四个软件目录对应课程四次作业，每个目录建议包含：
