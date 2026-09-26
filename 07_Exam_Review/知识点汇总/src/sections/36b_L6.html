@@ -1,0 +1,91 @@
+<h2 id="s6.8">§6.8 轨道定域化<span class="en">orbital localization</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">MOs as such are mostly used for building the various integrals involved in post-HF energy and property calculations. They can be plotted, and the plots look pretty. Localization: The Slater determinant is invariant under an arbitrary unitary transformation of molecular orbitals – they may be mixed the way we see fit.</span><span class="zh">行列式在占据轨道的任意幺正变换下不变（{{p:s3.7}}）⇒ 可以把正则轨道"混"成定域轨道。[L6 p12]{{ix:Localized orbitals|定域轨道}}</span></div>
+<table>
+<tr><th>判据 [L6 p12–13]</th><th>最大化什么</th><th>式子</th></tr>
+<tr><td><b>Boys</b>{{ix:Boys localization|Boys 定域化}}</td><td>轨道<b>质心之间的距离</b>（等价于使轨道弥散度最小）</td><td>$\{\varphi_i^{loc}\}=\arg\max\sum_{ij}\left[\langle\varphi_i|\vec r|\varphi_i\rangle-\langle\varphi_j|\vec r|\varphi_j\rangle\right]^2$</td></tr>
+<tr><td><b>Edmiston–Ruedenberg</b></td><td>轨道<b>自排斥能</b></td><td>$\arg\max\sum_i\langle\varphi_i\varphi_i|r^{-1}|\varphi_i\varphi_i\rangle$</td></tr>
+<tr><td><b>Pipek–Mezey</b>{{ix:Pipek–Mezey localization|Pipek–Mezey 定域化}}</td><td>各原子上<b>密度平方和</b>（Mulliken 布居平方和）</td><td>$\arg\max\sum_n|\rho_n|^2$</td></tr>
+</table>
+<div class="row">
+<div style="flex:1">
+<ul class="small">
+<li>Boys 与 ER 结果通常相似。</li>
+<li><b>PM 保持 σ/π 分离</b>（如乙烯）；Boys/ER 会把双键的 σ、π 混成两根"<b>香蕉键</b>"（banana bonds，定域化的常见假象）。{{ix:Banana bonds|香蕉键}}</li>
+</ul>
+<div class="box def"><span class="lab">原句</span><span class="en">N.B. Although they still produce the same Slater determinant, the localized orbitals are no longer eigenfunctions of the SCF operator – there is no such thing as the "energy of a localized orbital".</span><span class="zh">定域轨道给出同一个行列式，但不再是 Fock 算符的本征函数——<b>定域轨道没有"轨道能"</b>。[L6 p13]</span></div>
+</div>
+<figure style="flex:1"><img src="img/L6_p13_loc.png"><figcaption>[L6 p13] 香蕉键；乙烯的正则 MO、PM 和 Boys 定域轨道</figcaption></figure>
+</div>
+
+<h2 id="s6.9">§6.9 用定域轨道做 HF 与后 HF<span class="en">local correlation</span></h2>
+<p>定域化减少轨道间重叠 → 零或近零的双电子积分增多 → 用定域轨道表述的量化方法效率更高 [L6 p14]。</p>
+<table class="small">
+<tr><th>近似</th><th>内容</th></tr>
+<tr><td>近似 1</td><td>激发限制为<b>局域</b>激发</td></tr>
+<tr><td>近似 2</td><td>忽略<b>远距离</b>定域轨道对之间的相关</td></tr>
+</table>
+<p>两者物理上合理：<b>电子相关随距离迅速衰减</b>。通常保留 <b>&gt;95%</b> 的相关能（DLPNO-CCSD(T)、LMP2 就是这个思路，补充）。{{ix:Local correlation methods|定域相关方法}}</p>
+
+<h2 id="s6.10">§6.10 相对论效应：为什么重元素要改 Hamiltonian<span class="en">relativistic effects</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Einstein's relativity theory postulated that: speed of light c is constant in all inertia systems (~137.036 a.u.); all physical laws are the same in all inertia systems; space coordinates (x,y,z) and time (t) are four coordinates of a single space-time framework, and therefore, are equivalent to each other; Lorentz transformations allow to relate the coordinates between two inertia systems. … Schrodinger equation is NOT relativistically correct: space coordinates are described by second derivative, while time – at first derivative.</span><span class="zh">Schrödinger 方程对空间是二阶导、对时间是一阶导 → 空间和时间地位不对等 → 不满足相对论。a.u. 中 c ≈ 137.036。[L6 p15]{{ix:Relativistic effects|相对论效应}}</span></div>
+<div class="fcard"><span class="ft">相对论质量 [L6 p15]</span>
+$$m=m_0\left(\sqrt{1-\frac{v^2}{c^2}}\right)^{-1},\qquad \langle v_{1s}\rangle\approx Z\ \text{a.u.}\ \Rightarrow\ \frac vc\approx\frac{Z}{137}\quad(\text{补充})$$
+<p class="small">快速运动的电子（如 1s）质量比价电子大 → 1s 轨道<b>收缩</b>（Bohr 半径 ∝ 1/m）。例（补充）：Au（Z = 79）1s 的 v/c ≈ 0.58，质量增加约 22%。</p></div>
+<div class="box fix"><span class="lab">讲义 p15 最后一句只对了一半</span>讲义："This leads to a contraction of the 1s orbital, which in turn, leads to a 'lower effective nuclear charge' felt by outer electrons → outer orbitals get slightly more diffuse." 实际：
+<table class="small">
+<tr><th></th><th>作用对象</th><th>结果</th></tr>
+<tr><td><b>直接效应</b></td><td>所有 s 和 p<sub>1/2</sub> 轨道，<b>包括价层 6s</b>（s 电子在核附近有穿透部分，那里速度很高，{{p:s2.10}}）</td><td><b>收缩</b>、能量降低</td></tr>
+<tr><td><b>间接效应</b></td><td>d 和 f 轨道（离心势垒大，到不了核附近）</td><td>收缩的 s/p 把核屏蔽得更好 → d/f 感受的有效核电荷更小 → <b>扩张</b>、能量升高（= 讲义说的"变弥散"）</td></tr>
+</table>
+<p class="small">化学后果（补充）：金是黄色（6s 降、5d 升 → 5d→6s 跃迁降到约 2.4 eV，吸收蓝光）；汞常温为液体（6s² 很紧，金属键弱）；Au 电子亲和能大（Cs⁺Au⁻）；惰性电子对效应（Tl⁺、Pb²⁺、Bi³⁺）。</p></div>
+
+<h2 id="s6.11">§6.11 Dirac 方程<span class="en">Dirac equation</span></h2>
+<div class="fcard"><span class="ft">[L6 p16–17]</span>{{ix:Dirac equation|狄拉克方程}}
+$$\left[c\,\boldsymbol\alpha\cdot\mathbf p+\beta mc^2\right]\Psi=i\frac{\partial\Psi}{\partial t},\qquad \alpha_{x,y,z}=\begin{pmatrix}0&\sigma_{x,y,z}\\\sigma_{x,y,z}&0\end{pmatrix},\quad \beta=\begin{pmatrix}\mathbf I&0\\0&-\mathbf I\end{pmatrix}$$
+$$\sigma_x=\begin{pmatrix}0&1\\1&0\end{pmatrix},\ \sigma_y=\begin{pmatrix}0&-i\\i&0\end{pmatrix},\ \sigma_z=\begin{pmatrix}1&0\\0&-1\end{pmatrix}\ (\text{Pauli 矩阵});\qquad \Psi=\begin{pmatrix}\psi_1\\\psi_2\\\psi_3\\\psi_4\end{pmatrix}=\begin{pmatrix}\Psi^L\\\Psi^S\end{pmatrix}$$
+<p class="small">解是<b>四分量</b>波函数：大分量 $\Psi^L$（电子）+ 小分量 $\Psi^S$。对空间和时间都是<b>一阶</b>导数。自旋在 Dirac 方程中<b>自然出现</b>（补充）。</p></div>
+<div class="row">
+<figure style="flex:1.2"><img src="img/L6_p17_dirac.png"><figcaption>[L6 p17] 非相对论与相对论能谱：相对论解多出能量在 −2mc² 以下的<b>正电子</b>连续谱</figcaption></figure>
+<div class="small" style="flex:1"><p>$mc^2\approx0.511$ MeV；H 中电子结合能 $1.36\times10^{-5}$ MeV——化学能量比 $mc^2$ 小五个数量级。为把相对论能量零点与非相对论对齐，可用 $\beta'=\begin{pmatrix}0&0\\0&-2\mathbf I\end{pmatrix}$ 代替 β（扣除静止能）。</p>
+<p>Dirac 算符中的动能项 $c\,\boldsymbol\alpha\cdot(\mathbf p+\mathbf A)+\beta mc^2$，A 为矢势（外电场、磁场）[L6 p19]。</p></div>
+</div>
+
+<h2 id="s6.12">§6.12 两分量近似：标量相对论与自旋–轨道耦合<span class="en">Pauli–Dirac, DKH, ZORA</span></h2>
+<div class="fcard"><span class="ft">只求大分量：Pauli–Dirac 方程 [L6 p18]</span>{{ix:Scalar relativistic effects|标量相对论效应}}{{ix:Spin–orbit coupling (SOC)|自旋-轨道耦合}}{{ix:Darwin term|Darwin 项}}{{ix:Mass–velocity term|质速项}}
+$$\left[\underbrace{\frac{p^2}{2m}+V}_{\text{动能 + 势能}}\ \underbrace{-\frac{p^4}{8m^3c^2}}_{\text{质速项}}+\underbrace{\frac{Z\,\mathbf s\cdot\mathbf l}{2m^2c^2r^3}}_{\text{自旋–轨道}}+\underbrace{\frac{Z\pi\,\delta(\mathbf r)}{2m^2c^2}}_{\text{Darwin}}\right]\Psi^L=E\Psi^L$$
+<p><b>标量相对论修正 = 质速项 + Darwin 项</b>（不含自旋，可以加到普通单分量程序里）。$\Psi^L$ 是两分量波函数（spinor）。</p></div>
+<table class="cmp">
+<tr><th>修正项</th><th>物理意义</th><th>影响</th></tr>
+<tr><td>质速（mass-velocity）</td><td>电子质量随速度增加</td><td>s/p 收缩、能量降低（主要化学后果都来自标量效应）</td></tr>
+<tr><td>Darwin</td><td>电子"颤动"（Zitterbewegung）使核处势能被抹平；只作用于核处（$\delta(\mathbf r)$）</td><td>只影响 s 轨道（只有 s 在核处不为零）</td></tr>
+<tr><td>自旋–轨道（SOC）</td><td>自旋与轨道角动量耦合（$\propto Z$，对重原子大）</td><td>能级劈裂（p → p<sub>1/2</sub>、p<sub>3/2</sub>）、磷光、系间窜越、重元素磁性、单重–三重混合</td></tr>
+</table>
+<table class="small">
+<tr><th>实际处理办法</th><th>要点</th></tr>
+<tr><td><b>DKH</b>（Douglas–Kroll–Hess）{{ix:Douglas–Kroll–Hess (DKH)|DKH 哈密顿量}}</td><td>把两分量 Dirac Hamiltonian 变换为"非相对论 + 各种修正项"（讲义 p18）；全电子</td></tr>
+<tr><td><b>ZORA</b>（零阶正则近似，补充）{{ix:ZORA|零阶正则近似}}</td><td>另一种两分量/标量近似，全电子；ORCA、ADF 常用（L5 p38 建议 6："search for DKH or ZORA keywords"）</td></tr>
+<tr><td><b>相对论 ECP</b>（补充）</td><td>把内层电子换成拟合了相对论全电子计算的势；最便宜、最常用（def2 系列对 Rb 之后自动带 ECP；LANL2DZ、SDD）</td></tr>
+<tr><td>基组（补充）</td><td>全电子相对论计算要用重新收缩的基组（DKH-def2、ZORA-def2、SARC、cc-pVnZ-DK）</td></tr>
+</table>
+
+<h2 id="s6.13">§6.13 相对论修正的 Hamiltonian 项<span class="en">relativistic correction terms</span></h2>
+<p class="small">多电子时势能项也要修改：非相对论 $V(r_{12})=q_1q_2/r_{12}$ → Coulomb–Breit：</p>
+$$V_{ee}^{Coulomb-Breit}(r_{12})=\frac{1}{r_{12}}-\frac{1}{2r_{12}}\left[\boldsymbol\alpha_1\cdot\boldsymbol\alpha_2+\frac{(\boldsymbol\alpha_1\cdot\mathbf r_{12})(\boldsymbol\alpha_2\cdot\mathbf r_{12})}{r_{12}^2}\right]$$
+<p class="small">$\boldsymbol\alpha_1\cdot\boldsymbol\alpha_2$ 项 = <b>Gaunt</b> 相互作用；整个方括号 = <b>Breit</b> 相互作用（磁相互作用 + 推迟效应）[L6 p19]。{{ix:Breit interaction|Breit 相互作用}}{{ix:Gaunt interaction|Gaunt 相互作用}}</p>
+<table class="small">
+<tr><th>[L6 p20–21]</th><th>项</th></tr>
+<tr><td>单电子</td><td>质速 $H_{mv}=-\frac{1}{8m^3c^2}\sum_ip_i^4$（无外场时也存在）；Zeeman（外磁场 $B_i$）；自旋–轨道 $H_{SO}$（外电场 $F_i$）；Darwin</td></tr>
+<tr><td>双电子</td><td>自旋–其他轨道（SOO）、自旋–自旋（SS，含 Fermi 接触型 δ 项）、轨道–轨道（OO）、双电子 Darwin、双电子 SO</td></tr>
+<tr><td>电子–核</td><td>核场中的 SO（$\propto Z_A$）、顺磁自旋–轨道 PSO（核自旋 $I_A$，NMR）、电子–核自旋–自旋（超精细，含 Fermi 接触项）、电子–核 Darwin</td></tr>
+</table>
+<p class="small">"It is not practical to add all these terms in the Hamiltonian. Instead, these terms can be accounted by perturbation." [L6 p21]</p>
+
+<h2 id="s6.14">§6.14 三维收敛：基组 × 相关 × 相对论<span class="en">convergence cube</span></h2>
+<div class="row">
+<figure style="flex:1.1"><img src="img/L6_p22_cube.png"><figcaption>[L6 p22] 基组（SZ → 6ZP）、电子相关（HF → FCI）、相对论（1C → 2C → 4C）三个方向</figcaption></figure>
+<div class="box why" style="flex:1"><span class="lab">怎么读</span><ul>
+<li>只沿基组轴 → <b>HF 极限</b>；</li>
+<li>基组 + 相关 → <b>"精确"非相对论结果</b>（FCI/CBS）；</li>
+<li>再沿相对论轴（1C 单分量标量 → 2C 含 SOC → 4C Dirac）→ <b>"精确"相对论结果</b>。</li>
+<li>三个方向误差大体独立，要同时收敛；只提高一个方向不能保证更准。{{ix:1C / 2C / 4C methods|单/双/四分量方法}}</li></ul></div>
+</div>

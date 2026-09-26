@@ -1,0 +1,106 @@
+<h2 id="s5.13">§5.13 磁耦合：Heisenberg–Dirac–van Vleck 模型<span class="en">magnetic couplings</span></h2>
+<div class="row">
+<figure style="flex:1.1"><img src="img/L5_p39_mag.png"><figcaption>[L5 p39] 两个 S = ½ 自旋：三重态（有磁性，外场下分裂成 M = +1, 0, −1）与单重态（无磁性）</figcaption></figure>
+<div style="flex:1">
+<div class="fcard"><span class="ft">[L5 p40]</span>{{ix:Heisenberg–Dirac–van Vleck Hamiltonian|海森堡哈密顿量}}{{ix:Magnetic exchange coupling J|磁交换耦合常数}}
+$$\hat H_{HDvV}=-2J\,\hat S_1\cdot\hat S_2=-J\left(\hat S_T^2-\hat S_1^2-\hat S_2^2\right)$$
+<p class="small">由 $\hat S_T^2=(\hat S_1+\hat S_2)^2=\hat S_1^2+\hat S_2^2+2\hat S_1\cdot\hat S_2$；$S_T=S_1+S_2,\dots,|S_1-S_2|$。</p>
+<p><b>J &gt; 0：铁磁</b>（ferromagnetic，高自旋基态）；<b>J &lt; 0：反铁磁</b>（antiferromagnetic，低自旋基态）。{{ix:Ferromagnetic / antiferromagnetic|铁磁 / 反铁磁}}</p></div>
+</div>
+</div>
+<div class="fcard"><span class="ft">两个 S = ½ 的能级 [L5 p41]</span>
+$$E(S_T=1)=-J\left[2-\tfrac34-\tfrac34\right]=-\tfrac12J,\qquad E(S_T=0)=-J\left[0-\tfrac32\right]=+\tfrac32J$$
+$$\text{检验：}-\tfrac12J\times3+\tfrac32J\times1=0\quad(\text{按 }2S+1\text{ 加权的重心为零});\qquad \Delta E_{ST}=E_T-E_S=-2J$$
+<p class="small">单重态设为 0 时三重态在 −2J；J &gt; 0 ⇒ $E_T<E_S$ ⇒ 铁磁。一般自旋：$E(S)=-J[S(S+1)-S_1(S_1+1)-S_2(S_2+1)]$，相邻能级间隔 $E(S)-E(S-1)=-2JS$（Landé 间隔规则，补充）。</p></div>
+<div class="box why"><span class="lab">和计算的联系</span>单重–三重能隙直接给出 J。CI 或多参考方法可以直接算两个态（"no issues … except that the correlated calculations are tedious"）。磁耦合决定低温和室温磁化率的差异（Boltzmann 布居，{{p:s2.2}}）。</div>
+
+<h2 id="s5.14">§5.14 为什么 DFT 不能直接算开壳层单重态<span class="en">magnetic couplings from DFT</span></h2>
+<table class="cmp">
+<tr><th>态 [L5 p42]</th><th>波函数</th><th>DFT 能否直接算</th></tr>
+<tr><td>三重态 $M_S=+1$</td><td>$\alpha(1)\alpha(2)$</td><td><b>一个</b> Slater 行列式 → 适合 DFT</td></tr>
+<tr><td>三重态 $M_S=0$</td><td>$\frac{1}{\sqrt2}[\alpha(1)\beta(2)+\beta(1)\alpha(2)]$</td><td>两个行列式</td></tr>
+<tr><td>单重态</td><td>$\frac{1}{\sqrt2}[\alpha(1)\beta(2)-\beta(1)\alpha(2)]$</td><td><b>两个</b> Slater 行列式 → 不适合 DFT</td></tr>
+</table>
+<div class="box def"><span class="lab">原句</span><span class="en">As result, the direct DFT might not be suitable for computing the singlet state. Broken symmetry (BS) approach was proposed to overcome this issue. In BS-DFT, the singlet wave function is not computed, but instead, the energy of one single determinant α(1)β(2) is evaluated. Parameter J is derived from the energy difference of two configurations.</span><span class="zh">BS-DFT 不算真正的单重态，而是算<b>单个行列式</b> α(1)β(2)（一个中心自旋翻转，$M_S=0$）的能量，再用它与高自旋态的能量差求 J。[L5 p42]</span></div>
+
+<h2 id="s5.15">§5.15 Broken-symmetry DFT 与 Yamaguchi 公式<span class="en">BS-DFT, Yamaguchi formula</span></h2>
+<div class="fcard"><span class="ft">行列式能量（{{p:s3.6}}）</span>
+$$E_{HS}=\langle1|h|1\rangle+\langle2|h|2\rangle+\langle12|12\rangle-\langle12|21\rangle,\qquad E_{BS}=\langle1|h|1\rangle+\langle2|h|2\rangle+\langle12|12\rangle$$
+$$E_{HS}-E_{BS}=-\langle12|21\rangle=-K_{12}\quad(\text{高自旋更低，差一个交换积分})$$</div>
+<div class="box fix"><span class="lab">讲义 p42 / p43 的符号笔误（按 p40 约定 $\hat H=-2J\hat S_1\cdot\hat S_2$，J &gt; 0 铁磁）</span>
+<p>p42 先写 $E_{HS}-E_{BS}=-2J$（把 BS 当作单重态，与 p41 一致），紧接着却写 $J=(E_{HS}-E_{BS})/2$——代入得 J = −J，自相矛盾。最右边的 $\langle12|21\rangle/2$ 是对的。<b>正确：</b></p>
+$$J=\frac{E_{BS}-E_{HS}}{2}=\frac{K_{12}}{2}\qquad(\text{BS 视作纯单重态})$$
+<p>p43 Yamaguchi 公式分子、分母顺序也反了。<b>正确（标准形式）：</b>{{ix:Yamaguchi formula|山口公式}}</p>
+$$J=\frac{E_{BS}-E_{HS}}{\langle S^2\rangle_{HS}-\langle S^2\rangle_{BS}}$$
+<p class="small">自检（考场用，不用死记）：铁磁体系 HS 更稳定 ⇒ $E_{BS}>E_{HS}$；又总有 $\langle S^2\rangle_{HS}>\langle S^2\rangle_{BS}$ ⇒ 分子分母都正 ⇒ J &gt; 0 ✓。讲义原式在同样情形给出 J &lt; 0，与 p40 约定矛盾。<b>若判断题直接照抄讲义公式，按讲义；若问物理/符号是否自洽，按订正。</b></p></div>
+<table>
+<tr><th>假设 [L5 p42–43]＋补充</th><th>$\langle S^2\rangle_{BS}$</th><th>Yamaguchi 分母</th><th>结果</th></tr>
+<tr><td>BS ≈ 纯单重态（磁轨道强重叠）</td><td>0</td><td>2 − 0 = 2</td><td>$J=(E_{BS}-E_{HS})/2$ ← p42 的结果（Ruiz/Bencini）</td></tr>
+<tr><td>BS ≈ ½ 单重态 + ½ 三重态（弱重叠）</td><td>1</td><td>2 − 1 = 1</td><td>$J=E_{BS}-E_{HS}$ ← Noodleman（一般 $S_1,S_2$：分母 $4S_1S_2$）{{ix:Noodleman formula|Noodleman 公式}}</td></tr>
+<tr><td>一般情形</td><td>实际计算值</td><td>$\langle S^2\rangle_{HS}-\langle S^2\rangle_{BS}$</td><td>Yamaguchi：在两极限间<b>自动插值</b>，用 ⟨S²⟩ 校正自旋污染</td></tr>
+</table>
+<div class="box why"><span class="lab">为什么弱重叠时差 2 倍</span>BS 行列式 $|\alpha\beta|=\frac{1}{\sqrt2}\left[\text{单重态}+\text{三重态}(M_S=0)\right]$，所以 $E_{BS}\approx\frac12(E_S+E_T)$，$E_{BS}-E_{HS}=\frac12(E_S-E_T)=\frac12\cdot2J=J$。BS 态本身就是<b>自旋污染</b>的混合态（$\langle S^2\rangle\approx1$，而纯单重态应为 0）。</div>
+<div class="box cond"><span class="lab">条件 / 注意</span>
+<ul><li>"For more general cases when $S_{1,2}\ge\frac12$ the above formula is not quite correct … must consider the larger value of the total spin" → 用 Yamaguchi [L5 p43]。</li>
+<li>要确认<b>自旋真的翻到了目标原子</b>（看 Mulliken 自旋布居），并检查 BS 态的 ⟨S²⟩（HW2 Ex5 的 Cu₂Cl₆²⁻，{{p:sH.2}}）。</li>
+<li>J 对泛函（HF 交换比例）很敏感；能量单位换算 1 Ha = 219 474.6 cm⁻¹。</li>
+<li>ORCA 实现了多种公式（易用）；Gaussian 也可以。</li></ul></div>
+
+<h2 id="s5.16">§5.16 激发态：传播子方法、RPA 与 TD-DFT<span class="en">propagator methods, TD-DFT</span></h2>
+<div class="fcard"><span class="ft">频率依赖的极化率 [L5 p44]</span>
+$$\alpha(\omega)=\sum_{n\ne0}\frac{|\langle\psi_0|\mathbf r|\psi_n\rangle|^2}{\omega-(E_n-E_0)}\quad(\text{讲义简写；分母为零处即激发能：极点})$$
+<p class="small">分子体系受线性振荡电场 $\mathbf E=\mathbf r\cos\omega t$ 作用。极化率在 $\omega=E_n-E_0$ 处发散 → 从响应函数的<b>极点</b>得到激发能，从留数得到跃迁强度（补充）。</p></div>
+<table class="small">
+<tr><th>方法 [L5 p44]</th><th>要点</th></tr>
+<tr><td>传播子方法（Green 函数、运动方程 EOM）{{ix:Propagator methods|传播子方法}}</td><td>求频率依赖的极化率，<b>不显式构造</b>激发态波函数 $\psi_n$</td></tr>
+<tr><td>RPA（无规相近似）{{ix:Random phase approximation (RPA)|无规相近似}}</td><td>计入单、双激发对 CI 矩阵元的影响，但不显式建 CI 波函数；可用于 HF 或 CASSCF；动态相关质量中等</td></tr>
+<tr><td><b>TD-DFT</b>{{ix:TD-DFT|含时密度泛函}}</td><td>DFT 版的 RPA：把"一个电子从占据轨道激发到虚轨道"当作对原体系的外加微扰来优化激发态</td></tr>
+</table>
+<div class="box def"><span class="lab">原句</span><span class="en">Of course, there is no actual "time-dependency" in the excited state calculations using TD-DFT. The term originates from the fact that TD-DFT equations started from solving the time-dependent Schrodinger equation, with subsequent making the so-called adiabatic approximation, which is equivalent to "losing time memory", i.e. no time-dependency.</span><span class="zh">TD-DFT 算激发态并没有真的"含时"；名字来自从含时方程出发，再做<b>绝热近似</b>（"失去时间记忆"）。[L5 p44]{{ix:Adiabatic approximation|绝热近似}}</span></div>
+<div class="box cond"><span class="lab">TD-DFT 好用的条件 [L5 p45]</span>
+<ol><li>基态能用<b>单个 Slater 行列式</b>很好描述；</li>
+<li>自旋污染小；</li>
+<li>只需要<b>低激发态</b>；</li>
+<li>合适的基组和密度积分网格；</li>
+<li>合适的色散校正。</li></ol>
+<p>"High excited states which are comparable to molecular ionization potentials are poorly described."（接近电离能的高激发态、Rydberg 态描述差）。并非所有软件都支持溶剂 + 相对论 + 色散的所有组合，也可能有 bug → 批判地分析结果。补充：<b>电荷转移激发能偏低</b> → 用长程校正泛函（{{p:s5.8}}）；双激发特征的态 TD-DFT（绝热近似）描述不了。</p></div>
+
+<div class="box trap"><span class="lab">L5 判断陷阱</span><ul>
+<li class="x">"HK 定理给出了精确的交换相关泛函形式。" <span class="r">只证明存在性；形式未知。</span></li>
+<li class="x">"KS 方程是对多电子问题的近似变换。" <span class="r">讲义：<b>精确</b>变换（exact transformation）；近似只在 $V_{xc}$。</span></li>
+<li class="x">"HK 定理同样保证激发态密度唯一决定外势。" <span class="r">HK 讲基态。</span></li>
+<li class="x">"用近似泛函算的 DFT 能量一定是精确能量的上界。" <span class="r">HK 变分原理针对精确泛函；近似泛函可以低于精确能量。</span></li>
+<li class="x">"DFT 是 ab initio 方法，没有经验参数。" <span class="r">讲义：杂化泛函的系数拟合实验数据 → "disqualifies DFT from the ab initio category"。</span></li>
+<li class="x">"DFT 可以像 CI 一样系统地改进。" <span class="r">波函数方法可以（加大 CI 展开），DFT 不清楚。</span></li>
+<li class="x">"B3LYP 能正确描述稀有气体二聚体的结合。" <span class="r">标准 DFT 缺色散，预测 He₂、Ne₂ 不稳定；要加 D3。</span></li>
+<li class="x">"HF 能描述色散。" <span class="r">HF 与标准 DFT 都不能 [L5 p35]。</span></li>
+<li class="x">"DFT 低估电荷转移复合物的结合能。" <span class="r">高估（乙烯–F₂ 高估 20 kcal/mol）。</span></li>
+<li class="x">"DFT 的氢键重原子距离偏长。" <span class="r">通常太短。</span></li>
+<li class="x">"HF 有自相互作用误差。" <span class="r">HF 中 J 与 K 的 i = j 项精确抵消；近似 DFT 才有。</span></li>
+<li class="x">"长程校正泛函在长程用 DFT 交换、短程用 HF 交换。" <span class="r">反过来：短程 DFT、长程精确 HF 交换。</span></li>
+<li class="x">"TD-DFT 能可靠描述接近电离能的高激发态。" <span class="r">描述差；只适合低激发态。</span></li>
+<li class="x">"TD-DFT 计算中波函数真的随时间演化。" <span class="r">绝热近似后没有时间依赖。</span></li>
+<li class="x">"开壳层单重态是一个 Slater 行列式，可以直接用 DFT 算。" <span class="r">需要两个行列式 → BS 方法。</span></li>
+<li class="x">"BS 态是纯单重态。" <span class="r">它是 $M_S=0$ 的单行列式，含三重态成分（自旋污染，⟨S²⟩≈1）。</span></li>
+<li class="x">"$\hat H=-2J\hat S_1\cdot\hat S_2$ 中 J &lt; 0 表示铁磁。" <span class="r">J &gt; 0 铁磁，J &lt; 0 反铁磁。</span></li>
+<li class="x">"两个 S = ½ 自旋的单重–三重能隙是 J。" <span class="r">$E_T-E_S=-2J$。</span></li>
+<li class="x">"镧系化合物可以直接用常规 DFT 处理 4f 电子。" <span class="r">讲义：只适合 4f-in-core 赝势。</span></li>
+<li class="x">"双自由基、多自由基最适合 DFT。" <span class="r">近简并 → 不太适合；单自由基可以。</span></li>
+<li class="o">"ρ(r) 无论电子数多少都只是三个变量的函数。"</li>
+<li class="o">"双杂化泛函用到虚轨道，计算标度 N⁵。"</li>
+</ul></div>
+
+<h2 id="s5.17">§5.17 L5 易混对照<span class="en">quick contrasts</span></h2>
+<table class="cmp">
+<tr><th>A</th><th>B</th><th>区别</th></tr>
+<tr><td>HK 第一定理</td><td>HK 第二定理</td><td>第一：基态 ρ ↔ 外势一一对应（存在性）；第二：密度变分原理（真 ρ 使 E[ρ] 最小）</td></tr>
+<tr><td>HK 定理</td><td>KS 方程</td><td>HK 说能量是 ρ 的泛函；KS 给出实际可解的单粒子方程（引入无相互作用参考体系和 $V_{xc}$）</td></tr>
+<tr><td>LDA</td><td>GGA</td><td>LDA 只用 ρ（均匀电子气）；GGA 加 ∇ρ</td></tr>
+<tr><td>杂化</td><td>长程校正</td><td>杂化：全局固定比例 HF 交换（B3LYP 20%）；长程校正：随距离变化，长程 100% HF 交换</td></tr>
+<tr><td>色散校正</td><td>长程校正</td><td>D3：加经验的 −C₆/R⁶ 原子对项（补相关）；RS：改交换的长程行为（补 SIE、CT 激发）</td></tr>
+<tr><td>HF 交换</td><td>DFT 交换</td><td>HF：精确、非局域、无 SIE；DFT：近似、（半）局域、有 SIE</td></tr>
+<tr><td>Koopmans（HF）</td><td>KS 轨道能</td><td>HF：−ε<sub>HOMO</sub> ≈ IP（冻结轨道）；KS：只有精确泛函下 −ε<sub>HOMO</sub> = IP，近似泛函偏低</td></tr>
+<tr><td>高自旋态（HS）</td><td>破缺对称态（BS）</td><td>HS：所有未成对自旋平行，单行列式、自旋纯；BS：一个中心翻转，$M_S=0$，自旋污染</td></tr>
+<tr><td>Yamaguchi</td><td>Noodleman / p42</td><td>Yamaguchi 用 ⟨S²⟩ 差作分母，自动在强、弱重叠两极限间插值</td></tr>
+<tr><td>RPA</td><td>TD-DFT</td><td>RPA：基于 HF/CASSCF 的响应；TD-DFT：DFT 版的 RPA</td></tr>
+</table>

@@ -1,0 +1,80 @@
+<h1 class="chap" data-tab="L4" id="L4"><span class="no">L4</span>电子相关方法<span class="en">Electron correlation methods: CI · CC · MPn · BSSE · CBS</span></h1>
+
+<p class="lead">L4 补回 HF 丢掉的东西：先定义相关能、区分静态与动态相关；然后三大家族——组态相互作用（CI）、耦合簇（CC）、微扰理论（MPn），比较它们的<b>变分性</b>、<b>大小一致性</b>、<b>标度</b>和精度；最后是基组重叠误差（BSSE）与平衡校正、完备基组外推和各种"密度"。判断题最爱考"哪个方法变分 / 大小一致"。</p>
+
+<h2 id="s4.1">§4.1 HF 回顾与相关能<span class="en">correlation energy</span></h2>
+<p>HF 的四个特征 [L4 p3]：① 平均场近似；② 单电子近似（每个自旋轨道描述一个电子的运动）；③ 多电子波函数是单电子 MO 的反对称化乘积（一个 Slater 行列式），满足 Pauli；④ HF 能量是 Hamiltonian 的期望值 $E_{HF}=\langle\Psi_{HF}|\hat H|\Psi_{HF}\rangle$，<b>高于精确能量</b>。</p>
+<div class="fcard"><span class="ft">相关能 [L4 p3]</span>{{ix:Correlation energy|相关能}}
+$$E_{corr}=E_{exact}-E_{HF}\ (<0)$$
+<p class="small">严格说 $E_{HF}$ 应取 HF 极限（完备基组）；$E_{exact}$ 是精确<b>非相对论</b>能量。量级：约为总能量的 1%，但与化学键能同量级（He：−0.042 Ha ≈ −26 kcal/mol，{{p:sB.7}}）。</p></div>
+<div class="box def"><span class="lab">原句</span><span class="en">Electron correlation is, in effect, defined as inter-electron interactions that Hartree-Fock theory does not properly account for.</span><span class="zh">电子相关 = HF 没有正确处理的电子间相互作用。[L4 p4]</span></div>
+
+<h2 id="s4.2">§4.2 静态相关与动态相关<span class="en">static vs dynamic correlation</span></h2>
+<div class="row">
+<div style="flex:1.5">
+<div class="box def"><span class="lab">原句</span><span class="en">Static correlation refers to a situation where a single Slater determinant (i.e. a single population pattern of molecular orbitals) might not be a good approximation to the ground state. This often happens when the ground state is or becomes degenerate. … A famous example is the dissociation of the hydrogen molecule, where the restricted Hartree-Fock method produces a pair of ions instead of a pair of radicals.</span><span class="zh"><b>静态相关</b>：一个行列式（一种轨道占据方式）不足以近似基态，常见于基态<b>简并或变得简并</b>时。例：H₂ 解离，RHF 给出一对离子而不是一对自由基。[L4 p4]</span></div>
+<div class="box def"><span class="lab">原句</span><span class="en">Dynamic correlation is the correlated motion of electrons resulting from the Coulomb repulsion. Being an average field theory, the HF method does not properly account for this effect.</span><span class="zh"><b>动态相关</b>：库仑排斥导致的电子关联运动（瞬时互相避开）；HF 是平均场理论，处理不了。例：非弹性 X 射线散射不包含动态相关就描述不了。[L4 p4]</span></div>
+</div>
+<figure style="flex:1"><img src="img/L4_p4_h2diss.png"><figcaption>[L4 p4] H₂ 解离：正确是两个 H 自由基；RHF 给 H⁻ + H⁺</figcaption></figure>
+</div>
+<table class="cmp">
+<tr><th></th><th>静态（static / non-dynamic）</th><th>动态（dynamic）</th></tr>
+<tr><td>来源</td><td>简并、近简并（键解离、双自由基、开壳层原子如 B、过渡金属、共轭体系）</td><td>电子瞬时互相避开（库仑空穴）</td></tr>
+<tr><td>特征</td><td>少数几个行列式权重都大</td><td>大量激发行列式，每个权重很小（Ne：参考态 0.96，双激发 0.034，{{p:s4.6}}）</td></tr>
+<tr><td>方法</td><td>多参考：CASSCF、MCSCF（{{p:s3.22}}）</td><td>在好的参考上加激发：MP2、CCSD(T)、CISD；多参考 + 动态：CASPT2、NEVPT2、MRCI</td></tr>
+<tr><td>UHF</td><td colspan="2">UHF 用自旋对称破缺"模仿"静态相关（能量对了，自旋错了），但不含动态相关</td></tr>
+</table>
+
+<h2 id="s4.3">§4.3 两条路线：多组态波函数 vs DFT<span class="en">computational account of correlation</span></h2>
+<table class="cmp">
+<tr><th>多组态波函数方法 [L4 p6]</th><th>密度泛函方法</th></tr>
+<tr><td>在 HF 行列式之外加入额外的 Slater 行列式；这些行列式描述各种激发–退激发过程，解释动态相关，让电子彼此分开</td><td>近似地描述交换和相关；仍用<b>单个 Slater 行列式</b>的形式（像 HF），但 Fock 算符换成包含近似相关项的"更软"的势（HF 里缺这一项）（L5）</td></tr>
+</table>
+<div class="box add"><span class="lab">补充：自然轨道占据数是相关的"指纹"</span>相关波函数的自然轨道占据数不再是 2 和 0：占据轨道 &lt; 2、虚轨道 &gt; 0。只有动态相关时偏离很小（如 1.98 / 0.02）；强静态相关时会出现接近 1 的占据数（如拉长的 H₂：σ<sub>g</sub> 1.0、σ<sub>u</sub> 1.0）。CASSCF 活性空间就按这个挑。</div>
+
+<h2 id="s4.4">§4.4 变分原理在实践中：基组与性质<span class="en">variational principle in practice</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">In practice, the variational principle guarantees that a bigger basis set would yield a better approximation, though the law of diminishing returns certainly applies. Because of error compensation effects, the variational principle does not generally apply to properties other than energy, and even to energy differences … For property calculations, therefore, a bigger basis set does not necessarily mean a more accurate answer, but certainly means a longer processing time.</span><span class="zh">更大基组 → 能量更好，但<b>收益递减</b>；由于误差抵消，变分原理<b>不适用于能量以外的性质，甚至不适用于能量差</b>；算性质时基组大不一定更准，但一定更慢。[L4 p5]{{ix:Error compensation|误差抵消}}</span></div>
+<div class="row">
+<table style="flex:0 0 36%">
+<tr><th>H 原子 [L4 p5]</th><th>E (Ha)</th></tr>
+<tr><td>STO-3G</td><td>−0.49491</td></tr>
+<tr><td>STO-4G</td><td>−0.49848</td></tr>
+<tr><td>STO-5G</td><td>−0.49951</td></tr>
+<tr><td>STO-6G</td><td>−0.49983</td></tr>
+<tr><td colspan="2" class="small">精确 −0.5；单调逼近、收益递减</td></tr>
+</table>
+<figure style="flex:1"><img src="img/L4_p5_basisconv.png"><figcaption>[L4 p5] 生成焓 ΔH 随基组"忽高忽低"，不单调：能量差不受变分保护</figcaption></figure>
+</div>
+
+<h2 id="s4.5">§4.5 组态相互作用（CI）<span class="en">configuration interaction</span></h2>
+<div class="fcard"><span class="ft">CI 波函数与久期方程 [L4 p2, p12–13]</span>{{ix:Configuration interaction (CI)|组态相互作用}}
+$$\Psi=a_0\psi_{HF}+\sum_S a_S\psi_S+\sum_D a_D\psi_D+\sum_T a_T\psi_T+\cdots\qquad(\text{S/D/T = 单/双/三激发})$$
+$$L=\langle\Psi|\hat H|\Psi\rangle-\lambda\left(\langle\Psi|\Psi\rangle-1\right),\quad \frac{\partial L}{\partial a_i}=0\ \Rightarrow\ (\mathbf H-E\mathbf I)\mathbf a=\mathbf 0\ \Leftrightarrow\ \mathbf{Ha}=E\mathbf a,\quad H_{ij}=\langle\psi_i|\hat H|\psi_j\rangle$$
+<p class="small">在归一化约束下用 <b>Lagrange 乘子</b>最小化能量 → 普通本征值问题。<b>线性变分</b>：CI 系数由变分确定，MO 固定（取 HF 轨道）。</p></div>
+<div class="row">
+<div style="flex:1.3">
+<div class="box def"><span class="lab">原句</span><span class="en">Exact wave function is obtained when ALL possible Slater Determinants are included in the wave function, while their individual weights are determined variationally … Such wave function is called: exact non-relativistic solution of the Schrodinger equation. … Such wave functions are only possible for very small molecules, mostly diatomics, with small basis sets … (FCI). In practice, it is common to impose a limit on the number of excited electrons compared to the ground state HF Slater Determinant, usually 2.</span><span class="zh">FCI（在该基组内）= 精确非相对论解；实践中通常截断到双激发（CISD）。"The solution of this equation gives, in principle the exact answer. The only difficulty … is the very fast-growing size of the CI matrix." [L4 p2, p13]</span></div>
+</div>
+<figure style="flex:1"><img src="img/L4_p11_ci.png"><figcaption>[L4 p11] 参考行列式 + 单激发 + 双激发 + …</figcaption></figure>
+</div>
+<div class="box cond"><span class="lab">性质</span>
+<ul><li><b>截断 CI（CISD 等）是变分的</b>（能量是上界），但<b>不满足大小一致性</b>（{{p:s4.8}}）。FCI 既变分又大小一致。</li>
+<li>FCI 的精确是"<b>给定基组内</b>"的精确；基组不完备的误差仍在。</li>
+<li>标度：CID $O(n^5)$、CISD $O(n^6)$、CISDT $O(n^8)$、FCI $O(n!)$（{{p:s3.22}}）。</li></ul></div>
+
+<h2 id="s4.6">§4.6 行列式（SD）与组态函数（CSF）<span class="en">SD-CI and spin-adapted CI</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Wave functions are usually characterized by a total spin value (S) … Significant computational savings can be obtained by combining SDs into spin-adapted Configuration State Functions (CSFs). States of different spin states do not mix by non-relativistic Hamiltonian: ⟨singlet|Ĥ|triplet⟩ = 0.</span><span class="zh">把行列式组合成自旋匹配的 CSF（$\hat S^2$ 本征函数）可大幅节省；非相对论 Hamiltonian 不混合不同自旋态。[L4 p14]{{ix:Configuration state function (CSF)|组态函数}}</span></div>
+<div class="fcard"><span class="ft">计数公式（n 个空间轨道、2n 个自旋轨道、N 个电子、总自旋 S）[L4 p14]</span>{{ix:Weyl formula|Weyl 公式}}
+$$N_{SD}=\binom{2n}{N}=\frac{(2n)!}{N!\,(2n-N)!},\qquad N_{CSF}=\frac{2S+1}{n+1}\binom{n+1}{\frac N2-S}\binom{n+1}{\frac N2+S+1},\qquad N_{SD}\ge N_{CSF}$$
+<p class="small">算好的例子（CAS(2,2)、CAS(4,4)、CAS(6,6)…）和核对方法见 {{p:sB.4}}。</p></div>
+<div class="row">
+<table style="flex:1" class="small">
+<tr><th>激发级别 [L4 p15]</th><th>该级 CSF 数</th><th>累计 CSF 数</th></tr>
+<tr><td>1</td><td>71</td><td>71</td></tr><tr><td>2</td><td>2 485</td><td>2 556</td></tr><tr><td>3</td><td>40 040</td><td>42 596</td></tr><tr><td>4</td><td>348 530</td><td>391 126</td></tr><tr><td>6</td><td>5 033 210</td><td>7 147 876</td></tr><tr><td>8</td><td>8 653 645</td><td>24 490 201</td></tr><tr><td>10</td><td>1 002 001</td><td>30 046 752</td></tr>
+</table>
+<table style="flex:1" class="small">
+<tr><th>Ne / [5s4p3d] 各激发级权重 [L4 p16]</th><th>权重</th></tr>
+<tr><td>0（HF）</td><td>$9.6\times10^{-1}$</td></tr><tr><td>1</td><td>$9.8\times10^{-4}$</td></tr><tr><td><b>2</b></td><td><b>$3.4\times10^{-2}$</b></td></tr><tr><td>3</td><td>$3.7\times10^{-4}$</td></tr><tr><td>4</td><td>$4.5\times10^{-4}$</td></tr><tr><td>5</td><td>$1.9\times10^{-5}$</td></tr><tr><td>6–8</td><td>$10^{-6}$ → $10^{-9}$</td></tr>
+</table>
+</div>
+<div class="box why"><span class="lab">两张表说明什么</span>组态数随激发级<b>爆炸式</b>增长（计算困难），但权重迅速下降：<b>双激发最重要</b>（比单激发大 30 倍，Brillouin 定理使单激发不直接与 HF 耦合），四激发比三激发还大一点（四激发 ≈ 两个双激发的乘积 → 正是 CC 的思想，{{p:s4.9}}）。</div>

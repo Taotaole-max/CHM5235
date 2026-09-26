@@ -1,0 +1,48 @@
+<div class="cover">
+<h1>CM5235 Applied Computational Chemistry<br>开卷考试 · 知识点汇总（L1–L6）</h1>
+<div class="sub">考场查阅手册：按讲排列，公式速查 + 计数手册 + 判断陷阱 + 英文索引</div>
+<div class="meta">Mid-term quiz：2026-09-29（周二）· 开卷 · 只考理论和概念，不考软件关键词 · 讲义：Liviu Ungur, Lectures 1–6</div>
+
+<table class="legend">
+<tr><th style="width:24%">三种查法</th><th>怎么做</th></tr>
+<tr><td>① 知道讲次和主题</td><td>翻页边<b>黑色书签</b>找到讲次，再按节号（如 §4.8）查。目录在下一页。</td></tr>
+<tr><td>② 要找一个公式</td><td>看「<b>A 公式速查总表</b>」：每条公式写了它在说什么、成立条件和所在页码。</td></tr>
+<tr><td>③ 题干里有英文术语</td><td>查最后的「<b>英文术语 A–Z 索引</b>」：中文意思 + 页码（如 size consistency、counterpoise、Brillouin）。</td></tr>
+<tr><td>计数题</td><td>电子数、轨道数、基函数数、行列式 / CSF 数、积分数：照「<b>B 计数手册</b>」的步骤算。</td></tr>
+</table>
+
+<div style="display:flex;gap:10px;margin-top:6px">
+<div style="flex:1">
+<div class="box def" style="margin:4px 0"><span class="lab">原句</span><span class="en">Quoted sentence from the slides.</span><span class="zh">讲义英文原句 + 中文解释。题干多半是换个说法问原句。<span class="src">L2 p65</span> = 讲义第 2 讲第 65 页。</span></div>
+<div class="fcard" style="margin:4px 0"><span class="ft">公式卡</span>公式本身，下面的小表列出每个变量的含义。</div>
+<div class="box cond" style="margin:4px 0"><span class="lab">条件 / 失效</span>公式或方法在什么前提下成立、什么时候失效——判断题最常考。</div>
+<div class="box why" style="margin:4px 0"><span class="lab">为什么</span>一两句话讲清背后的道理。</div>
+</div>
+<div style="flex:1">
+<div class="box trap" style="margin:4px 0"><span class="lab">判断陷阱</span><ul><li class="x">常见的错误说法 <span class="r">错在哪里</span></li><li class="o">容易被误判为错的正确说法</li></ul></div>
+<div class="box add" style="margin:4px 0"><span class="lab">补充</span>讲义没有、但有助于理解的内容。<b>判断题以讲义为准。</b></div>
+<div class="box fix" style="margin:4px 0"><span class="lab">讲义订正</span>讲义原式或原句有误的地方（公式表中标 ‼）。</div>
+<div class="box exam" style="margin:4px 0"><span class="lab">考法</span>讲义例题、作业数据的结论。</div>
+</div>
+</div>
+
+<table class="small" style="margin-top:6px">
+<tr><th colspan="5">单位换算（a.u.：$\hbar=m_e=e=4\pi\varepsilon_0=1$；能量 Hartree，长度 bohr）{{ix:Hartree (unit)|哈特里（能量单位）}}</th></tr>
+<tr><td>1 Ha =</td><td>27.211 eV</td><td>627.51 kcal/mol</td><td>2625.5 kJ/mol</td><td>219 474.6 cm⁻¹</td></tr>
+<tr><td>1 eV =</td><td>0.036749 Ha</td><td>23.061 kcal/mol</td><td>96.485 kJ/mol</td><td>8065.5 cm⁻¹</td></tr>
+<tr><td>1 kcal/mol =</td><td>4.184 kJ/mol</td><td>349.76 cm⁻¹</td><td>0.043364 eV</td><td>1.5936 × 10⁻³ Ha</td></tr>
+<tr><td>$k_BT$（298 K）=</td><td>0.5925 kcal/mol</td><td>2.479 kJ/mol</td><td>207.2 cm⁻¹</td><td>0.02569 eV</td></tr>
+<tr><td>其他</td><td>1 bohr = 0.529177 Å</td><td>c = 137.036 a.u.</td><td>1 cm⁻¹ = 4.556 × 10⁻⁶ Ha</td><td>$k_B$ = 0.695 cm⁻¹/K</td></tr>
+</table>
+
+<table class="small" style="margin-top:4px">
+<tr><th colspan="2">讲义里要订正的地方（考试若照抄讲义原式，按讲义；问物理是否自洽，按订正）</th></tr>
+<tr><td>L2 p85 / p91</td><td>"总能量 = 轨道能之和"重复计算排斥（{{p:s2.18}}）；UHF 段误抄"β 轨道形状与 α 相同"（{{p:s2.20}}）</td></tr>
+<tr><td>L3 p37</td><td>$c_{1s}=0.9775$（不是 0.9975），权重 95.55%（不是 99.55%）（{{p:s3.4}}）</td></tr>
+<tr><td>L5 p42–43</td><td>BS-DFT：$J=(E_{BS}-E_{HS})/2$；Yamaguchi $J=(E_{BS}-E_{HS})/(\langle S^2\rangle_{HS}-\langle S^2\rangle_{BS})$（{{p:s5.15}}）</td></tr>
+<tr><td>L6 p5 / p15 / p28 / p37 / p42</td><td>Mulliken 跨原子项多乘 ½；价层 s 也收缩，变弥散的是 d/f；Onsager 方括号取倒数；色散分母下标对调；上机 IRoot 应为 1</td></tr>
+</table>
+</div>
+
+<h1 class="chap" data-tab="目录" id="TOC" data-notoc="1"><span class="no">≡</span>目录<span class="en">Contents</span></h1>
+{{TOC}}

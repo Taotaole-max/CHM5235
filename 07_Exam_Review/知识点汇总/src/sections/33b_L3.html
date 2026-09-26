@@ -1,0 +1,96 @@
+<h2 id="s3.5">§3.5 HF 回顾：H₂ 最小基与分子积分<span class="en">review of SCF-HF; molecular integrals</span></h2>
+<p>HF 的三个前提 [L3 p38]：① BO 近似（核静止）；② 每个电子在其余电子和核的平均静电场中运动；③ 波函数是<b>一个</b> Slater 行列式。简写 $|\varphi_1\bar\varphi_1\dots|$，<b>上划线表示 β 自旋轨道</b>。</p>
+<div class="fcard"><span class="ft">H₂ 最小基 [L3 p39–43]</span>
+$$\varphi_g=\frac{1s_1+1s_2}{\sqrt{2(1+S_{12})}},\quad \varphi_u=\frac{1s_1-1s_2}{\sqrt{2(1-S_{12})}},\quad S_{12}=\int1s_1^*1s_2\,d\tau>0$$
+$$\psi_{H_2}=\frac{1}{\sqrt2}\begin{vmatrix}\varphi_g(1)\alpha(1)&\varphi_g(1)\beta(1)\\\varphi_g(2)\alpha(2)&\varphi_g(2)\beta(2)\end{vmatrix}=|\varphi_g\bar\varphi_g|$$
+$$E=2\langle\varphi_g|\hat h|\varphi_g\rangle+\langle\varphi_g\varphi_g|\hat g|\varphi_g\varphi_g\rangle+V_{NN}=2h_{gg}+J_{gg}+V_{NN}$$
+<p class="small">不同原子上的基函数<b>不正交</b>（$S_{12}>0$），但组合出的 MO 正交。$\varphi_u$ 没有电子（虚轨道）。双电子项里交换积分对自旋积分后为 0（两个电子自旋相反），所以只剩库仑项。</p></div>
+
+<h2 id="s3.6">§3.6 单个 Slater 行列式的能量（按自旋轨道数）<span class="en">energy of a Slater determinant</span></h2>
+<div class="fcard"><span class="ft">通式 [L3 p44]</span>{{ix:Slater–Condon rules|斯莱特-康登规则}}
+$$E=\sum_{i}^{N_{elec}}h_{ii}+\sum_{i}^{N_{elec}}\sum_{j>i}^{N_{elec}}\left(J_{ij}-K_{ij}\right)+V_{nn}$$
+<p><b>$J_{ij}$ 对所有电子对都不为零（不管自旋）；$K_{ij}$ 只对同自旋电子对不为零。</b>i、j 是<b>电子（自旋轨道）</b>，两个电子在同一空间轨道 i 上时贡献 $J_{ii}$。</p></div>
+<div class="row">
+<div style="flex:1.2">
+<p><b>数法</b>：① 每个电子贡献所在轨道的 $h$；② 每<b>对</b>电子贡献一个 $J$（同轨道两电子 → $J_{ii}$）；③ 每对<b>同自旋</b>电子再减一个 $K$。</p>
+<table class="small">
+<tr><th>组态 [L3 p44–45]</th><th>能量</th></tr>
+<tr><td>1²2¹3¹（2、3 同自旋 α）</td><td>$2h_{11}+h_{22}+h_{33}+J_{11}+2J_{12}+2J_{13}+J_{23}-K_{12}-K_{13}-K_{23}$</td></tr>
+<tr><td>1²2²</td><td>$2h_{11}+2h_{22}+J_{11}+J_{22}+4J_{12}-2K_{12}$</td></tr>
+<tr><td>(a) 1↑2↑ 平行</td><td>$h_{11}+h_{22}+J_{12}-K_{12}$</td></tr>
+<tr><td>(b) 1↑2↓ 反平行</td><td>$h_{11}+h_{22}+J_{12}$</td></tr>
+<tr><td>(c) 1² </td><td>$2h_{11}+J_{11}$</td></tr>
+<tr><td>(d) 2² </td><td>$2h_{22}+J_{22}$</td></tr>
+<tr><td>(g) 1²2²（同上）</td><td>$2h_{11}+2h_{22}+J_{11}+J_{22}+4J_{12}-2K_{12}$</td></tr>
+</table>
+</div>
+<figure style="flex:1"><img src="img/L3_p45_bs.png"><figcaption>[L3 p45] 用"看"的方法写出每个行列式的能量</figcaption></figure>
+</div>
+<div class="box def"><span class="lab">原句</span><span class="en">The two Slater Determinants listed in a) and b) … are linked to the so-called Broken-Symmetry HF / DFT: The energy difference between these two Slater Determinants is the "magnetic exchange interaction, K<sub>12</sub>".</span><span class="zh">(a) 高自旋 ↑↑ 与 (b) 自旋翻转 ↑↓ 两个单行列式的能量差 $E_b-E_a=K_{12}$，就是"磁交换相互作用"。这是 broken-symmetry（BS）方法的雏形（{{p:s5.15}}）。[L3 p45]{{ix:Broken symmetry (BS)|破缺对称}}</span></div>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"(b) ↑↓ 行列式就是开壳层单重态。" <span class="r">它是单重态和三重态 $M_S=0$ 分量的 50:50 混合（{{p:s2.14}}）；这正是 BS 态自旋污染的原因。</span></li>
+<li class="x">"1²2² 组态里 K 的系数是 4。" <span class="r">4 个电子中同自旋对只有 2 对跨轨道（1α–2α、1β–2β）→ $-2K_{12}$；J 有 $J_{11}+J_{22}+4J_{12}$。</span></li>
+</ul></div>
+
+<h2 id="s3.7">§3.7 Fock 算符、正则轨道与幺正变换不变性<span class="en">Fock operator, canonical orbitals</span></h2>
+<div class="fcard"><span class="ft">Fock 算符（按自旋轨道写）[L3 p46]</span>
+$$\hat F_i=\hat h_i+\sum_{j=1}^{N_{elec}}\left(\hat J_j-\hat K_j\right),\qquad \hat F_i\varphi_i=\varepsilon_i\varphi_i$$
+<p>"Fock operator … defines the effective kinetic energy of an electron and the attraction to all nuclei"（加上与其他电子的平均排斥）。HF 轨道能就是 $\hat F$ 的本征值。</p></div>
+<div class="box def"><span class="lab">原句</span><span class="en">When HF orbital optimization calculation is finished, φ<sub>i</sub> are canonical molecular orbitals. Fock operator written in the basis of canonical molecular orbitals is diagonal. There are many orbital sets possible for the HF wave function, giving the same total energy. Any orbital set obtained by some unitary transformation of the converged molecular orbitals – will also give the same identical total HF energy.</span><span class="zh">收敛得到的是<b>正则轨道</b>（Fock 矩阵对角）。对占据轨道做任意<b>幺正变换</b>，行列式（至多差一个相因子）和总能量都不变 ⇒ 轨道不唯一。例：<b>自然轨道</b>对角化单电子密度矩阵。[L3 p46, p61]{{ix:Canonical orbitals|正则轨道}}{{ix:Natural orbitals|自然轨道}}{{ix:Unitary transformation|幺正变换}}</span></div>
+<table>
+<tr><th>轨道</th><th>定义 [L3 p61]</th><th>对角元</th></tr>
+<tr><td>正则轨道</td><td>收敛后使 $F_{\alpha\beta}$ 对角的轨道</td><td>轨道能 $\varepsilon_i$</td></tr>
+<tr><td>自然轨道</td><td>使密度矩阵 $D_{\alpha\beta}$ 对角的轨道</td><td><b>占据数</b>；RHF 为 2,2,2,…,0,0（相关方法中为 0–2 之间的分数，{{p:s4.3}}）</td></tr>
+<tr><td>定域轨道（补充）</td><td>对占据轨道做幺正变换，使轨道尽量局域（Boys、Pipek–Mezey）</td><td>对应化学键、孤对（{{p:s6.8}}）</td></tr>
+</table>
+
+<h2 id="s3.8">§3.8 Koopmans 定理<span class="en">Koopmans' theorem</span></h2>
+<div class="row">
+<div style="flex:1.1">
+<div class="box def"><span class="lab">原句</span><span class="en">Let's use the obtained set of molecular orbitals for a system with N electrons to compute the energy of a system with (N+1) and (N−1) electrons. Consider that the orbitals remain exactly the same as in the original calculation.</span><span class="zh">用 N 电子体系的轨道<b>不变</b>地去算 N±1 电子体系的能量。[L3 p47]{{ix:Koopmans' theorem|库普曼斯定理}}</span></div>
+$$E_N-E_{N-1}=\varepsilon_i\ \ (\text{移走 i 上的电子}),\qquad E_{N+1}-E_N=\varepsilon_a\ \ (\text{加到空轨道 a})$$
+$$\text{IP}\approx-\varepsilon_{HOMO},\qquad \text{EA}\approx-\varepsilon_{LUMO}$$
+<p class="small">推导 [L3 p48]：两个组态能量之差恰好是 $h_{33}+J_{13}-K_{13}+J_{23}-K_{23}=\langle\varphi_3|\hat F|\varphi_3\rangle=\varepsilon_3$（正则轨道下 F 对角）。</p>
+</div>
+<figure style="flex:1"><img src="img/L3_p47_koopmans.png"><figcaption>[L3 p47] N−1、N、N+1 三个组态，轨道冻结</figcaption></figure>
+</div>
+<div class="box cond"><span class="lab">条件 / 失效</span>
+<ul><li>前提：<b>冻结轨道</b>（不让 N±1 体系的轨道弛豫）+ 正则 HF 轨道 + 单行列式（无相关）。</li>
+<li>（补充）IP：忽略轨道弛豫使 IP 偏大、忽略相关使 IP 偏小，两者部分抵消 → Koopmans IP 常不错。EA：两个误差同向，−ε<sub>LUMO</sub> 往往很差（HF 的 LUMO 常为正能量）。</li>
+<li>只对 HF 成立；DFT 的 Kohn–Sham 轨道能没有这个意义（只有精确泛函下 −ε<sub>HOMO</sub> = IP，{{p:s5.7}}）。</li></ul></div>
+
+<h2 id="s3.9">§3.9 B 原子：什么时候一个行列式不够（静态相关）<span class="en">wave function for B atom</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Since the 2p shell is degenerate, the electron in the last shell may be placed in any of these orbitals … the wave function … must include all possibilities on equal footing. As result, there are three Slater Determinants possible … Given that HF method optimizes molecular orbitals of ONLY ONE Slater Determinant – it is NOT adequate for this problem … (CASSCF) must be employed … This case is a typical case of "static electron correlation" problem.</span><span class="zh">B：1s²2s²2p¹，2p 三重简并 → 三个等价行列式 $\psi=\frac{1}{\sqrt3}\left(|1s^22s^22p_x|+|1s^22s^22p_y|+|1s^22s^22p_z|\right)$。HF 只能优化一个行列式 → 不合适，要用 CASSCF。这是典型的<b>静态电子相关</b>问题。[L3 p49–50]{{ix:Static correlation|静态相关}}</span></div>
+<div class="box why"><span class="lab">判别规律</span>只要有<b>简并或近简并</b>的部分占据轨道（开壳层原子、键解离、双自由基、过渡金属 d 壳层、共轭体系），就可能需要多个行列式。</div>
+
+<h2 id="s3.10">§3.10 RHF、ROHF、UHF 与自旋污染<span class="en">restricted / unrestricted SCF, spin contamination</span></h2>
+<div class="row">
+<div style="flex:1.4">
+<div class="box def"><span class="lab">原句</span><span class="en">The Hamiltonian used in Hartree-Fock theory does not explicitly mention spin … a spin-flip does not change the energy. If we enforce that symmetry (demanding that the up and the down spin orbitals share the space part), the version … is called restricted. In open-shell systems, the unrestricted version is preferred… Restricted SCF is often faster (fewer integrals to evaluate), but fails to reproduce certain bond breaking processes. Unrestricted SCF treats bond breaking correctly (although for the wrong reasons), but can suffer from spin contamination.</span><span class="zh">[L3 p51–52]{{ix:Restricted open-shell HF (ROHF)|限制性开壳层 HF}}</span></div>
+</div>
+<figure style="flex:0 0 32%"><img src="img/L3_p51_rohf.png"><figcaption>[L3 p51] RHF 单重态、ROHF 双重态、UHF 双重态</figcaption></figure>
+</div>
+<table class="cmp">
+<tr><th></th><th>RHF</th><th>ROHF</th><th>UHF</th></tr>
+<tr><td>空间轨道</td><td>α、β 共用，全部双占</td><td>α、β 共用；双占 + 单占</td><td>α、β 各一套</td></tr>
+<tr><td>适用</td><td>闭壳层</td><td>开壳层，要自旋纯</td><td>开壳层、键解离</td></tr>
+<tr><td>$\hat S^2$ 本征态</td><td>是</td><td>是</td><td><b>否</b>（自旋污染）</td></tr>
+<tr><td>能量（同一基组）</td><td colspan="3">$E_{UHF}\le E_{ROHF}$（UHF 限制最少）；闭壳层平衡构型 UHF 常收敛到 RHF</td></tr>
+<tr><td>代价</td><td>快（积分少）</td><td>轨道能定义较模糊（补充）</td><td>两套轨道，约 2 倍工作量</td></tr>
+</table>
+<div class="fcard"><span class="ft">自旋污染判据 [L3 p53]</span>{{ix:⟨S²⟩ expectation value|自旋平方期望值}}
+$$\langle S^2\rangle_{UHF}\ \ge\ \langle S^2\rangle_{exact}=S(S+1),\qquad S=\frac{N_\alpha-N_\beta}{2}$$
+<p class="small">理想值：双重态 0.75，三重态 2.00，四重态 3.75（表见 {{p:sB.1}}）。</p></div>
+<div class="box def"><span class="lab">原句</span><span class="en">Unrestricted SCF methods produce wavefunctions that are not eigenfunctions of the total spin operator. This leads to distortions in computed magnetic properties and is best avoided. … Large spin contamination (particularly in Hartree-Fock calculations) is usually an indication that a single determinant is a very poor approximation to the ground state – MCSCF approaches should be considered.</span><span class="zh">[L3 p53]</span></div>
+<table class="small">
+<tr><th>处理自旋污染的三种办法 [L3 p53]</th><th>做法</th></tr>
+<tr><td>Annihilation（湮灭）</td><td>SCF <b>结束后</b>投影掉错误自旋的成分</td></tr>
+<tr><td>Projection（投影）</td><td>在 SCF <b>循环内</b>投影掉错误自旋成分</td></tr>
+<tr><td>Spin constraint（自旋约束）</td><td>把与目标总自旋的偏差作为 Lagrange 项，做约束能量优化</td></tr>
+</table>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"UHF 能正确描述键断裂，因为它包含了静态相关。" <span class="r">"for the wrong reasons"：靠打破自旋对称，代价是自旋污染。</span></li>
+<li class="x">"$\langle S^2\rangle_{UHF}$ 可以小于 $S(S+1)$。" <span class="r">UHF 只会 ≥（混进的是更高自旋态）。</span></li>
+<li class="x">"限制性方法比非限制性方法更慢。" <span class="r">限制性更快（积分少）。</span></li>
+<li class="o">"严重自旋污染提示应改用多组态（MCSCF）方法。"</li>
+</ul></div>

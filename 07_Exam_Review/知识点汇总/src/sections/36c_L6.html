@@ -1,0 +1,132 @@
+<h2 id="s6.15">§6.15 溶剂效应与显式水模型<span class="en">explicit water models</span></h2>
+<p>"Many calculations, particularly with charged and polar molecules, essentially require a correct treatment of solvent electrostatics." [L6 p23] 溶剂化模型分三类：<b>显式</b>（同一理论水平、QM/MM 用 TIPnP/SPC 水、QM/半经验）、<b>隐式</b>（Born、Onsager、Kirkwood、PCM）、<b>显式 + 隐式混合</b>。</p>
+<div class="fcard"><span class="ft">刚性水模型的势 [L6 p24]</span>{{ix:Explicit solvent models|显式溶剂模型}}{{ix:TIP3P / TIP4P / TIP5P / SPC|水分子模型}}
+$$E=\sum_{O-O}4\varepsilon\left[\left(\frac{\sigma}{r_{OO}}\right)^{12}-\left(\frac{\sigma}{r_{OO}}\right)^6\right]+\sum_{n,k}\frac{q_nq_k}{r_{nk}}$$
+<p class="small">Lennard-Jones 只作用在 O–O 之间（$r^{-12}$ 近程 Pauli 排斥，$-r^{-6}$ 色散吸引）+ 各点电荷间库仑作用。SPC = Simple Point Charge（3 点，电荷在 O、H 上）；TIP = Transferable Intermolecular Potential：TIP4P 把负电荷移到 HOH 角平分线上的虚拟点 L；TIP5P 在四面体方向放两个虚拟点模拟孤对。</p></div>
+<table class="small">
+<tr><th>方法 [L6 p24–26]</th><th>表现</th></tr>
+<tr><td>经典水模型（MD）</td><td>很好地重现水的<b>结构</b>（径向分布函数）和热力学性质；但<b>静电性质</b>（尤其偶极矩）与实验偏差大</td></tr>
+<tr><td>半经验（显式水）</td><td><b>重现不了</b>液态水的结构，连第一配位层都不对</td></tr>
+<tr><td>HF（显式水）</td><td>结构和介电性质都好得多，但对溶质分子尺度而言<b>非常贵</b></td></tr>
+</table>
+
+<h2 id="s6.16">§6.16 连续介质模型与经典空腔模型<span class="en">continuum solvation, obsolete cavity models</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">We will assume that the molecule sits in a cavity made in a polarisable material. The energy of the molecule has two contributions: energy of the molecule (incl. electrostatic interactions with the cavity) and energy of cavity formation.</span><span class="zh">分子坐在可极化介质（介电常数 ε）中挖出的<b>空腔</b>里；能量 = 分子能量（含与空腔的静电作用）+ 形成空腔的能量。[L6 p27]{{ix:Continuum solvation model|连续介质溶剂模型}}{{ix:Cavity|空腔}}</span></div>
+<table>
+<tr><th>空腔模型 [L6 p27–28]</th><th>假设</th><th>讲义评价</th></tr>
+<tr><td>Born{{ix:Born model|Born 模型}}</td><td>球形空腔 + 中心<b>电荷</b>：$\Delta G_{electr}=-\dfrac{\varepsilon-1}{2\varepsilon}\dfrac{q^2}{R}$</td><td rowspan="4">"Common feature of all four models: they are <b>completely inaccurate</b> for all practical purposes."（Kirkwood–Onsager："Completely wrong for all practical purposes"）</td></tr>
+<tr><td>Bell</td><td>球形空腔 + <b>偶极</b>：$\Delta G_{electr}=-\dfrac{\varepsilon-1}{2\varepsilon+1}\dfrac{\mu^2}{R^3}$</td></tr>
+<tr><td>Onsager{{ix:Onsager model|Onsager 模型}}</td><td>球形空腔 + <b>可极化偶极</b>（α）</td></tr>
+<tr><td>Kirkwood（-Westheimer）</td><td>分子静电势的一般<b>多极展开</b>，球形或椭球形空腔</td></tr>
+</table>
+<div class="box fix"><span class="lab">讲义 p28 Onsager 式：方括号应取倒数</span>讲义写 $\Delta G=-\frac{\varepsilon-1}{2\varepsilon+1}\frac{\mu^2}{R^3}\left[1-\frac{\varepsilon-1}{2\varepsilon+1}\frac{2\alpha}{R^3}\right]$。可极化偶极被反应场<b>增强</b>，应为
+$$\Delta G_{electr}=-\frac{\varepsilon-1}{2\varepsilon+1}\frac{\mu^2}{R^3}\left[1-\frac{\varepsilon-1}{2\varepsilon+1}\frac{2\alpha}{R^3}\right]^{-1}$$
+（α = 0 时两式都退化为 Bell 式；α &gt; 0 时正确式使 |ΔG| 变大，讲义式反而变小。）</div>
+<div class="box why"><span class="lab">读公式</span>$\frac{\varepsilon-1}{2\varepsilon}$ 在 ε = 1（真空）时为 0，ε → ∞（导体）时 → ½：溶剂越极性，稳定化越大，但很快饱和（水 ε = 78 已接近极限）。电荷项 $\propto q^2/R$、偶极项 $\propto\mu^2/R^3$：离子溶剂化能远大于中性极性分子。</div>
+
+<h2 id="s6.17">§6.17 PCM 家族与分子表面<span class="en">polarizable continuum model</span></h2>
+<table>
+<tr><th>现代模型 [L6 p27, p30]</th><th>空腔 / 做法</th><th>评价</th></tr>
+<tr><td><b>PCM</b>{{ix:Polarizable continuum model (PCM)|极化连续介质模型}}</td><td>以各原子为中心的<b>球的并集</b></td><td>"Quite good"，但镶嵌（tessellation）、积分、几何收敛可能有数值问题</td></tr>
+<tr><td>IEF-PCM</td><td>用 Poisson 方程的 Green 函数解静电问题</td><td>Gaussian03 起的默认</td></tr>
+<tr><td>IPCM</td><td>用 SCF <b>等密度面</b>作空腔；重复 SCF 直到空腔不变</td><td>—</td></tr>
+<tr><td>SCIPCM</td><td>在 SCF 循环<b>内部</b>更新空腔，SCF 与空腔同时收敛</td><td>"undoubtedly the best"，但贵；G16 收敛困难时用真空收敛轨道作初猜 [L6 p32]</td></tr>
+<tr><td>CPCM（补充）</td><td>类导体 PCM（ε → ∞ 近似再标度）</td><td>ORCA 常用（L6 p43 上机）</td></tr>
+</table>
+<div class="fcard"><span class="ft">表观表面电荷 [L6 p30]</span>
+$$\sigma(\vec r)=-\frac{\varepsilon-1}{4\pi\varepsilon}\frac{\partial}{\partial\vec n}\left[\varphi(\vec r)\right]_{in},\qquad \Delta G_{solvation}=\Delta G_{cavity}+\Delta G_{dispersion}+\Delta G_{electrostatic}$$
+<p class="small">由空腔<b>内侧</b>电势梯度的法向分量得到表面电荷，再反馈进 QM 计算（自洽反应场，SCRF）。</p></div>
+<div class="row">
+<figure style="flex:1"><img src="img/L6_p29_surface.png"><figcaption>[L6 p29] 空腔与三种分子表面</figcaption></figure>
+<div style="flex:1">
+<table class="small">
+<tr><th>表面 [L6 p29–30]{{ix:Solvent-accessible surface (SAS)|溶剂可及表面}}</th><th>定义</th></tr>
+<tr><td>van der Waals 表面</td><td>各原子 vdW 球的并集；易生成、易求导，量化计算常用</td></tr>
+<tr><td>溶剂可及表面（SAS，Lee–Richards）</td><td>探针球在原子上滚动，追踪<b>探针中心</b></td></tr>
+<tr><td>溶剂排除表面（SES，Connolly）{{ix:Solvent-excluded surface (SES)|溶剂排除表面}}</td><td>追踪探针的<b>最近点</b></td></tr>
+</table>
+<div class="box cond"><span class="lab">条件 / 局限 [L6 p31–33]</span><ul class="small">
+<li>结果依赖构造表面的<b>原子半径</b>（Pauling：晶体数据；Bondi：还考虑其他因素；Orozco–Luque：对酸性 H 例外处理）。</li>
+<li><b>基组效应完全不可预测</b>——溶剂化能不收敛到实验值。</li>
+<li>连续介质<b>重现不了氢键</b>：第一溶剂化层（氢键）常要<b>显式</b>加溶剂分子（显式 + PCM），对超精细耦合和 g 因子尤其重要。</li></ul></div>
+</div>
+</div>
+
+<h2 id="s6.18">§6.18 Poisson–Boltzmann 模型<span class="en">Poisson–Boltzmann</span></h2>
+<div class="fcard"><span class="ft">[L6 p34–35]</span>{{ix:Poisson–Boltzmann equation|泊松-玻尔兹曼方程}}
+$$n_\pm=n_0\exp\left[\mp\frac{ze\varphi(\vec r)}{kT}\right],\qquad \rho(\vec r)=zen_0\left\{\exp\left[-\frac{ze\varphi}{kT}\right]-\exp\left[+\frac{ze\varphi}{kT}\right]\right\},\qquad \nabla^2\varphi=-\frac{\rho}{\varepsilon_0\varepsilon}$$
+$$\Rightarrow\ \nabla^2\varphi(\vec r)=-\frac{zen_0}{\varepsilon_0\varepsilon}\left\{\exp\left[-\frac{ze\varphi(\vec r)}{kT}\right]-\exp\left[+\frac{ze\varphi(\vec r)}{kT}\right]\right\}$$
+$$\Delta G_{electr}=\frac12\int\rho(\vec r)\varphi_{reac}(\vec r)\,d^3r,\qquad \varphi_{reac}=\varphi_{solv}-\varphi_{vac}$$
+<p class="small">离子按电势的 Boltzmann 分布 + Poisson 方程。在 3D 网格上数值求解；反应势决定溶剂化自由能的静电部分。例：DNA 周围的 Na⁺、Cl⁻ 分布。</p></div>
+<div class="box cond"><span class="lab">条件</span>"Because it assumes the presence of independent point charges in the liquid, it is <b>not applicable to dielectric liquids</b>." 适合<b>电解质溶液</b>（离子），不适合纯介电液体。</div>
+
+<h2 id="s6.19">§6.19 氢键与非共价作用<span class="en">hydrogen bonds, non-covalent interactions</span></h2>
+<p><b>氢键</b> [L6 p36]：主要是<b>静电</b>作用，好的 DFT 泛函和后 HF 方法都能充分描述；<b>强氢键</b>（部分共价）需要高水平后 HF。{{ix:Hydrogen bond|氢键}}</p>
+<div class="fcard"><span class="ft">分子间作用的微扰展开 [L6 p37]</span>{{ix:van der Waals interaction|范德华作用}}{{ix:π-stacking|π 堆积}}
+$$\hat H=\hat H_A+\hat H_B+\hat H_{AB},\quad \hat H_{AB}=\sum_{a\in A}\sum_{b\in B}\frac{z_az_b}{r_{ab}}$$
+$$E=E_A+E_B+\underbrace{\langle0_A0_B|\hat H_{AB}|0_A0_B\rangle}_{\text{简单静电——不够}}+\underbrace{\sum_{nk}\frac{\langle0_A0_B|\hat H_{AB}|n_Ak_B\rangle\langle n_Ak_B|\hat H_{AB}|0_A0_B\rangle}{E_0^{(A)}+E_0^{(B)}-E_n^{(A)}-E_k^{(B)}}}_{\text{需要所有激发行列式（色散）}}$$
+<p class="small">vdW 与芳香堆积来自两分子<b>接近时相互极化</b>。"Unless the excited determinants are introduced accurately in a particular method, it is unlikely to yield accurate Van der Waals interactions."</p></div>
+<div class="box fix"><span class="lab">讲义 p37 分母上下标对调</span>讲义分母写 $E_0^{(A)}+E_0^{(B)}-E_k^{(A)}-E_n^{(B)}$，但分子中的激发态是 $n_A k_B$（A 在 n、B 在 k）。应为 $-E_n^{(A)}-E_k^{(B)}$（上式已订正）。</div>
+<div class="box def"><span class="lab">原句</span><span class="en">HF, DFT and other single-determinant methods completely fail to describe Van der Waals interactions and aromatic stacking – these interactions are almost entirely electron correlation effects. MP2/TZ generally gives good results, but BSSE correction is essential for quantitative interpretation.</span><span class="zh">HF、DFT 等单行列式方法<b>完全</b>描述不了 vdW 和芳香堆积（几乎全是相关效应）；MP2/TZ 一般不错，但定量解释必须做 <b>BSSE 校正</b>（{{p:s4.14}}）。（实用中 DFT 加 D3 色散校正可以补救，{{p:s5.9}}。）[L6 p38]</span></div>
+
+<h2 id="s6.20">§6.20 UV/Vis 光谱：垂直与绝热激发<span class="en">UV/Vis spectra</span></h2>
+<div class="fcard"><span class="ft">[L6 p39]</span>{{ix:Vertical excitation|垂直激发}}{{ix:Adiabatic excitation|绝热激发}}{{ix:Transition dipole moment|跃迁偶极矩}}
+$$\Delta E_k=\langle\Psi_k|\hat H|\Psi_k\rangle-\langle\Psi_0|\hat H|\Psi_0\rangle,\qquad \vec d_{kn}=\langle\Psi_k|\hat{\vec d}|\Psi_n\rangle,\quad \hat{\vec d}=e\vec r$$
+<p class="small">准确的<b>垂直</b>激发能通常由 CI 计算得到（激发行列式很贵）；跃迁概率用微扰理论（跃迁偶极矩）。</p></div>
+<figure class="w80"><img src="img/L6_p39_vertical.png"><figcaption>[L6 p39] 垂直吸收（基态几何）、垂直发射（激发态几何）、绝热激发（两极小之间）：基态与激发态的能量极小点不一定重合</figcaption></figure>
+<table class="cmp">
+<tr><th>垂直吸收</th><th>垂直发射</th><th>绝热激发</th></tr>
+<tr><td>在<b>基态</b>平衡几何上算激发能（Franck–Condon，核来不及动）→ 吸收峰</td><td>在<b>激发态</b>平衡几何上算回到基态的能量差 → 荧光</td><td>两个态<b>各自极小</b>之间的能量差（0–0 跃迁需再加零点能差）</td></tr>
+</table>
+<p class="small">大小关系（补充）：垂直吸收 &gt; 绝热 &gt; 垂直发射（Stokes 位移）。上机练习（p41–43）：苯酚的基态、第一激发态几何（TD-DFT 优化）与水溶剂（CPCM）。</p>
+<div class="box fix"><span class="lab">讲义 p42 上机输入</span>优化<b>第一</b>激发态应为 <code>IRoot 1</code>（讲义写 <code>IRoot 2</code>，注释却说 "Selecting the excited state (here no. 2)"）。不考关键词，但做作业时要注意。</div>
+<div class="box cond"><span class="lab">精度说明 [L6 p40]</span><ol class="small">
+<li>能量精度由方法决定——大基组下的 <b>CISD、CCSD 及更高</b>更好；</li>
+<li><b>谱线宽度</b>由电子结构动力学决定，<b>目前算不了</b>；</li>
+<li>跃迁矩只是<b>定性</b>正确；</li>
+<li>缺振动平均、溶剂效应等标准警告同样适用；</li>
+<li>很多情况下<b>双激发</b>贡献显著（TD-DFT 绝热近似描述不了，{{p:s5.16}}）。</li></ol></div>
+
+<div class="box trap"><span class="lab">L6 判断陷阱</span><ul>
+<li class="x">"Mulliken 电荷是可观测量，与基组无关。" <span class="r">基于基函数划分，强烈依赖基组，加弥散函数可能变号。MEP、偶极矩才是可观测量。</span></li>
+<li class="x">"Mulliken 布居中轨道占据数总在 0–2 之间。" <span class="r">对角元可 &gt; 2、非对角元可为负——Löwdin 正交化改进这一点。</span></li>
+<li class="x">"Mulliken 按电负性分配共享密度。" <span class="r">一律平分——"without any foundation"。</span></li>
+<li class="x">"Löwdin 解决了弥散函数的归属问题。" <span class="r">只改进问题 1–3。</span></li>
+<li class="x">"Bader 电荷基于基函数划分。" <span class="r">基于电荷密度的零通量面。</span></li>
+<li class="x">"Hirshfeld 按基函数把密度平分给原子。" <span class="r">按自由原子密度比例分配每一点的密度。</span></li>
+<li class="x">"定域轨道有明确的轨道能。" <span class="r">它们不是 Fock 算符本征函数，没有轨道能；但给出同一个行列式和总能量。</span></li>
+<li class="x">"Boys 定域化保持 σ/π 分离。" <span class="r">那是 Pipek–Mezey；Boys/ER 会给香蕉键。</span></li>
+<li class="x">"定域相关方法忽略的是近距离电子对的相关。" <span class="r">忽略的是远距离对；相关随距离快速衰减，保留 &gt;95%。</span></li>
+<li class="x">"相对论效应只影响内层电子，价层 s 轨道变弥散。" <span class="r">价层 s（如 Au 6s）也收缩；变弥散的是 d、f（间接效应）。</span></li>
+<li class="x">"Schrödinger 方程满足相对论，因为它对空间和时间都是二阶。" <span class="r">空间二阶、时间一阶 → 不对等。</span></li>
+<li class="x">"Dirac 方程的解是两分量波函数。" <span class="r">四分量（大、小分量各两个）；两分量是近似（Pauli–Dirac、DKH、ZORA）。</span></li>
+<li class="x">"标量相对论修正包含自旋–轨道耦合。" <span class="r">标量 = 质速 + Darwin；SOC 单独。</span></li>
+<li class="x">"Darwin 项影响所有 l 的轨道。" <span class="r">含 δ(r)，只对核处不为零的 s 轨道有贡献。</span></li>
+<li class="x">"Born、Onsager 等模型在实际计算中足够准确。" <span class="r">讲义：completely inaccurate for all practical purposes。</span></li>
+<li class="x">"PCM 能正确描述溶质–溶剂氢键。" <span class="r">连续介质重现不了氢键，第一溶剂层要显式加。</span></li>
+<li class="x">"PCM 溶剂化能随基组增大收敛到实验值。" <span class="r">基组效应完全不可预测。</span></li>
+<li class="x">"Poisson–Boltzmann 适用于介电液体。" <span class="r">假设独立点电荷（离子），不适用于介电液体。</span></li>
+<li class="x">"半经验方法能重现液态水结构。" <span class="r">连第一配位层都不对；HF 好得多但贵。</span></li>
+<li class="x">"经典水模型能很好地重现水的偶极矩。" <span class="r">结构好，静电性质（偶极矩）偏差大。</span></li>
+<li class="x">"DFT（无色散校正）能描述苯二聚体的 π 堆积。" <span class="r">单行列式方法完全失败；MP2/TZ + BSSE 校正。</span></li>
+<li class="x">"UV/Vis 的谱线宽度可以直接算出来。" <span class="r">讲义：目前算不了。</span></li>
+<li class="x">"垂直激发能等于绝热激发能。" <span class="r">两态极小点不重合时不同。</span></li>
+<li class="o">"氢键主要是静电作用，好的 DFT 泛函就能描述。" <span class="r">强（部分共价）氢键除外。</span></li>
+</ul></div>
+
+<h2 id="s6.21">§6.21 L6 易混对照<span class="en">quick contrasts</span></h2>
+<table class="cmp">
+<tr><th>A</th><th>B</th><th>区别</th></tr>
+<tr><td>Mulliken</td><td>Löwdin</td><td>Mulliken：原始（非正交）基，平分重叠布居，可 &gt;2 或 &lt;0；Löwdin：$\mathbf S^{1/2}\mathbf P\mathbf S^{1/2}$ 正交化后再分；两者都依赖基组</td></tr>
+<tr><td>Bader</td><td>Hirshfeld</td><td>Bader：零通量面把空间切成原子盆（电荷偏大）；Hirshfeld：每点按自由原子密度比例分（电荷偏小）；都基于密度</td></tr>
+<tr><td>原子电荷</td><td>MEP</td><td>电荷依赖划分方案；MEP 是可观测量</td></tr>
+<tr><td>Boys</td><td>Pipek–Mezey</td><td>Boys：最大化质心距离（香蕉键）；PM：最大化原子布居平方和（保 σ/π）</td></tr>
+<tr><td>标量相对论</td><td>自旋–轨道</td><td>标量：质速 + Darwin，s/p 收缩，不需自旋；SOC：劈裂、磷光、系间窜越</td></tr>
+<tr><td>直接效应</td><td>间接效应</td><td>直接：s、p<sub>1/2</sub> 收缩；间接：d、f 被屏蔽而扩张</td></tr>
+<tr><td>1C / 2C / 4C</td><td></td><td>1C：标量相对论（DKH、ZORA、ECP）；2C：加 SOC；4C：完整 Dirac（含正电子态）</td></tr>
+<tr><td>显式溶剂</td><td>隐式溶剂</td><td>显式：真分子（氢键、特异作用），贵、要采样；隐式：连续介质（ε），便宜，缺特异作用</td></tr>
+<tr><td>SAS（Lee–Richards）</td><td>SES（Connolly）</td><td>SAS 追踪探针中心；SES 追踪探针最近点</td></tr>
+<tr><td>IPCM</td><td>SCIPCM</td><td>IPCM：SCF 外层循环更新等密度空腔；SCIPCM：在 SCF 循环内同时收敛</td></tr>
+<tr><td>垂直吸收</td><td>绝热激发</td><td>垂直：基态几何上的能量差；绝热：两态各自极小之间</td></tr>
+<tr><td>PCM</td><td>Poisson–Boltzmann</td><td>PCM：介电连续介质中的表面电荷；PB：电解质溶液中的离子分布</td></tr>
+</table>

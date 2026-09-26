@@ -1,0 +1,131 @@
+<h2 id="sB.2">§B.2 基函数数 K<span class="en">counting basis functions</span></h2>
+<div class="box cond"><span class="lab">规则</span>
+<ul class="small">
+<li>K = 每个原子上各壳层函数数之和。一个 s 壳层 = 1 个函数，p = 3，d = <b>5（球谐）或 6（笛卡尔）</b>，f = 7 或 10，g = 9。笛卡尔函数数 = $(l+1)(l+2)/2$。</li>
+<li><b>最小基组（STO-3G）</b>：每个被占据的原子轨道 1 个函数，而且整个价层亚层都要给（B 只有 1 个 2p 电子，也给 3 个 2p；Li、Be 也给 2p）。</li>
+<li><b>劈裂价层</b>：内层 1 个，价层每个 AO 拆成 2 个（3-21G、6-31G）或 3 个（6-311G）。第三周期的 6-311G 例外：Cl 为 [6s5p]（21 个）。</li>
+<li><code>(d)</code> 或 <code>*</code>：重原子（非 H）加一组 d；<code>(d,p)</code> 或 <code>**</code>：再给 H 加一组 p（+3）。<code>(2df,2pd)</code>：重原子加 2 组 d + 1 组 f，H 加 2 组 p + 1 组 d。</li>
+<li><code>+</code>：重原子加一组弥散 s + p（+4）；<code>++</code>：再给 H 加一个弥散 s（+1）。</li>
+<li><b>cc-pVnZ</b>：n = D、T、Q、5（即 2、3、4、5）为 zeta 数；重原子最高角动量 l = n（DZ → d，TZ → f，QZ → g），H 低一级。<code>aug-</code>：每种角动量各加一个弥散函数。</li>
+</ul></div>
+<table class="small">
+<tr><th>基组</th><th class="c">H、He</th><th class="c">Li–Ne</th><th class="c">Na–Ar</th><th>组成（H / Li–Ne）</th></tr>
+<tr><td>STO-3G</td><td class="c">1</td><td class="c">5</td><td class="c">9</td><td>[1s] / [2s1p]；每个函数由 3 个 Gaussian 收缩</td></tr>
+<tr><td>3-21G、6-31G</td><td class="c">2</td><td class="c">9</td><td class="c">13</td><td>[2s] / [3s2p]</td></tr>
+<tr><td>6-31G(d) = 6-31G*</td><td class="c">2</td><td class="c">15（6d）</td><td class="c">19（6d）</td><td>重原子 +d</td></tr>
+<tr><td>6-31G(d,p) = 6-31G**</td><td class="c">5</td><td class="c">15</td><td class="c">19</td><td>H +p</td></tr>
+<tr><td>6-31+G(d)</td><td class="c">2</td><td class="c">19</td><td class="c">23</td><td>重原子 +sp 弥散</td></tr>
+<tr><td>6-31++G(d,p)</td><td class="c">6</td><td class="c">19</td><td class="c">23</td><td>H 再 +s 弥散</td></tr>
+<tr><td>6-311G</td><td class="c">3</td><td class="c">13</td><td class="c">21</td><td>[3s] / [4s3p]；Cl [6s5p]</td></tr>
+<tr><td>cc-pVDZ（= def2-SVP 计数）</td><td class="c">5</td><td class="c">14</td><td class="c">18</td><td>[2s1p] / [3s2p1d]；Na–Ar [4s3p1d]</td></tr>
+<tr><td>aug-cc-pVDZ</td><td class="c">9</td><td class="c">23</td><td class="c">27</td><td>[3s2p] / [4s3p2d]</td></tr>
+<tr><td>cc-pVTZ</td><td class="c">14</td><td class="c">30</td><td class="c">34</td><td>[3s2p1d] / [4s3p2d1f]；Na–Ar [5s4p2d1f]</td></tr>
+<tr><td>aug-cc-pVTZ</td><td class="c">23</td><td class="c">46</td><td class="c">50</td><td>[4s3p2d] / [5s4p3d2f]</td></tr>
+<tr><td>cc-pVQZ</td><td class="c">30</td><td class="c">55</td><td class="c">59</td><td>[4s3p2d1f] / [5s4p3d2f1g]</td></tr>
+<tr><td>def2-TZVP</td><td class="c">6</td><td class="c">31</td><td class="c">37</td><td>[3s1p] / [5s3p2d1f]；Cl [5s5p2d1f]</td></tr>
+</table>
+<p class="small">cc-pVnZ、aug-cc-pVnZ、def2 用<b>球谐</b>函数（d = 5，f = 7，g = 9）；6-31G(d) 类传统上用 6 个笛卡尔 d；6-311G 系列在 Gaussian 里用 5d。考试没说明时写出你的假设。</p>
+<table class="small">
+<tr><th>分子（6-31G 类用 6d）</th><th class="c">STO-3G</th><th class="c">6-31G</th><th class="c">6-31G(d)</th><th class="c">6-31G(d,p)</th><th class="c">cc-pVDZ</th><th class="c">aug-cc-pVDZ</th><th class="c">cc-pVTZ</th><th class="c">cc-pVQZ</th></tr>
+<tr><td>H₂</td><td class="c">2</td><td class="c">4</td><td class="c">4</td><td class="c">10</td><td class="c">10</td><td class="c">18</td><td class="c">28</td><td class="c">60</td></tr>
+<tr><td>HF</td><td class="c">6</td><td class="c">11</td><td class="c">17</td><td class="c">20</td><td class="c">19</td><td class="c">32</td><td class="c">44</td><td class="c">85</td></tr>
+<tr><td>H₂O</td><td class="c">7</td><td class="c">13</td><td class="c">19</td><td class="c">25</td><td class="c">24</td><td class="c">41</td><td class="c">58</td><td class="c">115</td></tr>
+<tr><td>NH₃</td><td class="c">8</td><td class="c">15</td><td class="c">21</td><td class="c">30</td><td class="c">29</td><td class="c">50</td><td class="c">72</td><td class="c">145</td></tr>
+<tr><td>CH₄</td><td class="c">9</td><td class="c">17</td><td class="c">23</td><td class="c">35</td><td class="c">34</td><td class="c">59</td><td class="c">86</td><td class="c">175</td></tr>
+<tr><td>HCl（HW1 Ex1 ✓）</td><td class="c">10</td><td class="c">15</td><td class="c">21</td><td class="c">24</td><td class="c">23</td><td class="c">36</td><td class="c">48</td><td class="c">89</td></tr>
+<tr><td>C₆H₆</td><td class="c">36</td><td class="c">66</td><td class="c">102</td><td class="c">120</td><td class="c">114</td><td class="c">192</td><td class="c">264</td><td class="c">510</td></tr>
+<tr><td>C₆H₅ClO</td><td class="c">49</td><td class="c">86</td><td class="c">134</td><td class="c">149</td><td class="c">141</td><td class="c">233</td><td class="c">314</td><td class="c">594</td></tr>
+</table>
+<p class="small">HW 核对：HCl/6-311+G(d) = 3 + 30 = 33 ✓（HW1）；2-氯苯酚/def2-TZVP = 6 × 31 + 5 × 6 + 31 + 37 = 284 ✓（HW2）。</p>
+<div class="box why"><span class="lab">原始函数（primitive）数</span>"6-31G" 的数字是原始 Gaussian 个数：内层每个 AO 由 6 个原始函数收缩成 1 个；价层内侧 3 个、外侧 1 个。C：1s 用 6 个；2s′ 3 个、2p′ 3 × 3 = 9 个；2s″ 1 个、2p″ 3 个；共 <b>22 个原始函数，收缩成 9 个基函数</b>。STO-3G 中 C 的 5 个基函数各由 3 个原始函数组成，共 15 个。收缩系数固定，每个收缩函数只算一个变分参数（{{p:s3.18}}）。</div>
+
+<h2 id="sB.3">§B.3 分子轨道数：占据与虚轨道<span class="en">occupied / virtual orbitals</span></h2>
+<div class="fcard"><span class="ft">规则</span>
+$$\text{MO 数}=K\ (\text{每种自旋}),\qquad \text{闭壳层：占据}=\frac N2,\ \ \text{虚}=K-\frac N2;\qquad \text{开壳层：}\ \alpha\ \text{占}\ N_\alpha,\ \beta\ \text{占}\ N_\beta$$
+<p class="small">自旋轨道数 2K。HOMO 是第 N/2 个，LUMO 是第 N/2 + 1 个（闭壳层）。<b>为什么 MO 数 = K</b>：Roothaan 方程中 F、S 是 K × K 矩阵，解出 K 个本征值和本征矢；K 个线性无关函数只能组合出 K 个线性无关轨道（{{p:s3.11}}）。</p></div>
+<table class="small">
+<tr><th>例子</th><th class="c">K</th><th class="c">N</th><th class="c">占据</th><th class="c">虚</th></tr>
+<tr><td>H₂ 最小基</td><td class="c">2</td><td class="c">2</td><td class="c">1（σ<sub>g</sub>）</td><td class="c">1（σ<sub>u</sub>）</td></tr>
+<tr><td>H₂O / STO-3G</td><td class="c">7</td><td class="c">10</td><td class="c">5</td><td class="c">2</td></tr>
+<tr><td>H₂O / cc-pVDZ</td><td class="c">24</td><td class="c">10</td><td class="c">5</td><td class="c">19</td></tr>
+<tr><td>HCl / STO-3G（HW1）</td><td class="c">10</td><td class="c">18</td><td class="c">9</td><td class="c">1</td></tr>
+<tr><td>讲义 L3 p5 的输出（阴离子）</td><td class="c">99</td><td class="c">60</td><td class="c">30 α + 30 β</td><td class="c">69 α + 69 β</td></tr>
+<tr><td>NH₃⁺• / STO-3G（UHF）</td><td class="c">8</td><td class="c">9</td><td class="c">α 5，β 4</td><td class="c">α 3，β 4</td></tr>
+</table>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"换更大的基组，占据轨道会变多。" <span class="r">占据数只由电子数决定；变的是虚轨道数。</span></li>
+<li class="x">"UHF 的轨道总数是 K。" <span class="r">α、β 各一套 K 个空间轨道，共 2K 个。</span></li>
+<li class="x">"虚轨道越多，HF 能量降得越多。" <span class="r">HF 能量只取决于占据轨道；更大基组让占据轨道本身更好才降能量。虚轨道数主要影响相关方法。</span></li>
+<li class="x">"HF 的虚轨道能 = 加一个电子的能量，很准。" <span class="r">Koopmans EA 通常很差（{{p:s3.8}}）。</span></li>
+</ul></div>
+
+<h2 id="sB.4">§B.4 行列式数与 CSF 数<span class="en">Slater determinants, CSFs, CAS</span></h2>
+<div class="fcard"><span class="ft">[L4 p14]：n 个空间轨道（2n 个自旋轨道）、N 个电子、总自旋 S</span>{{ix:Complete active space CAS(N,n)|完全活性空间}}
+$$N_{SD}=\binom{2n}{N},\qquad N_{SD}(M_S)=\binom{n}{N_\alpha}\binom{n}{N_\beta},\qquad N_{CSF}(S)=\frac{2S+1}{n+1}\binom{n+1}{\frac N2-S}\binom{n+1}{\frac N2+S+1}$$
+<p class="small"><b>核对</b>：$\sum_S(2S+1)N_{CSF}(S)=N_{SD}$（每个自旋 S 的 CSF 有 2S + 1 个 $M_S$ 分量）。CAS(N, n)：N 个电子放在 n 个活性轨道中，活性空间内做 FCI（{{p:s3.22}}）；非活性轨道始终双占，虚轨道始终空。</p></div>
+<table class="small">
+<tr><th>体系 / 活性空间</th><th class="c">全部 SD</th><th class="c">$M_S=0$ 的 SD</th><th class="c">S = 0</th><th class="c">S = 1</th><th class="c">S = 2</th><th class="c">S = 3</th><th class="c">S = 4</th></tr>
+<tr><td>2 电子 2 轨道（H₂ 最小基，CAS(2,2)）</td><td class="c">6</td><td class="c">4</td><td class="c">3</td><td class="c">1</td><td class="c">—</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>2 电子 3 轨道（p²，CAS(2,3)）</td><td class="c">15</td><td class="c">9</td><td class="c">6</td><td class="c">3</td><td class="c">—</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>CAS(4,4)</td><td class="c">70</td><td class="c">36</td><td class="c">20</td><td class="c">15</td><td class="c">1</td><td class="c">—</td><td class="c">—</td></tr>
+<tr><td>CAS(6,6)</td><td class="c">924</td><td class="c">400</td><td class="c">175</td><td class="c">189</td><td class="c">35</td><td class="c">1</td><td class="c">—</td></tr>
+<tr><td>CAS(8,8)</td><td class="c">12 870</td><td class="c">4 900</td><td class="c">1 764</td><td class="c">2 352</td><td class="c">720</td><td class="c">63</td><td class="c">1</td></tr>
+</table>
+<p class="small">核对 CAS(6,6)：175 + 3 × 189 + 5 × 35 + 7 × 1 = 924 ✓；H₂：3 + 3 × 1 = 6 ✓。B 原子 2p¹（1 电子 3 轨道）：S = ½ 的 CSF = 3，就是 L3 p50 的 3 个行列式。<b>O₂ 的 π*²</b>：$\binom42=6$ 个行列式 → ³Σ<sub>g</sub>⁻（3）+ ¹Δ<sub>g</sub>（2）+ ¹Σ<sub>g</sub>⁺（1）。</p>
+<div class="fcard"><span class="ft">激发行列式的数目（按自旋轨道：N 个占据，$2K-N$ 个虚）</span>
+$$N_S=N(2K-N),\qquad N_D=\binom N2\binom{2K-N}{2},\qquad N_{FCI}=\binom{2K}{N}$$
+<p class="small">例：H₂O / cc-pVDZ（N = 10，2K = 48，虚自旋轨道 38）：单激发 380 个，双激发 45 × 703 = 31 635 个，FCI $\binom{48}{10}=6.5\times10^9$ 个。这就是 FCI 只能做极小体系、CISD 截断到双激发的原因（{{p:s4.5}}）。</p></div>
+
+<h2 id="sB.5">§B.5 积分数、存储与计算标度<span class="en">integrals, storage, scaling</span></h2>
+<div class="fcard"><span class="ft">规则</span>
+$$\text{单电子积分（不重复）}=M=\frac{K(K+1)}{2},\qquad \text{双电子积分（不重复）}=\frac{M(M+1)}{2}\approx\frac{K^4}{8}$$
+<p class="small">利用 $(\mu\nu|\lambda\sigma)=(\nu\mu|\lambda\sigma)=(\mu\nu|\sigma\lambda)=(\lambda\sigma|\mu\nu)$，共 8 重对称。每个积分双精度占 8 字节。</p></div>
+<table class="small">
+<tr><th class="c">K</th><th class="c">不重复双电子积分</th><th class="c">存储（× 8 B）</th><th>意义</th></tr>
+<tr><td class="c">24（H₂O/cc-pVDZ）</td><td class="c">45 150</td><td class="c">0.36 MB</td><td>放内存毫无问题</td></tr>
+<tr><td class="c">100</td><td class="c">$1.28\times10^7$</td><td class="c">≈ 100 MB</td><td>可以存盘</td></tr>
+<tr><td class="c">284（2-氯苯酚/def2-TZVP）</td><td class="c">$8.2\times10^8$</td><td class="c">≈ 6.5 GB</td><td>HW2 Ex3；RI 后约 $1.8\times10^7$ 个三中心积分</td></tr>
+<tr><td class="c">1000</td><td class="c">$1.25\times10^{11}$</td><td class="c">≈ 1 TB</td><td>存不下 → direct SCF 现算现用（{{p:s3.14}}）</td></tr>
+</table>
+<div class="row">
+<table style="flex:1.3" class="small">
+<tr><th>方法</th><th class="c">形式标度</th><th class="c">K 翻倍，耗时 ×</th><th>讲义给的可算规模</th></tr>
+<tr><td>对角化、RI-HF</td><td class="c">$K^3$</td><td class="c">8</td><td>—</td></tr>
+<tr><td>HF</td><td class="c">$K^4$</td><td class="c">16</td><td>几百个原子</td></tr>
+<tr><td>MP2</td><td class="c">$K^5$</td><td class="c">32</td><td>约 100 个原子</td></tr>
+<tr><td>MP3、CISD、CCSD、QCISD</td><td class="c">$K^6$</td><td class="c">64</td><td>CISD、CCSD 约 20 个原子</td></tr>
+<tr><td>MP4、CCSD(T)、QCISD(T)</td><td class="c">$K^7$</td><td class="c">128</td><td>MP4 约 20 个原子</td></tr>
+<tr><td>MP5、CISDT、CCSDT</td><td class="c">$K^8$</td><td class="c">256</td><td>—</td></tr>
+<tr><td>MP6</td><td class="c">$K^9$</td><td class="c">512</td><td>—</td></tr>
+<tr><td>MP7、CISDTQ、CCSDTQ</td><td class="c">$K^{10}$</td><td class="c">1024</td><td>—</td></tr>
+<tr><td>FCI</td><td class="c">$K!$</td><td class="c">—</td><td>最多 3–4 个简单原子</td></tr>
+</table>
+<figure style="flex:1" class="nb"><img src="img/fig_scaling.png"><figcaption>自绘：体系变大时，高阶方法耗时增长快得多（对数坐标）</figcaption></figure>
+</div>
+<div class="box exam"><span class="lab">用法</span>估算耗时只需要比值：$t_2=t_1(K_2/K_1)^p$。例：MP2 算 100 个基函数用 2 h，200 个约需 2 × 2⁵ = 64 h。算力提升 X 倍，能算的体系只大 $X^{1/p}$ 倍（Moore 定律十年 32 倍：CCSD(T) 只大 $32^{1/7}=1.64$ 倍，{{p:s1.7}}）。对称性把矩阵分成 k 个等大块，对角化耗时变为 $n^3/k^2$（{{p:s3.17}}）。</div>
+
+<h2 id="sB.6">§B.6 量子数、简并度、节面<span class="en">quantum numbers, degeneracy, nodes</span></h2>
+<table class="small">
+<tr><th>量</th><th>规则</th><th>例子</th></tr>
+<tr><td>角量子数 l</td><td>$l=0,1,\dots,n-1$（s, p, d, f, g）</td><td>n = 3：3s、3p、3d</td></tr>
+<tr><td>磁量子数 m</td><td>$m=-l,\dots,+l$，共 $2l+1$ 个</td><td>d：5 个轨道</td></tr>
+<tr><td>一个壳层 n 的轨道数 / 电子数</td><td>$n^2$ 个轨道，最多 $2n^2$ 个电子</td><td>n = 2：4 个轨道，8 个电子</td></tr>
+<tr><td>H 原子能级简并度</td><td>只依赖 n：$n^2$（计入自旋 $2n^2$）；$E_n=-Z^2/2n^2$ Ha</td><td>2s、2p 简并（多电子原子中不再简并，{{p:s2.15}}）</td></tr>
+<tr><td>节面</td><td>角向 l 个，径向 $n-l-1$ 个，总计 $n-1$ 个</td><td>3s：径向 2；3p：径向 1 + 角向 1；3d：角向 2</td></tr>
+<tr><td>自旋多重度</td><td>$2S+1$ 个 $M_S$ 分量（能量相同）</td><td>三重态简并度 3，用在 Boltzmann 的 g 里</td></tr>
+<tr><td>谱项简并度</td><td>$(2L+1)(2S+1)$</td><td>p² 组态：³P（9）+ ¹D（5）+ ¹S（1）= 15 = $\binom62$</td></tr>
+<tr><td>Slater 行列式展开</td><td>$N!$ 项，归一化因子 $1/\sqrt{N!}$</td><td>He 基态：2! = 2 项</td></tr>
+<tr><td>Heisenberg 能级（两个自旋）</td><td>$S_T=S_1+S_2,\dots,|S_1-S_2|$；$E(S)-E(S-1)=-2JS$</td><td>两个 S = ½：三重态在 −2J（单重态为 0）</td></tr>
+</table>
+
+<h2 id="sB.7">§B.7 数值估算速查<span class="en">Boltzmann numbers, energy scales</span></h2>
+<table class="small">
+<tr><th>问题</th><th>算法</th><th>结果（298 K，$k_BT$ = 207 cm⁻¹ = 0.593 kcal/mol）</th></tr>
+<tr><td>能量差 ΔE 的两个态（g 相同）的布居比</td><td>$e^{-\Delta E/k_BT}$</td><td>ΔE = 207 cm⁻¹：0.37；1 kcal/mol：0.19；2000 cm⁻¹（振动）：$6\times10^{-5}$；3 eV（电子激发）：$10^{-51}$</td></tr>
+<tr><td>布居比变化 10 倍需要的能量差</td><td>$k_BT\ln10$</td><td>1.36 kcal/mol = 5.7 kJ/mol = 477 cm⁻¹</td></tr>
+<tr><td>单重–三重分布（$g_T/g_S=3$）</td><td>$3e^{-\Delta E/k_BT}$</td><td>三重态高 200 cm⁻¹：比值 1.14，三重态占 53%；10 K 时 $\approx10^{-12}$</td></tr>
+<tr><td>"化学精度"</td><td>—</td><td>1 kcal/mol = 1.6 mHa = 0.043 eV = 350 cm⁻¹</td></tr>
+<tr><td>相关能量级</td><td>$E_{corr}$ 约为总能量的 1–5%（讲义 L5 p6）</td><td>He：HF 极限 −2.8617、精确 −2.9037 Ha，相关能 −0.042 Ha（1.4%）≈ −26 kcal/mol，远大于化学精度</td></tr>
+<tr><td>磁耦合 J 的量级</td><td>—</td><td>1–100 cm⁻¹ ≈ $10^{-6}$–$10^{-4}$ Ha：总能量的 $10^{-8}$ 以下 → 必须双精度、紧收敛（HW2 Ex5）</td></tr>
+<tr><td>电子速度（相对论）</td><td>$v/c\approx Z/137$</td><td>Cu 0.21；Ag 0.34；Au 0.58；Hg 0.58</td></tr>
+</table>

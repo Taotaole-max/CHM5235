@@ -1,0 +1,51 @@
+<h1 class="chap" data-tab="L3" id="L3"><span class="no">L3</span>软件、变分原理、HF/SCF 的实现与基组<span class="en">Standard software · variational principle · SCF in practice · basis sets</span></h1>
+
+<p class="lead">L3 把 L2 的 HF 理论"落地"：先是各软件包的特长（概念性，不考关键词），然后是整门课最重要的定理——<b>变分原理</b>，接着是单行列式的能量怎么数、Koopmans 定理、RHF/ROHF/UHF 与自旋污染、SCF 的矩阵形式与收敛技巧、积分怎么存（conventional / direct / RI）、对称性，最后是基组（STO vs GTO、zeta、极化、弥散、命名）和"精确波函数 = FCI"的引子。</p>
+
+<h2 id="s3.1">§3.1 软件包的特长与短板<span class="en">standard software &amp; visualization tools</span></h2>
+<p class="small muted">试卷不考软件关键词；但"哪个程序适合做什么、为什么扩展性差"可能出概念题。</p>
+<table class="small">
+<tr><th>软件 [L3 p2–22]</th><th>特长（PRO）</th><th>短板（CONTRA）</th></tr>
+<tr><td><b>Gaussian</b> + GaussView{{ix:Gaussian (program)|高斯程序}}</td><td>内坐标模块极好（扫描、约束、势能面分析）；溶剂化与反应场支持好；输入友好、宽容</td><td>很贵、许可限制严；<b>扩展性差：CISD 不超过 4 核、DFT 不超过 32 核</b>（即使共享内存）；Linux/OSX 安装麻烦</td></tr>
+<tr><td><b>ORCA</b>{{ix:ORCA|ORCA 程序}}</td><td><b>光谱性质最好</b>（NMR、EPR，尤其"难"的 ZFS、交换耦合）；输入简单；学术免费</td><td><b>不用对称性分块</b>（no symmetry factorization）；闭源；无自带图形界面</td></tr>
+<tr><td><b>OpenMOLCAS</b></td><td><b>多组态方法最好</b>：CASSCF、RASSCF、CASPT2、SO-RASSI、ANISO；过渡金属、镧系、开壳层自由基；免费开源</td><td>并行不好；无图形界面</td></tr>
+<tr><td><b>VASP</b></td><td>固体计算最好之一；赝势准确；并行好；DFT、DFPT、TDDFT、RPA、GW；能带、DOS、声子、光学</td><td>贵；专有</td></tr>
+<tr><td>GAMESS</td><td><b>CI 模块出色</b>；文档清楚；"传统"方法（HF、MPn、CI、MCSCF）强</td><td>三个分支语法不兼容；通常不超过 32 核；大型系统难装</td></tr>
+<tr><td>ADF</td><td><b>Slater 型基组</b>；重元素、过渡金属好；相对论 DFT 出色</td><td><b>只做 DFT</b>；含锕系、镧系常不收敛；输入输出文件繁杂</td></tr>
+<tr><td>MOPAC</td><td>能量子力学地处理<b>超大体系</b>；含 PM6</td><td><b>只有半经验</b>方法；要第三方 GUI</td></tr>
+<tr><td colspan="3">其他 [L3 p12]：Dalton（CI、CC 精细）、Turbomole（"可能最快最精简"）、NWChem（数千核并行）、Quantum Espresso / CASTEP（平面波、材料）、Siesta、Jaguar（过渡金属）、ONETEP（<b>线性标度</b> DFT，大体系）。可视化：GaussView（只能导出 2D 图）、Avogadro、Chemcraft、VMD（大生物分子、MD）、Molden、Jmol、Multiwfn。</td></tr>
+</table>
+<p class="small">"Gaussian is not the most CPU-efficient package in existence, but it takes much less time to set up… CPU time is $0.01–0.02 an hour, brain time is $25+ an hour." [L3 p2]</p>
+
+<h2 id="s3.2">§3.2 一个计算要指定什么；输出里能读出什么<span class="en">input &amp; output essentials</span></h2>
+<p>任何量化输入的要素 [L3 p4]：内存与核数；<b>方法</b>（如 RB3LYP：R = 自旋限制）、<b>基组</b>（cc-pVDZ）；任务（opt、freq）；收敛阈值（tight）；DFT 积分网格（ultrafine）；<b>总电荷与自旋多重度</b>（如 "−1 1" = 阴离子、单重态 S = 0）；坐标。</p>
+<div class="box exam"><span class="lab">输出例子 [L3 p5]（可出"读输出、数轨道"题）</span>
+<code class="small">SCF Done: E(RB3LYP) = −2692.65912953 A.U. after 9 cycles　−V/T = 2.0012<br>KE = 2689.32　PE = −6926.42　EE = 1295.55<br>NBasis = 99　NAE = 30　NBE = 30　NVA = 69　NVB = 69</code>
+<ul class="small">
+<li>NBasis = K = 99 个基函数 = 99 个 MO；NAE/NBE = α、β 电子数（30 + 30 = 60 电子，闭壳层）；NVA = 99 − 30 = 69 个 α 虚轨道（{{p:sB.3}}）。</li>
+<li>−V/T ≈ 2：位力定理（virial theorem，补充）：库仑体系在平衡构型 $\langle V\rangle=-2\langle T\rangle$，$E=-\langle T\rangle$。检查：KE 2689.32 ≈ −E 2692.66。{{ix:Virial theorem|位力定理}}</li>
+<li>.chk 是二进制检查点文件（重启、后处理），formchk 转成文本 .fchk。</li></ul></div>
+
+<h2 id="s3.3">§3.3 变分原理<span class="en">variational principle</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">For any operator, when we use its own ground eigenstate – we get the lowest possible eigenvalue. When we use an approximate function (i.e. not its eigenstate) to compute the expectation value of the operator – the result will always be higher.</span><span class="zh">用基态本征函数得到最低本征值；用任何近似函数算期望值，结果总是更高（或相等）。"one of the most important theorems used in Computational Chemistry" [L3 p25–26]{{ix:Variational principle|变分原理}}</span></div>
+<div class="fcard"><span class="ft">变分原理与证明 [L3 p26–27]</span>
+$$E_{trial}=\frac{\langle\psi_{trial}|\hat H|\psi_{trial}\rangle}{\langle\psi_{trial}|\psi_{trial}\rangle}\ \ge\ E_{exact}=\varepsilon_0$$
+$$\psi_{trial}=\sum_i c_i\varphi_i\ (\hat H\varphi_i=\varepsilon_i\varphi_i)\ \Rightarrow\ E_{trial}-\varepsilon_0=\sum_i|c_i|^2(\varepsilon_i-\varepsilon_0)\ \ge0$$
+<p class="small">不等式成立因为 $|c_i|^2\ge0$ 且 $\varepsilon_i\ge\varepsilon_0$。能量是本征值的<b>加权平均</b>，所以不可能低于最低的那个。</p></div>
+<div class="box cond"><span class="lab">条件 / 适用范围</span>
+<ul><li>只对<b>能量</b>（Hamiltonian 的期望值）成立，给出的是<b>基态能量的上界</b>。对偶极矩等其他性质没有上界/下界保证。</li>
+<li>只适用于"在某个函数空间里让能量期望值最小"得到的方法：HF、CI（CISD、FCI）、MCSCF/CASSCF 是变分的；<b>MP2、CC 不是</b>（能量可低于精确值，{{p:s4.10}}）；近似 DFT 也不受这个上界约束（泛函本身近似，{{p:s5.3}}）。</li>
+<li>要求 $\hat H$ 是精确的 Hamiltonian，且试探函数满足同样的边界条件、对称性。</li></ul></div>
+<div class="box why"><span class="lab">能量比波函数准（补充）</span>若基态系数为 $1-\delta$，能量误差 $\propto\delta^2$（二阶小量），波函数误差 $\propto\delta$（一阶）。所以 HF 能量常比 HF 偶极矩等性质准。</div>
+
+<h2 id="s3.4">§3.4 变分法实践：线性与非线性参数<span class="en">variational method in practice</span></h2>
+<p><b>四步</b> [L3 p28]：① 构造含参数的试探函数 $\psi_{trial}=\sum_i c_i\varphi_i$；② 算 $E_{trial}$；③ 令所有一阶导数 $\partial E_{trial}/\partial c_i=0$，解方程组；④ 用最优 $c_i$ 算最终能量——它是这个试探形式下<b>可能的最低能量</b>。</p>
+<div class="box cond"><span class="lab">要再改进只有两条路 [L3 p28]</span>(a) 增加变分参数（扩大基组）；(b) 换一种波函数表示（同样会增加参数）。在固定的函数形式里，最优解就到头了。</div>
+<table>
+<tr><th>讲义例题 [L3 p29–37]</th><th>试探函数</th><th>结果</th></tr>
+<tr><td>非线性变分 1</td><td>$\psi=\sqrt{\alpha^3/\pi}\,e^{-\alpha r}$</td><td>$E(\alpha)=\frac{\alpha^2}{2}-\alpha$，$dE/d\alpha=\alpha-1=0$ ⇒ $\alpha=1$，$E=-\frac12$ Ha，<b>恰好是精确 1s</b>（"we were lucky"：试探形式包含了真解）</td></tr>
+<tr><td>非线性变分 2</td><td>$\psi=\sqrt{\alpha^5/3\pi}\;r\,e^{-\alpha r}$（不可能变成 1s）</td><td>$E(\alpha)=\frac43\left(\frac{\alpha^2}{8}-\frac{3\alpha}{8}\right)$ ⇒ $\alpha=\frac32$，$E=-\frac38$ Ha：高于基态 −1/2，但远低于第二本征值 −1/8</td></tr>
+<tr><td>投影求权重</td><td>$c_{1s}=\int\psi_{1s}^*\psi_{trial}\,d\tau$</td><td>利用本征态正交，其余项为零；$c_{1s}=432\sqrt2/625$</td></tr>
+</table>
+<div class="box fix"><span class="lab">讲义数值笔误 [L3 p37]</span>讲义写 $c_{1s}=432\sqrt2/625\approx0.9975$、权重 "0.9555 or 99.55%"。实际 $432\times1.41421/625=\mathbf{0.9775}$，权重 $c_{1s}^2=\mathbf{0.9555=95.55\%}$。（能量 −0.375 Ha 对应的 1s 权重本来就不可能是 99.55%。）</div>
+<div class="box add"><span class="lab">线性 vs 非线性变分（补充）</span>参数是展开<b>系数</b>（如 LCAO 的 $c_{si}$、CI 系数）→ 线性变分 → 化成矩阵本征值问题（久期方程）。参数在函数<b>内部</b>（如指数 α、几何）→ 非线性，要迭代或数值优化。基组的 Gaussian 指数、收缩系数是事先定好的，不参与变分。</div>

@@ -1,0 +1,76 @@
+<h2 id="s4.7">§4.7 H₂ 最小基的 FCI：CI 怎样让电子彼此分开<span class="en">how CI lets electrons be far apart</span></h2>
+<p>最小基（每个 H 一个函数 $\chi_A,\chi_B$）：$\varphi_1=\chi_A+\chi_B$（成键），$\varphi_2=\chi_A-\chi_B$（反键）。FCI 空间 = $\Psi_0=|\varphi_1\bar\varphi_1|$ + 4 个单激发 + 1 个双激发 $\Psi_1=|\varphi_2\bar\varphi_2|$，共 6 个行列式 [L4 p17]（= $\binom42$，{{p:sB.4}}）。</p>
+<div class="row">
+<figure style="flex:1"><img src="img/L4_p18_cimatrix.png"><figcaption>[L4 p18] 自旋匹配后的 CI 矩阵：S = 0 与 S = 1 不混合；单激发单重态也不与 Ψ₀ 混合</figcaption></figure>
+<div style="flex:1">
+<div class="box def"><span class="lab">原句</span><span class="en">Spin singlet states do NOT mix with spin triplet states. Also, singly-excited singlet SD (Ψ₂−Ψ₃) does not mix with Ψ₀ because of Brillouin theorem (all singly-excited configurations do not mix with Hartree-Fock ground state).</span><span class="zh">[L4 p18]{{ix:Brillouin theorem|布里渊定理}}</span></div>
+<p class="small">⇒ 真正混合的只有 $\Psi_0$ 与双激发 $\Psi_1$（都是 S = 0 且 g 对称）。</p>
+</div>
+</div>
+<div class="fcard"><span class="ft">离子项与共价项 [L4 p19–20]</span>
+$$\Psi_0\propto\underbrace{\chi_A(1)\chi_A(2)+\chi_B(1)\chi_B(2)}_{\text{离子}}+\underbrace{\chi_A(1)\chi_B(2)+\chi_B(1)\chi_A(2)}_{\text{共价}},\qquad \Psi_1\propto(\text{离子})-(\text{共价})$$
+$$\Psi_{FCI}=a_0\Psi_0+a_1\Psi_1=(a_0+a_1)[\text{离子}]+(a_0-a_1)[\text{共价}],\qquad a_0^2+a_1^2=1$$</div>
+<div class="row">
+<div style="flex:1.3">
+<div class="box why"><span class="lab">要点 [L4 p19–20]</span><ul>
+<li>HF 的 $\Psi_0$ 离子、共价<b>各 50%</b>。混入 $\Psi_1$（$a_1<0$）→ 共价成分增加 → 两个电子运动相关（<b>左右相关</b>，left-right correlation）。{{ix:Left-right correlation|左右相关}}</li>
+<li>混合程度强烈依赖 H–H 距离；<b>无穷远处 $a_1=-a_0$ → 离子项为零</b>，得到正确的两个 H 原子。</li>
+<li>RHF 解离极限过高；UHF 在远处接近 FCI 但平衡区与 RHF 重合；FCI 处处最低（p21 图）。</li></ul></div>
+</div>
+<figure style="flex:1"><img src="img/L4_p21_h2pes.png"><figcaption>[L4 p21] H₂：RHF（虚线）、UHF（点线）、FCI（实线）</figcaption></figure>
+</div>
+
+<h2 id="s4.8">§4.8 截断 CI 的大小不一致性<span class="en">size inconsistency of truncated CI</span></h2>
+<div class="box def"><span class="lab">原句（例子）</span><span class="en">Let's assume we need to compute the energy of two water molecules, separated by e.g. 100 Angstrom … 1) Compute both water molecules together … E<sub>supermolecule</sub>. 2) Compute one single water molecule and then, multiply the result by 2 … We would expect that E<sub>sup</sub> = 2E. However, this equality is respected only by the Full CI method. When using any of the truncated CI methods (like CISD), we will find that 2E(H₂O) &lt; E<sub>sup</sub>. … a product of two CISD wave functions of each water molecule … will necessarily include single, double, triple and quadruple excited SDs, more than the CISD wave function obtained for the case (1).</span><span class="zh">[L4 p22]{{ix:Size consistency|大小一致性}}{{ix:Size extensivity|大小广延性}}</span></div>
+<div class="fcard"><span class="ft">大小一致性</span>
+$$E(A+B,\ R\to\infty)=E(A)+E(B)\qquad\text{CISD：}\ E_{CI}(1+2)>E_{CI}(1)+E_{CI}(2)$$
+<p class="small">中文：两个无限远的分子一起算，能量应等于分开算之和。CISD 超分子计算只允许"总共两个电子"被激发，不能描述"两个分子各自同时双激发"（= 整体四激发），所以超分子能量偏高。</p></div>
+<table class="cmp">
+<tr><th>方法</th><th>变分？</th><th>大小一致？</th></tr>
+<tr><td>HF（RHF 需注意解离到正确碎片）</td><td>✓</td><td>✓</td></tr>
+<tr><td>截断 CI（CISD、CISDT）</td><td>✓</td><td><b>✗</b></td></tr>
+<tr><td>FCI</td><td>✓</td><td>✓</td></tr>
+<tr><td>CC（CCSD、CCSD(T)…）</td><td><b>✗</b></td><td>✓（即使截断）</td></tr>
+<tr><td>MPn（MP2…）</td><td><b>✗</b></td><td>✓</td></tr>
+<tr><td>CASSCF</td><td>✓</td><td>✓（活性空间取法合理时，补充）</td></tr>
+</table>
+
+<h2 id="s4.9">§4.9 耦合簇（CC）<span class="en">coupled cluster</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Coupled-cluster theory uses a sum over all excitations of a specified type. That is, whereas each determinant is parameterized in CI theory, it is the excitation process that is parameterized in the CC theory. CC includes higher excitations, but their coefficients are products of lower order excitation coefficients. CC theory is size-consistent.</span><span class="zh">CI 给<b>每个行列式</b>一个参数；CC 给<b>激发过程</b>一个参数。CC 含更高激发，但其系数是低阶激发系数的乘积。CC 大小一致。[L4 p23]{{ix:Coupled cluster (CC)|耦合簇}}</span></div>
+<div class="fcard"><span class="ft">CI 与 CC 的波函数 [L4 p24–26]</span>
+$$\hat T=\hat T_1+\hat T_2+\hat T_3+\cdots+\hat T_{N_{elec}},\qquad \Psi_{CI}=(1+\hat T)\Psi_0,\qquad \Psi_{CC}=e^{\hat T}\Psi_0$$
+$$e^{\hat T}=1+\hat T_1+\left(\hat T_2+\tfrac12\hat T_1^2\right)+\left(\hat T_3+\hat T_2\hat T_1+\tfrac16\hat T_1^3\right)+\cdots$$
+$$E_{CC}=\langle\Psi_0|\hat He^{\hat T}|\Psi_0\rangle=E_0+\sum_{i<j}^{occ}\sum_{a<b}^{virt}\left(t_{ij}^{ab}+t_i^at_j^b-t_i^bt_j^a\right)\left[\langle ij|ab\rangle-\langle ij|ba\rangle\right]$$
+<table class="vars"><tr><td>$\hat T_1,\hat T_2$</td><td>产生单、双激发的算符</td><td>$t$</td><td>振幅（amplitudes），由投影方程 $\langle\Psi_i^a|\hat He^{\hat T}|\Psi_0\rangle=E_{CC}\langle\Psi_i^a|e^{\hat T}\Psi_0\rangle$、$\langle\Psi_{ij}^{ab}|\dots$ 求得</td></tr></table>
+<p class="small">单激发项 $\sum t_i^a\langle\Psi_0|\hat H|\Psi_i^a\rangle=0$（Brillouin）。能量只需双激发振幅、单激发振幅乘积和变换到 MO 基的双电子积分。能量用<b>投影</b>而不是变分得到 → <b>CC 不是变分的</b>。</p></div>
+<div class="box cond"><span class="lab">截断与适用范围 [L4 p26–27]</span>
+<ul><li>CCSD（单双）、CCSDT（单双三）…；讲义说 "golden standard in QC is CCSDTQ"。（补充：通常说的"金标准"是 <b>CCSD(T)</b>——三激发用微扰估计；判断题按题目语境。）{{ix:CCSD(T)|含微扰三激发的 CCSD}}</li>
+<li>"Coupled Clusters is size-consistent method, even at the truncated level."</li>
+<li>多参考体系（扭曲双键、拉长单键等）中随激发级别收敛可能<b>慢得多</b>——和 CI 一样，单行列式不是好的起点时应改用 CASSCF / CASPT2。</li></ul></div>
+<div class="row">
+<table style="flex:1" class="small">
+<tr><th>水 / cc-pVDZ [L4 p27]</th><th>$E-E_{FCI}$ (Ha)</th></tr>
+<tr><td>RHF</td><td>0.217822</td></tr><tr><td>CCSD</td><td>0.003744</td></tr><tr><td>CCSDT</td><td>0.000493</td></tr><tr><td>CCSDTQ</td><td>0.000019</td></tr><tr><td>CCSDTQP</td><td>0.000003</td></tr>
+</table>
+<table style="flex:1" class="small">
+<tr><th>方法</th><th>键长 RMS 误差 (Å)</th></tr>
+<tr><td>HF/6-31G(d,p)</td><td>0.021</td></tr><tr><td>HF/6-311G(d,p)</td><td>0.022</td></tr><tr><td>MP2/6-31G(d,p)</td><td>0.014</td></tr><tr><td>MP2/6-311G(d,p)</td><td>0.014</td></tr><tr><td>QCISD/6-311G(d,p)</td><td>0.013</td></tr><tr><td>CCSD(T)/6-311G(d,p)</td><td>0.013</td></tr>
+</table>
+<table style="flex:1" class="small">
+<tr><th>方法</th><th>原子化能 RMS 误差 (kcal/mol)</th></tr>
+<tr><td>HF/6-31G(d)</td><td>85.9</td></tr><tr><td>HF/6-311G(2df,p)</td><td>82.0</td></tr><tr><td>MP2/6-31G(d)</td><td>22.4</td></tr><tr><td>MP2/6-311G(d,p)</td><td>23.7</td></tr><tr><td>QCISD/6-311G(d)</td><td>28.8</td></tr><tr><td>CCSD(T)/6-311G(2df,p)</td><td>11.5</td></tr>
+</table>
+</div>
+<p class="small">读表：HF 的原子化能误差 ~85 kcal/mol（相关能对键能至关重要，加大基组也救不了 HF）；几何对方法不那么敏感（HF 已 0.02 Å）。MP2/6-311G(d,p) 比 MP2/6-31G(d) 稍差——更大基组不一定更准（误差抵消，{{p:s4.4}}）。</p>
+
+<h2 id="s4.10">§4.10 微扰理论与 MP2<span class="en">perturbation theory, Møller–Plesset</span></h2>
+<div class="fcard"><span class="ft">Rayleigh–Schrödinger 微扰理论 [L4 p28–35]</span>{{ix:Perturbation theory|微扰理论}}
+$$\hat H=\hat H_0+\lambda\hat H_1,\quad \hat H_0\psi_n^{(0)}=E_n^{(0)}\psi_n^{(0)},\quad \psi_n=\sum_k\lambda^k\psi_n^{(k)},\quad E_n=\sum_k\lambda^kE_n^{(k)}$$
+$$E_n^{(1)}=\langle\psi_n^{(0)}|\hat H_1|\psi_n^{(0)}\rangle,\qquad \psi_n^{(1)}=\sum_{m\ne n}\frac{\langle\psi_m^{(0)}|\hat H_1|\psi_n^{(0)}\rangle}{E_n^{(0)}-E_m^{(0)}}\psi_m^{(0)},\qquad E_n^{(2)}=\sum_{m\ne n}\frac{|\langle\psi_m^{(0)}|\hat H_1|\psi_n^{(0)}\rangle|^2}{E_n^{(0)}-E_m^{(0)}}$$
+<table class="vars"><tr><td>$\hat H_0$</td><td>已会解的简单 Hamiltonian（如 $\hat K+\hat V_0$）</td><td>$\hat H_1$</td><td>微扰（如外加电场、磁场）；假设 $\hat V_0$ 远强于 $\lambda\hat H_1$</td><td>$k$</td><td>第 k 阶修正</td></tr></table></div>
+<div class="box why"><span class="lab">读公式</span>基态的 $E^{(2)}$ <b>总是负的</b>（分母 $E_0^{(0)}-E_m^{(0)}<0$，分子 ≥ 0）；两个态能量越接近（分母小）混合越强——所以近简并时微扰<b>发散/失效</b>。</div>
+<div class="fcard"><span class="ft">MP2：把 PT 用于闭壳层 HF [L4 p36]</span>{{ix:Møller–Plesset perturbation theory (MP2)|MP2 微扰}}
+$$E\approx E_{MP0}+E_{MP1}+E_{MP2}=E_{HF}+\sum_{i<j}^{occ}\sum_{a<b}^{virt}\frac{\left|\langle\varphi_i\varphi_j|\varphi_a\varphi_b\rangle-\langle\varphi_i\varphi_j|\varphi_b\varphi_a\rangle\right|^2}{\varepsilon_i+\varepsilon_j-\varepsilon_a-\varepsilon_b}$$
+<table class="vars"><tr><td>$\varepsilon_i,\varepsilon_j$</td><td>HF 占据轨道能</td><td>$\varepsilon_a,\varepsilon_b$</td><td>HF 空（虚）轨道能</td></tr></table>
+<p class="small">（补充）MP 的 $\hat H_0=\sum\hat F$；$E_{MP0}+E_{MP1}=E_{HF}$，所以第一个修正在<b>二阶</b>；只有<b>双激发</b>进入 MP2（单激发因 Brillouin 为零）。分母是 HOMO–LUMO 类能隙：能隙小（近简并、金属、键解离）时 MP2 失效。</p></div>
+<div class="box cond"><span class="lab">性质</span>MPn <b>非变分</b>（能量可低于精确值：Be 的 MP7 相关能 100.15%，{{p:s4.11}}）；<b>大小一致</b>；单参考——只在 HF 是好起点时可靠；标度 MP2 $O(n^5)$。</div>

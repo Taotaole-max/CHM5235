@@ -1,0 +1,77 @@
+<h2 id="s3.11">§3.11 基组近似与 Roothaan 方程的矩阵形式<span class="en">basis set approximation; FC = SCε</span></h2>
+<p>MO 是描述<b>单个电子</b>运动的函数 [L3 p54]。两种表示：</p>
+<table class="small">
+<tr><th>数值网格（numerical QC）</th><th>函数展开（LCAO）</th></tr>
+<tr><td>小分子可把 MO 直接展开在格点上；<b>极易并行</b>（多核 CPU、GPU）；但波函数很快变得<b>太大</b>、难处理</td><td>中大分子更好：表示更<b>紧凑</b>。$\varphi_i=\sum_\alpha^{N_{basis}}c_{i\alpha}\chi_\alpha$</td></tr>
+</table>
+<div class="fcard"><span class="ft">矩阵形式 [L3 p55–57]</span>
+$$\sum_\alpha c_{i\alpha}\langle\chi_\beta|\hat F|\chi_\alpha\rangle=\sum_\alpha c_{i\alpha}\langle\chi_\beta|\chi_\alpha\rangle\,\varepsilon_i\ \Rightarrow\ \mathbf{FC}=\mathbf{SC}\boldsymbol{\varepsilon}$$
+<table class="vars"><tr><td>$F_{\alpha\beta}$</td><td>AO 基下的 Fock 矩阵</td><td>$S_{\alpha\beta}$</td><td>原始基组的重叠矩阵</td><td>$\mathbf C$</td><td>系数矩阵（每列一个 MO）</td><td>$\boldsymbol\varepsilon$</td><td>对角矩阵：轨道能</td></tr></table></div>
+
+<h2 id="s3.12">§3.12 密度矩阵、Fock 矩阵与 HF 能量<span class="en">density matrix</span></h2>
+<div class="fcard"><span class="ft">[L3 p58–59]</span>{{ix:Density matrix|密度矩阵}}
+$$D_{\gamma\delta}=\sum_{j=1}^{N_{elec}}c_{\gamma j}c_{\delta j},\qquad F_{\alpha\beta}=h_{\alpha\beta}+\sum_{\gamma\delta}^{N_{basis}}G_{\alpha\beta\gamma\delta}D_{\gamma\delta},\qquad \mathbf F=\mathbf h+\mathbf G\cdot\mathbf D$$
+$$G_{\alpha\beta\gamma\delta}=\langle\chi_\alpha\chi_\gamma|\hat g|\chi_\beta\chi_\delta\rangle-\langle\chi_\alpha\chi_\gamma|\hat g|\chi_\delta\chi_\beta\rangle\quad(\text{库仑}-\text{交换})$$
+$$E=\sum_{\alpha\beta}D_{\alpha\beta}h_{\alpha\beta}+\frac12\sum_{\alpha\beta\gamma\delta}D_{\alpha\beta}D_{\gamma\delta}\left[\langle\chi_\alpha\chi_\gamma|\hat g|\chi_\beta\chi_\delta\rangle-\langle\chi_\alpha\chi_\gamma|\hat g|\chi_\delta\chi_\beta\rangle\right]+V_{nn}$$
+<p class="small">½ 因为每对电子数了两次。关键：F 依赖 D，D 又来自 F 的本征矢 → 必须迭代。</p></div>
+
+<h2 id="s3.13">§3.13 SCF 过程<span class="en">SCF procedure</span></h2>
+<div class="row">
+<figure style="flex:1.2"><img src="img/L3_p60_scf.png"><figcaption>[L3 p60] 初猜 D → 构造 F（需要双电子积分）→ 对角化 F → 新 D → 迭代</figcaption></figure>
+<div style="flex:1">
+<p><b>收敛判据</b>：(a) 能量不再变化；(b) 密度矩阵不再变化。每一步都在降低能量——"Variational Principle!"{{ix:SCF convergence|SCF 收敛}}</p>
+<p>收敛后 MO 系数已知；任何幺正变换不改变总能量（{{p:s3.7}}）。</p>
+<div class="box why"><span class="lab">为什么贵</span>每轮都要：① 用 $K^4$ 量级的双电子积分构造 F；② 对角化 $K\times K$ 矩阵（$O(K^3)$，难并行，{{p:s1.10}}）。</div>
+</div>
+</div>
+
+<h2 id="s3.14">§3.14 双电子积分的计算：conventional、direct、半经验<span class="en">computational aspects of 2-ERIs</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">D<sub>αβ</sub>, h<sub>αβ</sub> are square matrices of size N<sub>basis</sub>. These matrices can be kept in the active memory … The second summation is the hardest part. … a two-electron integral may be called one-, two-, three- and four-centre integral. For combinatorial reasons, the number of four-centre integrals may be very large. They cannot be kept in memory for any compound larger than benzene. Semi-empirical methods are based on partial neglect of two-electron integrals.</span><span class="zh">单电子部分（$K\times K$ 矩阵）放内存很快；难的是双电子积分：按四个基函数所在原子分为一、二、三、四中心积分，四中心积分数目巨大，比苯大的分子就放不进内存。<b>半经验方法 = 部分忽略双电子积分</b>（再用参数弥补）。[L3 p62]{{ix:Semi-empirical methods|半经验方法}}{{ix:Four-centre integrals|四中心积分}}</span></div>
+<table class="cmp">
+<tr><th></th><th>Conventional（存盘）{{ix:Conventional SCF|传统 SCF}}</th><th>Direct（现算现用）{{ix:Direct SCF|直接 SCF}}</th></tr>
+<tr><td>积分计算次数</td><td>只算<b>一次</b></td><td>每次用都重算（通常 <b>4–16 次</b>）</td></tr>
+<tr><td>存储介质性能 [L3 p63]</td><td>磁盘：顺序 100 MB/s，随机 1 MB/s，延迟 1–10 ms</td><td>内存：顺序 10 GB/s，随机 1 GB/s，延迟 1–10 ns</td></tr>
+<tr><td>大分子</td><td>100+ 原子时积分数组<b>放不下磁盘</b></td><td>只需存基组描述，通常放得进内存</td></tr>
+<tr><td>压缩</td><td>可用数据压缩</td><td>不需要</td></tr>
+</table>
+<p><b>Semi-direct</b>：折中，适合后 HF 方法（把某些很贵的中间量存盘）；在 SSD 上常快得多 [L3 p63]。</p>
+<div class="box why"><span class="lab">和 L1 的联系</span>这张表就是 L1 延迟/带宽表（{{p:s1.5}}）的应用：磁盘随机访问又慢又有 ms 级延迟，重算往往比读盘快。</div>
+
+<h2 id="s3.15">§3.15 RI（Resolution of Identity）/ 密度拟合 / Cholesky 分解<span class="en">RI methods</span></h2>
+<div class="fcard"><span class="ft">[L3 p64]</span>{{ix:Resolution of identity (RI)|恒等分解}}{{ix:Density fitting|密度拟合}}{{ix:Cholesky decomposition|Cholesky 分解}}
+$$\hat 1=\sum_n|\varphi_n\rangle\langle\varphi_n|\ \ (\text{完备基}),\qquad \langle\chi_\alpha\chi_\beta|\hat g|\chi_\gamma\chi_\delta\rangle\approx\sum_{P,Q}^{N_{aux}}\langle\chi_\alpha\chi_\beta|\hat g|P\rangle\,[\mathbf{PQ}]^{-1}\,\langle Q|\hat g|\chi_\gamma\chi_\delta\rangle$$</div>
+<div class="box why"><span class="lab">省在哪里 [L3 p64]</span>
+<ol><li>$\langle\chi_\alpha\chi_\beta|\hat g|P\rangle$ 是<b>三下标</b>量；P、Q 是<b>辅助（拟合）基组</b>，有限且远小于原基函数乘积数 $N_{basis}^2$。</li>
+<li>矩阵 $[\mathbf{PQ}]$ 放得进内存。</li>
+<li>HF 原始标度 $N^4$，RI 后降到 $N^3$ 甚至更低（取决于内存）。</li>
+<li>Cholesky 分解是 RI 的一种特殊形式。</li></ol></div>
+<div class="box cond"><span class="lab">条件</span>RI 是近似：误差取决于辅助基组质量（要和主基组配套）；能量有小的拟合误差（补充）。</div>
+
+<h2 id="s3.16">§3.16 SCF 收敛问题与加速技巧<span class="en">convergence acceleration</span></h2>
+<p>最朴素的迭代"收敛很差：需要很多次迭代，很多情况下<b>可能永远不收敛</b>"[L3 p65]。</p>
+<table>
+<tr><th>技巧 [L3 p66–68]</th><th>做法</th><th>特点 / 条件</th></tr>
+<tr><td>Extrapolation 外推</td><td>用前几轮（通常 3–5 轮）的 Fock 矩阵外推出本轮更好的 F</td><td>—</td></tr>
+<tr><td>Damping 阻尼{{ix:Damping|阻尼}}</td><td>$D'_{n+1}=\omega D_n+(1-\omega)D_{n+1}$，ω 为阻尼因子</td><td>抑制密度在收敛值两侧来回振荡</td></tr>
+<tr><td>Level shifting 能级移动{{ix:Level shifting|能级移动}}</td><td>人为<b>增大 HOMO–LUMO 能隙</b> → 下一轮占据/空轨道混合更小（完全收敛时混合 = 0）</td><td><b>保证收敛</b>，但<b>可能收敛到局部极小</b></td></tr>
+<tr><td><b>DIIS</b>{{ix:DIIS|直接迭代子空间反演}}</td><td>$F'_{n+1}=\sum_i^n c_iF_i$，c 使误差 $f(\mathbf c)=\mathrm{Tr}\,(\mathbf{FDS}-\mathbf{SDF})^2$ 最小，约束 $\sum c_i=1$</td><td>收敛时 $\mathbf{FDS}=\mathbf{SDF}$（F 与 D 对易）；最常用</td></tr>
+<tr><td>Newton–Raphson、共轭梯度</td><td>用轨道梯度（一阶导）和轨道 Hessian（二阶导）预测最佳 F</td><td>在极小点<b>附近</b>收敛好；Hessian 贵；DIIS 失败时用</td></tr>
+</table>
+<div class="row">
+<figure style="flex:1"><img src="img/L3_p66_damping.png"><figcaption>[L3 p66] 振荡的密度：阻尼把它拉向收敛值</figcaption></figure>
+<figure style="flex:0.8"><img src="img/L3_p67_levelshift.png"><figcaption>[L3 p67] 能级移动：拉大 HOMO–LUMO 能隙</figcaption></figure>
+</div>
+<div class="box add"><span class="lab">补充：收敛了 ≠ 找到了基态</span>SCF 收敛只说明是能量的驻点，可能是鞍点或更高的解（HW1 Ex2 的 H–F 势能面就收敛到了不稳定的 RHF 型解，要做波函数稳定性分析才发现，{{p:sH.1}}）。</div>
+
+<h2 id="s3.17">§3.17 对称性的作用<span class="en">effects of symmetry</span></h2>
+<div class="row">
+<div style="flex:1">
+<ol>
+<li>用点群对称操作生成<b>对称匹配线性组合</b>（SALC）作为 MO 初猜。{{ix:SALC|对称匹配线性组合}}</li>
+<li>$F_{\alpha\beta}$、$h_{\alpha\beta}$、双电子积分、$D_{\alpha\beta}$ 都变成<b>块对角</b>（每块一个不可约表示）。</li>
+</ol>
+<p>好处 [L3 p69]：只存非零块 → 大幅省空间和内存；块对角矩阵乘法更快；收敛也更好。</p>
+<div class="box add"><span class="lab">补充估算</span>对角化 $O(n^3)$：分成 k 个等大块，耗时 $k(n/k)^3=n^3/k^2$（2 块快 4 倍，4 块快 16 倍）。ORCA 不用对称性分块（{{p:s3.1}}）。</div>
+</div>
+<figure style="flex:0 0 48%"><img src="img/L3_p69_symmetry.png"><figcaption>[L3 p69] 按不可约表示分块的矩阵</figcaption></figure>
+</div>

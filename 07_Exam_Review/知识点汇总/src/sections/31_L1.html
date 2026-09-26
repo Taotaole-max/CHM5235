@@ -1,0 +1,165 @@
+<h1 class="chap" data-tab="L1" id="L1"><span class="no">L1</span>计算化学概览与计算平台<span class="en">Overview of computational chemistry · computers & clusters</span></h1>
+
+<p class="lead">L1 讲两件事：① 计算化学是什么、从哪里来；② 计算机硬件怎样限制我们能算什么。可能出的是概念判断题：延迟和带宽的区别、为什么用双精度、为什么矩阵对角化是瓶颈、什么时候多节点反而更慢。具体软件命令、Linux 操作、PBS 脚本不考。</p>
+
+<h2 id="s1.1">§1.1 课程结构与考核<span class="en">course plan &amp; assessment</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">The midterm test and final exam will mostly include theoretical and conceptual questions. No practical calculations will be needed for the mid-term quiz and for final exam.</span><span class="zh">期中和期末主要考理论和概念，不需要做实际计算。[L1 p5]</span></div>
+<table>
+<tr><th>项目</th><th class="c">权重</th><th>内容</th></tr>
+<tr><td>4 次作业（HPC@NUS 上做）</td><td class="c">各 15%</td><td>Gaussian/GaussView；ORCA/Avogadro/Chemcraft；OpenMOLCAS/Luscus；VASP/VESTA/vaspkit/py4vasp</td></tr>
+<tr><td>期中小测（9 月 29 日周二）</td><td class="c">15%</td><td>理论和概念</td></tr>
+<tr><td>期末考试</td><td class="c">25%</td><td>理论和概念</td></tr>
+</table>
+<p>理论课主线 [L1 p2]：计算化学概览 → 原子级、粗粒化力场方法及其局限 → 量子力学基础（算符、本征方程、量子化、H 原子轨道）→ HF 与 Roothaan–Hall 方程 → 波函数分析（原子电荷、电子密度、轨道定域化）→ 电子相关方法（MP2、CCSD 等）→ 分子动力学（DFT 与半经验）。</p>
+<p>上机课 [L1 p3–4]：Gaussian、ORCA 做几何优化与频率、轨道/电子密度/自旋密度可视化、磁交换（BS-DFT）、TD-DFT 激发态；OpenMOLCAS 做多组态方法 RASSCF/CASPT2/RASSI（过渡金属、镧系激发态）；VASP 做固体周期性材料、二维层、表面吸附分子。</p>
+
+<h2 id="s1.2">§1.2 计算化学是什么 · 名人与里程碑<span class="en">what is computational chemistry</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Computational Chemistry is a (relatively new) research area which aims at finding answers to chemical problems by using computers &amp; fundamental laws of interaction between particles.</span><span class="zh">计算化学：用计算机 + 粒子间相互作用的基本定律来回答化学问题。[L1 p7]{{ix:Computational chemistry|计算化学}}</span></div>
+<p>一个化学反应 A + B →(催化剂) 产物 + C + D… 的未知数 [L1 p7]：最合适的试剂、催化剂；反应条件（温度、压力、溶剂）；从反应混合物中分离新化合物；新化合物的物理性质（分子和晶体结构、势能面、熔点、EPR、UV-Vis、IR、NMR、Raman 谱）；反应机理（新认识）；反应动力学（为工业放大服务）。</p>
+<table>
+<tr><th class="nw">Nobel 奖</th><th>获奖者</th><th>原因（讲义原文）[L1 p9]</th></tr>
+<tr><td>1998</td><td>Walter Kohn</td><td>"for his development of density-functional theory"{{ix:Kohn, Walter|DFT 获奖者}}</td></tr>
+<tr><td>1998</td><td>John Pople</td><td>"for his development of computational methods in quantum chemistry"{{ix:Pople, John|Gaussian 程序、量化方法}}</td></tr>
+<tr><td>2013</td><td>Karplus, Levitt, Warshel</td><td>"for the development of multiscale models for complex chemical systems"</td></tr>
+</table>
+<p><b>Enrico Clementi</b> [L1 p8]：1961 年开创 ab initio 量化计算并免费分发 HF 程序；首次系统估算原子与分子的相关能；1963 年开创密度泛函方法；1972 年起做液体、水溶液中生物体系的 Monte Carlo 和分子动力学；1983 年开创并行计算硬件（LCAP）。</p>
+<table class="small">
+<tr><th class="nw">年份</th><th>事件 [L1 p11]</th><th class="nw">年份</th><th>事件</th></tr>
+<tr><td>1925</td><td>Heisenberg、Born、Jordan：矩阵力学；Schrödinger：波动力学和非相对论 Schrödinger 方程；Heitler–London：第一个化学键计算</td><td>1955</td><td>第一个"大"分子 N₂ 的 ab initio 计算</td></tr>
+<tr><td>1927</td><td>Hartree 发表自洽场（SCF）方法</td><td>1956</td><td>晶体管取代真空管</td></tr>
+<tr><td>1930</td><td>Fock 建立 Hartree–Fock 理论</td><td>1964</td><td>Hohenberg 和 Kohn 提出 DFT</td></tr>
+<tr><td>1947</td><td>ENIAC，第一台通用计算机</td><td>1970</td><td>Pople 推出 Gaussian 程序</td></tr>
+<tr><td>1950</td><td>Roothaan 发表 LCAO 理论</td><td>1971</td><td>第一个商用微处理器 Intel 4004</td></tr>
+<tr><td>1951</td><td>UNIVAC，第一台商用通用计算机</td><td>1998 / 2019 / 2020</td><td>第一个 2-qubit 量子处理器（Chuang、Gershenfeld）；Google 超导量子处理器"量子优越性"；中国科大光量子处理器</td></tr>
+</table>
+<p>JACS 历史被引前列的计算论文 [L1 p10]：AM1、MNDO（半经验）；AMBER 第二代力场、OPLS-AA、UFF、MM2（力场）；GIAO（NMR 化学位移）；Pople 的小劈裂价层基组（3-21G）；自然杂化轨道（NBO）。</p>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"Hartree 在 1930 年提出了 HF 理论。" <span class="r">Hartree 1927 年提出 SCF；Fock 1930 年加上反对称（交换）才成为 Hartree–Fock。</span></li>
+<li class="x">"Kohn 因为发明 Gaussian 程序获奖。" <span class="r">Gaussian 是 Pople；Kohn 是 DFT。两人同为 1998 年。</span></li>
+<li class="x">"2013 年 Nobel 奖授予 DFT。" <span class="r">2013 年是多尺度模型（QM/MM 的思想），Karplus、Levitt、Warshel。</span></li>
+<li class="o">Roothaan 的年份：L1 p11 写 1950，L2 p86 写 1955。<span class="r">讲义前后不一致，题目引用哪页就按哪页。</span></li>
+</ul></div>
+
+<h2 id="s1.3">§1.3 未来方向<span class="en">promising paths</span></h2>
+<ol>
+<li><b>AI / 机器学习 + 计算化学</b>：以比普通 DFT 快一万倍以上的速度得到 DFT 质量的结果 → 更充分地扫描相空间；快速预测新材料、新现象、反应性和性质；加速新分子和新材料的发现。</li>
+<li>准确描述<b>弱相互作用</b>：van der Waals、色散、长程相关（对应 {{p:s5.9}} 的 DFT-D）。</li>
+<li>准确预测分子晶体的<b>晶体结构和声子谱</b>。</li>
+<li><b>非平衡量子动力学</b>：同时对电子和核解 Schrödinger 方程，即 non-Born–Oppenheimer（对应 {{p:s2.16}}）。{{ix:Non-Born–Oppenheimer|非 BO 动力学}}</li>
+<li>面向<b>量子处理器</b>的计算方法及各种混合方法。</li>
+</ol>
+<div class="box add"><span class="lab">补充</span>方法层级（便宜 → 昂贵）：力场 / 分子力学（经典势能函数，没有电子；AMBER、OPLS、UFF、MM2）→ 半经验（AM1、MNDO、PM6：略去大部分双电子积分并用参数弥补，{{p:s3.14}}）→ DFT → HF 及后 HF（MP2、CC、CI）。越往后越"第一性原理"，也越贵。</div>
+
+<h2 id="s1.4">§1.4 计算机与集群的结构<span class="en">anatomy of a computer / cluster</span></h2>
+<p>一台计算机 [L1 p14]：主板集成 CPU（多个计算核心 + 很快的本地缓存）、RAM（快）、硬盘（慢）、显卡（自带 GPU 和显存）、外设。</p>
+<div class="row">
+<figure style="flex:0 0 38%"><img src="img/L1_p15_cluster.png"><figcaption>[L1 p15] 集群：头节点 + 很多计算节点，经互联交换机相连</figcaption></figure>
+<div style="flex:1.4">
+<table class="cmp">
+<tr><th></th><th>计算机集群（如 NSCC）{{ix:Cluster|计算机集群}}</th><th>共享内存超算（如 IBM Blue Gene/Q）{{ix:Shared-memory supercomputer|共享内存超级计算机}}</th></tr>
+<tr><td>结构</td><td>独立节点 + 头节点 + 交换机</td><td>专有大型主板，集成大量处理器和内存</td></tr>
+<tr><td>通信</td><td><b>异构互联</b>：同节点内核间快，节点间慢</td><td>高效整合，超大内存</td></tr>
+<tr><td>价格</td><td>便宜：只比各节点价格之和<b>略高</b>，可大规模部署</td><td>比同等核数的集群<b>贵得多</b></td></tr>
+<tr><td>容错</td><td>一个节点坏了可单独关掉，不必停整个集群</td><td>—</td></tr>
+<tr><td>系统</td><td>通常 Linux</td><td>UNIX + 自家优化工具</td></tr>
+<tr><td>特长</td><td>大量相对独立的任务</td><td>别处做不了的：<b>超大矩阵对角化</b></td></tr>
+</table></div></div>
+
+<h2 id="s1.5">§1.5 延迟与带宽 · 存储层级<span class="en">latency vs bandwidth</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Latency: is the time it takes for the data requested by the CPU to start arriving. Bandwidth: is the speed (rate) of the arriving data.</span><span class="zh">延迟 = 请求后多久<b>开始</b>到达（等第一个字节）；带宽 = 到达的<b>速率</b>（之后每秒多少）。两者是不同的量。[L1 p19]{{ix:Latency|延迟}}{{ix:Bandwidth|带宽}}</span></div>
+<div class="row">
+<table style="flex:1">
+<tr><th>位置 [L1 p19]</th><th>延迟</th><th>带宽</th></tr>
+<tr><td>CPU 寄存器</td><td>1 clock</td><td>—</td></tr>
+<tr><td>L1 缓存</td><td>1 clock</td><td>150 GB/s</td></tr>
+<tr><td>L2 缓存</td><td>3 clocks</td><td>50 GB/s</td></tr>
+<tr><td>L3/L4 缓存</td><td>10 clocks</td><td>50 GB/s</td></tr>
+<tr><td>本机 RAM</td><td>100 clocks</td><td>10 GB/s</td></tr>
+<tr><td>NUMA RAM</td><td>150 clocks</td><td>10 GB/s</td></tr>
+<tr><td><b>其他节点的 RAM</b></td><td><b>10k clocks</b></td><td>1 GB/s</td></tr>
+<tr><td>闪存</td><td>10k clocks</td><td>1 GB/s</td></tr>
+<tr><td>磁盘</td><td>10k clocks</td><td>0.1 GB/s</td></tr>
+</table>
+<div style="flex:1">
+<div class="box why"><span class="lab">为什么重要</span>
+<ul><li>小的数据集和程序算得快，因为能放进更高一级（更快）的缓存。</li>
+<li>随机访问主内存会让程序很慢：每次都要付一次延迟。</li>
+<li>访问其他节点的内存，延迟是本机 RAM 的 100 倍，带宽只有 1/10。</li>
+<li>NUMA（Non-Uniform Memory Access）：多 CPU 插槽的节点里，访问"另一个 CPU 旁边"的内存稍慢（150 vs 100 clocks）。</li></ul></div>
+</div></div>
+
+<h2 id="s1.6">§1.6 性能指标 · 双精度 · 能耗<span class="en">GIPS, GFLOPS, double precision</span></h2>
+<table>
+<tr><th>指标</th><th>含义 [L1 p20]</th><th>注意</th></tr>
+<tr><td>GIPS{{ix:GIPS|每秒十亿条指令}}</td><td>每秒执行十亿条机器指令</td><td><b>与架构强相关</b>，不同架构之间不好比</td></tr>
+<tr><td>GFLOPS{{ix:GFLOPS|每秒十亿次浮点运算}}</td><td>每秒十亿次浮点运算（单精度或双精度乘法）</td><td>科学计算<b>几乎总是用双精度</b></td></tr>
+</table>
+<div class="box add"><span class="lab">为什么用双精度（补充）</span>单精度约 7 位有效数字，双精度约 16 位。分子总能量是几十到几千 Hartree，而化学上关心的能量差是 $10^{-3}$ Ha（约 1 kcal/mol）甚至 $10^{-6}$ Ha（约 0.2 cm⁻¹，磁耦合的量级）。用单精度时两个大数相减，有效数字全被吃掉。{{ix:Double precision|双精度}}</div>
+<p><b>能耗</b>：单台计算机无所谓（平均约 0.2 kWh），大型集群就成问题。ARM 处理器（手机、平板、Apple M1）比 Intel 省电得多；当时排名第一的超算、日本的 <b>Fugaku</b> 用 ARM 架构的 A64FX。</p>
+
+<h2 id="s1.7">§1.7 Moore 定律<span class="en">Moore's law</span></h2>
+<div class="row">
+<div style="flex:1.3">
+<div class="box def"><span class="lab">原句</span><span class="en">The number of transistors on integrated circuits doubles approximately every two years.</span><span class="zh">集成电路上的<b>晶体管数</b>约每两年翻一番（不是主频！）。不断增长的算力推动计算化学处理更复杂的体系、用更高级的理论。[L1 p21]{{ix:Moore's law|摩尔定律}}</span></div>
+<div class="box add"><span class="lab">和标度一起看（补充）</span>算力翻一番，但 CCSD(T) 耗时 $\propto N^7$：能算的体系只大 $2^{1/7}\approx1.10$ 倍。计算化学的进步很大程度上来自算法（RI、定域相关、线性标度），不只是硬件（{{p:sB.5}}）。</div>
+<p class="small muted">图中 2005 年以后单线程性能和主频都停滞（功耗墙），增长主要靠核数 → 并行变得必要。</p>
+</div>
+<figure style="flex:0 0 36%"><img src="img/L1_p21_moore.png"><figcaption>[L1 p21] 晶体管数（最上）仍指数增长；主频、功耗在 2005 年后持平，核数开始增加</figcaption></figure>
+</div>
+
+<h2 id="s1.8">§1.8 网络互联与集群通信<span class="en">network interconnects</span></h2>
+<div class="row">
+<table style="flex:1" class="small">
+<tr><th>互联 [L1 p22]</th><th>年份</th><th>带宽</th></tr>
+<tr><td>10/100/1000BASE Ethernet</td><td>1990/95/99</td><td>10 Mbps / 100 Mbps / 1 Gbps</td></tr>
+<tr><td>Myrinet-10G；10GBASE Ethernet</td><td>2005；2006</td><td>10 Gbps</td></tr>
+<tr><td>Infiniband 12X QDR</td><td>2009</td><td>96 Gbit/s</td></tr>
+<tr><td>100GBASE Ethernet</td><td>2010</td><td>100 Gbit/s</td></tr>
+</table>
+<div style="flex:1" class="small">铜缆或光纤均可；码率越高，受噪声和阻抗损耗限制，<b>电缆最大长度越短</b>。互联延迟通常在 <b>100 ns</b> 量级 [L1 p22]。<br>难点 [L1 p23]：问题分到 N 个节点后，某些时刻只有部分节点需要交换数据。怎样只在需要的节点之间高效交换，是很难的问题，顶级方案大多受商业专利保护。</div>
+</div>
+<div class="box def"><span class="lab">原句</span><span class="en">Note the microsecond latencies – 1 microsecond is equivalent to about 2k clocks on a Nehalem CPU. … For this reason, memory intensive calculations with a lot of data dependencies are often difficult to run on cluster architectures. Running them on a single node could be much faster than in parallel on several nodes.</span><span class="zh">集群节点间延迟是微秒级（1 μs ≈ 2000 个时钟周期），带宽也远低于 RAM 和缓存。所以<b>数据依赖多、内存密集</b>的计算在集群上难跑，<b>单节点可能比多节点并行快得多</b>。[L1 p24]</span></div>
+<div class="box add"><span class="lab">补充</span>Amdahl 定律：程序中串行部分占比 $s$，用 $P$ 个处理器的加速比 $\le 1/[s+(1-s)/P]$，上限 $1/s$。再加上通信开销，核数多到一定程度反而变慢。这就是讲义说 Gaussian CISD 不宜超过 4 核、DFT 不宜超过 32 核的原因（{{p:s3.1}}）。{{ix:Amdahl's law|阿姆达尔定律}}</div>
+
+<h2 id="s1.9">§1.9 文件系统与 I/O<span class="en">filesystem performance</span></h2>
+<table>
+<tr><th>名称 [L1 p25]</th><th>延迟</th><th>带宽</th><th>典型用途</th></tr>
+<tr><td>RAM disk</td><td>纳秒</td><td>10 GB/s</td><td>把一段内存伪装成文件系统，不常用</td></tr>
+<tr><td><b>scratch / swap</b>{{ix:Scratch|临时计算目录}}</td><td>微秒–毫秒</td><td>0.1–1 GB/s</td><td>专用快速文件系统，<b>放计算的中间结果</b></td></tr>
+<tr><td>local filesystem</td><td>毫秒</td><td>0.1 GB/s</td><td>操作系统文件、可执行程序、系统日志</td></tr>
+<tr><td>network filesystem</td><td>毫秒</td><td>0.1 GB/s</td><td>用户 home 目录（外部硬件，经网络访问）</td></tr>
+<tr><td>backup filesystem</td><td>秒</td><td>0.1 GB/s</td><td>不常访问的增量备份</td></tr>
+</table>
+<p>大量 I/O 会显著拖慢<b>整个集群</b>，所以按管理员要求在 scratch 目录里运行计算 [L1 p25]。和 {{p:s3.14}} 的 conventional / direct SCF 直接相关：积分存盘还是现算。</p>
+
+<h2 id="s1.10">§1.10 基本矩阵运算的标度<span class="en">scaling of BLAS &amp; LAPACK operations</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Matrix factorisations (SVD, LU, diagonalisation, Householder, etc.) are very expensive, difficult to parallelize, and do not benefit from sparse storage.</span><span class="zh">矩阵分解（奇异值分解、LU、对角化、Householder）非常贵、难并行、稀疏存储也不省。[L1 p26]{{ix:Diagonalization|对角化}}</span></div>
+<table>
+<tr><th>运算（$n\times n$）</th><th class="c">CPU 耗时</th><th class="c">内存</th><th class="c">稀疏存储</th><th class="c">并行</th></tr>
+<tr><td>矩阵 × 矩阵</td><td class="c">$O(n^3)$</td><td class="c">$O(nnz)$</td><td class="c">更低</td><td class="c">容易</td></tr>
+<tr><td>矩阵 × 向量</td><td class="c">$O(n^2)$</td><td class="c">$O(nnz)$</td><td class="c">更低</td><td class="c">容易</td></tr>
+<tr><td>exp(矩阵) × 向量</td><td class="c">$O(n^2)$</td><td class="c">$O(nnz)$</td><td class="c">更低</td><td class="c">容易</td></tr>
+<tr><td>矩阵求幂</td><td class="c">$O(n^3)$</td><td class="c">$O(nnz)$</td><td class="c">更低</td><td class="c">容易</td></tr>
+<tr><td><b>大多数矩阵分解</b></td><td class="c">$O(n^3)$</td><td class="c"><b>$O(n^3)$</b></td><td class="c"><b>不变</b></td><td class="c"><b>困难</b></td></tr>
+</table>
+<p class="small">$nnz$：非零元个数（number of non-zeros）。</p>
+<div class="box why"><span class="lab">和后面的联系</span>SCF 每一轮都要对角化 Fock 矩阵（{{p:s3.13}}），这一步 $O(K^3)$ 且难并行；共享内存超算的特长正是超大矩阵对角化（{{p:s1.4}}）；CI 本质上是超大矩阵的本征值问题（{{p:s4.5}}）；对称性把矩阵分块，正是为了减轻对角化负担（{{p:s3.17}}）。</div>
+
+<h2 id="s1.11">§1.11 操作系统<span class="en">Linux</span></h2>
+<p>自 2018 年起，Top 500 超算<b>全部</b>运行 Linux [L1 p27]。它源自 Unix，开源免费，命令行可以直接和硬件打交道。各软件包的特长和短板见 {{p:s3.1}}。</p>
+
+<div class="box trap"><span class="lab">L1 判断陷阱</span><ul>
+<li class="x">"用的节点越多，计算一定越快。" <span class="r">节点间延迟 μs 级（约 2000 时钟周期），数据依赖多的内存密集型计算单节点可能快得多 [L1 p24]。</span></li>
+<li class="x">"延迟和带宽是同一指标的两种说法。" <span class="r">延迟是"多久开始到"，带宽是"到达的速率"。</span></li>
+<li class="x">"矩阵对角化和矩阵乘法一样容易并行。" <span class="r">分解类运算难并行，而且稀疏存储也不省内存 [L1 p26]。</span></li>
+<li class="x">"矩阵乘法的内存需求是 $O(n^3)$。" <span class="r">$O(nnz)$；只有矩阵分解的内存是 $O(n^3)$（讲义表）。</span></li>
+<li class="x">"科学计算一般用单精度以节省时间。" <span class="r">几乎总是双精度 [L1 p20]。</span></li>
+<li class="x">"集群价格远高于各节点价格之和。" <span class="r">只略高；是共享内存超算比同等集群贵得多 [L1 p16, p18]。</span></li>
+<li class="x">"集群中一个节点故障，整个集群都要停机。" <span class="r">集群容错，坏节点可单独关掉。</span></li>
+<li class="x">"共享内存超算和集群一样运行 Linux。" <span class="r">讲义：Blue Gene/Q 用 UNIX + 自家优化工具；集群"通常" Linux。（但 Top500 自 2018 全是 Linux —— 看题目问哪一页。）</span></li>
+<li class="x">"Moore 定律说 CPU 主频每两年翻一番。" <span class="r">说的是晶体管数。</span></li>
+<li class="x">"计算应该在 home 目录里跑。" <span class="r">放 scratch；home 是网络文件系统，大量 I/O 拖慢集群 [L1 p25]。</span></li>
+<li class="x">"互联带宽越高，电缆可以越长。" <span class="r">相反，码率越高最大长度越短 [L1 p22]。</span></li>
+<li class="o">"GIPS 与架构强相关，不同架构之间不好直接比较。" <span class="r">[L1 p20]</span></li>
+<li class="o">"小程序和小数据集跑得快，因为能放进更快的缓存。" <span class="r">[L1 p19]</span></li>
+</ul></div>

@@ -1,0 +1,66 @@
+<h1 class="chap" data-tab="L5" id="L5"><span class="no">L5</span>密度泛函理论（DFT）、磁耦合与 TD-DFT<span class="en">Density functional theory · functionals · BS-DFT magnetic coupling · TD-DFT</span></h1>
+
+<p class="lead">L5 换一条路补相关：不再扩展波函数，而是用 3 维的电子密度 ρ(r) 作基本变量。主线：电子密度与 Mulliken 型布居 → HK 第一定理（ρ 唯一决定一切）→ HK 第二定理（密度的变分原理）→ Kohn–Sham 方程（精确变换，未知的只有 $V_{xc}$）→ 泛函阶梯（LDA → GGA → meta-GGA → 杂化 → 双杂化，另有长程校正和色散校正）→ DFT 的系统误差（色散、自相互作用、过度离域）→ 磁耦合（Heisenberg 模型、BS-DFT、Yamaguchi）→ TD-DFT。</p>
+
+<h2 id="s5.1">§5.1 电子密度的展开与布居分析<span class="en">electron density distribution</span></h2>
+<div class="fcard"><span class="ft">[L5 p4–5]</span>
+$$\rho(\vec r)=\sum_{i=1}^{N}|\chi_i(\vec r)|^2,\quad \chi_i=\sum_{\mu=1}^{K}c_{\mu i}\varphi_\mu\ \Rightarrow\ \rho(\vec r)=\sum_{\mu,\nu}^{K}\sum_i^N c_{\mu i}^*c_{\nu i}\,\varphi_\mu^*(\vec r)\varphi_\nu(\vec r)$$
+$$N=\int\rho\,d^3r=\sum_{\mu\nu}P_{\mu\nu}S_{\mu\nu},\qquad P_{\mu\nu}=\sum_{i=1}^{N}c_{\mu i}^*c_{\nu i}\ \text{（密度矩阵）},\quad S_{\mu\nu}=\int\varphi_\mu^*\varphi_\nu\,d^3r\ \text{（重叠矩阵）}$$
+$$N_{\mu\nu}=P_{\mu\nu}S_{\mu\nu}\ \text{（轨道对的布居）},\qquad P^\alpha_{\mu\nu}=\sum_i c^{\alpha*}_{\mu i}c^\alpha_{\nu i},\ \ P^\beta_{\mu\nu}=\sum_i c^{\beta*}_{\mu i}c^\beta_{\nu i}$$
+<table class="vars"><tr><td>N</td><td>电子数（求和到占据自旋轨道）</td><td>K</td><td>基函数数</td></tr></table></div>
+<div class="box why"><span class="lab">两种情况 [L5 p5]</span>① $\varphi_\mu,\varphi_\nu$ 在<b>同一原子</b>上：$N_{\mu\nu}$ 全部归这个原子（贡献它的电荷）；② 在<b>不同原子</b>上：$N_{\mu\nu}$ 由两原子共享，既贡献化学键也贡献电荷（Mulliken 平分，{{p:s6.1}}）。同样可以按 α、β 分开做<b>自旋布居</b>。</div>
+<div class="fcard"><span class="ft">密度算符 [L5 p8–9]</span>
+$$\hat\rho(\vec r)=\sum_{i=1}^{N}\delta(\vec r_i-\vec r),\qquad \rho(\vec r)=\langle\Psi|\hat\rho(\vec r)|\Psi\rangle=\sum_i|\varphi_i(\vec r)|^2$$
+<p class="small">单电子：$\rho=|\Psi(\vec r)|^2$ = 在 $\vec r$ 找到电子的概率。N 电子：在 $\vec r$ 找到<b>任意一个</b>电子的概率，不管其余 N−1 个在哪。<b>无论 N 多大，ρ 都只是 3 个变量的实函数</b>（波函数是 3N 个变量）。</p></div>
+<div class="box def"><span class="lab">原句</span><span class="en">Within the Born-Oppenheimer Hamiltonian, the type of molecule or solid is defined by the electron-nucleus interaction (this is often called the 'external potential').</span><span class="zh">BO 下决定"是什么分子/固体"的只有核–电子吸引 $V_{ext}=-\sum_i\sum_A Z_A/|\vec R_A-\vec r_i|$（外势）；动能和电子排斥对所有体系形式都一样。[L5 p7]{{ix:External potential|外势}}</span></div>
+
+<h2 id="s5.2">§5.2 Hohenberg–Kohn 第一定理<span class="en">first HK theorem</span></h2>
+<div class="row">
+<figure style="flex:1"><img src="img/L5_p16_hk1.png"><figcaption>[L5 p16] 映射 C：$\hat V_{ext}\mapsto\Psi$、D：$\Psi\mapsto\rho$ 都是双射</figcaption></figure>
+<figure style="flex:1"><img src="img/L5_p10_maps.png"><figcaption>[L5 p10] 单射（不会多对一）、满射（每个 B 都被取到）、双射（一一对应）</figcaption></figure>
+</div>
+<div class="box def"><span class="lab">原句</span><span class="en">"There is a one-to-one correspondence between the ground state density of a many-electron system and the external potential." Consequence: any observable ground state property of the many-electron system can be written as a unique functional of the density: property = ⟨Ψ|Ô|Ψ⟩ = O[ρ].</span><span class="zh">基态密度与外势<b>一一对应</b> ⇒ 任何基态可观测性质都是密度的唯一泛函。C 单射"不奇怪"，D 单射"非常令人惊讶"——这就是 HK 第一定理（1964）。[L5 p14, p17]{{ix:Hohenberg–Kohn theorems|霍恩伯格-科恩定理}}</span></div>
+<div class="box why"><span class="lab">反证法证明思路 [L5 p15]</span>设 $\Psi\ne\Psi'$（外势 V、V′ 不同，电子数相同）却给出同一个 ρ。$\hat H=\hat H'-V'+V$，由变分原理：
+$$E_0<\langle\Psi'|\hat H|\Psi'\rangle=E_0'+\int\rho'(V-V')\,d\vec r,\qquad E_0'<E_0-\int\rho(V-V')\,d\vec r$$
+两式相加，若 $\rho=\rho'$ 得 $E_0+E_0'<E_0'+E_0$，矛盾。（证明用到了<b>变分原理</b>和<b>非简并基态</b>。）</div>
+<p class="small"><b>泛函</b>：函数把数映射成数，$x\mapsto f(x)$；泛函把<b>函数</b>映射成数，$f\mapsto F[f]$，例如 $F[f]=\int f(x)e^{-x^2}dx$。泛函导数：$F_1[\rho]=\int\rho(\vec r)\nu(\vec r)d\vec r\Rightarrow\delta F_1/\delta\rho=\nu(\vec r)$ [L5 p18]。{{ix:Functional|泛函}}</p>
+
+<h2 id="s5.3">§5.3 Hohenberg–Kohn 第二定理：密度的变分原理<span class="en">second HK theorem</span></h2>
+<div class="row">
+<div style="flex:1.3">
+<div class="box def"><span class="lab">原句</span><span class="en">"The unique functional that returns the ground state total energy when applied to the ground state density, returns a higher energy for any other density."</span><span class="zh">把基态密度代入能量泛函得到基态能量；代入<b>任何其他</b>密度得到更高能量。[L5 p19]</span></div>
+$$E_{V_{ext}}[\rho]=F_{HK}[\rho]+\int\rho(\vec r)V_{ext}(\vec r)\,d\vec r,\qquad E_0=\min_\rho E[\rho]$$
+<p class="small">$F_{HK}$：（未知的）Hohenberg–Kohn 泛函，给出动能 + 电子–电子部分，<b>对所有体系通用</b>。Note 2：可以通过<b>最小化</b>能量泛函找到基态密度 [L5 p20]。</p>
+</div>
+<figure style="flex:1"><img src="img/L5_p20_hk2.png"><figcaption>[L5 p20] 能量泛函在 ρ₀ 处取最小</figcaption></figure>
+</div>
+<div class="box cond"><span class="lab">条件 / 局限</span>
+<ul><li>HK 定理只讲<b>基态</b>（激发态要 TD-DFT，{{p:s5.16}}）；证明假设非简并基态。</li>
+<li>定理保证泛函存在，但<b>没给出它的形式</b>。用近似泛函时，DFT 能量<b>不再是</b>精确能量的上界（补充）。</li>
+<li>"Ground state total energy" = 把所有核和电子分开到无穷远需要加的能量（0 K）；实验上可由比热、熔化与汽化潜热、再把原子变成等离子体所需能量得到 [L5 p21]。</li></ul></div>
+
+<h2 id="s5.4">§5.4 Kohn–Sham 方程<span class="en">Kohn–Sham theorem</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">The Kohn-Sham equations are an exact transformation of the original problem (coupled differential equations) in single-particle equations (uncoupled). "The exact ground state density of a N-electron system is ρ(r) = Σ φ<sub>i</sub>*(r)φ<sub>i</sub>(r), where the single-particle wave functions φ<sub>i</sub> are the N lowest-energy solutions of the Kohn-Sham equations."</span><span class="zh">KS 方程把耦合的多电子问题<b>精确地</b>变换为不耦合的单粒子方程；精确基态密度 = N 个最低 KS 轨道的 $|\phi_i|^2$ 之和。[L5 p22]{{ix:Kohn–Sham equations|科恩-沈方程}}</span></div>
+<div class="fcard"><span class="ft">KS 方程 [L5 p22]</span>
+$$\hat H_{KS}\phi_i=\varepsilon_i\phi_i,\qquad \hat H_{KS}=-\frac{\hbar^2}{2m_e}\nabla_i^2+\hat V_{ext}+\underbrace{\frac{e^2}{4\pi\varepsilon_0}\int\frac{\rho(\vec r')}{|\vec r-\vec r'|}d\vec r'}_{\hat V_H\ (\text{Hartree})}+\hat V_{xc},\qquad \hat V_{xc}=\frac{\delta V_{xc}[\rho]}{\delta\rho}$$
+<p class="small">KS 的"单粒子"是<b>无相互作用的准粒子</b>，其密度等于真实体系密度；动能用轨道精确算（这是 KS 相比纯密度泛函的关键改进，补充）。所有未知都塞进 $V_{xc}$。</p></div>
+<div class="row">
+<figure style="flex:1"><img src="img/L5_p23_hfdft.png"><figcaption>[L5 p23] HF：电子 + 核库仑势 + 电子间库仑作用；DFT：准粒子 + 核库仑势 + 平均静态分布 $V_H$ + 神秘的 $V_{xc}$。"Much easier maths, but you have to know V<sub>xc</sub>"</figcaption></figure>
+<table class="cmp" style="flex:1.2">
+<tr><th></th><th>HF</th><th>KS-DFT</th></tr>
+<tr><td>基本变量</td><td>波函数（单行列式）</td><td>密度（用 KS 行列式构造）</td></tr>
+<tr><td>交换</td><td>精确（非局域 $\hat K$）</td><td>近似（$V_{xc}$，多为局域）</td></tr>
+<tr><td>相关</td><td>无</td><td>有（近似）</td></tr>
+<tr><td>理论上精确？</td><td>否（单行列式近似）</td><td>是（若知道精确 $V_{xc}$）</td></tr>
+<tr><td>自相互作用</td><td>J 与 K 精确抵消</td><td>近似泛函不抵消（SIE）</td></tr>
+<tr><td>形式</td><td colspan="2">都是 SCF：单行列式、迭代、对角化；DFT 成本 ≈ HF</td></tr>
+</table>
+</div>
+
+<h2 id="s5.5">§5.5 交换相关泛函：LDA、GGA、meta-GGA<span class="en">approximate XC functionals</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">One unique expression for V<sub>xc</sub>[ρ] must exist, but it is unknown. … Meta-GGAs also include second and higher derivatives of the density. This effectively amounts to building more and more accurate Taylor type approximations to the true XC functional.</span><span class="zh">唯一的精确 $V_{xc}[\rho]$ 存在但未知；LDA → GGA → meta-GGA 相当于对真实泛函做越来越高阶的"Taylor 型"近似。[L5 p24]</span></div>
+<div class="fcard"><span class="ft">[L5 p24, p29]</span>{{ix:Local density approximation (LDA)|局域密度近似}}{{ix:Generalized gradient approximation (GGA)|广义梯度近似}}{{ix:Meta-GGA|meta-GGA 泛函}}
+$$\text{LDA：}\ V_{xc}^{LDA}[\rho]=\int\rho(\vec r)\,\varepsilon_{xc}(\rho(\vec r))\,d\vec r,\qquad E_x^{LDA}=-\frac34\left(\frac3\pi\right)^{1/3}\int\rho^{4/3}(\vec r)\,d\vec r$$
+$$\text{LSDA：}\ \varepsilon_{xc}(\rho_\uparrow,\rho_\downarrow);\qquad \text{GGA：}\ \varepsilon_{xc}(\rho_\uparrow,\rho_\downarrow,\nabla\rho_\uparrow,\nabla\rho_\downarrow);\qquad \text{meta-GGA：再加}\ \nabla^2\rho\ \text{或动能密度}\ \tau$$
+<p class="small">GGA 例：Becke 88 交换 $\varepsilon_x^{B88}=\varepsilon_x^{LDA}-\beta\rho^{1/3}\dfrac{x^2}{1+6\beta x\sinh^{-1}x}$，$x=|\nabla\rho|/\rho^{4/3}$；LYP 相关（Lee–Yang–Parr）。meta-GGA：TPSS、VSXC、HCTH 等。</p></div>
+<div class="box why"><span class="lab">LDA 的物理图像（补充）</span>把每一点当作密度为 ρ(r) 的<b>均匀电子气</b>。适合密度变化缓慢的体系（金属）；分子中会过度结合（键能偏大、键长偏短）。GGA 加入密度梯度，描述不均匀性。</div>

@@ -1,0 +1,55 @@
+<h1 class="chap" data-tab="L6" id="L6"><span class="no">L6</span>波函数分析、相对论效应与溶剂化<span class="en">Wave function analysis · atomic charges · relativistic effects · solvation models</span></h1>
+
+<p class="lead">L6 三块：① 从波函数里"读"化学量——原子电荷（Mulliken、Löwdin、Bader、Hirshfeld）、键级、静电势、定域轨道；② 相对论——为什么重元素要改 Hamiltonian（Dirac 方程、标量相对论与自旋–轨道、DKH/ZORA/ECP）；③ 溶剂——显式水模型、连续介质模型（PCM 家族）、Poisson–Boltzmann，以及氢键、非共价作用和 UV/Vis 激发。讲义本身有 5 处要订正，都标在对应位置。</p>
+
+<h2 id="s6.1">§6.1 Mulliken 布居与电荷<span class="en">Mulliken populations and charges</span></h2>
+<div class="fcard"><span class="ft">布居的来源（同 {{p:s5.1}}）[L6 p3–4]</span>
+$$N=\sum_{\mu\nu}^KP_{\mu\nu}S_{\mu\nu},\qquad P_{\mu\nu}=\sum_i^Nc_{\mu i}^*c_{\nu i},\qquad N_{\mu\nu}=P_{\mu\nu}S_{\mu\nu}$$
+<p class="small">同一原子上的 $N_{\mu\nu}$ 归该原子；不同原子上的由两者<b>共享</b>（成键 + 电荷）。</p></div>
+<div class="box def"><span class="lab">原句：Mulliken 规则</span><span class="en">1. Start with the charge of the bare nucleus. 2. If the basis functions φ<sub>μ</sub> and φ<sub>ν</sub> are both on atom A, assign all the corresponding density to the charge of atom A. 3. If the basis function φ<sub>μ</sub> is on atom A and φ<sub>ν</sub> is on atom B, assign half of the corresponding density to the charge of atom A.</span><span class="zh">从裸核电荷出发；同在 A 上的全部归 A；一个在 A 一个在 B 的<b>平分</b>。[L6 p5]{{ix:Mulliken population analysis|Mulliken 布居分析}}</span></div>
+<div class="box fix"><span class="lab">讲义 p5 公式多乘了一个 ½</span>
+<p>讲义写 $Q_A=Z_A-\sum_{\mu\in A}\sum_{\nu\in A}P_{\mu\nu}S_{\mu\nu}-\frac12\sum_{\mu\in A}\sum_{\nu\in B}P_{\mu\nu}S_{\mu\nu}$。但双重求和 $\sum_{\mu\in A}\sum_{\nu\in B}$ 对每个跨原子对只数了一次；该对的总密度是 $P_{\mu\nu}S_{\mu\nu}+P_{\nu\mu}S_{\nu\mu}=2P_{\mu\nu}S_{\mu\nu}$，一半归 A 正好是 $P_{\mu\nu}S_{\mu\nu}$。<b>正确</b>：</p>
+$$Q_A=Z_A-\sum_{\mu\in A}\sum_{\nu}^{\text{all}}P_{\mu\nu}S_{\mu\nu}=Z_A-\sum_{\mu\in A}\sum_{\nu\in A}P_{\mu\nu}S_{\mu\nu}-\sum_{\mu\in A}\sum_{\nu\notin A}P_{\mu\nu}S_{\mu\nu}$$
+<p class="small">验证：H₂ 最小基 $P_{\mu\nu}=1/(1+S)$。讲义式给 $Q_A=1-\frac{1}{1+S}-\frac12\frac{S}{1+S}=\frac{S}{2(1+S)}>0$——中性分子两端都带正电，荒谬；正确式给 0 ✓。</p></div>
+<p><b>用途</b>：不带符号、不加核电荷的求和 → <b>原子布居</b>；按 α−β 求和 → <b>原子自旋密度</b>。优点 [L6 p5]：① 定性正确（"no quantitative method exists anyway"）；② 很便宜（基态性质）；③ 能反映化学反应中的正确趋势。</p>
+
+<h2 id="s6.2">§6.2 自旋布居与自旋密度<span class="en">spin populations</span></h2>
+<div class="fcard"><span class="ft">[L5 p5] [L6 p4]</span>
+$$P^\alpha_{\mu\nu}=\sum_i^{N_\alpha}c^{\alpha*}_{\mu i}c^\alpha_{\nu i},\quad P^\beta_{\mu\nu}=\sum_i^{N_\beta}c^{\beta*}_{\mu i}c^\beta_{\nu i},\qquad \rho_A^{spin}=\sum_{\mu\in A}\sum_\nu\left(P^\alpha_{\mu\nu}-P^\beta_{\mu\nu}\right)S_{\mu\nu}$$
+<p class="small">总自旋布居之和 = $N_\alpha-N_\beta=2S$。</p></div>
+<div class="box why"><span class="lab">要点（补充）</span>RHF：α、β 相同，自旋密度处处为零；只有 UHF/UKS/ROHF 等开壳层方法有自旋密度。未成对电子所在原子自旋布居大（Cu(II) 约 0.5–0.6，其余在配体 Cl 上）；<b>BS 态</b>两个 Cu 自旋布居<b>符号相反</b>——这就是检查"自旋是否翻到目标原子"的办法（{{p:s5.15}}）。相邻原子上出现小的<b>负</b>自旋密度 = 自旋极化（UHF 中 α、β 空间轨道不同所致）。</div>
+
+<h2 id="s6.3">§6.3 Löwdin 布居<span class="en">Löwdin populations</span></h2>
+<div class="box def"><span class="lab">原句：Mulliken 的问题</span><span class="en">1. Diagonal elements of P<sub>μν</sub> may be larger than two, implying more than two electrons in an orbital (Pauli principle violation). 2. Off-diagonal elements of P<sub>μν</sub> may be negative, implying a negative number of electrons in an orbital. 3. Equal partitioning of electron density between participating atoms is without any foundation. 4. Diffuse functions centred on atom A are still counted as only belonging to A. 5. Mulliken charges do not reproduce the multipole moments of the molecule.</span><span class="zh">[L6 p6]</span></div>
+<div class="fcard"><span class="ft">Löwdin 对称正交化 [L6 p6]</span>{{ix:Löwdin population analysis|Löwdin 布居分析}}
+$$N=\sum_{\mu\nu}P_{\mu\nu}S_{\mu\nu}=\mathrm{Tr}(\mathbf{PS})=\mathrm{Tr}\left(\mathbf S^{1/2}\mathbf P\mathbf S^{1/2}\right),\qquad N_{\mu\nu}=\left[\mathbf S^{1/2}\mathbf P\mathbf S^{1/2}\right]_{\mu\nu}$$
+<p class="small">利用<b>迹的循环置换</b>性质：用<b>正交化</b>的基函数（而不是可能近线性相关的原始基组）做布居分析。改进了问题 1–3（对角元在 0–2 之间、非负、无需"平分"）；问题 4（弥散函数仍按原中心归属）、5 仍在。</p></div>
+<div class="box why"><span class="lab">共同弱点</span>Mulliken 与 Löwdin 都基于<b>基函数</b>划分 → 结果<b>依赖基组</b>，加弥散函数时可能剧烈变化甚至变号（HW2 中 2-氯苯酚的 Mulliken 电荷符号翻转，{{p:sH.2}}）。Bader、Hirshfeld 基于<b>密度</b>本身，对基组不敏感。</div>
+
+<h2 id="s6.4">§6.4 Bader 电荷（QTAIM）<span class="en">atoms in molecules</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">R. Bader developed an intuitive way of dividing molecules into atoms called the Quantum Theory of Atoms in Molecules (QTAIM). His definition of an atom is based purely on the electronic charge density. Bader uses what are called zero flux surfaces to divide atoms. A zero-flux surface is a 2-D surface on which the charge density is a minimum perpendicular to the surface.</span><span class="zh">只基于电荷密度划分原子：用<b>零通量面</b>（沿面法向密度取极小的二维面，$\nabla\rho\cdot\vec n=0$）把分子切成原子盆；分子中原子间密度的极小处是天然的分界。[L6 p7]{{ix:Bader charges (QTAIM)|Bader 电荷}}{{ix:Zero-flux surface|零通量面}}</span></div>
+<p class="small">用途：Bader 体积内的电荷很好地近似原子总电荷；可得相互作用原子/分子的多极矩；定义原子"硬度"（从原子移走电荷的代价）；给出化学键的定义和键强的数值（键临界点）。</p>
+
+<h2 id="s6.5">§6.5 Hirshfeld 电荷<span class="en">Hirshfeld charges</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">A general and natural choice is to share the charge density at each point between the atoms, in proportion to their free-atom densities at the corresponding distances from the nuclei. Hirshfeld charges (Hirshfeld, 1977) are defined relative to the deformation density, this is the difference between the molecular (relaxed) and unrelaxed atomic charge densities.</span><span class="zh">每一点的分子密度按<b>自由原子密度的比例</b>分给各原子（"股东"划分）；电荷相对于<b>形变密度</b> = 分子（弛豫后）密度 − 未弛豫的原子密度叠加。形变密度是化学成键、电子共享的自然结果。[L6 p8]{{ix:Hirshfeld charges|Hirshfeld 电荷}}{{ix:Deformation density|形变密度}}</span></div>
+$$w_A(\vec r)=\frac{\rho_A^{free}(\vec r)}{\sum_B\rho_B^{free}(\vec r)},\qquad q_A=-\int w_A(\vec r)\,\Delta\rho(\vec r)\,d\vec r,\quad \Delta\rho=\rho_{mol}-\sum_B\rho_B^{free}\quad(\text{补充写法})$$
+
+<h2 id="s6.6">§6.6 Mulliken 键级<span class="en">Mulliken bond order</span></h2>
+<div class="row">
+<div style="flex:1">
+<div class="fcard"><span class="ft">[L6 p9]</span>{{ix:Bond order|键级}}
+$$q_{AB}=2\sum_{\mu\in A}\sum_{\nu\in B}P_{\mu\nu}S_{\mu\nu}$$
+<p class="small">A–B 之间"一个基函数在 A、另一个在 B"的全部密度（重叠布居）；Löwdin 键级做类似的正交化替换。重叠布居与键级指数线性相关（N–O 化合物）。</p></div>
+</div>
+<figure style="flex:1.2"><img src="img/L6_p9_bondorder.png"><figcaption>[L6 p9] N–O 键级指数 vs 重叠布居；丙烯、乙醛、丙酮的键级（σ、π 分量）</figcaption></figure>
+</div>
+
+<h2 id="s6.7">§6.7 分子静电势（MEP）<span class="en">molecular electrostatic potential</span></h2>
+<div class="row">
+<div style="flex:1">
+<div class="fcard"><span class="ft">[L6 p10]</span>{{ix:Molecular electrostatic potential (MEP)|分子静电势}}
+$$\phi(x_1,y_1,z_1)=\underbrace{\sum_i\frac{q_i}{4\pi\varepsilon_0r_i}}_{\text{核项（正）}}-\underbrace{\iiint\frac{\rho(x,y,z)}{4\pi\varepsilon_0r_e}\,dx\,dy\,dz}_{\text{电子项（负）}}$$
+<p class="small">MEP 描述价电子的电荷分布；通常画在<b>等电子密度面</b>上着色。讲义 HF 分子图：红 = 负（F 端），蓝 = 正（H 端）。用于预测亲电/亲核进攻位点、氢键方向。它是<b>可观测量</b>（不依赖划分方案，补充）。</p></div>
+</div>
+<figure style="flex:1"><img src="img/L6_p10_mep.png"><figcaption>[L6 p10] HF 分子的等密度面与 MEP 着色</figcaption></figure>
+</div>

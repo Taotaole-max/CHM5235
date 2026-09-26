@@ -1,0 +1,118 @@
+<h2 id="s4.11">§4.11 各方法回收的相关能（Be 原子）<span class="en">summary of explicit correlation methods</span></h2>
+<div class="row">
+<table style="flex:1.2">
+<tr><th>方法 [L4 p39]</th><th>$E_{corr}$(Be)</th><th>方法</th><th>$E_{corr}$(Be)</th><th>方法</th><th>$E_{corr}$(Be)</th></tr>
+<tr><td>MP2</td><td>67.85%</td><td>CISD</td><td>96.05%</td><td>CCSD</td><td>99.75%</td></tr>
+<tr><td>MP3</td><td>86.90%</td><td>CISDT</td><td>96.29%</td><td>CCSD(T)</td><td>99.99%</td></tr>
+<tr><td>MP4</td><td>94.58%</td><td>CISDTQ</td><td>100%</td><td>CCSDT</td><td>99.99%</td></tr>
+<tr><td>MP5</td><td>98.15%</td><td></td><td></td><td>CCSDTQ</td><td>100%</td></tr>
+<tr><td>MP6</td><td>99.64%</td><td></td><td></td><td></td><td></td></tr>
+<tr><td><b>MP7</b></td><td><b>100.15%</b></td><td></td><td></td><td></td><td></td></tr>
+</table>
+<div style="flex:1">
+<div class="box def"><span class="lab">原句</span><span class="en">Single reference methods are very accurate if and only if the HF reference state is a good starting point. In systems with homolytic bond cleavage or degeneracies, MPn, CI and CC methods can fail dramatically.</span><span class="zh">单参考方法<b>当且仅当</b> HF 参考态是好起点时才很准；均裂断键或简并体系中 MPn、CI、CC 都可能严重失败。[L4 p39]</span></div>
+<p class="small">读表：MP7 超过 100%（非变分，可越过精确值）；CC 收敛最快（CCSD 已 99.75%）；Be（2s² 与 2p² 近简并）的 MP2 只有 68%。Be 只有 4 个电子，所以 CISDTQ = FCI = 100%。</p>
+</div>
+</div>
+
+<h2 id="s4.12">§4.12 标度与能算的规模<span class="en">scaling of explicit correlation methods</span></h2>
+<div class="row">
+<table style="flex:1">
+<tr><th>方法（不做基函数筛选）[L4 p40]</th><th class="c">随基函数数 n 的标度</th></tr>
+<tr><td>HF</td><td class="c">$O(n^4)$</td></tr>
+<tr><td>MP2</td><td class="c">$O(n^5)$</td></tr>
+<tr><td>MP3、CISD、CCSD、QCISD</td><td class="c">$O(n^6)$</td></tr>
+<tr><td>MP4、<b>CCSD(T)</b>、QCISD(T)</td><td class="c">$O(n^7)$</td></tr>
+<tr><td>MP5、CISDT、CCSDT</td><td class="c">$O(n^8)$</td></tr>
+<tr><td>MP6</td><td class="c">$O(n^9)$</td></tr>
+<tr><td>MP7、CISDTQ、CCSDTQ</td><td class="c">$O(n^{10})$</td></tr>
+<tr><td>FCI</td><td class="c">$O(n!)$</td></tr>
+</table>
+<table style="flex:1.2" class="small">
+<tr><th>方法 [L4 p40]</th><th>可算规模</th><th>解析导数</th></tr>
+<tr><td>HF</td><td>几百个原子</td><td>一阶、二阶解析导数都有</td></tr>
+<tr><td>MP2</td><td>~100 原子</td><td>一阶、二阶解析</td></tr>
+<tr><td>MP4</td><td>~20 原子</td><td>只有数值导数</td></tr>
+<tr><td>CISD、CCSD</td><td>~20 原子</td><td>一阶解析通常有，二阶多为数值</td></tr>
+<tr><td>FCI</td><td><b>最多 3–4 个简单原子</b></td><td>全部数值</td></tr>
+</table>
+</div>
+<div class="box fix"><span class="lab">两张标度表的差别</span>L3 p80 / L4 p10 的 CI 表写 CISDT $O(n^8)$、CID $O(n^5)$；L4 p40 把 CISDT 与 MP5、CCSDT 同列为 $O(n^8)$，一致。注意 CISD 与 CCSD 都是 $O(n^6)$，但 CCSD 大小一致、CISD 不是。用法：耗时比 $=(n_2/n_1)^p$（{{p:sB.5}}）。</div>
+<div class="box add"><span class="lab">补充：为什么是这些指数</span>HF：双电子积分 4 个下标 → $n^4$。MP2：积分从 AO 变换到 MO（每个下标一次 $n^5$）。CCSD：$o^2v^4$ 项 → $n^6$。(T)：三激发的微扰估计 $o^3v^4$ → $n^7$。</div>
+
+<h2 id="s4.13">§4.13 高级方法 ≠ 所有性质都更准<span class="en">performance &amp; error compensation</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">For properties other than energy, a higher correlation level method does not necessarily mean a more accurate answer – beware of error compensation situations.</span><span class="zh">对能量以外的性质，更高的相关级别不一定更准——小心误差抵消。[L4 p41] 讲义的图：31 个分子相对 X 射线几何的偏差分布（按方法、按基组），以及 N₂ 解离曲线随方法的变化（单参考方法在拉长键长处出问题）。</span></div>
+
+<h2 id="s4.14">§4.14 BSSE、平衡校正与完备基组外推<span class="en">BSSE, counterpoise, CBS</span></h2>
+<div class="row">
+<figure style="flex:1"><img src="img/L4_p37_bsse.png"><figcaption>[L4 p37] 上：CI 大小不一致；下：BSSE</figcaption></figure>
+<div style="flex:1">
+<div class="box def"><span class="lab">原句</span><span class="en">Basis set superposition error: When molecules are brought close together, they augment each other's basis, thereby increasing the variational flexibility. The energy will go down even in the absence of any interaction. This results in non-physical attraction. E(proximate) &lt; E(distant).</span><span class="zh">两分子靠近时，<b>互相借用对方的基函数</b>，变分灵活性增加，即使没有真实相互作用能量也会下降 → <b>非物理的吸引</b>，结合能被高估。[L4 p37]</span></div>
+</div>
+</div>
+<div class="fcard"><span class="ft">Counterpoise（平衡）校正 [L4 p38]</span>{{ix:Counterpoise correction|平衡校正}}
+$$\Delta E_{CP}=E(A)_{AB}+E(B)_{AB}-E(A)_A-E(B)_B\ (<0),\qquad E_{int}^{CP}=E(AB)_{AB}-E(A)_{AB}-E(B)_{AB}$$
+<table class="vars"><tr><td>$E(A)_{AB}$</td><td>碎片 A 在<b>整个复合物基组</b>中的能量：B 的位置只放基函数（"<b>ghost</b>"），不放电子和原子核</td><td>$E(A)_A$</td><td>A 在自己的基组中</td></tr></table>
+<p class="small">步骤：① 复合物照常算；② 每个碎片在另一个碎片的<b>轨道（但不含电子或原子核）</b>存在下各算一次。"Atom-centred basis sets are rarely big enough to avoid the BSSE."</p></div>
+<div class="row">
+<figure style="flex:1.1"><img src="img/L4_p38_cp.png"><figcaption>[L4 p38] 平衡校正示意与数值：BSSE 3-21G 4.07、6-31G 0.92、6-31+G(d) 0.58 kcal/mol</figcaption></figure>
+<div class="box why" style="flex:1"><span class="lab">要点</span><ul><li>BSSE 随基组增大而<b>减小</b>（完备基组时为 0）。</li><li>弱相互作用（氢键、范德华、HW 里的复合物结合能）最需要校正：BSSE 可与结合能同量级。</li><li>BSSE（基组不完备）与大小不一致（方法截断）是两个不同的问题，讲义放在同一页对照。</li></ul></div>
+</div>
+<div class="fcard"><span class="ft">完备基组（CBS）外推：Dunning–Feller [L4 p43]</span>{{ix:Complete basis set (CBS) limit|完备基组极限}}
+$$E_n=E_{CBS}+\alpha\,e^{-\beta n}$$
+<p class="small">n：(aug-)cc-pVnZ 的 zeta 指数（D = 2、T = 3、Q = 4）；α、β 可针对某类分子拟合。"Energies (but not usually other parameters) can be extrapolated to the basis set limit." 只外推<b>能量</b>，一般不外推其他参数。</p></div>
+<table class="small">
+<tr><th>讲义推荐 [L4 p43]</th><th>例子</th></tr>
+<tr><td>快速近似（抓住要点）</td><td>HF/6-31G(d,p) 或 HF/cc-pVDZ</td></tr>
+<tr><td>慢而准</td><td>MP2/6-311G(2d,2p) 或 MP2/cc-pVTZ</td></tr>
+<tr><td>非常慢、非常准</td><td>CCSD(T)/cc-pVQZ 及以上</td></tr>
+<tr><td>专门的高精度复合方法</td><td>MP2-R12、G1–G3、G2MP2、G3MP2 等{{ix:Composite methods (G2, G3)|复合方法}}</td></tr>
+</table>
+
+<h2 id="s4.15">§4.15 密度与分布<span class="en">densities and distributions</span></h2>
+<div class="row">
+<div style="flex:1.2">
+<p>"Density refers to a continuous spatial distribution of a certain property." [L4 p44]</p>
+<table>
+<tr><th>密度</th><th>定义</th></tr>
+<tr><td>概率密度</td><td>$p(x,y,z)=|\psi(x,y,z)|^2$</td></tr>
+<tr><td>电子密度{{ix:Electron density|电子密度}}</td><td>$\rho(\vec r)=N\int d^3r_2\cdots\int d^3r_N\,|\Psi(\vec r,\vec r_2,\dots,\vec r_N)|^2$</td></tr>
+<tr><td>自旋密度{{ix:Spin density|自旋密度}}</td><td>$\sigma(\vec r)=\rho_\uparrow(\vec r)-\rho_\downarrow(\vec r)$</td></tr>
+<tr><td>电荷密度</td><td>$\rho_C(\vec r)=Ne\int\cdots\int|\Psi|^2\,d^3r_2\cdots d^3r_N$</td></tr>
+</table>
+<p class="small">$\int\rho\,d\vec r=N$；RHF 闭壳层 $\sigma\equiv0$；自旋密度可以<b>为负</b>（自旋极化，{{p:s6.2}}）。电子密度是 DFT 的基本变量（L5）。</p>
+</div>
+<figure style="flex:1"><img src="img/L4_p44_density.png"><figcaption>[L4 p44] 静电势映射的等密度面、硅表面电荷密度、CeO₂ 氧空位周围的自旋密度</figcaption></figure>
+</div>
+
+<div class="box trap"><span class="lab">L4 判断陷阱</span><ul>
+<li class="x">"CISD 是大小一致的。" <span class="r">截断 CI 都不大小一致；只有 FCI 是。</span></li>
+<li class="x">"CCSD 是变分方法，所以能量是上界。" <span class="r">CC 用投影求能量，非变分；但大小一致。</span></li>
+<li class="x">"MP2 能量一定高于精确能量。" <span class="r">MPn 非变分；Be 的 MP7 回收 100.15%。</span></li>
+<li class="x">"MPn 级数随 n 单调收敛到精确值。" <span class="r">可能振荡甚至发散（近简并时），也可越过精确值。</span></li>
+<li class="x">"单激发行列式与 HF 基态有强耦合。" <span class="r">Brillouin 定理：$\langle\Psi_0|\hat H|\Psi_i^a\rangle=0$；双激发才直接耦合。</span></li>
+<li class="x">"单重态与三重态 CSF 之间有 CI 矩阵元。" <span class="r">非相对论 $\hat H$ 不混合不同自旋（自旋–轨道耦合才会，{{p:s6.12}}）。</span></li>
+<li class="x">"FCI 给出薛定谔方程的精确解。" <span class="r">是<b>该基组内</b>的精确非相对论解；基组不完备误差仍在。</span></li>
+<li class="x">"CC 波函数只包含到 T 截断的那一级激发。" <span class="r">$e^{\hat T}$ 通过乘积（如 $\frac12\hat T_2^2$）含更高激发。</span></li>
+<li class="x">"BSSE 使结合能被低估。" <span class="r">BSSE 造成非物理吸引，结合能被<b>高估</b>；平衡校正减弱结合。</span></li>
+<li class="x">"平衡校正中 ghost 原子带有电子和原子核。" <span class="r">只有基函数。</span></li>
+<li class="x">"BSSE 在基组增大时变大。" <span class="r">变小；完备基组时消失。</span></li>
+<li class="x">"更大基组 + 更高方法，所有性质都更准。" <span class="r">误差抵消：性质和能量差不受变分保护 [L4 p5, p41]。</span></li>
+<li class="x">"HF 能量高于精确能量的部分是交换能。" <span class="r">是相关能；交换 HF 已精确包含。</span></li>
+<li class="x">"动态相关可以用 CASSCF 充分描述。" <span class="r">CASSCF 主要处理静态相关；动态相关要 CASPT2/NEVPT2/MRCI。</span></li>
+<li class="o">"CISD 和 CCSD 的标度都是 $O(n^6)$。"</li>
+<li class="o">"在 H₂ 解离极限，FCI 中 $a_1=-a_0$，离子项为零。"</li>
+</ul></div>
+
+<h2 id="s4.16">§4.16 L4 易混对照<span class="en">quick contrasts</span></h2>
+<table class="cmp">
+<tr><th>A</th><th>B</th><th>区别</th></tr>
+<tr><td>CI</td><td>CC</td><td>CI：$(1+\hat T)\Psi_0$，每个行列式一个参数，变分，截断后不大小一致；CC：$e^{\hat T}\Psi_0$，参数化激发过程，高激发由乘积给出，非变分，截断后仍大小一致</td></tr>
+<tr><td>CI / CC</td><td>MPn</td><td>前两者迭代求解系数/振幅；MPn 逐阶微扰公式，一次算出（MP2 不迭代）</td></tr>
+<tr><td>变分</td><td>大小一致</td><td>变分：能量是上界；大小一致：$E(A+B)=E(A)+E(B)$。两者独立（CISD 变分不一致；CCSD 一致不变分；FCI 都满足）</td></tr>
+<tr><td>SD</td><td>CSF</td><td>SD 是单个行列式（$M_S$ 确定）；CSF 是若干 SD 的自旋匹配组合（$S$ 确定），数目更少</td></tr>
+<tr><td>BSSE</td><td>大小不一致</td><td>BSSE：基组不完备 → 互借基函数 → 非物理吸引；大小不一致：方法截断 → 超分子与碎片能量不相加</td></tr>
+<tr><td>静态相关</td><td>动态相关</td><td>见 {{p:s4.2}} 的表</td></tr>
+<tr><td>CCSD(T)</td><td>CCSDT</td><td>(T)：三激发用微扰估计，$n^7$；T：三激发完全迭代，$n^8$；Be 上都 99.99%</td></tr>
+<tr><td>CBS 外推</td><td>平衡校正</td><td>外推：用 D/T/Q 系列推到无穷大基组；CP：在固定基组里扣除 BSSE</td></tr>
+</table>

@@ -1,0 +1,169 @@
+<h1 class="chap" data-tab="L2" id="L2"><span class="no">L2</span>量子力学基础与 Hartree–Fock 理论<span class="en">Introduction to computational chemistry: QM basics → Hartree–Fock–Roothaan</span></h1>
+
+<p class="lead">主线：为什么要用量子力学 → Schrödinger 方程和算符的语言 → 五条公设 → H 原子（唯一能精确解的）→ He 和多电子体系（$1/r_{12}$ 让精确解不可能）→ 轨道近似、Pauli 原理、Slater 行列式 → BO 近似 → HF 能量、Fock 算符、Roothaan 方程、SCF → RHF 与 UHF。后面每一讲都在这一讲的近似上做修补：L3 讲怎么解 HF，L4 补回 HF 丢掉的电子相关，L5 换一条路（DFT），L6 补相对论和溶剂。</p>
+
+<h2 id="s2.1">§2.1 为什么需要量子力学：量子化与波粒二象性<span class="en">quantization, de Broglie</span></h2>
+<p>只能用"能量是量子化的（不连续）"来解释的实验 [L2 p2]：电子的发现之后的<b>黑体辐射、光电效应、热容、Bohr 模型、Compton 散射、波粒二象性、Heisenberg 不确定性原理</b>。{{ix:Quantization|量子化}}</p>
+<div class="fcard"><span class="ft">de Broglie 关系（1924）</span>{{ix:de Broglie relation|德布罗意关系}}
+$$E=pc=mc^2,\quad E=h\nu\ \Rightarrow\ \lambda=\frac{h}{p}=\frac{h}{mv}$$
+<table class="vars"><tr><td>$\lambda$</td><td>物质波波长</td><td>$p$</td><td>动量；de Broglie 断言对粒子和光子都成立</td></tr></table></div>
+<div class="row">
+<div style="flex:1.1">
+<ul>
+<li>证据：电子衍射（Davisson–Germer 1925，Thompson 1927）[L2 p4]。</li>
+<li>电子显微镜利用电子波动性：波长可以用<b>加速电压</b>控制，波长很短，比光学显微镜精细得多；电子束还可用电场、磁场聚焦。</li>
+<li>de Broglie 波给 Bohr 轨道量子化一个简单物理解释：轨道周长必须是波长的整数倍，$n\lambda=2\pi r_n$，$r_n=n^2a_0$ [L2 p5]。</li>
+<li>de Broglie 1929 年 Nobel 奖："for the idea of wave-like behavior of matter"。</li>
+</ul>
+<div class="box why"><span class="lab">为什么小物体才显出波动性</span>$\lambda\propto 1/(mv)$。80 kg 的人以 5 m/s 运动，$\lambda\approx1.7\times10^{-36}$ m，完全无法观测；电子以同样速度运动，$\lambda\approx1.5\times10^{-4}$ m。"Wave properties are far more significant for small objects." [L2 p10]</div>
+</div>
+<figure style="flex:0 0 42%"><img src="img/L2_p5_bohr.png"><figcaption>[L2 p5] 驻波条件 → Bohr 轨道量子化</figcaption></figure>
+</div>
+
+<h2 id="s2.2">§2.2 什么时候必须用量子力学：Boltzmann 分布<span class="en">Boltzmann distribution</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Classical mechanics can be applied when energy difference between states can be ignored so that the spectrum is regarded as "continuous". Quantum description of a system is necessary when the energy spectrum is "discrete".</span><span class="zh">能级差可以忽略、谱看成"连续"时用经典力学；谱"离散"时必须用量子描述。两者不是竞争关系。[L2 p6]</span></div>
+<div class="fcard"><span class="ft">Boltzmann 分布</span>{{ix:Boltzmann distribution|玻尔兹曼分布}}
+$$\frac{n_i}{n_j}=\frac{g_i}{g_j}\,e^{-(e_i-e_j)/k_BT}=\frac{g_i}{g_j}\,e^{-\Delta E/k_BT}$$
+<table class="vars">
+<tr><td>$n_i$</td><td>能量为 $e_i$ 的粒子数</td><td>$g_i$</td><td>简并度（degeneracy）：粒子能量落在 $e_i\pm\Delta e$ 区间内的方式数。能量越高 → 分配方式越多 → 简并度越高（熵越大）{{ix:Degeneracy|简并度}}</td></tr>
+<tr><td>$k_BT$</td><td>热能；298 K 时 207 cm⁻¹ = 0.593 kcal/mol = 2.48 kJ/mol = 0.0257 eV</td><td>$k_B$</td><td>0.695 cm⁻¹/K；按摩尔用 $RT$</td></tr>
+</table></div>
+<div class="row">
+<figure style="flex:1"><img src="img/L2_p8_twolevel.png"><figcaption>[L2 p8] 1000 个原子、两个能级：$T\to\infty$ 时 $n_1,n_2\to500$</figcaption></figure>
+<figure style="flex:1"><img src="img/L2_p9_boltz.png"><figcaption>[L2 p9] (a)(b) $\Delta E\lesssim k_BT$ 像连续谱；(c) $\Delta E\gg k_BT$ 几乎只占最低能级</figcaption></figure>
+</div>
+<p>两能级（$g_1=g_2$）：$n_1=\dfrac{1000}{1+e^{-\Delta e/k_BT}}$，$n_2=\dfrac{1000\,e^{-\Delta e/k_BT}}{1+e^{-\Delta e/k_BT}}$。</p>
+<div class="box cond"><span class="lab">判据 / 条件</span>$\Delta E<k_BT$ 或 $\Delta E\approx k_BT$：谱看起来连续 → 经典描述足够；$\Delta E>k_BT$：离散谱 → 必须量子描述 [L2 p9]。公式要求<b>热平衡</b>；只依赖能量差，能量零点任选。</div>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"温度趋于无穷时 $n_i/n_j\to1$。" <span class="r">指数项 → 1，比值 → $g_i/g_j$。简并度大的能级最终粒子更多。</span></li>
+<li class="x">"$g_i=g_j$ 时，温度足够高，上能级的粒子数就会超过下能级。" <span class="r">热平衡下永远不会，极限是相等（粒子数反转需要非平衡，如激光）。</span></li>
+<li class="x">"温度减半，布居比变为原来的一半。" <span class="r">指数变两倍，比值变为原来的<b>平方</b>（$g$ 相同时）。</span></li>
+<li class="x">"室温下电子激发态有可观的热布居。" <span class="r">电子跃迁 2–5 eV ≈ 100–200 $k_BT$，布居比 $<10^{-40}$。</span></li>
+<li class="o">"振动（约 2000 cm⁻¹ ≈ 10 $k_BT$）室温下基本都在基态；转动（约 10 cm⁻¹）很多能级被占据，可近似经典处理。"</li>
+<li class="o">"$g_T=3$ 的三重态即使比单重态高 200 cm⁻¹，室温下布居也可以超过单重态。" <span class="r">$3e^{-200/207}=1.14>1$。磁耦合体系要按 Boltzmann 加权（{{p:s5.15}}）。</span></li>
+</ul></div>
+
+<h2 id="s2.3">§2.3 从波动方程到 Schrödinger 方程<span class="en">wave mechanics, TISE, TDSE</span></h2>
+<p><b>推导链条</b>（不必会推，要知道每一步加了什么）[L2 p10–13]：</p>
+<ol>
+<li>经典非色散波动方程 $\dfrac{\partial^2\Psi}{\partial x^2}=\dfrac{1}{v^2}\dfrac{\partial^2\Psi}{\partial t^2}$，解如 $A\sin(kx-\omega t+\phi)$，$k=2\pi/\lambda=\omega/v$，$v=\lambda\nu$。</li>
+<li>驻波 $\Psi(x,t)=\psi(x)\cos\omega t$（对应"定态"）代入 → $\dfrac{d^2\psi}{dx^2}+\dfrac{4\pi^2}{\lambda^2}\psi=0$。这仍是<b>经典</b>方程。</li>
+<li>放进"量子"：$E=\dfrac{p^2}{2m}+V$ ⇒ $p^2=2m(E-V)$，代入 de Broglie $\lambda=h/p$ ⇒ $\dfrac{d^2\psi}{dx^2}+\dfrac{8\pi^2m}{h^2}(E-V)\psi=0$，用 $\hbar=h/2\pi$ 整理即 TISE。</li>
+</ol>
+<div class="fcard"><span class="ft">定态（不含时）与含时 Schrödinger 方程</span>{{ix:Time-independent Schrödinger equation (TISE)|定态薛定谔方程}}{{ix:Time-dependent Schrödinger equation (TDSE)|含时薛定谔方程}}
+$$-\frac{\hbar^2}{2m}\frac{\partial^2\psi}{\partial x^2}+V(x)\psi=E\psi\qquad\qquad -\frac{\hbar^2}{2m}\frac{\partial^2\Psi}{\partial x^2}+V(x,t)\Psi=i\hbar\frac{\partial\Psi}{\partial t}$$
+$$\text{定态：}\ \Psi(x,t)=\psi(x)\,e^{-iEt/\hbar},\qquad \Psi^*\Psi=\psi^*\psi\ \ (\text{与时间相位无关})$$</div>
+<div class="box cond"><span class="lab">条件 / 关系</span>
+<ul><li>TISE 研究<b>定态</b>（stationary states），如 H 原子的 1s、2p<sub>z</sub>。定态下两个方程同时成立 ⇒ $i\hbar\,\partial\Psi/\partial t=E\Psi$。</li>
+<li>没有外场作用的分子和材料，$V(x,y,z)$ 与时间无关 ⇒ TDSE 化为 TISE [L2 p30]。动能算符本身也不含时（和经典 $K=\frac m2(d\vec r/dt)^2$ 不同）。</li>
+<li>为什么换成波动力学：讲义原话 "For what we are doing, the mathematics is simpler." [L2 p10]</li></ul></div>
+
+<h2 id="s2.4">§2.4 算符、本征值与本征函数<span class="en">operators, eigenvalue equation</span></h2>
+<div class="fcard"><span class="ft">本征值方程</span>{{ix:Eigenvalue equation|本征值方程}}{{ix:Hamiltonian|哈密顿算符}}
+$$\hat H\psi_n(x)=E_n\psi_n(x),\qquad \hat H=-\frac{\hbar^2}{2m}\frac{\partial^2}{\partial x^2}+V(x)$$
+<table class="vars"><tr><td>$\hat H$</td><td>总能量算符（Hamiltonian）</td><td>$E_n$</td><td>第 n 个本征值：<b>标量、实数</b>（"Eigenvalue is a scalar, real number"）</td><td>$\psi_n$</td><td>第 n 个本征函数：算符作用后只多出一个常数因子</td></tr></table>
+<p class="small">算符例子：$\partial/\partial x$、$x$、exp、log 等 [L2 p15]。</p></div>
+<div class="box exam"><span class="lab">讲义例题的结论 [L2 p17]</span>$\psi=Ae^{ikx}+Be^{-ikx}$ <b>不是</b> $\partial/\partial x$ 的本征函数（作用后得 $ik(Ae^{ikx}-Be^{-ikx})$，形状变了），但<b>是</b> $\partial^2/\partial x^2$ 的本征函数，本征值 $-k^2$。判断"是不是本征函数"：作用之后能否写成"常数 × 原函数"。</div>
+<table>
+<tr><th>可观测量 [L2 p16]</th><th>算符</th><th>可观测量</th><th>算符</th></tr>
+<tr><td>坐标</td><td>$\hat{\vec r}$</td><td>势能</td><td>$\hat V$</td></tr>
+<tr><td>动量</td><td>$\hat{\vec p}$</td><td>动能</td><td>$\hat K$</td></tr>
+<tr><td>角动量</td><td>$\hat{\vec L}=\hat{\vec r}\times\hat{\vec p}$</td><td>总能量</td><td>$\hat H$</td></tr>
+<tr><td>电偶极矩、磁偶极矩</td><td>$\hat d$、$\hat\mu$</td><td colspan="2">每个可观测量对应一个<b>厄米</b>算符</td></tr>
+</table>
+<p>表象空间：坐标空间 $\vec r=(x,y,z)$，动量空间 $\vec p=(p_x,p_y,p_z)$；$r$ 和 $p$ 在各自表象中是连续变量。</p>
+
+<h2 id="s2.5">§2.5 正交、归一、完备<span class="en">orthogonality, normalization, completeness</span></h2>
+<table>
+<tr><th>性质</th><th>式子 [L2 p18–20]</th><th>含义</th></tr>
+<tr><td>正交{{ix:Orthogonality|正交}}</td><td>$\int\psi_i^*\psi_j\,dx=0\ (i\ne j)$</td><td>本征态彼此"完全不同"</td></tr>
+<tr><td>归一{{ix:Normalization|归一化}}</td><td>$\int\psi_i^*\psi_i\,dx=1$</td><td>所有本征函数"振幅"相同：在全空间找到电子的概率为 1（100% 确定）</td></tr>
+<tr><td>完备{{ix:Completeness|完备性}}</td><td>$\psi(x)=\sum_n b_n\psi_n(x)$</td><td>全部本征函数构成完备集，任何函数都能用它们线性组合。$\psi_n$ 也叫<b>基函数</b>，$b_n$ 是混合系数</td></tr>
+</table>
+<p>类比：三维空间里任何矢量都能用正交单位矢量 x、y、z 组合。完备集<b>可以是无穷的，但不一定无穷</b>。讲义例题：在 $0\le x\le a$ 上归一化 $\psi=a(a+x)$，得 $N=\sqrt{3/(7a^5)}$ [L2 p19]。</p>
+<div class="box why"><span class="lab">为什么重要</span>完备性是 LCAO（{{p:s2.19}}）、变分展开（{{p:s3.4}}）和 FCI 展开（{{p:s4.5}}）的数学基础：用有限个基函数展开就是截断，基组越接近完备，结果越接近精确（完备基组极限，CBS）。</div>
+
+<h2 id="s2.6">§2.6 算符的性质：线性、对易、厄米<span class="en">linearity, commutators, Hermiticity</span></h2>
+<p><b>线性</b>：$a\hat O\psi=\hat O(a\psi)$。log 是非线性算符：$\log(a\psi)\ne a\log\psi$。量子力学里的算符都是线性的。</p>
+<div class="fcard"><span class="ft">对易子与反对易子</span>{{ix:Commutator|对易子}}
+$$[\hat A,\hat B]=\hat A\hat B-\hat B\hat A,\qquad [\hat A,\hat B]_+=\hat A\hat B+\hat B\hat A$$
+<p>$[\hat A,\hat B]=0$：对易，$\hat A$ 的所有本征函数也是 $\hat B$ 的本征函数，反之亦然 [L2 p26]。</p></div>
+<table>
+<tr><th>讲义中的对易关系 [L2 p21–31, p50]</th><th>含义</th></tr>
+<tr><td>$[\hat x,\hat p_x]=i\hbar$；$[\hat x,\hat p_y]=[\hat x,\hat p_z]=0$</td><td>同一方向的位置和动量不能同时确定；不同方向互不影响。"The commutation is one of the most important relation in quantum mechanics."</td></tr>
+<tr><td>$[\hat x,\hat p_x^2]=2i\hbar\,\hat p_x$ ；$[\hat x,\hat H]=\dfrac{i\hbar}{m}\hat p_x$</td><td>位置与能量不能同时确定</td></tr>
+<tr><td>$[\hat p,\hat H]=-i\hbar\,\dfrac{\partial V}{\partial x}$</td><td>只有 $V$ 为常数（自由粒子）时动量守恒</td></tr>
+<tr><td>$[\hat H,\hat L^2]=[\hat H,\hat L_z]=0$（当 $V=V(r)$）</td><td>中心力场中 $E$、$l$、$m$ 可同时确定（{{p:s2.10}}）</td></tr>
+</table>
+<p class="small">对易子代数 [L2 p27]：$[\hat A,\hat B]=-[\hat B,\hat A]$；$[\hat A,\hat A^n]=0$；$[\alpha\hat A,\hat B]=\alpha[\hat A,\hat B]$；$[\hat A,\hat B+\hat C]=[\hat A,\hat B]+[\hat A,\hat C]$；$[\hat A,\hat B\hat C]=[\hat A,\hat B]\hat C+\hat B[\hat A,\hat C]$；$[\hat A\hat B,\hat C]=\hat A[\hat B,\hat C]+[\hat A,\hat C]\hat B$；Jacobi：$[\hat A,[\hat B,\hat C]]+[\hat B,[\hat C,\hat A]]+[\hat C,[\hat A,\hat B]]=0$。</p>
+<div class="box why"><span class="lab">$[\hat x,\hat p]=i\hbar$ 意味着什么 [L2 p24–25]</span>Newton 定律对微观粒子是错的，只是真实运动方程的近似；当"令 $h=0$"对所求性质影响可以忽略时，经典物理才适用。数学上两种理解：把 x、p 当<b>算符</b>（波动力学），或当<b>矩阵</b>（矩阵力学：矩阵元 $O_{ij}=\int\psi_i^*\hat O\psi_j\,dx$，而 $AB\ne BA$）。</div>
+<div class="fcard"><span class="ft">厄米算符（Hermitian）</span>{{ix:Hermitian operator|厄米算符}}
+$$\int\psi_i^*\,\hat O\,\psi_j\,dx=\left(\int\psi_j^*\,\hat O\,\psi_i\,dx\right)^*$$
+<p>厄米算符的本征值全是<b>实数</b>；所有对应可观测量的算符都是厄米的；Hamiltonian 矩阵是厄米矩阵 [L2 p22]。</p></div>
+<div class="box add"><span class="lab">补充：对易与"好量子数"、对称性标签</span>一个量能用来标记状态（好量子数），前提是它的算符和 $\hat H$ 对易，而这又来自势能的对称性：原子（球对称）→ $\hat L^2,\hat L_z$ → s、p、d 和 m；直线分子（只有绕键轴转动不变）→ 只剩 $\hat L_z$ → σ、π、δ；H₂O（C<sub>2v</sub>）→ 点群操作 → a₁、b₁、b₂；八面体配合物 → d 分裂成 t<sub>2g</sub>、e<sub>g</sub>。对称性越低，好量子数越少，简并越低。有对称性就能把 Fock 矩阵分块（{{p:s3.17}}）。{{ix:Good quantum number|好量子数}}</div>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"任意两个算符都满足 $\hat A\hat B\psi=\hat B\hat A\psi$。" <span class="r">$x$ 与 $-i\hbar\,\partial/\partial x$ 不对易，作用顺序有影响 [L2 p21]。</span></li>
+<li class="x">"两个算符不对易，所以它们没有任何共同的本征函数。" <span class="r">不对易时不存在<b>完整的</b>共同本征函数集，个别函数仍可能同时是两者的本征函数。考试表述：对易 ⇒ 有共同本征函数 ⇒ 可以同时精确测量。</span></li>
+<li class="x">"可观测量的本征值可以是复数。" <span class="r">厄米 ⇒ 实数。波函数本身可以是复数。</span></li>
+<li class="x">"$[\hat x,\hat p_y]=i\hbar$。" <span class="r">不同方向对易，为 0。</span></li>
+<li class="o">"对易的算符可以同时精确测量。"</li>
+</ul></div>
+
+<h2 id="s2.7">§2.7 坐标表象中的算符<span class="en">operators in coordinate space</span></h2>
+<table>
+<tr><th>量 [L2 p29]</th><th>坐标表象</th></tr>
+<tr><td>坐标</td><td>$\hat{\vec r}\to\vec r=(x,y,z)$</td></tr>
+<tr><td>动量</td><td>$\hat{\vec p}\to-i\hbar\nabla=-i\hbar\left(\frac{\partial}{\partial x},\frac{\partial}{\partial y},\frac{\partial}{\partial z}\right)$</td></tr>
+<tr><td>角动量</td><td>$\hat{\vec L}=\hat{\vec r}\times\hat{\vec p}\to(yp_z-zp_y,\ zp_x-xp_z,\ xp_y-yp_x)$</td></tr>
+<tr><td>势能</td><td>$V(x,y,z)$</td></tr>
+<tr><td>动能</td><td>$\hat K=\dfrac{\hat p^2}{2m}\to-\dfrac{\hbar^2}{2m}\nabla^2=-\dfrac{\hbar^2}{2m}\left(\frac{\partial^2}{\partial x^2}+\frac{\partial^2}{\partial y^2}+\frac{\partial^2}{\partial z^2}\right)$</td></tr>
+<tr><td>Hamiltonian</td><td>$\hat H=\hat K+\hat V=-\dfrac{\hbar^2}{2m}\nabla^2+V(x,y,z)$</td></tr>
+</table>
+<p>原子单位（a.u.）中 $\hbar=m_e=e=4\pi\varepsilon_0=1$：电子动能算符写成 $-\frac12\nabla^2$，库仑势写成 $-Z/r$、$1/r_{12}$。讲义从 p56 起就换成了 a.u.（常数"消失"不是笔误）。{{ix:Atomic units|原子单位}}</p>
+
+<h2 id="s2.8">§2.8 Born 解释与波函数的要求<span class="en">Born interpretation</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">In 1926, Born suggested that the product Ψ*Ψ should be regarded as a "probability density". Ψ can be a complex function, since it is the product with its complex conjugate which specifies the real physical probability… It leads to the normalization condition when integrated over all space: ∫Ψ*Ψ dτ = 1.</span><span class="zh">$\Psi^*\Psi=|\Psi|^2$ 是概率密度；$\Psi$ 本身可以是复函数、不可观测；对感兴趣的空间积分才得到概率；对全空间积分得归一化条件。[L2 p32]{{ix:Born interpretation|玻恩解释}}</span></div>
+<p><b>合格波函数的条件</b> [L2 p34–35]：① <b>单值</b>（每个 x 只有一个值；反例是一个 x 对应两个值的曲线）；② <b>连续</b>（$f(a)$ 存在，$x\to a$ 两侧极限存在且等于 $f(a)$）；③ <b>有限</b>（区间内不能取无穷，反例 tan x）；④ <b>可归一</b>（平方可积）。</p>
+
+<h2 id="s2.9">§2.9 量子力学五条公设<span class="en">postulates of QM</span></h2>
+<table>
+<tr><th class="nw">公设</th><th>内容（讲义原句要点）[L2 p33–43]{{ix:Postulates of quantum mechanics|量子力学公设}}</th></tr>
+<tr><td>1 · 状态</td><td>粒子的状态完全由波函数 $\Psi(x,t)$ 描述。$t_0$ 时刻在 $x_0$ 附近宽 $dx$ 区间内找到粒子的概率 $P(x_0,t_0)dx=|\Psi(x_0,t_0)|^2dx$，$\int_{-\infty}^{\infty}|\Psi|^2dx=1$。</td></tr>
+<tr><td>2 · 算符</td><td>每个可测性质（位置、动量、能量……）都对应一个算符；实验测量在理论上就是用对应算符作用于波函数。</td></tr>
+<tr><td>3 · 测量值</td><td>对算符 $\hat A$ 对应的可观测量做<b>单次</b>测量，得到的值<b>只可能是该算符的本征值</b>。</td></tr>
+<tr><td>4 · 期望值</td><td>对大量相同制备的体系各测一次，平均值 = 期望值 $\langle a\rangle=\dfrac{\int\Psi^*\hat A\Psi\,dx}{\int\Psi^*\Psi\,dx}$；$\Psi$ 已归一时分母为 1。{{ix:Expectation value|期望值}}</td></tr>
+<tr><td>5 · 时间演化</td><td>体系随时间的演化由含时 Schrödinger 方程决定：$\hat H\Psi=i\hbar\,\partial\Psi/\partial t$。</td></tr>
+</table>
+<div class="fcard"><span class="ft">期望值的两种情况（公设 4）[L2 p39–40]</span>
+<p>情况 1：$\Psi$ 是 $\hat A$ 的归一本征态 $\varphi_n$ ⇒ $\langle a\rangle=a_n$，每次测量都得 $a_n$。</p>
+<p>情况 2：$\Psi$ 不是本征态 ⇒ 用 $\hat A$ 的正交归一本征态展开：</p>
+$$\Psi=\sum_n b_n\varphi_n\ \Rightarrow\ \langle a\rangle=\sum_n|b_n|^2a_n$$
+<table class="vars"><tr><td>$b_n$</td><td>本征态 n 的展开系数</td><td>$|b_n|^2$</td><td>本征态 n 的<b>权重</b>（测到 $a_n$ 的概率）</td></tr></table></div>
+<p><b>叠加原理与测量</b> [L2 p41–42]：测量前波函数是所有可能本征态的叠加；期望值是加权平均。单次测量只得到一个本征值；要知道全部 $b_n$ 需要很多次测量。测量是"主动"的：它把波函数<b>坍缩</b>到被测性质的某个本征态上，原波函数的其他信息全部丢失。Schrödinger 的猫：$\Psi_{cat}=\Psi_{alive}+\Psi_{not\ alive}$，"打开盒子"就是测量，重复很多次约 50% 活着。Einstein："你真的认为我们不看月亮时月亮就不在那里吗？"{{ix:Superposition principle|叠加原理}}</p>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"单次测量得到的是期望值。" <span class="r">单次只能得到某个本征值；期望值是多次测量的平均，可能不等于任何一个本征值（例：$\frac{1}{\sqrt2}(\varphi_{1s}+\varphi_{2p_z})$ 的能量期望值 −0.3125 Ha，单次只会测到 −0.5 或 −0.125）。</span></li>
+<li class="x">"$b_n$ 是本征态 n 的权重。" <span class="r">权重是 $|b_n|^2$。</span></li>
+<li class="x">"期望值公式只对归一化的 Ψ 成立。" <span class="r">通式带分母；Ψ 已归一时分母为 1。</span></li>
+<li class="x">"测量不会改变体系的状态。" <span class="r">测量使波函数坍缩。</span></li>
+<li class="o">"同一个波函数可以对某个量有确定值、对另一个量没有。" <span class="r">看它是不是那个算符的本征态（上例对 $\hat L_z$ 是本征态，m 都为 0；对 $\hat L^2$ 不是）。</span></li>
+</ul></div>
+
+<h2 id="s2.10">§2.10 氢原子与中心力场<span class="en">hydrogen atom, central force</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Hydrogen atom – the only quantum system which can be solved exactly (analytically).</span><span class="zh">氢原子是唯一能精确（解析）求解的量子体系。[L2 p44]</span></div>
+<div class="fcard"><span class="ft">库仑势与中心力 [L2 p44–47]</span>{{ix:Central force|中心力}}
+$$V=\frac{1}{4\pi\varepsilon_0}\frac{Q_1Q_2}{|\vec r_1-\vec r_2|},\qquad \vec F(r)=-\frac{dV(r)}{dr}\frac{\vec r}{r}$$
+<p>中心力：由<b>球对称</b>势能 $V(r)$ 导出的力，总是沿径向。球坐标 $x=r\sin\theta\cos\varphi$，$y=r\sin\theta\sin\varphi$，$z=r\cos\theta$。</p></div>
+<div class="fcard"><span class="ft">中心力场中的 Hamiltonian [L2 p49–52]</span>
+$$\nabla^2=\frac{\partial^2}{\partial r^2}+\frac2r\frac{\partial}{\partial r}-\frac{\hat L^2}{\hbar^2r^2},\qquad \hat H=-\frac{\hbar^2}{2m_e}\left(\frac{\partial^2}{\partial r^2}+\frac2r\frac{\partial}{\partial r}\right)+\frac{\hat L^2}{2m_er^2}+V(r)$$
+$$\hat L^2\Psi=l(l+1)\hbar^2\Psi\ \ (l=0,1,2,\dots),\qquad \hat L_z\Psi=m\hbar\Psi\ \ (m=-l,\dots,+l)$$
+$$\Psi=R(r)\,Y_l^m(\theta,\varphi),\qquad -\frac{\hbar^2}{2m_e}\left(\frac{d^2}{dr^2}+\frac2r\frac{d}{dr}-\frac{l(l+1)}{r^2}\right)R+V(r)R=ER$$
+<table class="vars">
+<tr><td>$Y_l^m$</td><td>球谐函数，$\hat L^2$ 的本征函数，与 r 无关 {{ix:Spherical harmonics|球谐函数}}</td><td>$\dfrac{l(l+1)}{r^2}$</td><td>离心项：l 越大，电子越被推离核（→ 穿透效应 {{p:s2.15}}；$R_{nl}\propto r^l$ 在核附近）</td></tr>
+</table></div>
+<div class="box cond"><span class="lab">适用范围</span>"For any one-particle problem in spherically symmetric potential V(r), the stationary wave functions are R(r)Y<sub>l</sub><sup>m</sup>(θ,φ)" [L2 p52]。径向方程<b>只有单电子体系</b>能解析求解；两个及以上电子只能数值求解（"Numerical methods allow for (almost) any accuracy needed"）。径向函数的信息"制成表"放在<b>基组</b>里 [L2 p54]。</div>
+<figure class="w80"><img src="img/L2_p53_Ylm.png"><figcaption>[L2 p53] 实球谐函数 l = 0–5 的形状，每个 l 有 2l+1 个</figcaption></figure>
+<div class="row">
+<figure style="flex:1.5"><img src="img/L2_p54_levels.png"><figcaption>[L2 p54] H 原子能级（只依赖 n，越往上越密）与类氢径向函数表</figcaption></figure>
+<figure style="flex:1"><img src="img/L2_p55_radial.png"><figcaption>[L2 p55] 径向函数：节点数 n − l − 1；只有 s 在 r = 0 处不为零</figcaption></figure>
+</div>
+<div class="box add"><span class="lab">补充</span>类氢能量 $E_n=-\dfrac{Z^2}{2n^2}$ Ha（H 基态 −0.5 Ha = −13.6 eV），只依赖 n ⇒ 同一 n 的 s、p、d 简并，简并度 $n^2$（计自旋 $2n^2$）。节面：角向 l 个，径向 $n-l-1$ 个，共 $n-1$ 个（{{p:sB.6}}）。<b>只有 s 轨道在核处振幅不为零</b> ⇒ Fermi 接触超精细耦合只来自 s 自旋密度；重元素 s 电子靠近核速度快、相对论收缩（{{p:s6.10}}）。</div>

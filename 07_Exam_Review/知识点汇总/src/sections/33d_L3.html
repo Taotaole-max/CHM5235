@@ -1,0 +1,108 @@
+<h2 id="s3.18">§3.18 Slater 型与 Gaussian 型轨道<span class="en">STO vs GTO</span></h2>
+<div class="row">
+<div style="flex:1.3">
+<div class="fcard"><span class="ft">STO 与 GTO [L3 p71–73]</span>{{ix:Slater-type orbital (STO)|斯莱特型轨道}}{{ix:Gaussian-type orbital (GTO)|高斯型轨道}}
+$$\phi^{STO}_{abc}=N\,x^ay^bz^c\,e^{-\zeta r},\qquad G_{n,l,m}(r,\theta,\varphi)=N\,Y_{l,m}(\theta,\varphi)\,r^{2n-2-l}e^{-\alpha r^2}$$
+$$\text{收缩（contraction）：}\ \chi(r,\theta,\varphi)=Y_{l,m}\sum_i a_i\,r^{2n_i-2-l}e^{-\alpha_i r^2}$$
+<table class="vars"><tr><td>$a,b,c$</td><td>决定角动量 $L=a+b+c$</td><td>$\zeta$</td><td>轨道指数，决定轨道大小</td><td>$a_i$</td><td>收缩系数（固定，不参与变分）{{ix:Contraction|收缩}}</td></tr></table></div>
+</div>
+<figure style="flex:1"><img src="img/L3_p72_stogto.png"><figcaption>[L3 p72] 指数都为 1 的 STO 与 GTO：GTO 在核处是平的、尾巴衰减太快</figcaption></figure>
+</div>
+<table class="cmp">
+<tr><th></th><th>STO</th><th>GTO</th></tr>
+<tr><td>形状</td><td>正确的短程（核处尖点 cusp）和长程（指数衰减）行为；像 H 的 1s</td><td>核处导数为零（<b>无尖点</b>）→ 小距离行为不对；衰减 $e^{-\alpha r^2}$ 太快 → 大距离行为不对</td></tr>
+<tr><td>积分</td><td>多中心积分<b>难</b>（"difficult to integrate for polyatomics"）</td><td><b>Gaussian 乘积定理</b>：两个 Gaussian 的乘积是位于其"重心"的另一个 Gaussian ⇒ 所有双电子积分都有<b>解析式</b>，比数值积分快得多；衰减快 → 按距离截断进一步提速</td></tr>
+<tr><td>补救</td><td>ADF 用 STO（{{p:s3.1}}）</td><td>用几个 GTO 拟合一个 STO（收缩，如 STO-3G）</td></tr>
+<tr><td>其他缺点</td><td colspan="2">基函数都以原子核为中心 → <b>基组重叠误差（BSSE）</b>（{{p:s4.14}}）{{ix:Basis set superposition error (BSSE)|基组重叠误差}}</td></tr>
+</table>
+
+<h2 id="s3.19">§3.19 Gaussian 基组的组成部分<span class="en">core, valence, zeta, polarization, diffuse …</span></h2>
+<table>
+<tr><th>组成 [L3 p75]</th><th>含义</th><th>什么时候要 [L3 p76]</th></tr>
+<tr><td>Core functions 内层函数</td><td>描述内层电子（如 C 的 1s），不参与成键</td><td>—</td></tr>
+<tr><td>Valence functions 价层函数</td><td>描述参与成键的价电子；和内层的区分常是名义上的</td><td>—</td></tr>
+<tr><td><b>Zeta number</b>{{ix:Zeta (ζ) number|ζ 数}}</td><td>价层<b>独立的径向函数组数</b>（通常 2–4），增加灵活性（DZ、TZ、QZ）</td><td>越多越好/越慢，通常 2–3</td></tr>
+<tr><td><b>Polarization</b> 极化函数{{ix:Polarization functions|极化函数}}</td><td>角动量<b>更高</b>的函数（H 上加 p，重原子加 d），让原子轨道相对核"偏移/极化"</td><td>越多越好/越慢，通常一两组 l+1</td></tr>
+<tr><td><b>Diffuse</b> 弥散函数{{ix:Diffuse functions|弥散函数}}</td><td>非常宽的函数，描述远离核的区域</td><td><b>阴离子</b>（通常一组）；弱相互作用、激发态、Rydberg</td></tr>
+<tr><td>Tight functions 紧函数</td><td>紧贴核的函数，改善核附近描述</td><td><b>只用于 NMR、ESR 相关计算</b>（超精细耦合 HFC、J 耦合）</td></tr>
+<tr><td>ECP 有效核势{{ix:Effective core potential (ECP)|有效核势}}</td><td>有效库仑势，<b>替代重原子内层轨道</b>（内层电子在非相对论方法中描述不好）</td><td>重元素（隐含相对论效应，{{p:s6.12}}）</td></tr>
+<tr><td>Rydberg functions</td><td>极弥散的函数</td><td>只用于 Rydberg 态</td></tr>
+</table>
+<div class="box def"><span class="lab">原句</span><span class="en">Bigger and more flexible basis sets provide more accurate matrix representations for the original differential equations and therefore yield more accurate results. Specialized basis sets exist for almost any specific purpose.</span><span class="zh">更大、更灵活的基组 → 原微分方程的矩阵表示更准 → 结果更准（变分：HF 能量随基组增大单调下降，趋于 HF 极限）。[L3 p76]</span></div>
+
+<h2 id="s3.20">§3.20 基组命名：Pople 与 correlation-consistent<span class="en">basis set nomenclature</span></h2>
+<div class="row">
+<figure style="flex:1.1"><img src="img/L3_p76_basisname.png"><figcaption>[L3 p76] 6-311++G(3df,3pd) 与 aug-cc-pVTZ 的拆解</figcaption></figure>
+<div style="flex:1" class="small">
+<p><b>Pople：X-YZG</b>{{ix:Pople basis sets|Pople 基组}}</p>
+<ul>
+<li>第一个数：每个内层 AO 由几个原始 Gaussian 收缩成 1 个函数。</li>
+<li>短横后面的数的个数 = 价层 zeta 数（6-31G：DZ；6-311G：TZ），每个数 = 该组函数的原始 Gaussian 数。</li>
+<li><code>+</code>：重原子加弥散 s+p；<code>++</code>：H 也加弥散 s。</li>
+<li><code>(d)</code> 或 <code>*</code>：重原子加 d；<code>(d,p)</code> 或 <code>**</code>：H 也加 p。<code>(3df,3pd)</code>：重原子加 3 组 d + 1 组 f，H 加 3 组 p + 1 组 d。</li>
+</ul>
+<p><b>Dunning：aug-cc-pVnZ</b>{{ix:Correlation-consistent basis sets (cc-pVnZ)|相关一致基组}}："correlation consistent polarized valence n-zeta"，n = D、T、Q、5；<code>aug-</code> = 每种角动量加一个弥散函数。为<b>相关计算</b>设计，便于向完备基组（CBS）外推（{{p:s4.14}}）。</p>
+<p>每个基组有多少个函数、怎么数：{{p:sB.2}}。</p>
+</div>
+</div>
+
+<h2 id="s3.21">§3.21 精确波函数 = FCI；单参考与多参考方法<span class="en">exact form of the wave function</span></h2>
+<div class="fcard"><span class="ft">激发行列式展开 [L3 p77]</span>
+$$\Psi=a_0\psi_{HF}+\sum_i^{occ}\sum_r^{virt}a_i^r\psi_i^r+\sum_{i<j}^{occ}\sum_{r<s}^{virt}a_{ij}^{rs}\psi_{ij}^{rs}+\sum_{i<j<k}\sum_{r<s<t}a_{ijk}^{rst}\psi_{ijk}^{rst}+\cdots$$
+<table class="vars"><tr><td>$\psi_i^r$</td><td>单激发行列式：电子从占据轨道 i 激发到虚轨道 r</td><td>$\psi_{ij}^{rs}$</td><td>双激发</td><td>$a$</td><td>展开系数</td></tr></table></div>
+<div class="box def"><span class="lab">原句</span><span class="en">The exact wave function includes ALL possible excited Slater determinants. It can only be computed for very-very small molecules and light atoms, in a small-medium basis set. It is called sometimes Full Configuration Interaction (FCI) wave function. … By adding excited Slater determinants into the HF wave function, the electrons start to feel each other – and avoid each other (increasing the inter-electronic distance), accounting for the dynamical correlation.</span><span class="zh">包含所有激发行列式的是（给定基组内的）精确波函数 = FCI，只能用于极小体系。加入激发行列式 → 电子开始"感觉到"彼此、互相避开 → 描述<b>动态相关</b>。[L3 p77–78]{{ix:Full configuration interaction (FCI)|完全组态相互作用}}{{ix:Dynamic correlation|动态相关}}</span></div>
+<table class="cmp">
+<tr><th>单参考方法（single-reference）</th><th>多参考方法（multi-reference）</th></tr>
+<tr><td>MP2、MP3、MP4、CCSD、CCSDT、CISD、CISDT…（以 HF 行列式为出发点）</td><td>CASSCF、MCSCF、RASSCF、CASPT2、NEVPT2、MRCI、MRCC…（以多个行列式为出发点）{{ix:Multireference methods|多参考方法}}</td></tr>
+</table>
+
+<h2 id="s3.22">§3.22 MCSCF、CI 与 CASSCF<span class="en">multiconfigurational SCF, CI</span></h2>
+<div class="row">
+<div style="flex:1">
+<div class="box def"><span class="lab">原句</span><span class="en">If a single Slater determinant gives a poor description of the system, multiple determinants (differing in the electron arrangement in the orbitals) may be used, with weights adjusted using the variational principle. MCSCF description is often necessary in aromatic and conjugated systems as well as systems involving bond breaking or formation.</span><span class="zh">[L3 p79]{{ix:MCSCF|多组态自洽场}}</span></div>
+</div>
+<figure style="flex:1"><img src="img/L3_p79_mcscf.png"><figcaption>[L3 p79] 几个组态一起变分；烯丙基阴离子需要两个组态</figcaption></figure>
+</div>
+<table>
+<tr><th>方法 [L3 p80]</th><th>组态</th><th class="c">随基组大小的标度</th></tr>
+<tr><td>CID</td><td>所有双激发行列式</td><td class="c">$O(n^5)$</td></tr>
+<tr><td>CISD</td><td>所有单、双激发</td><td class="c">$O(n^6)$</td></tr>
+<tr><td>CISDT</td><td>所有单、双、三激发</td><td class="c">$O(n^8)$</td></tr>
+<tr><td>Full CI</td><td>所有组态</td><td class="c">$O(n!)$</td></tr>
+</table>
+<div class="box def"><span class="lab">原句</span><span class="en">The limit where full CI is used for a subset of all orbitals is known as CASSCF (complete active space SCF). The choice of the orbitals is not a simple matter. … Due to the astronomical number of configurations, full CI is only possible for very small (diatomics) systems. Fortunately, full CI is rarely necessary, as CISD tends to be sufficiently accurate for most practical purposes.</span><span class="zh">在一部分轨道（活性空间）里做 FCI = CASSCF，活性轨道的选择不简单。FCI 组态数天文数字，只能做双原子分子这么小的体系；"CISD 对多数实际用途足够准"（讲义原话；但 CISD 不满足大小一致性，{{p:s4.8}}）。[L3 p80]{{ix:CASSCF|完全活性空间自洽场}}</span></div>
+
+<div class="box trap"><span class="lab">L3 判断陷阱</span><ul>
+<li class="x">"变分原理保证 HF 算出的偶极矩也是上界。" <span class="r">变分只管能量。</span></li>
+<li class="x">"变分原理保证 MP2 能量高于精确能量。" <span class="r">MP2、CC 不是变分方法。</span></li>
+<li class="x">"基组越大，HF 能量可能上升。" <span class="r">基组扩大 = 变分空间扩大，能量只降不升（嵌套基组）。</span></li>
+<li class="x">"HF 能量随基组增大可以一直降到精确能量。" <span class="r">只能降到 HF 极限；剩下的是相关能。</span></li>
+<li class="x">"Koopmans 定理适用于 DFT 的 HOMO。" <span class="r">它基于 HF 冻结轨道的推导。</span></li>
+<li class="x">"Koopmans 定理考虑了电离后轨道的弛豫。" <span class="r">恰恰假设轨道不变。</span></li>
+<li class="x">"对占据轨道做幺正变换会改变 HF 能量。" <span class="r">不变；正则、定域、自然轨道给同一个能量。</span></li>
+<li class="x">"Direct SCF 比 conventional 算的积分少。" <span class="r">算得更多（每轮重算），但避开了慢速磁盘 I/O。</span></li>
+<li class="x">"Level shifting 保证收敛到全局极小。" <span class="r">保证收敛，但可能是局部极小。</span></li>
+<li class="x">"RI 是精确的，不引入误差。" <span class="r">用有限辅助基近似，有小的拟合误差。</span></li>
+<li class="x">"GTO 在核处有正确的尖点。" <span class="r">GTO 核处导数为零；STO 才有尖点。</span></li>
+<li class="x">"选 GTO 是因为它的形状比 STO 更接近真实轨道。" <span class="r">恰相反；选 GTO 是因为积分可以解析地算（乘积定理）。</span></li>
+<li class="x">"弥散函数用于改善核附近区域。" <span class="r">那是 tight 函数；弥散描述远离核的区域（阴离子）。</span></li>
+<li class="x">"极化函数是更宽的函数。" <span class="r">极化 = 更高角动量；更宽的是弥散函数。</span></li>
+<li class="x">"B 原子基态用 ROHF 就能定性正确描述。" <span class="r">讲义：三个简并行列式，需 CASSCF（静态相关）。</span></li>
+<li class="x">"半经验方法忽略全部双电子积分。" <span class="r">部分忽略，并用参数弥补。</span></li>
+<li class="o">"收敛时 FDS − SDF = 0。" <span class="r">DIIS 的误差向量正是它。</span></li>
+</ul></div>
+
+<h2 id="s3.23">§3.23 L3 易混对照<span class="en">quick contrasts</span></h2>
+<table class="cmp">
+<tr><th>A</th><th>B</th><th>区别</th></tr>
+<tr><td>正则轨道</td><td>自然轨道</td><td>正则：F 对角，对角元 = 轨道能；自然：D 对角，对角元 = 占据数</td></tr>
+<tr><td>Conventional</td><td>Direct</td><td>存盘一次 vs 每轮重算；大分子磁盘放不下 → direct</td></tr>
+<tr><td>Damping</td><td>Level shifting</td><td>阻尼：混合新旧密度抑制振荡；能级移动：拉大 HOMO–LUMO 能隙，保证收敛但可能局部极小</td></tr>
+<tr><td>DIIS</td><td>Newton–Raphson</td><td>DIIS：前几轮 F 的最优线性组合；NR：用梯度和 Hessian，近极小点好但 Hessian 贵</td></tr>
+<tr><td>STO</td><td>GTO</td><td>STO 形状对、积分难；GTO 形状差、积分解析快 → 用收缩的 GTO</td></tr>
+<tr><td>极化函数</td><td>弥散函数</td><td>极化：更高 l，让轨道变形；弥散：更小指数（更宽），描述远区（阴离子）</td></tr>
+<tr><td>Tight 函数</td><td>ECP</td><td>Tight：加强核附近（HFC、NMR J）；ECP：用势替代内层电子（重元素）</td></tr>
+<tr><td>静态相关</td><td>动态相关</td><td>静态：简并/近简并需要多个行列式（B 原子、键解离）；动态：电子瞬时互相避开，靠大量激发行列式描述（{{p:s4.2}}）</td></tr>
+<tr><td>CISD</td><td>CASSCF</td><td>CISD：HF 参考加所有单双激发；CASSCF：活性空间内 FCI 并同时优化轨道</td></tr>
+<tr><td>RHF / ROHF</td><td>UHF</td><td>R 系列是 $\hat S^2$ 本征态；UHF 能量更低但有自旋污染</td></tr>
+</table>

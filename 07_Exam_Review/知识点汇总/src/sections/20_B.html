@@ -1,0 +1,30 @@
+<h1 class="chap" data-tab="计数" id="B"><span class="no">B</span>计数手册：电子、轨道、基函数、行列式、积分<span class="en">Counting handbook</span></h1>
+<p class="lead">老师说会考"轨道数和电子数"。这类题都按固定规则数，每节先给规则，再给算好的例子。<b>做题顺序</b>：① 电子数 → ② 自旋（α、β 各几个）→ ③ 基函数数 K → ④ 轨道数（占据 / 虚）→ ⑤ 行列式、CSF 或积分数。电子数只由分子决定，与基组无关；基组只影响 K 和虚轨道数。本节所有数字都用脚本核对过。</p>
+
+<h2 id="sB.1">§B.1 电子数与自旋<span class="en">electrons, spin, multiplicity</span></h2>
+<div class="fcard"><span class="ft">规则</span>{{ix:Multiplicity|自旋多重度}}
+$$N=\sum_AZ_A-q,\qquad N_\alpha+N_\beta=N,\qquad S=\frac{N_\alpha-N_\beta}{2}=\frac{\text{未成对电子数}}{2}\ (\text{高自旋}),\qquad \text{多重度}=2S+1$$
+<p class="small">q 为分子电荷（阳离子 q &gt; 0，电子减少）。多重度：1 单重态、2 双重态、3 三重态、4 四重态、5 五重态、6 六重态。</p></div>
+<div class="box cond"><span class="lab">奇偶检查</span>N 为<b>偶数</b> → 只能单重、三重、五重……；N 为<b>奇数</b> → 只能双重、四重、六重……。题目给的"电荷 + 多重度"奇偶不对，就不可能存在（程序会直接报错）。</div>
+<table class="small">
+<tr><th>体系</th><th class="c">N</th><th>基态</th><th class="c">$N_\alpha/N_\beta$</th><th>说明</th></tr>
+<tr><td>H₂O、NH₃、CH₄、NH₄⁺、OH⁻、HF、Ne</td><td class="c">10</td><td>单重态</td><td class="c">5 / 5</td><td>等电子体；NH₄⁺：7 + 4 − 1；OH⁻：8 + 1 + 1</td></tr>
+<tr><td>HCl</td><td class="c">18</td><td>单重态</td><td class="c">9 / 9</td><td>HW1 Ex1：9 个占据轨道</td></tr>
+<tr><td>CH₃•、NH₃⁺•</td><td class="c">9</td><td>双重态</td><td class="c">5 / 4</td><td>一个未成对电子</td></tr>
+<tr><td>O₂</td><td class="c">16</td><td>三重态</td><td class="c">9 / 7</td><td>两个简并 π* 各一个电子，同向（Hund）</td></tr>
+<tr><td>B 原子</td><td class="c">5</td><td>双重态</td><td class="c">3 / 2</td><td>1s²2s²2p¹（三个简并行列式，{{p:s3.9}}）</td></tr>
+<tr><td>Cu²⁺（d⁹）</td><td class="c">27</td><td>双重态</td><td class="c">14 / 13</td><td>29 − 2；Cu(II) 二聚体：高自旋 S = 1，BS 态 $M_S=0$</td></tr>
+<tr><td>2-氯苯酚 C₆H₅ClO</td><td class="c">66</td><td>单重态</td><td class="c">33 / 33</td><td>6 × 6 + 5 + 17 + 8；HOMO = 第 33 个（ORCA 从 0 数，编号 32）</td></tr>
+<tr><td>[Cu₂Cl₆]²⁻（L5 上机）</td><td class="c">162</td><td>BS / HS</td><td class="c">81 / 81（BS）<br>82 / 80（HS）</td><td>2 × 29 + 6 × 17 + 2；两个 d⁹ → 总 S = 0 或 1</td></tr>
+</table>
+<div class="fcard"><span class="ft">$\langle S^2\rangle$ 的理想值（UHF/UKS 输出与它比较，判断自旋污染）</span>{{ix:Spin contamination|自旋污染}}
+<table class="small"><tr><th>多重度</th><td class="c">1</td><td class="c">2</td><td class="c">3</td><td class="c">4</td><td class="c">5</td><td class="c">6</td></tr>
+<tr><th>S</th><td class="c">0</td><td class="c">1/2</td><td class="c">1</td><td class="c">3/2</td><td class="c">2</td><td class="c">5/2</td></tr>
+<tr><th>S(S+1)</th><td class="c">0</td><td class="c">0.75</td><td class="c">2.00</td><td class="c">3.75</td><td class="c">6.00</td><td class="c">8.75</td></tr></table>
+<p class="small"><b>怎么读 ⟨S²⟩</b>：若波函数是两个自旋态的混合，$\langle S^2\rangle=\sum_Sw_S\,S(S+1)$（$w_S$ 为权重）。拉长的 H₂（UHF）、BS 态（两个 S = ½ 中心一个 α 一个 β）：$\langle S^2\rangle\approx1.0=\frac12\times0+\frac12\times2$，即单重态、三重态各一半，不是纯三重态。高自旋三重态 2.0。Yamaguchi 分母就是两者之差 ≈ 1（{{p:s5.15}}）。双重态自由基算出 0.76–0.78：污染可忽略；算出 1.0 以上：严重污染，单个行列式可能不够（{{p:s3.10}}）。</p></div>
+<div class="box add"><span class="lab">补充</span>
+<ul class="small">
+<li><b>ECP（有效核势）</b>把内层电子换成势：显式电子数 = N − 被替换的内层电子数。例：def2 对 Au 用 60 电子 ECP，只剩 79 − 60 = 19 个显式电子。题目问哪个"电子数"要看清。</li>
+<li>过渡金属 <b>d 电子数 = 族序数 − 氧化态</b>：Cu(II) 11 − 2 = 9（d⁹，S = ½）；Fe(III) 8 − 3 = 5（高自旋 d⁵，S = 5/2）；Ni(II) d⁸ 八面体 S = 1。</li>
+<li><b>冻结核</b>（frozen core）：相关计算常不激发内层（Li–Ne 的 1s；Na–Ar 的 1s2s2p）。H₂O 冻结 O 1s 后参与相关的占据轨道为 5 − 1 = 4 个。</li></ul>
+</div>

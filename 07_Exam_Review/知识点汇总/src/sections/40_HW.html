@@ -1,0 +1,27 @@
+<h1 class="chap" data-tab="作业" id="HW"><span class="no">HW</span>作业里的现象与结论<span class="en">What HW1 (Gaussian) and HW2 (ORCA) actually showed</span></h1>
+<p class="lead">只写现象、原因和对应的讲义知识点，不写输入关键词。数值来自你自己的报告，考试出"情景题"时可以直接当例子用。</p>
+
+<h2 id="sH.1">§H.1 HW1（Gaussian）<span class="en">HCl, H–F PES, CH₂FCl, H₂, CH₂FOH</span></h2>
+<table class="small">
+<tr><th style="width:17%">题目</th><th style="width:43%">现象（数据）</th><th>原因 / 对应知识点</th></tr>
+<tr><td>Ex1 HCl<br>RHF，6 个基组</td><td>基函数数 = 轨道数：STO-3G 10、6-31G 15、cc-pVDZ 23、6-311+G(d) 33、cc-pVTZ 48、cc-pVQZ 89。STO-3G：9 个占据 + 1 个虚轨道。R<sub>e</sub> 1.313 → 1.266 Å（实验 1.275）；频率 3373 → 3139 cm⁻¹，<b>都高于</b>实验 2991。<b>6-311+G(d) 的能量（−460.0872）高于 cc-pVDZ（−460.0895）</b>。</td><td>MO 数 = K（{{p:sB.3}}）；HF 频率系统偏高约 5%（缺相关，键太"硬"）；基组越大越接近 HF 极限，但 HF 极限 ≠ 实验（相关能）。不同<b>系列</b>的基组不是嵌套的，能量不必单调——变分原理只保证同一函数空间扩大时能量不升（{{p:s3.3}}）。</td></tr>
+<tr><td>Ex1 HCl<br>轨道与电荷</td><td>MO 1–5 是 Cl 内层（1s −104.8 Ha；2p 三个近简并）；MO 6 以 Cl 3s 为主；MO 7 是 H–Cl σ 键；HOMO（MO 8、9）是两个<b>简并</b>的 Cl 3p 孤对；HOMO–LUMO 能隙 15.5 eV。Mulliken：Cl −0.17、H +0.17。</td><td>HF 能隙远大于光学能隙（虚轨道能不是激发能）；π 型孤对由 $\hat L_z$ 对称性简并（{{p:s2.6}}）。</td></tr>
+<tr><td>Ex2 H–F 势能面<br>UHF/UB3LYP/UCCSD/UCCSD(T)</td><td><code>guess=mix</code> 对异核 H–F <b>没能破缺自旋对称</b>：从 0.5 到 10 Å 全程 ⟨S²⟩ = 0（UHF 塌回 RHF 解）。在 R = 5 Å 做稳定性分析后能量<b>降低 0.293 Ha（769 kJ/mol）</b>，⟨S²⟩ 0 → 1.003。拉长区 UCCSD 振幅方程<b>不收敛</b>（4.57 Å 以后）。D<sub>e</sub>：UB3LYP 574 最接近实验 569 kJ/mol。</td><td>SCF 收敛 ≠ 最低解（{{p:s3.16}}）；RHF 型解解离错误（离子项，{{p:s2.20}}）；UHF 破缺对称得到正确极限但 ⟨S²⟩ → 1（两个自由基的 50:50 单重/三重混合，{{p:sB.1}}）；键断裂 = 静态相关 → 单参考 CC 失效（{{p:s4.11}}）。</td></tr>
+<tr><td>讲义任务 H₂<br>RHF vs UHF</td><td>平衡附近两条曲线重合；在 Coulson–Fischer 点之后 UHF 低于 RHF，趋于 2E(H) = −1 Ha；RHF 解离极限过高。</td><td>{{p:s2.20}}、{{p:s4.7}}：RHF 固定 50% 离子项；FCI 中 $a_1\to-a_0$。</td></tr>
+<tr><td>Ex3 CH₂FCl</td><td>BDE（UB3LYP/cc-pVDZ，含 ZPE）：C–H 390 kJ/mol、<b>C–F 435 kJ/mol</b>。三种方法总能量：HF/STO-3G −591.17、B3LYP/cc-pVDZ −599.36、CCSD/cc-pVTZ −598.67 Ha。静电势面：H 端正（蓝），F、Cl 端负。</td><td>BDE = 碎片（自由基用非限制方法）− 母体，要加 ZPE；不同方法 + 不同基组的总能量<b>不能直接比</b>（B3LYP 低于 CCSD 不说明更准，DFT 不受变分上界约束，{{p:s5.3}}）；MEP 见 {{p:s6.7}}。</td></tr>
+<tr><td>Ex5 H₂ 理论题</td><td>最小基 6 个行列式；基态 $E_0=2h_{gg}+J_{gg}+V_{nn}$；单激发三重态 $h_{gg}+h_{uu}+J_{gu}-K_{gu}$，单重态 $+K_{gu}$。</td><td>{{p:s3.6}}、{{p:s4.7}}、{{p:sB.4}}</td></tr>
+<tr><td>Ex6 CH₂FOH<br>TD-DFT(TDA) vs CIS</td><td>S1：TDA/B3LYP 8.10 eV（153 nm），CIS 9.81 eV；CIS 五个态都<b>高 1.7–3.0 eV</b>。无共轭 → 吸收在真空紫外。</td><td>CIS 不含相关（基于 HF，虚轨道太高）；TD-DFT 含近似相关（{{p:s5.16}}）；激发能 ∝ 1/L²（共轭越长越红）。</td></tr>
+</table>
+
+<h2 id="sH.2">§H.2 HW2（ORCA）<span class="en">2-chlorophenol, solvent, RI, TD-DFT, BS-DFT, MD</span></h2>
+<table class="small">
+<tr><th style="width:17%">题目</th><th style="width:43%">现象（数据）</th><th>原因 / 对应知识点</th></tr>
+<tr><td>Ex1 2-氯苯酚<br>PBE vs B3LYP，气相 vs 水</td><td>HOMO–LUMO 能隙：<b>PBE 4.19 eV、B3LYP 5.76 eV</b>（气相）；水中只变 0.02 eV。频率：B3LYP 平均高 2.8%，O–H 伸缩 3567 vs 3722 cm⁻¹。偶极矩 0.75（PBE 气）→ 1.09 D（B3LYP 水）。熵几乎与方法无关（81.2–81.9 cal/mol/K）。O–H 朝向 Cl 的构象低 3.3 kcal/mol（分子内 O–H···Cl）。</td><td>杂化泛函的 HF 交换减小 SIE、拉开能隙；GGA 能隙偏小（{{p:s5.6}}、{{p:s5.8}}）。连续介质使分子<b>极化</b> → 偶极矩、O–H 电荷分离增大（{{p:s6.17}}）。平动/转动熵只取决于质量和几何。</td></tr>
+<tr><td>Ex1 原子电荷</td><td>Mulliken：Cl −0.13 ~ −0.14、O −0.32 ~ −0.42；<b>Löwdin：Cl +0.37 ~ +0.39、O +0.08 ~ +0.11——符号翻转</b>；C1、C2 也反号。</td><td>电荷不是可观测量；两种方案划分重叠密度的方式不同，只能在同一方案内比较趋势（{{p:s6.1}}、{{p:s6.3}}）。</td></tr>
+<tr><td>Ex1 静电势</td><td>最负：O 孤对（远离 Cl 一侧）和环的 π 面；最正：羟基 H。点电荷模型画不出 π 面上方的负电势。</td><td>MEP 来自真实电子分布；原子中心电荷不能表示 π 电子云（{{p:s6.7}}）。</td></tr>
+<tr><td>Ex2 溶剂理论</td><td>CPCM(Water)：ε = 80.4，空腔为 1.2 × vdW 半径的原子球；表面电荷 $\mathbf{Aq}=-f(\varepsilon)\mathbf V$，$f=(\varepsilon-1)/(\varepsilon+x)$（CPCM x = 0，COSMO x = 0.5）；静电溶剂化能 −4.7 ~ −4.8 kcal/mol；普通 CPCM <b>不含</b>空腔/色散项；氢键要显式水。</td><td>{{p:s6.16}}、{{p:s6.17}}；自洽反应场：电荷与密度每轮一起更新；自由能里的 ½ = 极化溶剂所做的功。</td></tr>
+<tr><td>Ex3 RI 理论</td><td>2-氯苯酚 def2-TZVP：K = 284，四中心积分约 $8.1\times10^8$ 个（≈ 6.5 GB）；RI（def2/J，N<sub>aux</sub> = 449）只需约 $1.8\times10^7$ 个三中心积分（≈ 145 MB，少 45 倍），可放内存。</td><td>{{p:s3.15}}、{{p:sB.5}}：$K^4/8$ → $K^2N_{aux}/2$；拟合误差系统性，能量差中大部分抵消。</td></tr>
+<tr><td>Ex4 TD-DFT</td><td>S1 = HOMO→LUMO（π→π*）：PBE 4.66 eV、B3LYP 4.99 eV；<b>B3LYP 所有态比 PBE 高 0.3–0.5 eV</b>；水中 S1 只移 −0.01 eV，但振子强度 0.040 → 0.058；部分态顺序互换。</td><td>泛函选择的影响远大于溶剂（{{p:s5.16}}）；杂化泛函激发能更高（能隙更大）。</td></tr>
+<tr><td>Ex5 Cu(II)₂ 桨轮<br>BS-DFT</td><td>⟨S²⟩<sub>HS</sub> ≈ 2.00、⟨S²⟩<sub>BS</sub> ≈ 1.00；Cu 自旋布居 +0.63 / −0.63（BS 确实翻转）。$E_{HS}-E_{BS}$ 只有 20–130 cm⁻¹（比总能量小 7 个数量级）。J（Yamaguchi，$\hat H=-2J\hat S_A\cdot\hat S_B$）：SVP 下非相对论 +38（铁磁）→ DKH −22 / ZORA −53（反铁磁）；<b>TZVP 下三者都反铁磁</b>（−78，DKH = ZORA = −127 cm⁻¹）。相对论使总能量降 30–46 Ha，但在 J 中几乎全部抵消。泛函：TPSSh(10% HF) +173、B3LYP(20%) +38、PBE0(25%) −31 cm⁻¹。</td><td>弱重叠极限 ⟨S²⟩ 差 ≈ 1 ⇒ Yamaguchi ≈ Noodleman，Bencini 式小一半（{{p:s5.15}}）；小基组造成符号假象；标量相对论主要稳定内层、对 J 的净效应约 60%（{{p:s6.12}}）；<b>HF 交换比例是 BS-DFT 最大的不确定性</b>：本例中 HF 交换越多，J 越负（越偏反铁磁）。</td></tr>
+<tr><td>Ex6 水团簇 MD<br>PBE vs GFN2-xTB，400 K</td><td>xTB（128 个水、2.5 ps）：四面体序参量 0.90 → 0.39，4.4 Å 第二近邻峰消失 → <b>冰簇熔化</b>，氢键数几乎不变；分子从表面蒸发（需要球形壁）。DFT（20 个水、100 fs）：几乎看不到熔化。温度涨落：大团簇 ±22 K，60 原子 DFT 团簇 ±50 K。每原子每步：DFT 比 xTB 贵约 136 倍。</td><td>氢键重排需 ~ps，100 fs 只够采样振动；小体系温度相对涨落 ∝ $1/\sqrt N$；成本决定能模拟的尺度和时长（半经验 = 忽略大部分积分，{{p:s3.14}}）。</td></tr>
+</table>

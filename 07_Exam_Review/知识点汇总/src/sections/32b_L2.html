@@ -1,0 +1,166 @@
+<h2 id="s2.11">§2.11 氦原子与多电子体系：轨道近似、平均场<span class="en">He atom, orbital &amp; mean-field approximation</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">It is not possible to obtain exact wave functions for any system with more than one electron, however, we can obtain numerical solutions as accurate as we please.</span><span class="zh">多于一个电子的体系都得不到精确（解析）波函数，但数值解可以要多准有多准。[L2 p56]</span></div>
+<div class="fcard"><span class="ft">He 原子 Hamiltonian（a.u.）[L2 p56]</span>
+$$\hat H=\left(-\tfrac12\nabla_1^2-\frac{2}{r_1}\right)+\left(-\tfrac12\nabla_2^2-\frac{2}{r_2}\right)+\frac{1}{r_{12}},\qquad r_{12}=|\vec r_2-\vec r_1|$$
+<p>前两个括号各是一个"类氢"问题；麻烦全在 $1/r_{12}$：电子间库仑排斥（"electrons wish to avoid each other as much as possible"）。</p></div>
+<div class="box why"><span class="lab">$1/r_{12}$ 带来的后果 [L2 p57–61]</span>
+<ul><li>$\vec r_{12}$ 不从坐标原点出发，<b>破坏了球对称</b> → 方程无法精确求解，需要进一步近似。</li>
+<li>电子互相推挤，单个电子的角动量不断涨落 ⇒ 单个 $l_1,l_2$ <b>不再是好量子数</b>；但总轨道角动量 $L=l_1+l_2$ 守恒，是整个体系的好量子数。</li>
+<li>$\vec L=\sum\vec l_i$、$\vec S=\sum\vec s_i$（矢量相加）；z 分量按<b>普通数</b>相加：$M_L=\sum m_i$，$M_S=\sum m_{s,i}$。$L=0,1,2,\dots$；$M_L=0,\pm1,\dots,\pm L$。自由原子和离子的 L、S 守恒。</li>
+<li>每个电子的 $l_i$ 仍有用：它给出电子 i 的<b>平均</b>轨道角动量；把电子间作用平均掉就得到近似的径向力 Hamiltonian。</li></ul></div>
+<div class="box def"><span class="lab">轨道近似</span><span class="en">Orbital approximation consists in writing the above wave function as a product of effective mono-electronic wave functions … This is an approximation, because the exact wave function may have a much more complex form … but if we wish to solve Ĥ for real molecules, we have no alternative.</span><span class="zh">把 $\psi(\vec r_1\sigma_1;\vec r_2\sigma_2)\approx\varphi_1(\vec r_1,\sigma_1)\varphi_2(\vec r_2,\sigma_2)$：多电子波函数写成有效单电子函数的乘积。这是近似（精确波函数可含二次项、混合变量项等），但要解真实分子别无选择。[L2 p60]{{ix:Orbital approximation|轨道近似}}</span></div>
+<div class="box def"><span class="lab">平均场近似</span><span class="en">Mean-Field Approximation (MFA): each electron moves in an average electrostatic field created by nuclei + all other electrons. MFA neglects the true electron-electron correlated motion (i.e. electron correlation). In reality – electrons avoid each other as much as possible, since they repel each other.</span><span class="zh">每个电子在"核 + 所有其他电子"的<b>平均</b>静电场中运动。MFA 忽略了电子间真实的关联运动，即<b>电子相关</b>。[L2 p61]{{ix:Mean-field approximation (MFA)|平均场近似}}{{ix:Electron correlation|电子相关}}</span></div>
+<p>有了轨道近似，每个电子仍可用类氢的 $l_i=0,1,2,\dots$，于是每个电子有四个量子数 $n_i,l_i,m_i,s_{zi}$。轨道近似 + Pauli 原理解释了<b>元素周期表</b> [L2 p62]。</p>
+
+<h2 id="s2.12">§2.12 电子自旋<span class="en">electron spin</span></h2>
+<div class="fcard"><span class="ft">自旋算符与本征函数 [L2 p63–64]</span>{{ix:Spin|自旋}}
+$$\hat s^2\alpha=s(s+1)\hbar^2\alpha,\quad \hat s_z\alpha=+\tfrac12\hbar\,\alpha,\quad \hat s_z\beta=-\tfrac12\hbar\,\beta;\qquad \int\alpha^*\alpha\,d\sigma=\int\beta^*\beta\,d\sigma=1,\ \int\alpha^*\beta\,d\sigma=0$$
+<p>类比轨道角动量引入自旋角动量 $\hat s^2,\hat s_z$，描述"电子绕自身轴的角运动"（讲义加了引号：只是历史比喻）。电子 $s=\frac12$，$m_s=\pm\frac12$。约定：<b>小写 $s,m_s$ 指单个电子，大写 $S,M_S$ 指多电子体系的总自旋</b>。</p></div>
+<div class="box why"><span class="lab">α、β 正交的后果</span>对自旋积分时异自旋项为零 ⇒ 交换积分 K 只在<b>同自旋</b>电子之间不为零（{{p:s2.13}}、{{p:s2.17}}）。</div>
+
+<h2 id="s2.13">§2.13 Pauli 原理与 He 的单重态、三重态<span class="en">Pauli principle, J and K</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Pauli Principle states that an electronic wave function ψ(1,2,…) is antisymmetric with respect to interchange of any pair of two electrons: P̂₁₂ψ(1,2,…) = ψ(2,1,…) = −ψ(1,2,…).</span><span class="zh">交换任意两个电子，电子波函数<b>变号</b>（反对称）。概率密度 $\psi^*\psi$ 在交换下<b>不变</b>（前提：电子全同），因为它是可观测量。轨道近似下用 Slater 行列式满足反对称要求。[L2 p65]{{ix:Pauli principle|泡利原理}}{{ix:Antisymmetry|反对称性}}</span></div>
+<p><b>He 基态 1s²</b> [L2 p66]：电子不可区分，$\psi(1,2)=1s(r_1)\alpha_1\,1s(r_2)\beta_2$ 和 $\psi(2,1)$ 等价，可组合成 $\Psi_\pm=\psi(1,2)\pm\psi(2,1)$。只有 $\Psi_-$（交换后变号）满足 Pauli：</p>
+$$\Psi(^1S_0)=\frac{1}{\sqrt2}\,1s(r_1)1s(r_2)\,[\alpha_1\beta_2-\alpha_2\beta_1]\qquad(L=0,S=0,J=0)$$
+<p>空间部分对称 × 自旋部分反对称 = 整体反对称。</p>
+<div class="row">
+<div style="flex:1.35">
+<p><b>He 激发态 1s2s</b> [L2 p67–69]：</p>
+<ul class="small">
+<li>空间：对称 $\frac{1}{\sqrt2}[1s(r_1)2s(r_2)+1s(r_2)2s(r_1)]$，反对称 $\frac{1}{\sqrt2}[1s(r_1)2s(r_2)-1s(r_2)2s(r_1)]$。</li>
+<li>自旋：对称的三个 $\alpha_1\alpha_2$、$\beta_1\beta_2$、$\frac{1}{\sqrt2}(\alpha_1\beta_2+\alpha_2\beta_1)$（S = 1，$M_S=+1,-1,0$）；反对称的一个 $\frac{1}{\sqrt2}(\alpha_1\beta_2-\alpha_2\beta_1)$（S = 0）。</li>
+<li>必须"对称 × 反对称"：<b>三重态 ³S₁ = 空间反对称 × 自旋对称</b>（三个态简并）；<b>单重态 2¹S₀ = 空间对称 × 自旋反对称</b>。{{ix:Singlet|单重态}}{{ix:Triplet|三重态}}</li>
+</ul>
+$$E(^3S_1)=E_{1s}+E_{2s}+J-K,\qquad E(2\,^1S_0)=E_{1s}+E_{2s}+J+K,\qquad \Delta E=E(^3S_1)-E(2\,^1S_0)=-2K$$
+$$J=\iint 1s(r_1)^*2s(r_2)^*\,\frac{1}{r_{12}}\,1s(r_1)2s(r_2)\,d\tau,\qquad K=\iint 1s(r_1)^*2s(r_2)^*\,\frac{1}{r_{12}}\,1s(r_2)2s(r_1)\,d\tau$$
+<table class="vars"><tr><td>$J$</td><td>库仑积分：两团电荷云的经典静电排斥，&gt; 0 {{ix:Coulomb integral J|库仑积分}}</td></tr><tr><td>$K$</td><td>交换积分：两个电子"交换位置"后的重叠，没有经典对应，&gt; 0 {{ix:Exchange integral K|交换积分}}</td></tr></table>
+</div>
+<figure style="flex:1"><img src="img/fig_he_1s2s.png"><figcaption>自绘：J 把两个态一起抬高，K 再把它们劈裂 2K，三重态在下</figcaption></figure>
+</div>
+<div class="box cond"><span class="lab">条件</span>这个结果是用 <b>H 原子的 1s、2s 轨道</b>作近似空间函数、计算 Hamiltonian 期望值得到的（"after quite a lot of manipulation"）。同样近似下 He 基态能量 −2.75 Ha（精确值 −2.9037 Ha，HF 极限 −2.8617 Ha）[L2 p71]。</div>
+<div class="box why"><span class="lab">为什么三重态更低（Hund 规则的来源）</span>三重态空间部分反对称：$\vec r_1=\vec r_2$ 时波函数为零，同自旋电子不会同时出现在同一位置（"Fermi 空穴 / 交换空穴"，补充术语），平均距离更大、排斥更小，所以能量低 2K。这是 Pauli 原理在能量上的直接后果，<b>不是自旋之间的磁相互作用</b>。同样机制：O₂ 的 π*² 基态是三重态。{{ix:Hund's rule|洪特规则}}{{ix:Fermi hole|费米空穴}}</div>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"交换积分 K 在任意两个电子之间都存在。" <span class="r">K 只在同自旋电子之间；J 对所有电子对都存在。</span></li>
+<li class="x">"三重态能量更低，是因为两个平行自旋之间有磁吸引。" <span class="r">原因是空间波函数反对称，电子彼此避开，库仑排斥减小。</span></li>
+<li class="x">"He 1s2s 的单重态和三重态能量差是 K。" <span class="r">差是 2K。</span></li>
+<li class="x">"Pauli 原理要求概率密度在交换两个电子后变号。" <span class="r">变号的是波函数，概率密度不变。</span></li>
+<li class="x">"He 基态的空间部分反对称。" <span class="r">1s² 空间对称（两个电子同一空间轨道），自旋反对称（单重态）。</span></li>
+</ul></div>
+
+<h2 id="s2.14">§2.14 Slater 行列式<span class="en">Slater determinants</span></h2>
+<div class="fcard"><span class="ft">Slater 行列式（1930 年代初）[L2 p72, p76]</span>{{ix:Slater determinant|斯莱特行列式}}
+$$\Psi(1,2,\dots,N)=\frac{1}{\sqrt{N!}}\begin{vmatrix}\phi_a(1)&\phi_b(1)&\cdots&\phi_n(1)\\ \phi_a(2)&\phi_b(2)&\cdots&\phi_n(2)\\ \vdots&\vdots&\ddots&\vdots\\ \phi_a(N)&\phi_b(N)&\cdots&\phi_n(N)\end{vmatrix}$$
+<table class="vars"><tr><td>行</td><td>电子（坐标 1…N）</td><td>列</td><td>占据的<b>自旋轨道</b>（空间轨道 × α 或 β）</td><td>$1/\sqrt{N!}$</td><td>归一化因子；展开有 $N!$ 项；$\langle\Psi|\Psi\rangle=1$</td></tr></table></div>
+<div class="box why"><span class="lab">为什么自动满足 Pauli 原理（两条性质）[L2 p73]</span>① 交换任意两行（两个电子）或两列，行列式<b>变号</b> → 反对称。② 任意两行或两列相同（或只差一个常数因子），行列式<b>为零</b> → 两个电子不能占据同一个自旋轨道（不相容）。</div>
+<p><b>He 的例子</b> [L2 p73]：基态 $\Psi(^1S_0)=\frac{1}{\sqrt2}\begin{vmatrix}1s(r_1)\alpha_1&1s(r_1)\beta_1\\1s(r_2)\alpha_2&1s(r_2)\beta_2\end{vmatrix}$ 是<b>一个</b>行列式；激发单重态 $2\,^1S_0$ 需要<b>两个</b>行列式的线性组合 $\frac12\left(|1s\alpha\ 2s\beta|-|1s\beta\ 2s\alpha|\right)$；而三重态的 $M_S=\pm1$ 分量 $|1s\alpha\,2s\alpha|$ 只要一个行列式。</p>
+<div class="box def"><span class="lab">原句</span><span class="en">While the determinant automatically satisfies the Pauli exclusion principle, it does not account for electron correlation.</span><span class="zh">行列式自动满足 Pauli 不相容原理，但<b>不包含电子相关</b>。[L2 p76]</span></div>
+<div class="box why"><span class="lab">后面反复用到</span>"开壳层单重态需要两个行列式"正是 DFT 算不了磁耦合单重态、必须改用 broken-symmetry（BS）单行列式的原因（{{p:s5.15}}）；也是 H₂ 解离时单行列式失败的根源（{{p:s2.20}}、{{p:s4.2}}）。</div>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"Slater 行列式既满足 Pauli 原理，又包含了电子相关。" <span class="r">讲义原话：满足 Pauli，但不包含电子相关。（它只包含同自旋电子间的"交换相关"——补充）</span></li>
+<li class="x">"任何自旋态都能写成一个 Slater 行列式。" <span class="r">开壳层单重态（He 1s2s ¹S、双自由基单重态）至少需要两个。</span></li>
+<li class="x">"N 个电子的 Slater 行列式展开有 N² 项。" <span class="r">N! 项。</span></li>
+<li class="x">"行列式的列对应电子。" <span class="r">讲义约定：行 = 电子，列 = 自旋轨道（转置不影响值）。</span></li>
+</ul></div>
+
+<h2 id="s2.15">§2.15 碱金属：轨道能量依赖 l（穿透效应）<span class="en">orbital dependence of energy</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">The electron-electron repulsion term has broken the spherical symmetry and we see a strong orbital dependence of the energy. (This effect is not present in one-electron atoms, where the energy depends only on the main quantum number n for all 2l+1 orbital states.) For a given n, E<sub>ns</sub> &lt; E<sub>np</sub> &lt; E<sub>nd</sub> &lt; E<sub>nf</sub> …, because the penetration of the outer electrons to the nucleus decreases in the order s &gt; p &gt; d &gt; f.</span><span class="zh">多电子原子中同一 n 的能量随 l 升高；单电子原子中只依赖 n。原因：外层电子向核的<b>穿透</b>按 s &gt; p &gt; d &gt; f 递减。[L2 p75]{{ix:Penetration|穿透效应}}{{ix:Shielding|屏蔽}}</span></div>
+<div class="row">
+<figure style="flex:1.2"><img src="img/L2_p75_penetration.png"><figcaption>[L2 p75] Na 的 3s、3p 钻穿 1s 屏蔽层；Li 的 2s 比 2p 钻得更深</figcaption></figure>
+<div class="box why" style="flex:1"><span class="lab">为什么</span>内层电子屏蔽核电荷。s 电子能"钻"进内层、离核很近（核处有振幅），感受到更大的有效核电荷，能量更低；l 越大，离心项 $l(l+1)/r^2$ 越把电子推离核，穿透越少、屏蔽越多，能量越高。这个差别可以大到让不同 n 交错：K 的 4s 低于 3d（H 原子里 3d 低于 4s）。</div>
+</div>
+
+<h2 id="s2.16">§2.16 分子 Hamiltonian 与 Born–Oppenheimer 近似<span class="en">Born–Oppenheimer approximation</span></h2>
+<div class="fcard"><span class="ft">分子总 Hamiltonian（a.u.）</span>
+$$\hat H=\underbrace{-\sum_A\frac{1}{2M_A}\nabla_A^2}_{\text{核动能}}+\underbrace{\frac12\sum_A\sum_{B\ne A}\frac{Z_AZ_B}{r_{AB}}}_{\text{核–核排斥}}\underbrace{-\sum_i\frac12\nabla_i^2}_{\text{电子动能}}\underbrace{-\sum_A\sum_i\frac{Z_A}{r_{iA}}}_{\text{核–电子吸引}}+\underbrace{\frac12\sum_i\sum_{j\ne i}\frac{1}{r_{ij}}}_{\text{电子–电子排斥}}$$
+<p class="small">讲义 p77 写成 $-\sum_A\nabla_A^2$、$-\sum_i\nabla_i^2$ 的简写（略去了质量和 ½），五项物理意义相同。$\frac12\sum\sum_{j\ne i}$ 的 ½ 是因为每对算了两次。</p></div>
+<div class="box def"><span class="lab">原句</span><span class="en">Electrons are much lighter than nuclei (the nucleus of H is about 2000 times heavier than the electron). Therefore electrons move much faster than nuclei. We consider that nuclei are static, i.e. do not move at all. The electrons are considered to adjust immediately to any new configuration of the nuclei.</span><span class="zh">核比电子重约 2000 倍（质子/电子 = 1836），电子运动快得多 ⇒ 视核为<b>静止</b>，电子<b>瞬时</b>跟随核构型调整。[L2 p78]{{ix:Born–Oppenheimer approximation|玻恩-奥本海默近似}}</span></div>
+<div class="fcard"><span class="ft">BO 下的电子 Hamiltonian [L2 p78–80]</span>
+$$\sum_A\nabla_A^2=0,\quad V_{NN}=\frac12\sum_A\sum_{B\ne A}\frac{Z_AZ_B}{r_{AB}}=\text{常数}\ \Rightarrow\ \hat H=\sum_i\hat h_i+\frac12\sum_i\sum_{j\ne i}\hat g_{ij}+V_{NN}$$
+$$\hat h_i=-\tfrac12\nabla_i^2-\sum_A\frac{Z_A}{|\vec r_i-\vec r_A|},\qquad \hat g_{ij}=\frac{1}{|\vec r_i-\vec r_j|}$$
+<table class="vars"><tr><td>$\hat h_i$</td><td>单电子算符（核心 Hamiltonian）：电子 i 的动能 + 它受所有核的吸引</td><td>$\hat g_{ij}$</td><td>双电子算符：电子 i、j 的排斥</td><td>$V_{NN}$</td><td>核排斥能，固定构型下是常数，直接加到能量上</td></tr></table></div>
+<div class="box add"><span class="lab">BO 带来的概念（补充）</span>核不动 → 对每一种核构型 $\{\vec R_A\}$ 解一次电子问题，得到 $E(\vec R)$，这就是<b>势能面</b>（PES）。几何优化找 PES 极小点，振动频率来自极小点附近的曲率，过渡态是一阶鞍点。PES 与核质量无关：H₂ 与 D₂ 的势能曲线完全相同，只是零点能不同。{{ix:Potential energy surface (PES)|势能面}}</div>
+<div class="box cond"><span class="lab">什么时候 BO 不够</span>核运动与电子运动耦合强：两个电子态能量接近（锥形交叉、非绝热过程）、非平衡量子动力学。讲义把"同时解电子和核的 Schrödinger 方程（non-Born–Oppenheimer）"列为未来方向（{{p:s1.3}}）。</div>
+
+<h2 id="s2.17">§2.17 Hartree–Fock 近似与能量表达式<span class="en">Hartree–Fock energy</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Electrons move in an average electrostatic field created by all nuclei and remaining electrons. Each electron does not feel explicitly the presence of other electrons, nor knows it where the other electrons are. In reality, it is a fact that the probability of finding two electrons close to each other is very small.</span><span class="zh">HF：电子在所有核和其余电子产生的平均静电场中运动；每个电子不显式感受其他电子，也不知道它们在哪。而实际上两个电子靠得很近的概率很小（→ 这就是 HF 丢掉的相关）。[L2 p81]{{ix:Hartree–Fock (HF)|哈特里-福克}}</span></div>
+<div class="fcard"><span class="ft">闭壳层 HF 总能量 [L2 p83]</span>
+$$E=2\sum_{i=1}^{N/2}H_i+\sum_{i=1}^{N/2}\sum_{j=1}^{N/2}\left(2J_{ij}-K_{ij}\right)+V_{NN}$$
+$$H_i=\langle\phi_i(1)|\hat h_1|\phi_i(1)\rangle,\quad J_{ij}=\langle\phi_i(1)\phi_j(2)|\hat g_{12}|\phi_i(1)\phi_j(2)\rangle,\quad K_{ij}=\langle\phi_i(1)\phi_j(2)|\hat g_{12}|\phi_j(1)\phi_i(2)\rangle$$
+<table class="vars">
+<tr><td>$N/2$</td><td>占据空间轨道数（每个轨道 2 个电子）</td><td>$H_i$</td><td>核心 Hamiltonian 积分 = <b>单电子积分</b>；乘 2 因每轨道 2 电子</td></tr>
+<tr><td>$J_{ij},K_{ij}$</td><td>电子排斥积分（ERI）= <b>双电子积分</b>{{ix:Electron repulsion integral (ERI)|电子排斥积分}}</td><td>$2J-K$</td><td>轨道 i、j 之间 4 对电子都有库仑排斥（双重求和数两次 ⇒ 2J），同自旋的 2 对才有交换（K）</td></tr>
+</table></div>
+<div class="box why"><span class="lab">i = j 的项</span>双重求和含 $i=j$：$2J_{ii}-K_{ii}=J_{ii}$（因 $J_{ii}=K_{ii}$）。正好是同一轨道两个电子之间的排斥；"自己排斥自己"的部分被 K <b>精确抵消</b>。HF 没有自相互作用误差，而近似 DFT 有（{{p:s5.8}}）。{{ix:Self-interaction error (SIE)|自相互作用误差}}</div>
+
+<h2 id="s2.18">§2.18 Fock 算符与 HF 方程<span class="en">Fock operator</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Determination of φ<sub>i</sub> requires minimization of the total energy with respect to molecular orbital coefficients, following the variational principle. This leads to F̂φ<sub>i</sub>(1) = ε<sub>i</sub>φ<sub>i</sub>(1), where ε<sub>i</sub> is the orbital energy and F̂ is called Fock operator.</span><span class="zh">按变分原理对 MO 系数最小化总能量，得到 HF 方程。[L2 p84]{{ix:Fock operator|福克算符}}</span></div>
+<div class="fcard"><span class="ft">Fock 算符与 J、K 算符 [L2 p84–85]</span>
+$$\hat F(1)=-\tfrac12\nabla_1^2-\sum_A\frac{Z_A}{|\vec r_1-\vec r_A|}+\sum_{j=1}^{N/2}\left[2\hat J_j(1)-\hat K_j(1)\right]$$
+$$\hat J_j(1)f(1)=f(1)\int\frac{|\phi_j(2)|^2}{r_{12}}\,d\vec r_2,\qquad \hat K_j(1)f(1)=\phi_j(1)\int\frac{\phi_j^*(2)f(2)}{r_{12}}\,d\vec r_2$$
+<table class="vars">
+<tr><td>$\hat J_j$</td><td>库仑算符：电子 1 感受 $\phi_j$ 中电子的平均静电排斥；<b>局域</b>（只看电子 1 所在点）</td></tr>
+<tr><td>$\hat K_j$</td><td>交换算符：没有经典对应；把 f 与 $\phi_j$ 的角色交换，结果依赖 f 在全空间的值 → <b>非局域</b>{{ix:Exchange operator|交换算符}}</td></tr>
+<tr><td>$\varepsilon_i$</td><td>轨道能：轨道 i 中一个电子的能量（动能 + 核吸引 + 与所有其他电子的平均排斥）{{ix:Orbital energy|轨道能}}</td></tr>
+</table></div>
+<div class="box cond"><span class="lab">关键限制</span>$\hat F$ 里的 $\hat J_j,\hat K_j$ 由<b>占据轨道本身</b>决定 → 算符依赖于它自己的解 → 只能<b>迭代</b>（SCF）。讲义 p84 写的是 $-\nabla_1^2$（省略了 ½）。</div>
+<div class="box fix"><span class="lab">讲义说法要小心：轨道能之和 ≠ HF 总能量</span>讲义 p85 写 "Total energy is a sum of individual orbital energies: $E=\sum_i\gamma_i\varepsilon_i$"（$\gamma_i$ 为占据数）。严格地说 $\varepsilon_i=H_i+\sum_j(2J_{ij}-K_{ij})$，把所有占据轨道的 ε 加起来时每对电子的排斥被算了两次。正确关系：
+$$E_{HF}=\sum_{i}^{N/2}\left(H_i+\varepsilon_i\right)+V_{NN}=2\sum_i\varepsilon_i-\sum_{ij}(2J_{ij}-K_{ij})+V_{NN}$$
+判断题若问"HF 总能量是否等于轨道能之和"，按讲义语境可能判 ✓；若问"轨道能之和是否重复计算了电子排斥"，答案是会。轨道能的物理意义（Koopmans）见 {{p:s3.8}}。</div>
+
+<h2 id="s2.19">§2.19 Roothaan 方程（LCAO）与 SCF<span class="en">Hartree–Fock–Roothaan equations</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Hartree-Fock equation is difficult to solve. In 1955, Roothaan proposed to use a linear combination of atomic orbitals (LCAO) to represent the molecular orbitals.</span><span class="zh">HF 方程难解；Roothaan 提出用原子轨道线性组合（LCAO）表示分子轨道。[L2 p86]（L1 p11 写 1950）{{ix:LCAO|原子轨道线性组合}}{{ix:Roothaan equations|罗特汉方程}}</span></div>
+<div class="fcard"><span class="ft">Hartree–Fock–Roothaan 方程 [L2 p86–87]</span>
+$$\phi_i=\sum_{s=1}^{K}c_{si}\chi_s\ \Rightarrow\ \sum_s c_{si}\left(F_{ts}-\varepsilon_iS_{ts}\right)=0\ \ (t=1,\dots,K),\qquad \det\left|F_{ts}-\varepsilon_iS_{ts}\right|=0$$
+$$F_{ts}=\langle\chi_t|\hat F|\chi_s\rangle,\qquad S_{ts}=\langle\chi_t|\chi_s\rangle\qquad\text{矩阵形式：}\ \mathbf{FC}=\mathbf{SC}\boldsymbol\varepsilon$$
+<table class="vars">
+<tr><td>$\chi_s$</td><td>基函数（原子轨道）</td><td>$c_{si}$</td><td>MO i 中基函数 s 的系数：未知数</td><td>$S_{ts}$</td><td>重叠积分：不同原子上的基函数<b>不正交</b>，S 不是单位矩阵 {{ix:Overlap matrix|重叠矩阵}}</td></tr>
+</table>
+<p class="small">怎么得到：LCAO 代入 HF 方程，两边左乘 $\chi_t^*$ 并积分。有非平凡解的条件：<b>久期行列式</b>（secular determinant）为零。{{ix:Secular determinant|久期行列式}}</p></div>
+<div class="box why"><span class="lab">LCAO 的意义</span>把"求一个未知函数"的微分–积分方程变成"求一组系数"的矩阵本征值问题，计算机才能处理。代价（"a large number of these integrals must be computed. More approximations are devised." [L2 p88]）：要算大量 J、K 积分（双电子积分约 $K^4/8$ 个，{{p:sB.5}}），于是又发展出 direct、RI、半经验等近似（L3）。</div>
+<div class="row">
+<div style="flex:1.1">
+<div class="box def"><span class="lab">原句</span><span class="en">Solving this for a single electron in an average electric field of all other electrons is relatively easy, and HF method proceeds by treating each electron in turn in a cycle. The algorithm updates the wavefunctions for each electron until the solution no longer changes. This procedure is known as the self-consistent field method.</span><span class="zh">自洽场（SCF）：轮流更新每个电子（轨道）的波函数，直到解不再改变。[L2 p89]{{ix:Self-consistent field (SCF)|自洽场}}</span></div>
+<p class="small">"These equations form the basis of modern quantum &amp; computational chemistry." [L2 p87] 具体算法（初猜、构造 F、对角化、收敛判据）见 {{p:s3.13}}。</p>
+</div>
+<figure style="flex:1"><img src="img/L2_p89_scf.png"><figcaption>[L2 p89] SCF 循环</figcaption></figure>
+</div>
+
+<h2 id="s2.20">§2.20 RHF 与 UHF<span class="en">spin restricted vs unrestricted</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Spin-restricted: each occupied molecular orbital has two electrons. Spin-alpha density is exactly identical to spin-beta density. The shape of spin-alpha orbitals is identical to spin-beta orbitals. Spin-unrestricted: Two sets of independent molecular orbitals are optimized. Spin-alpha and spin-beta orbitals. In large, at electronic ground state and equilibrium geometry, RHF and UHF are equivalent. However, UHF performs much better near dissociated limit. … UHF wave function is subject to spin-contamination problem.</span><span class="zh">[L2 p91]{{ix:Restricted Hartree–Fock (RHF)|限制性 HF}}{{ix:Unrestricted Hartree–Fock (UHF)|非限制性 HF}}{{ix:Spin contamination|自旋污染}}</span></div>
+<div class="box fix"><span class="lab">讲义笔误</span>p91 的 UHF 段落里有一句 "The shape of spin-beta orbitals is identical to spin-alpha orbitals"，是从 RHF 段落误抄的：UHF 的 α、β 轨道形状<b>可以不同</b>，这正是它的意义。</div>
+<div class="row">
+<table class="cmp" style="flex:1.3">
+<tr><th></th><th>RHF</th><th>UHF</th></tr>
+<tr><td>轨道</td><td>α、β 共用同一组空间轨道，每个占据轨道 2 个电子</td><td>α、β 各一套，独立优化</td></tr>
+<tr><td>自旋密度</td><td>α 密度 = β 密度（自旋密度处处为零）</td><td>可以不相等，能给出自旋密度</td></tr>
+<tr><td>平衡几何闭壳层基态</td><td colspan="2">大体<b>等价</b>（UHF 通常自动收敛到 RHF 解）</td></tr>
+<tr><td>键解离</td><td>失败：H₂ 的 $\sigma_g^2$ 固定含 50% 离子项 H⁺H⁻，解离极限能量过高</td><td>好得多：α、β 电子可分别局域到两个原子上</td></tr>
+<tr><td>自旋</td><td>是 $\hat S^2$ 的本征函数</td><td>有自旋污染：不再是 $\hat S^2$ 的本征函数，$\langle S^2\rangle>S(S+1)$</td></tr>
+<tr><td>开壳层</td><td>需要 ROHF（{{p:s3.10}}）</td><td>常用</td></tr>
+</table>
+<figure style="flex:1"><img src="img/fig_h2_rhf_uhf.png"><figcaption>自绘：H₂ 解离。UHF 在 Coulson–Fischer 点从 RHF 分叉，趋于正确极限但 $\langle S^2\rangle\to1$</figcaption></figure>
+</div>
+<div class="box why"><span class="lab">为什么 RHF 解离失败</span>$\sigma_g^2\propto[1s_A(1)+1s_B(1)][1s_A(2)+1s_B(2)]=\underbrace{1s_A1s_A+1s_B1s_B}_{\text{离子 H}^-\text{H}^+}+\underbrace{1s_A1s_B+1s_B1s_A}_{\text{共价}}$，离子与共价各占一半，拉到无穷远也改不掉。真正的解是 $\sigma_g^2$ 与 $\sigma_u^2$ 的组合（CI），属于<b>静态相关</b>（{{p:s4.2}}）。作业 1（H₂、HF 分子势能面，RHF 对 UHF，同一基组）考的就是这一点（{{p:sH.1}}）。{{ix:Coulson–Fischer point|库尔森-费舍尔点}}</div>
+<div class="box trap"><span class="lab">判断陷阱</span><ul>
+<li class="x">"UHF 在键解离时更好，是因为它包含了电子相关。" <span class="r">UHF 仍是单行列式；能量对了是因为打破了自旋对称（"for the wrong reasons"，L3 p52），代价是自旋污染。</span></li>
+<li class="x">"在平衡构型下，UHF 总是比 RHF 明显更准。" <span class="r">闭壳层基态平衡构型下两者大体等价。</span></li>
+<li class="x">"RHF 可以给出非零的自旋密度。" <span class="r">RHF 中 α、β 密度处处相等。</span></li>
+<li class="x">"UHF 的 α、β 轨道形状相同。" <span class="r">讲义 p91 的误抄；UHF 的两套轨道独立优化，可以不同。</span></li>
+<li class="o">"UHF 能量 ≤ RHF 能量（同一基组）。" <span class="r">UHF 限制更少，变分空间更大。</span></li>
+</ul></div>
+
+<h2 id="s2.21">§2.21 L2 易混对照<span class="en">quick contrasts</span></h2>
+<table class="cmp">
+<tr><th>概念 A</th><th>概念 B</th><th>区别</th></tr>
+<tr><td>定态方程 TISE</td><td>含时方程 TDSE</td><td>TISE 求能级和定态；TDSE 描述演化（公设 5）。定态 $\Psi=\psi e^{-iEt/\hbar}$，概率密度不随时间变</td></tr>
+<tr><td>本征函数</td><td>一般波函数</td><td>本征函数测量时必得确定值；一般波函数是本征函数的叠加，只能给期望值</td></tr>
+<tr><td>单次测量结果</td><td>期望值</td><td>单次只能是某个本征值；期望值 $\sum|b_n|^2a_n$ 是多次测量的平均</td></tr>
+<tr><td>库仑积分 J</td><td>交换积分 K</td><td>J：经典排斥，所有电子对都有；K：量子效应，只有同自旋电子对有，使能量降低</td></tr>
+<tr><td>轨道 / 自旋轨道</td><td>Slater 行列式</td><td>轨道是单电子函数（自旋轨道 = 空间轨道 × α 或 β）；行列式是 N 电子波函数</td></tr>
+<tr><td>轨道近似</td><td>平均场近似</td><td>轨道近似：波函数写成单电子函数的乘积或行列式；平均场：每个电子只感受其他电子的平均场。两者一起 → HF，丢掉电子相关</td></tr>
+<tr><td>Born–Oppenheimer</td><td>Hartree–Fock</td><td>BO 分离核与电子运动（核不动）；HF 在 BO 之上再近似电子–电子相互作用</td></tr>
+<tr><td>对称空间 × 反对称自旋</td><td>反对称空间 × 对称自旋</td><td>前者单重态，后者三重态；两者都整体反对称，符合 Pauli</td></tr>
+<tr><td>H 原子</td><td>多电子原子</td><td>H：能量只依赖 n，径向方程可解析求解；多电子：能量依赖 n 和 l（穿透），只能数值求解</td></tr>
+<tr><td>HF 方程（微分–积分）</td><td>Roothaan 方程（矩阵）</td><td>LCAO 把求函数变成求系数：$\mathbf{FC}=\mathbf{SC}\boldsymbol\varepsilon$</td></tr>
+<tr><td>单电子积分 $H_i$</td><td>双电子积分 $J,K$</td><td>单电子：动能 + 核吸引（$\sim K^2$ 个）；双电子：电子排斥（$\sim K^4/8$ 个）</td></tr>
+</table>

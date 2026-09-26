@@ -1,0 +1,108 @@
+<h1 class="chap" data-tab="速查" id="A"><span class="no">A</span>公式速查总表<span class="en">Formula quick-reference</span></h1>
+<p class="lead">每行：公式 → 它在说什么 → 成立条件或容易错的地方 → 详细讲解的节号和页码。本表只帮你定位；变量的完整解释、原句和判断陷阱都在正文。a.u. 为原子单位（$\hbar=m_e=e=4\pi\varepsilon_0=1$），N 为电子数，K 为基函数数。标 ‼ 的是讲义原式有误、此处已订正的。</p>
+<table class="ftab">
+<thead><tr><th>公式</th><th>在说什么</th><th>条件 / 注意</th><th>见</th></tr></thead>
+
+<tr class="grp"><td colspan="4">L1 计算平台</td></tr>
+<tr><td>乘法 $O(n^3)$、矩阵×向量 $O(n^2)$；矩阵分解 $O(n^3)$、内存 $O(n^3)$</td><td>基本线性代数运算的代价</td><td>只有分解类内存是 $n^3$、稀疏不省、<b>难并行</b></td><td>§1.10 {{p:s1.10}}</td></tr>
+<tr><td>晶体管数约每 2 年 ×2</td><td>Moore 定律</td><td>不是主频；方法代价 $N^p$ ⇒ 体系只大 $2^{1/p}$</td><td>§1.7 {{p:s1.7}}</td></tr>
+<tr><td>加速比 $\le1/[s+(1-s)/P]$</td><td>Amdahl（补充）</td><td>串行比例 s 限制并行；多节点通信 μs 级延迟</td><td>§1.8 {{p:s1.8}}</td></tr>
+
+<tr class="grp"><td colspan="4">L2 量子力学基础与 HF</td></tr>
+<tr><td>$\lambda=h/p=h/mv$</td><td>de Broglie：物质波</td><td>m、v 越小波动性越明显</td><td>§2.1 {{p:s2.1}}</td></tr>
+<tr><td>$\dfrac{n_i}{n_j}=\dfrac{g_i}{g_j}e^{-\Delta E/k_BT}$</td><td>Boltzmann 布居</td><td>热平衡；$T\to\infty$ 比值 → $g_i/g_j$；$\Delta E\gg k_BT$ 需量子</td><td>§2.2 {{p:s2.2}}</td></tr>
+<tr><td>$-\frac{\hbar^2}{2m}\psi''+V\psi=E\psi$；$\hat H\Psi=i\hbar\partial_t\Psi$</td><td>TISE / TDSE</td><td>定态 $\Psi=\psi e^{-iEt/\hbar}$，$|\Psi|^2$ 不含时</td><td>§2.3 {{p:s2.3}}</td></tr>
+<tr><td>$\hat A\psi_n=a_n\psi_n$</td><td>本征值方程</td><td>作用后只差常数因子；可观测量本征值为实数</td><td>§2.4 {{p:s2.4}}</td></tr>
+<tr><td>$\int\psi_i^*\psi_j=\delta_{ij}$；$\psi=\sum b_n\psi_n$</td><td>正交归一；完备性</td><td>完备集可以有限也可以无限</td><td>§2.5 {{p:s2.5}}</td></tr>
+<tr><td>$[\hat x,\hat p_x]=i\hbar$；$[\hat A,\hat B]=0\Rightarrow$ 共同本征函数</td><td>对易关系</td><td>不同方向对易；对易 ⇒ 可同时精确测量</td><td>§2.6 {{p:s2.6}}</td></tr>
+<tr><td>$\int\psi_i^*\hat O\psi_j=(\int\psi_j^*\hat O\psi_i)^*$</td><td>厄米算符</td><td>⇒ 本征值实数；所有可观测量</td><td>§2.6 {{p:s2.6}}</td></tr>
+<tr><td>$\hat p=-i\hbar\nabla$；$\hat K=-\frac{\hbar^2}{2m}\nabla^2$；$\hat L=\hat r\times\hat p$</td><td>坐标表象算符</td><td>a.u. 中动能 $-\frac12\nabla^2$</td><td>§2.7 {{p:s2.7}}</td></tr>
+<tr><td>$\langle a\rangle=\dfrac{\int\Psi^*\hat A\Psi}{\int\Psi^*\Psi}=\sum|b_n|^2a_n$</td><td>期望值（公设 4）</td><td>单次测量只得某个 $a_n$；权重是 $|b_n|^2$</td><td>§2.9 {{p:s2.9}}</td></tr>
+<tr><td>$\Psi=R(r)Y_l^m$；$\hat L^2\to l(l+1)\hbar^2$，$\hat L_z\to m\hbar$</td><td>中心力场</td><td>$V=V(r)$；径向方程只对单电子解析</td><td>§2.10 {{p:s2.10}}</td></tr>
+<tr><td>$E_n=-Z^2/2n^2$ Ha；节面 $n-1$</td><td>类氢能级（补充）</td><td>只依赖 n，简并 $n^2$；只有 s 核处非零</td><td>§2.10 {{p:s2.10}}</td></tr>
+<tr><td>$\hat H_{He}=\sum(-\frac12\nabla_i^2-\frac2{r_i})+\frac1{r_{12}}$</td><td>He（a.u.）</td><td>$1/r_{12}$ 破坏球对称 → 无解析解</td><td>§2.11 {{p:s2.11}}</td></tr>
+<tr><td>$\hat s_z\alpha=+\frac12\alpha$，$\int\alpha^*\beta=0$</td><td>电子自旋</td><td>小写单电子，大写总自旋</td><td>§2.12 {{p:s2.12}}</td></tr>
+<tr><td>$\hat P_{12}\psi(1,2)=-\psi(1,2)$</td><td>Pauli 原理</td><td>变号的是波函数，$|\psi|^2$ 不变</td><td>§2.13 {{p:s2.13}}</td></tr>
+<tr><td>$E(^3S)=E_{1s}+E_{2s}+J-K$，$E(^1S)=\dots+J+K$</td><td>He 1s2s：三重态低 2K</td><td>用 H 型轨道近似；Hund 规则的来源</td><td>§2.13 {{p:s2.13}}</td></tr>
+<tr><td>$J=\iint\frac{|1s(1)|^2|2s(2)|^2}{r_{12}}$；$K=\iint\frac{1s(1)2s(1)\,2s(2)1s(2)}{r_{12}}$</td><td>库仑、交换积分</td><td>K 只在同自旋电子间；均 &gt; 0</td><td>§2.13 {{p:s2.13}}</td></tr>
+<tr><td>$\Psi=\frac{1}{\sqrt{N!}}\det|\phi_a(1)\cdots\phi_n(N)|$</td><td>Slater 行列式</td><td>满足 Pauli；不含相关；N! 项</td><td>§2.14 {{p:s2.14}}</td></tr>
+<tr><td>$E_{ns}&lt;E_{np}&lt;E_{nd}&lt;E_{nf}$</td><td>多电子原子穿透</td><td>单电子原子只依赖 n</td><td>§2.15 {{p:s2.15}}</td></tr>
+<tr><td>$\hat H=\sum\hat h_i+\frac12\sum_{i\ne j}\frac1{r_{ij}}+V_{NN}$</td><td>BO 下电子 Hamiltonian</td><td>核静止；$V_{NN}$ 为常数；由此有 PES</td><td>§2.16 {{p:s2.16}}</td></tr>
+<tr><td>$E=2\sum_i^{N/2}H_i+\sum_{ij}^{N/2}(2J_{ij}-K_{ij})+V_{NN}$</td><td>闭壳层 HF 能量</td><td>$i=j$：$2J_{ii}-K_{ii}=J_{ii}$，无自相互作用</td><td>§2.17 {{p:s2.17}}</td></tr>
+<tr><td>$\hat F=\hat h+\sum_j(2\hat J_j-\hat K_j)$，$\hat F\phi_i=\varepsilon_i\phi_i$</td><td>Fock 算符、HF 方程</td><td>F 依赖自身解 → SCF；K 非局域</td><td>§2.18 {{p:s2.18}}</td></tr>
+<tr><td>$E_{HF}=\sum_i(H_i+\varepsilon_i)+V_{NN}\ne2\sum\varepsilon_i$</td><td>轨道能之和 ≠ 总能 ‼</td><td>讲义 p85 写 $E=\sum\gamma_i\varepsilon_i$，重复计算了排斥</td><td>§2.18 {{p:s2.18}}</td></tr>
+<tr><td>$\phi_i=\sum c_{si}\chi_s$；$\det|F_{ts}-\varepsilon S_{ts}|=0$；$\mathbf{FC}=\mathbf{SC}\varepsilon$</td><td>Roothaan（LCAO）</td><td>S 非单位阵（基函数不正交）</td><td>§2.19 {{p:s2.19}}</td></tr>
+<tr><td>RHF：α 密度 = β 密度；UHF：两套轨道</td><td>RHF vs UHF</td><td>UHF 解离好但自旋污染；讲义 p91 UHF 段误抄 ‼</td><td>§2.20 {{p:s2.20}}</td></tr>
+
+<tr class="grp"><td colspan="4">L3 变分原理、SCF 与基组</td></tr>
+<tr><td>$E_{trial}=\frac{\langle\psi|\hat H|\psi\rangle}{\langle\psi|\psi\rangle}\ge E_0$；$E-\varepsilon_0=\sum|c_i|^2(\varepsilon_i-\varepsilon_0)$</td><td>变分原理</td><td>只对能量；HF、CI 变分，MP2、CC、近似 DFT 不</td><td>§3.3 {{p:s3.3}}</td></tr>
+<tr><td>$\partial E/\partial c_i=0$</td><td>变分法四步</td><td>改进只能靠更多参数或换表示</td><td>§3.4 {{p:s3.4}}</td></tr>
+<tr><td>$E(\alpha)=\frac{\alpha^2}2-\alpha$ → α = 1；$r e^{-\alpha r}$：α = 3/2，E = −3/8</td><td>H 原子非线性变分</td><td>$c_{1s}=432\sqrt2/625=0.9775$，权重 95.55% ‼</td><td>§3.4 {{p:s3.4}}</td></tr>
+<tr><td>$E_{H_2}=2h_{gg}+J_{gg}+V_{NN}$</td><td>H₂ 最小基 HF 能量</td><td>一对异自旋电子，无 K</td><td>§3.5 {{p:s3.5}}</td></tr>
+<tr><td>$E=\sum_ih_{ii}+\sum_{i&lt;j}(J_{ij}-K_{ij})+V_{nn}$</td><td>任一行列式的能量</td><td>i、j 为电子；K 只算同自旋对</td><td>§3.6 {{p:s3.6}}</td></tr>
+<tr><td>$E(\uparrow\downarrow)-E(\uparrow\uparrow)=K_{12}$</td><td>BS 雏形：磁交换</td><td>↑↓ 行列式是单重/三重混合</td><td>§3.6 {{p:s3.6}}</td></tr>
+<tr><td>$\text{IP}\approx-\varepsilon_{HOMO}$，$\text{EA}\approx-\varepsilon_{LUMO}$</td><td>Koopmans</td><td>冻结轨道 + HF；EA 差；不适用 DFT</td><td>§3.8 {{p:s3.8}}</td></tr>
+<tr><td>$\langle S^2\rangle_{UHF}\ge S(S+1)$，$S=(N_\alpha-N_\beta)/2$</td><td>自旋污染</td><td>严重污染 → 考虑 MCSCF</td><td>§3.10 {{p:s3.10}}</td></tr>
+<tr><td>$D_{\gamma\delta}=\sum_jc_{\gamma j}c_{\delta j}$；$\mathbf F=\mathbf h+\mathbf G\cdot\mathbf D$</td><td>密度矩阵形式的 Fock 矩阵</td><td>F 依赖 D → 迭代</td><td>§3.12 {{p:s3.12}}</td></tr>
+<tr><td>$E=\sum D h+\frac12\sum DD[(\alpha\gamma|\beta\delta)-(\alpha\gamma|\delta\beta)]+V_{nn}$</td><td>AO 基的 HF 能量</td><td>第二项（双电子积分）最难</td><td>§3.12 {{p:s3.12}}</td></tr>
+<tr><td>$(\alpha\beta|\gamma\delta)\approx\sum_{PQ}(\alpha\beta|P)[PQ]^{-1}(Q|\gamma\delta)$</td><td>RI / 密度拟合</td><td>$N^4\to N^3$；辅助基决定误差</td><td>§3.15 {{p:s3.15}}</td></tr>
+<tr><td>$D'_{n+1}=\omega D_n+(1-\omega)D_{n+1}$</td><td>阻尼</td><td>抑制振荡</td><td>§3.16 {{p:s3.16}}</td></tr>
+<tr><td>$F'_{n+1}=\sum c_iF_i$，min $\mathrm{Tr}(\mathbf{FDS}-\mathbf{SDF})^2$，$\sum c_i=1$</td><td>DIIS</td><td>收敛时 FDS = SDF</td><td>§3.16 {{p:s3.16}}</td></tr>
+<tr><td>$\phi^{STO}=Nx^ay^bz^ce^{-\zeta r}$；$G\propto Y_{lm}r^{2n-2-l}e^{-\alpha r^2}$</td><td>STO vs GTO</td><td>GTO：核处无尖点、尾部太快，但积分解析</td><td>§3.18 {{p:s3.18}}</td></tr>
+<tr><td>$\Psi=a_0\psi_{HF}+\sum a_i^r\psi_i^r+\sum a_{ij}^{rs}\psi_{ij}^{rs}+\cdots$</td><td>精确波函数 = FCI</td><td>给定基组内精确</td><td>§3.21 {{p:s3.21}}</td></tr>
+<tr><td>CID $n^5$、CISD $n^6$、CISDT $n^8$、FCI $n!$</td><td>截断 CI 标度</td><td>CASSCF = 活性空间内 FCI</td><td>§3.22 {{p:s3.22}}</td></tr>
+
+<tr class="grp"><td colspan="4">L4 电子相关方法</td></tr>
+<tr><td>$E_{corr}=E_{exact}-E_{HF}$</td><td>相关能</td><td>&lt; 0；约总能量 1–5%，但与键能同量级</td><td>§4.1 {{p:s4.1}}</td></tr>
+<tr><td>$\mathbf{Ha}=E\mathbf a$，$H_{ij}=\langle\psi_i|\hat H|\psi_j\rangle$</td><td>CI 久期方程</td><td>Lagrange 乘子；线性变分</td><td>§4.5 {{p:s4.5}}</td></tr>
+<tr><td>$N_{SD}=\binom{2n}N$；$N_{CSF}=\frac{2S+1}{n+1}\binom{n+1}{N/2-S}\binom{n+1}{N/2+S+1}$</td><td>SD、CSF 计数</td><td>$\sum(2S+1)N_{CSF}=N_{SD}$</td><td>§4.6 {{p:s4.6}}</td></tr>
+<tr><td>$\langle\Psi_0|\hat H|\Psi_i^a\rangle=0$</td><td>Brillouin 定理</td><td>单激发不与 HF 直接耦合</td><td>§4.7 {{p:s4.7}}</td></tr>
+<tr><td>$\Psi_{FCI}=(a_0+a_1)[\text{离子}]+(a_0-a_1)[\text{共价}]$</td><td>H₂ 最小基 FCI</td><td>∞ 远处 $a_1=-a_0$</td><td>§4.7 {{p:s4.7}}</td></tr>
+<tr><td>$E(A+B)=E(A)+E(B)$</td><td>大小一致性</td><td>截断 CI ✗；CC、MPn、FCI ✓</td><td>§4.8 {{p:s4.8}}</td></tr>
+<tr><td>$\Psi_{CC}=e^{\hat T}\Psi_0=(1+\hat T_1+\hat T_2+\frac12\hat T_1^2+\cdots)\Psi_0$</td><td>耦合簇</td><td>高激发来自乘积；非变分，大小一致</td><td>§4.9 {{p:s4.9}}</td></tr>
+<tr><td>$E_{CC}=E_0+\sum(t_{ij}^{ab}+t_i^at_j^b-t_i^bt_j^a)\langle ij||ab\rangle$</td><td>CC 能量</td><td>单激发项因 Brillouin 为零</td><td>§4.9 {{p:s4.9}}</td></tr>
+<tr><td>$E^{(1)}=\langle\psi^{(0)}|\hat H_1|\psi^{(0)}\rangle$；$E^{(2)}=\sum_{m\ne n}\frac{|\langle m|\hat H_1|n\rangle|^2}{E_n^{(0)}-E_m^{(0)}}$</td><td>RS 微扰理论</td><td>基态 $E^{(2)}&lt;0$；近简并发散</td><td>§4.10 {{p:s4.10}}</td></tr>
+<tr><td>$E_{MP2}=E_{HF}+\sum_{i&lt;j}\sum_{a&lt;b}\frac{|\langle ij||ab\rangle|^2}{\varepsilon_i+\varepsilon_j-\varepsilon_a-\varepsilon_b}$</td><td>MP2</td><td>非变分；大小一致；$n^5$；能隙小时失效</td><td>§4.10 {{p:s4.10}}</td></tr>
+<tr><td>HF $n^4$ → MP2 $n^5$ → CCSD $n^6$ → CCSD(T) $n^7$ → FCI $n!$</td><td>标度表</td><td>HF 数百原子；MP2 ~100；CCSD ~20；FCI 3–4</td><td>§4.12 {{p:s4.12}}</td></tr>
+<tr><td>$\Delta E_{CP}=E(A)_{AB}+E(B)_{AB}-E(A)_A-E(B)_B$</td><td>平衡校正 BSSE</td><td>ghost 只放基函数；BSSE 使结合能高估</td><td>§4.14 {{p:s4.14}}</td></tr>
+<tr><td>$E_n=E_{CBS}+\alpha e^{-\beta n}$</td><td>CBS 外推（Dunning–Feller）</td><td>n = zeta 指数；只外推能量</td><td>§4.14 {{p:s4.14}}</td></tr>
+<tr><td>$\rho(\vec r)=N\int|\Psi|^2d\vec r_2\cdots$；$\sigma=\rho_\uparrow-\rho_\downarrow$</td><td>电子密度、自旋密度</td><td>$\int\rho=N$；RHF 自旋密度 0</td><td>§4.15 {{p:s4.15}}</td></tr>
+
+<tr class="grp"><td colspan="4">L5 DFT、磁耦合、TD-DFT</td></tr>
+<tr><td>$N=\sum P_{\mu\nu}S_{\mu\nu}$，$P_{\mu\nu}=\sum_ic_{\mu i}^*c_{\nu i}$</td><td>密度矩阵、布居</td><td>$N_{\mu\nu}=P_{\mu\nu}S_{\mu\nu}$</td><td>§5.1 {{p:s5.1}}</td></tr>
+<tr><td>$\hat\rho(\vec r)=\sum_i\delta(\vec r_i-\vec r)$</td><td>密度算符</td><td>ρ 永远只是 3 个变量</td><td>§5.1 {{p:s5.1}}</td></tr>
+<tr><td>$\rho_0\leftrightarrow V_{ext}$ 一一对应；性质 $=O[\rho]$</td><td>HK 第一定理</td><td>基态；反证法用变分原理</td><td>§5.2 {{p:s5.2}}</td></tr>
+<tr><td>$E[\rho]=F_{HK}[\rho]+\int\rho V_{ext}$，$E_0=\min E[\rho]$</td><td>HK 第二定理</td><td>$F_{HK}$ 通用但未知</td><td>§5.3 {{p:s5.3}}</td></tr>
+<tr><td>$[-\frac12\nabla^2+V_{ext}+V_H+V_{xc}]\phi_i=\varepsilon_i\phi_i$，$\rho=\sum|\phi_i|^2$，$V_{xc}=\delta E_{xc}/\delta\rho$</td><td>Kohn–Sham</td><td>精确变换；近似只在 $V_{xc}$</td><td>§5.4 {{p:s5.4}}</td></tr>
+<tr><td>$E_x^{LDA}=-\frac34(\frac3\pi)^{1/3}\int\rho^{4/3}$</td><td>LDA 交换</td><td>均匀电子气；过度结合</td><td>§5.5 {{p:s5.5}}</td></tr>
+<tr><td>$\varepsilon_{xc}(\rho)\to(\rho,\nabla\rho)\to(\rho,\nabla\rho,\tau)$</td><td>LDA → GGA → meta-GGA</td><td>"Taylor 型"逐级近似</td><td>§5.5 {{p:s5.5}}</td></tr>
+<tr><td>$E^{B3LYP}=(1-a)E_x^{LSDA}+aE_x^{HF}+b\Delta E_x^{B88}+(1-c)E_c^{LSDA}+cE_c^{LYP}$</td><td>B3LYP</td><td>系数拟合实验 → 不算 ab initio</td><td>§5.6 {{p:s5.6}}</td></tr>
+<tr><td>$E^{DH}=(1-a)E_x^{DFT}+aE_x^{HF}+(1-b)E_c^{DFT}+bE_c^{MP2}$</td><td>双杂化</td><td>用虚轨道；$N^5$</td><td>§5.6 {{p:s5.6}}</td></tr>
+<tr><td>$\frac1{r_{12}}=\frac{1-\mathrm{erf}(\omega r)}{r}+\frac{\mathrm{erf}(\omega r)}{r}$</td><td>长程校正</td><td>短程 DFT、长程 HF 交换</td><td>§5.8 {{p:s5.8}}</td></tr>
+<tr><td>$\Delta E_{disp}=-\sum_ns_n\sum_{AB}\frac{C_n^{AB}}{R_{AB}^n}f_{damp}$</td><td>DFT-D 色散</td><td>经验；BJ 阻尼</td><td>§5.9 {{p:s5.9}}</td></tr>
+<tr><td>$\hat H=-2J\hat S_1\cdot\hat S_2=-J(\hat S_T^2-\hat S_1^2-\hat S_2^2)$</td><td>Heisenberg</td><td>J &gt; 0 铁磁，J &lt; 0 反铁磁</td><td>§5.13 {{p:s5.13}}</td></tr>
+<tr><td>$E_T=-\frac12J$，$E_S=+\frac32J$，$E_T-E_S=-2J$</td><td>两个 S = ½ 的能级</td><td>按 2S+1 加权重心为 0</td><td>§5.13 {{p:s5.13}}</td></tr>
+<tr><td>$E_{HS}-E_{BS}=-K_{12}$；$J=\frac{E_{BS}-E_{HS}}{2}$ ‼</td><td>BS 视作单重态</td><td>讲义 p42 符号前后矛盾</td><td>§5.15 {{p:s5.15}}</td></tr>
+<tr><td>$J=\dfrac{E_{BS}-E_{HS}}{\langle S^2\rangle_{HS}-\langle S^2\rangle_{BS}}$ ‼</td><td>Yamaguchi</td><td>讲义 p43 分子分母反了；弱重叠 → Noodleman</td><td>§5.15 {{p:s5.15}}</td></tr>
+<tr><td>$\alpha(\omega)=\sum_n\frac{|\langle0|\mathbf r|n\rangle|^2}{\omega-(E_n-E_0)}$</td><td>频率依赖极化率</td><td>极点 = 激发能；RPA、TD-DFT</td><td>§5.16 {{p:s5.16}}</td></tr>
+
+<tr class="grp"><td colspan="4">L6 波函数分析、相对论、溶剂</td></tr>
+<tr><td>$Q_A=Z_A-\sum_{\mu\in A}\sum_\nu P_{\mu\nu}S_{\mu\nu}$ ‼</td><td>Mulliken 电荷</td><td>讲义 p5 跨原子项多乘 ½；依赖基组</td><td>§6.1 {{p:s6.1}}</td></tr>
+<tr><td>$N_{\mu\nu}=[\mathbf S^{1/2}\mathbf P\mathbf S^{1/2}]_{\mu\nu}$</td><td>Löwdin</td><td>正交化基；修正问题 1–3</td><td>§6.3 {{p:s6.3}}</td></tr>
+<tr><td>$\nabla\rho\cdot\vec n=0$（零通量面）</td><td>Bader（QTAIM）</td><td>基于密度</td><td>§6.4 {{p:s6.4}}</td></tr>
+<tr><td>$w_A=\rho_A^{free}/\sum_B\rho_B^{free}$</td><td>Hirshfeld</td><td>相对形变密度</td><td>§6.5 {{p:s6.5}}</td></tr>
+<tr><td>$q_{AB}=2\sum_{\mu\in A}\sum_{\nu\in B}P_{\mu\nu}S_{\mu\nu}$</td><td>Mulliken 键级</td><td>—</td><td>§6.6 {{p:s6.6}}</td></tr>
+<tr><td>$\phi=\sum\frac{q_i}{4\pi\varepsilon_0r_i}-\int\frac{\rho}{4\pi\varepsilon_0r_e}$</td><td>分子静电势</td><td>核项正、电子项负；可观测</td><td>§6.7 {{p:s6.7}}</td></tr>
+<tr><td>Boys：max $\sum[\langle i|\vec r|i\rangle-\langle j|\vec r|j\rangle]^2$；PM：max $\sum|\rho_n|^2$</td><td>定域化判据</td><td>PM 保 σ/π；定域轨道无轨道能</td><td>§6.8 {{p:s6.8}}</td></tr>
+<tr><td>$m=m_0/\sqrt{1-v^2/c^2}$，$v/c\approx Z/137$</td><td>相对论质量</td><td>s、p 收缩；d、f 扩张（间接）‼</td><td>§6.10 {{p:s6.10}}</td></tr>
+<tr><td>$[c\boldsymbol\alpha\cdot\mathbf p+\beta mc^2]\Psi=i\partial_t\Psi$</td><td>Dirac 方程</td><td>四分量；空间时间都一阶</td><td>§6.11 {{p:s6.11}}</td></tr>
+<tr><td>$\frac{p^2}{2m}+V-\frac{p^4}{8m^3c^2}+\frac{Z\mathbf s\cdot\mathbf l}{2m^2c^2r^3}+\frac{Z\pi\delta(\mathbf r)}{2m^2c^2}$</td><td>Pauli–Dirac</td><td>标量 = 质速 + Darwin；另有 SOC</td><td>§6.12 {{p:s6.12}}</td></tr>
+<tr><td>$\frac1{r_{12}}-\frac1{2r_{12}}[\boldsymbol\alpha_1\cdot\boldsymbol\alpha_2+\frac{(\boldsymbol\alpha_1\cdot\mathbf r)(\boldsymbol\alpha_2\cdot\mathbf r)}{r^2}]$</td><td>Coulomb–Breit</td><td>$\boldsymbol\alpha_1\cdot\boldsymbol\alpha_2$ = Gaunt</td><td>§6.13 {{p:s6.13}}</td></tr>
+<tr><td>$E=\sum4\varepsilon[(\sigma/r)^{12}-(\sigma/r)^6]+\sum q_nq_k/r_{nk}$</td><td>刚性水模型</td><td>结构好，偶极矩差</td><td>§6.15 {{p:s6.15}}</td></tr>
+<tr><td>$\Delta G=-\frac{\varepsilon-1}{2\varepsilon}\frac{q^2}R$；$-\frac{\varepsilon-1}{2\varepsilon+1}\frac{\mu^2}{R^3}$</td><td>Born；Bell</td><td>"completely inaccurate"</td><td>§6.16 {{p:s6.16}}</td></tr>
+<tr><td>Onsager：$\cdots\left[1-\frac{\varepsilon-1}{2\varepsilon+1}\frac{2\alpha}{R^3}\right]^{-1}$ ‼</td><td>可极化偶极</td><td>讲义 p28 方括号应取倒数</td><td>§6.16 {{p:s6.16}}</td></tr>
+<tr><td>$\sigma=-\frac{\varepsilon-1}{4\pi\varepsilon}\frac{\partial\varphi}{\partial n}\big|_{in}$；$\Delta G_{solv}=\Delta G_{cav}+\Delta G_{disp}+\Delta G_{el}$</td><td>PCM 表面电荷</td><td>依赖原子半径；基组效应不可预测</td><td>§6.17 {{p:s6.17}}</td></tr>
+<tr><td>$\nabla^2\varphi=-\frac{zen_0}{\varepsilon_0\varepsilon}[e^{-ze\varphi/kT}-e^{ze\varphi/kT}]$</td><td>Poisson–Boltzmann</td><td>不适用于介电液体</td><td>§6.18 {{p:s6.18}}</td></tr>
+<tr><td>$E^{(2)}=\sum_{nk}\frac{|\langle0_A0_B|\hat H_{AB}|n_Ak_B\rangle|^2}{E_0^A+E_0^B-E_n^A-E_k^B}$ ‼</td><td>色散（二阶）</td><td>讲义 p37 下标对调</td><td>§6.19 {{p:s6.19}}</td></tr>
+<tr><td>$\Delta E_k=\langle\Psi_k|\hat H|\Psi_k\rangle-\langle\Psi_0|\hat H|\Psi_0\rangle$；$d_{kn}=\langle\Psi_k|e\vec r|\Psi_n\rangle$</td><td>激发能、跃迁矩</td><td>垂直 vs 绝热；线宽算不了</td><td>§6.20 {{p:s6.20}}</td></tr>
+</table>

@@ -1,0 +1,85 @@
+<h2 id="s5.6">§5.6 杂化与双杂化泛函<span class="en">hybrid &amp; double-hybrid functionals</span></h2>
+<div class="fcard"><span class="ft">杂化泛函一般形式与 B3LYP [L5 p25, p30]</span>{{ix:Hybrid functional|杂化泛函}}{{ix:B3LYP|B3LYP 泛函}}
+$$E_{XC}^{HYB}=E_{XC}^{LDA}+a_0\left(E_X^{HF}-E_X^{LDA}\right)+a_X\left(E_X^{GGA}-E_X^{LDA}\right)+a_C\left(E_C^{GGA}-E_C^{LDA}\right)$$
+$$E_{xc}^{B3LYP}=(1-a)E_x^{LSDA}+a\,E_x^{HF}+b\,\Delta E_x^{B88}+(1-c)E_c^{LSDA}+c\,E_c^{LYP}$$
+<p class="small">补充：B3LYP 的 a = 0.20（20% HF 交换）、b = 0.72、c = 0.81；PBE0 用 25% HF 交换。"The coefficients are optimized against experimental data. This disqualifies DFT from the 'ab initio methods' category – it does require empirical parameters." "Do not just use B3LYP for everything." [L5 p25]</p></div>
+<div class="fcard"><span class="ft">双杂化（如 B2PLYP）[L5 p30]</span>{{ix:Double-hybrid functional|双杂化泛函}}
+$$E_{xc}^{DHDFT}=(1-a)E_x^{DFT}+a\,E_x^{HF}+(1-b)E_c^{DFT}+b\,E_c^{MP2}$$
+<p class="small">加入部分 HF 交换和 MP2 型相关（用到<b>虚轨道</b>）；$E_c^{MP2}$ 标度 $N^5$，大体系慢。</p></div>
+<div class="box add"><span class="lab">为什么混 HF 交换（补充）</span>HF 交换没有自相互作用、渐近行为正确，但缺相关、过度定域；GGA 交换过度离域。两者误差方向相反，按比例混合能部分抵消 → 能隙、反应能垒、键能都改善。代价：精确交换是非局域的，计算比纯 GGA 贵（固体里尤其明显，HW2 中 B3LYP 的 HOMO–LUMO 能隙大于 PBE 也源于此，{{p:sH.2}}）。</div>
+
+<h2 id="s5.7">§5.7 泛函阶梯、可改进性与性能<span class="en">Jacob's ladder, systematic improvability</span></h2>
+<div class="row">
+<table style="flex:1.4" class="small">
+<tr><th>阶</th><th>名称 [L5 p36]{{ix:Jacob's ladder|雅各布天梯}}</th><th>变量</th><th>例子（参数少 / 多）</th></tr>
+<tr><td>1</td><td>局域密度</td><td>ρ</td><td>LDA、LSDA、Xα</td></tr>
+<tr><td>2</td><td>GGA</td><td>ρ, ∇ρ</td><td>PW91、<b>PBE</b>、BLYP、OLYP、HCTH / SOGGA11、N12</td></tr>
+<tr><td>3</td><td>meta-GGA</td><td>ρ, ∇ρ, ∇²ρ 或 τ</td><td>TPSS、B95、B97M-V / VSXC、M11L、MN12L</td></tr>
+<tr><td>4</td><td>杂化 GGA</td><td>+ HF 交换</td><td><b>B3LYP</b>、PBE0、TPSSh、HSE、<i>CAM-B3LYP</i>、<i>ωB97X-V</i> / M11、<i>ωB97X</i>、<b><i>ωB97XD</i></b></td></tr>
+<tr><td>5</td><td>双杂化</td><td>+ 虚轨道</td><td>B2PLYP、PBE0-DH</td></tr>
+</table>
+<figure style="flex:0 0 34%" class="nb"><img src="img/fig_ladder.png"><figcaption>自绘：越往上越准（平均而言）、越贵</figcaption></figure>
+</div>
+<p class="small">（讲义表中斜体 = 含长程校正，粗体 = 含色散。）</p>
+<div class="box def"><span class="lab">原句：系统可改进性</span><span class="en">No problems for wave function based approaches: just increase the CI expansion. Much less clear for DFT. Gradient corrected functional perform better than LSDA. Hybrid functional are of comparable quality but the status is less clear (B3LYP is a "magic" functional). Across a wide variety of systems DFT tends to be remarkably robust. Routes to further improve DFT: better defining the hole function; better correction of self-interaction errors.</span><span class="zh">波函数方法可以<b>系统地</b>改进（扩大 CI 展开）；DFT 没有这样清楚的路径。[L5 p31]{{ix:Systematic improvability|系统可改进性}}</span></div>
+<table class="small">
+<tr><th>MAD (kJ/mol) [L5 p37]</th><th>阶</th><th>原子化能/键</th><th>单参考键能</th><th>多参考键能</th><th>IP</th><th>EA</th><th>能垒</th></tr>
+<tr><td>HF</td><td>–</td><td>129</td><td>144</td><td>304</td><td>92</td><td>113</td><td>48</td></tr>
+<tr><td>MP2</td><td>–</td><td>9</td><td>22</td><td>161</td><td>27</td><td>13</td><td>20</td></tr>
+<tr><td>CCSD(T)</td><td>–</td><td>12 (1)</td><td>23 (14)</td><td>73 (43)</td><td>21 (8)</td><td>16 (2)</td><td>5 (2)</td></tr>
+<tr><td>LSDA</td><td>1</td><td>70</td><td>89</td><td>127</td><td>41</td><td>24</td><td>63</td></tr>
+<tr><td>PBE</td><td>2</td><td>13</td><td>29</td><td>60</td><td>26</td><td>9</td><td>37</td></tr>
+<tr><td>TPSS</td><td>3</td><td>4</td><td>24</td><td>28</td><td>17</td><td>10</td><td>35</td></tr>
+<tr><td>B3LYP</td><td>4</td><td>4</td><td>25</td><td>91</td><td>24</td><td>10</td><td>18</td></tr>
+<tr><td>PBE0</td><td>4</td><td>4</td><td>21</td><td>117</td><td>14</td><td>12</td><td>16</td></tr>
+<tr><td>ωB97XD</td><td>4-RS</td><td>2</td><td>24</td><td>106</td><td>13</td><td>8</td><td>13</td></tr>
+<tr><td>MN12-SX</td><td>4-RS</td><td>2</td><td>45</td><td>44</td><td>22</td><td>9</td><td>5</td></tr>
+<tr><td>B2PLYP</td><td>5</td><td>4 (2)</td><td>18</td><td>74</td><td>10</td><td>10</td><td>8</td></tr>
+</table>
+<p class="small">读表：HF 全面最差；LSDA 原子化能误差大（过度结合）；GGA 起大幅改善；<b>多参考键能</b>所有方法都差（杂化泛函反而比 meta-GGA 更差，因为 HF 交换加剧静态相关问题）；杂化/长程校正对能垒好。括号为 CBS 外推值。</p>
+<div class="box add"><span class="lab">KS 轨道能的意义（补充）</span>KS 轨道是辅助量；只有精确泛函下 $-\varepsilon_{HOMO}=\text{IP}$（Janak/"DFT Koopmans"）；近似 GGA 的 $-\varepsilon_{HOMO}$ 常比 IP 低几 eV（SIE 使 HOMO 偏高），HOMO–LUMO 能隙偏小。对比 HF 的 Koopmans（{{p:s3.8}}）。</div>
+
+<h2 id="s5.8">§5.8 自相互作用误差与长程校正泛函<span class="en">self-interaction error, range separation</span></h2>
+<div class="row">
+<figure style="flex:1"><img src="img/L5_p33_sie.png"><figcaption>[L5 p33] HF：Hartree 能中的自相互作用 i = j 项被交换能精确抵消；KS：只有未知的精确 XC 泛函才能抵消</figcaption></figure>
+<div style="flex:1">
+<div class="box def"><span class="lab">原句</span><span class="en">Practical versions of DFT suffer from a spurious, unphysical self-interaction contribution, leading to the need of 'self-interaction correction methods' (SIC). Especially important when electrons are densely packed and hence correlation being strong.</span><span class="zh">实用 DFT 有虚假的自相互作用（电子与自身的密度排斥），需 SIC；电子密集、相关强时尤其重要。[L5 p33]</span></div>
+</div>
+</div>
+$$E_H=\frac12\sum_{i,j}\iint\frac{\rho_i(\vec r)\rho_j(\vec r')}{|\vec r-\vec r'|}\,d\vec r\,d\vec r'\quad(\text{含 } i=j\ \text{项})$$
+<div class="fcard"><span class="ft">长程校正（range-separated）泛函 [L5 p34]</span>{{ix:Range-separated functional|长程校正泛函}}
+$$\frac{1}{r_{12}}=\underbrace{\frac{1-\mathrm{erf}(\omega r_{12})}{r_{12}}}_{\text{短程：DFT 交换相关}}+\underbrace{\frac{\mathrm{erf}(\omega r_{12})}{r_{12}}}_{\text{长程：精确 HF 交换}},\qquad \mathrm{erf}(x)=\frac{2}{\sqrt\pi}\int_0^xe^{-t^2}dt$$
+<p>针对 DFT 的系统误差：① 自相互作用误差（对某个电子交换项不能精确抵消库仑项；HF 中精确抵消）；② TD-DFT 算的<b>电荷转移激发能太低</b>；③ 电子过度离域。例：LC-BLYP、CAM-B3LYP、ωB97X。</p></div>
+
+<h2 id="s5.9">§5.9 色散校正<span class="en">dispersion-corrected DFT (DFT-D)</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">Dispersion-corrected Functionals aim at accounting for various dispersion forces, like Van der Waals. These weak interactions are not accounted by standard DFT or HF methods, but proved increasingly important for large systems (it is cumulative). Grimme proposed to include dispersion corrections as empirical terms, similar to Van Der Waals terms in Force Field methods.</span><span class="zh">标准 DFT 和 HF 都不含色散（长程相关）；它对大体系越来越重要（累加）。Grimme：像力场的 vdW 项一样加经验修正。[L5 p35]{{ix:Dispersion correction (DFT-D)|色散校正}}{{ix:London dispersion|伦敦色散力}}</span></div>
+<div class="fcard"><span class="ft">[L5 p35]</span>
+$$\Delta E_{disp}=-\sum_{n=6(,8,10)}s_n\sum_{AB}^{atoms}\frac{C_n^{AB}}{R_{AB}^n}\,f_{damp}(R_{AB}),\qquad C_6^{AB}=\frac{\alpha_A\alpha_B\langle\mu^2\rangle_A\langle\mu^2\rangle_B}{\alpha_A\langle\mu^2\rangle_B+\alpha_B\langle\mu^2\rangle_A}$$
+<table class="vars"><tr><td>$C_n^{AB}$</td><td>原子对色散系数（查表或计算）</td><td>$s_n$</td><td>依赖泛函的缩放参数</td><td>$f_{damp}$</td><td>阻尼函数：短距离关掉修正（避免发散、避免与泛函重复计算）；Grimme 零阻尼或 <b>Becke–Johnson（BJ）</b>阻尼</td></tr></table>
+<p class="small">记号 D / D2 / D3 / D4（如 ωB97X-D、B3LYP-D3(BJ)）。替代：依赖实际密度的非局域相关（van Voorhis–Vydrov），更慢，性能与 D3 相近。纯经验、几乎不增加计算量。</p></div>
+
+<h2 id="s5.10">§5.10 DFT 的最坏情形<span class="en">worst-case scenarios</span></h2>
+<table>
+<tr><th>失败 [L5 p32]</th><th>讲义例子</th><th>原因</th></tr>
+<tr><td>不能描述 London 色散（"long range" 相关）</td><td>He、Ne 等稀有气体二聚体被预测为<b>不稳定</b></td><td>局域/半局域泛函只看局部密度；→ DFT-D</td></tr>
+<tr><td>氢键体系</td><td>重原子–重原子距离通常<b>太短</b>；解离误差较大</td><td>—</td></tr>
+<tr><td>电荷转移复合物</td><td>乙烯–F₂ 结合能<b>高估 20 kcal/mol</b></td><td>SIE → 过度离域</td></tr>
+<tr><td>普遍问题：<b>过度离域</b>（overdelocalization）{{ix:Delocalization error|离域误差}}</td><td>—</td><td>SIE</td></tr>
+<tr><td>近简并、多参考（补充自 p38）</td><td>双自由基、过渡金属开壳层、开壳层单重态</td><td>KS 是单行列式</td></tr>
+</table>
+
+<h2 id="s5.11">§5.11 实用建议<span class="en">some advices</span></h2>
+<ol class="small">
+<li>先想想体系的波函数，判断 DFT 适不适用（有没有能级近简并？）。多数闭壳层有机分子适合；开壳层<b>单</b>自由基也可以（非限制 DFT）；<b>双自由基、多自由基</b>不太适合；过渡金属化合物不太适合，除非明显是闭壳层 [L5 p38]。</li>
+<li><b>镧系只适合 4f-in-core 赝势</b>。</li>
+<li>尽量收集实验数据对比；测量是在溶液还是气相？</li>
+<li>基组：先小后大（程序常自动投影）；<b>阴离子需要额外弥散函数和长程校正泛函</b>；通常 VTZP 已合理，更大的基组不再带来精度。</li>
+<li>小体系可忽略色散；<b>大体系色散很重要</b>。</li>
+<li>含重元素（Pt、Pd、Zn 等）要考虑<b>相对论修正</b>：DKH 或 ZORA（{{p:s6.12}}）。</li>
+<li>查文献找针对该类体系表现最好的泛函和基组，比自己做基准测试快。</li>
+</ol>
+
+<h2 id="s5.12">§5.12 DFT 小结<span class="en">summary of DFT</span></h2>
+<div class="box def"><span class="lab">原句</span><span class="en">The basic lemma of DFT: the ground state density of a bound system of interacting electrons in some external potential determines this potential uniquely. … It should therefore be possible to reformulate quantum chemistry in terms of electron density alone (just three dimensions!) – a major simplification. Hohenberg-Kohn variational principle: there exists a well-defined (though not explicitly known) functional of electron density, which attains a global minimum at the ground state density.</span><span class="zh">基态密度 → 外势 → Hamiltonian → 体系一切性质。[L5 p27]</span></div>
+$$E_0=\min_{\Psi\to\rho_0}\langle\Psi|\hat T+\hat V+\hat U|\Psi\rangle,\qquad E[\rho]=T[\rho]+U[\rho]+\int V(\vec r)\rho(\vec r)\,d^3r$$
+<p class="small">T[ρ]：动能泛函；U[ρ]：电子间排斥泛函；∫Vρ：核吸引泛函（<b>已知</b>）。前两者未知。</p>
