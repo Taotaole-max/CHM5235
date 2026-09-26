@@ -29,9 +29,9 @@ def main():
     para(doc, "TD-DFT for the first five singlet excited states at the four optimised structures of Exercise 1, "
               "with the same functional, basis and solvent model as the optimisation: ! RKS <PBE | B3LYP> "
               "def2-TZVP def2/J TightSCF (RIJCOSX for B3LYP, CPCM(Water) for the solvated runs) and %tddft "
-              "NRoots 5  TDA false end, i.e. full linear-response TD-DFT rather than the Tamm–Dancoff "
-              "approximation. The ground state is closed-shell, so a restricted reference was used; it gives the "
-              "same ground state as the unrestricted one of Exercise 1 but pure singlet excited states.")
+              "NRoots 5  TDA false end (full linear-response TD-DFT, not the Tamm–Dancoff approximation). The "
+              "ground state is closed-shell, so a restricted reference was used. It gives the same ground state as "
+              "the unrestricted calculation in Exercise 1, but the excited states are pure singlets.")
 
     # ---------------------------------------------------------------- 总表
     heading(doc, "Excitation energies of the first five excited states")

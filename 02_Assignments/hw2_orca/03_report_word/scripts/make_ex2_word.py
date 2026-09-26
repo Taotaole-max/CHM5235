@@ -6,7 +6,7 @@
 """
 import re
 
-from report_common import AS2, REPORT_DIR, exercise_title, heading, new_document, para, para_lead, save
+from report_common import AS2, REPORT_DIR, exercise_title, heading, new_document, para, save
 
 EX1 = AS2 / "Ex1_2Cl_phenol"
 KCAL = 627.509474
@@ -36,75 +36,57 @@ def main():
     exercise_title(doc, "Exercise 2 - Theoretical question #1: solvent effects")
 
     heading(doc, "How the solvent was included in Exercise 1")
-    para(doc, "The water calculations of Exercise 1 used the conductor-like polarizable continuum model, "
-              "CPCM(Water). It is an implicit solvent model: no water molecules are present. The solvent is "
-              f"replaced by a homogeneous, polarizable dielectric with the macroscopic constants of water, "
-              f"ε = {eps:.1f} and refractive index n = {n:.2f}.")
-    para_lead(doc, "Cavity.",
-              "The molecule sits in a cavity of molecular shape built from overlapping atomic spheres. By "
-              "default ORCA 5 uses a van der Waals type surface with sphere radii 1.2 times the atomic van der "
-              "Waals radii (C 1.70, H 1.10, O 1.52, Cl 1.75 Å); for 2-chlorophenol this gives "
-              f"C {r2(radii['C'])}, H {r2(radii['H'])}, O {r2(radii['O'])} and Cl {r2(radii['Cl'])} Å. "
-              f"The surface is discretised on Lebedev points ({npts} points here), and each point carries one "
-              "surface charge.")
-    para_lead(doc, "Apparent surface charges.",
-              "The charge distribution of the solute polarises the dielectric, and this polarisation is "
-              "represented by charges q_{i} on the cavity surface. For a perfect conductor (ε → ∞) the total "
-              "electrostatic potential on the surface must vanish, V(r_{i}) + Σ_{j} V_{q,j}(r_{i}) = 0, which in "
-              "matrix form is A q = −V: V_{i} is the potential of the solute (electrons and nuclei) at point i and "
-              "A is the Coulomb interaction matrix between the surface charges. For a real dielectric the "
-              "conductor charges are scaled down, A q = −f(ε) V with f(ε) = (ε − 1)/(ε + x). CPCM uses x = 0, "
-              f"so f = {f_eps:.4f} for water; x = 0.5 would give the COSMO variant.")
-    para_lead(doc, "Gaussian charges.",
-              "ORCA 5 smears each surface charge into a spherical Gaussian instead of using a point charge, so "
-              "that A_{ii} = ζ_{i} (2/π)^{1/2}/F_{i} and A_{ij} = erf(ζ_{ij} r_{ij})/r_{ij}. The switching function F_{i} "
-              "smoothly removes charges that move inside a neighbouring sphere. With point charges, surface "
-              "points appear and disappear as the atoms move, and the energy jumps; with Gaussian charges the "
-              "energy and its derivatives are continuous. This is what makes the analytic gradients and Hessians "
-              "usable, and both were needed for the Opt and Freq runs in water.")
-    para_lead(doc, "Self-consistent reaction field.",
-              "The surface charges add a potential V_{solv}(r) = Σ_{i} q_{i}/|r − r_{i}| (with Gaussian smearing) to "
-              "the one-electron part of the Kohn–Sham operator. The charges depend on the density and the "
-              "density depends on the charges, so both are updated in every SCF iteration until they are "
-              "converged together. The SCF minimises the free energy G = ⟨Ψ|Ĥ^{0}|Ψ⟩ + ½⟨Ψ|V̂|Ψ⟩; the factor ½ "
-              "accounts for the work spent polarising the solvent. The orbitals, charges, dipole moment and "
-              "frequencies of Exercise 1 are therefore those of the polarised, solvated molecule, which is why "
-              "the dipole moment and the O–H charge separation increase in water.")
-    para_lead(doc, "What the energy contains.",
-              "The solvent term printed as \u201cCPCM Dielectric\u201d is the electrostatic part of the solvation "
-              f"free energy: {e_pbe:.5f} Eh ({e_pbe * KCAL:.2f} kcal mol^{{-1}}) with PBE and {e_b3:.5f} Eh "
-              f"({e_b3 * KCAL:.2f} kcal mol^{{-1}}) with B3LYP at the optimised structures. Plain CPCM in ORCA 5 "
-              "does not add the non-electrostatic terms (cavity formation, dispersion, repulsion); the output "
-              "states that the cavity-dispersion term is not included.")
+    para(doc, "The water calculations in Exercise 1 used the conductor-like polarizable continuum model, "
+              "CPCM(Water). This is an implicit model: there are no water molecules in the calculation. Instead, "
+              "the molecule is placed in a cavity inside a uniform dielectric that has the bulk properties of "
+              f"water, ε = {eps:.1f} and refractive index n = {n:.2f}.")
+    para(doc, "The cavity is built from overlapping spheres on the atoms. ORCA 5 takes 1.2 times the van der Waals "
+              "radius of each element (C 1.70, H 1.10, O 1.52, Cl 1.75 Å), which gives "
+              f"C {r2(radii['C'])}, H {r2(radii['H'])}, O {r2(radii['O'])} and Cl {r2(radii['Cl'])} Å for "
+              f"2-chlorophenol. The cavity surface is divided into small elements, {npts} Lebedev points in this "
+              "case, and each element carries one charge.")
+    para(doc, "These surface charges q_{i} represent the polarisation of the solvent by the solute. If the "
+              "surrounding medium were a perfect conductor (ε → ∞), the total electrostatic potential on the "
+              "surface would be zero. Written for all surface points this gives the linear equations A q = −V, "
+              "where V_{i} is the potential of the solute (electrons and nuclei) at point i and A contains the "
+              "Coulomb interactions between the surface charges. Water is not a conductor, so the charges are "
+              f"scaled by f(ε) = (ε − 1)/(ε + x): A q = −f(ε) V. CPCM uses x = 0 (f = {f_eps:.4f} for water), "
+              "while the original COSMO model uses x = 0.5.")
+    para(doc, "In ORCA 5 each surface charge is a small Gaussian rather than a point charge, "
+              "A_{ii} = ζ_{i} (2/π)^{1/2}/F_{i} and A_{ij} = erf(ζ_{ij} r_{ij})/r_{ij}, where the switching "
+              "function F_{i} gradually removes a charge when it moves into a neighbouring sphere. With point "
+              "charges, surface points would appear and disappear as the atoms move and the energy would jump. "
+              "The Gaussian charges keep the energy and its derivatives smooth, which is needed for the analytic "
+              "gradients and Hessians used in the Opt and Freq runs.")
+    para(doc, "The surface charges and the electron density depend on each other, so they are solved together in "
+              "the SCF (self-consistent reaction field). In each iteration the potential of the charges, "
+              "V_{solv}(r) = Σ_{i} q_{i}/|r − r_{i}|, is added to the one-electron part of the Kohn–Sham "
+              "operator, the new density gives new charges, and this is repeated until both are converged. The "
+              "quantity minimised is the free energy G = ⟨Ψ|Ĥ^{0}|Ψ⟩ + ½⟨Ψ|V̂|Ψ⟩, where the factor ½ accounts for "
+              "the work needed to polarise the solvent. All properties in Exercise 1 (orbitals, charges, dipole "
+              "moment, frequencies) therefore belong to the polarised molecule in solution, which explains the "
+              "larger dipole moment and the larger O–H charge separation in water.")
+    para(doc, "The “CPCM Dielectric” energy in the output is the electrostatic part of the solvation free "
+              f"energy: {e_pbe:.5f} Eh ({e_pbe * KCAL:.2f} kcal mol^{{-1}}) with PBE and {e_b3:.5f} Eh "
+              f"({e_b3 * KCAL:.2f} kcal mol^{{-1}}) with B3LYP. Plain CPCM in ORCA 5 does not include the "
+              "non-electrostatic terms (cavity formation, dispersion and repulsion), as the output also states.")
 
     heading(doc, "Other ways to treat solvent effects in ORCA")
-    para_lead(doc, "CPCM with the COSMO scaling.",
-              "! CPCMC(solvent) keeps the same model but uses x = 0.5 in f(ε).")
-    para_lead(doc, "SMD.",
-              "The Solvation Model based on Density (Marenich, Cramer and Truhlar) uses the CPCM electrostatics "
-              "with its own intrinsic radii and adds a non-electrostatic cavity–dispersion–solvent-structure "
-              "(CDS) term, computed from atomic surface tensions and solvent descriptors (refractive index, "
-              "hydrogen-bond acidity and basicity, surface tension, aromaticity, halogenicity). It is "
-              "parameterised against experimental solvation free energies and is the usual choice when ΔG_{solv} "
-              "itself is needed (%cpcm smd true end in ORCA 5, ! SMD(solvent) in ORCA 6).")
-    para_lead(doc, "OpenCOSMO-RS (ORCA 6).",
-              "Starts from the conductor-screening charges and adds a statistical-thermodynamics treatment of "
-              "the interacting surface segments. It gives solvation free energies in pure solvents and mixtures "
-              "and their temperature dependence.")
-    para_lead(doc, "Implicit models for xTB.",
-              "For semi-empirical GFN-xTB calculations ORCA passes the solvent to the xtb program: ALPB, "
-              "ddCOSMO or CPCM-X.")
-    para_lead(doc, "Explicit and mixed solvation.",
-              "Specific solute–solvent interactions, such as a water molecule hydrogen-bonded to the OH group of "
-              "2-chlorophenol, are not described by a continuum. They can be added as explicit solvent "
-              "molecules, either placed by hand or automatically with the ORCA SOLVATOR (ORCA 6), and the "
-              "solvated cluster can itself be embedded in CPCM (cluster–continuum model). Larger explicit "
-              "solvent shells can be treated with QM/MM, using the ORCA MM module for the solvent, and molecular "
-              "dynamics with explicit solvent (as in Exercise 6) samples the solvent configurations.")
-    para_lead(doc, "Excited states.",
-              "For TD-DFT, CPCM is applied in linear-response form; vertical excitations are normally computed "
-              "with non-equilibrium solvation, in which only the electronic polarisation of the solvent "
-              "(ε_{∞} = n^{2}) follows the fast change of the density.")
+    para(doc, "SMD (Marenich, Cramer and Truhlar) uses the same CPCM electrostatics with its own atomic radii and "
+              "adds a non-electrostatic term for cavitation, dispersion and solvent structure, calculated from "
+              "atomic surface tensions and solvent parameters. It is fitted to experimental solvation free "
+              "energies, so it is the better choice when ΔG_{solv} itself is needed (%cpcm smd true end in "
+              "ORCA 5, ! SMD(solvent) in ORCA 6).")
+    para(doc, "openCOSMO-RS (ORCA 6) starts from the screening charges of a conductor calculation and treats the "
+              "contacts between surface segments of solute and solvent with statistical thermodynamics. It gives "
+              "solvation free energies in pure solvents and mixtures, including their temperature dependence.")
+    para(doc, "A continuum cannot describe specific interactions such as a hydrogen bond between a water molecule "
+              "and the OH group of 2-chlorophenol. For this, a few explicit water molecules can be added around "
+              "the solute, by hand or with the SOLVATOR tool in ORCA 6, and the whole cluster can then be placed "
+              "in CPCM (cluster–continuum model).")
+    para(doc, "For a larger explicit solvent shell, ORCA offers QM/MM, where the solute is treated quantum "
+              "mechanically and the solvent with a force field. Molecular dynamics with explicit solvent, as in "
+              "Exercise 6, samples many solvent configurations instead of a single averaged one.")
 
     save(doc, REPORT_DIR / "HW2_Ex2_theory_solvent_effects.docx")
 

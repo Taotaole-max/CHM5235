@@ -10,8 +10,8 @@ from pathlib import Path
 
 import numpy as np
 
-from report_common import (AS2, REPORT_DIR, caption, exercise_title, figure, heading, new_document,
-                           para, save, table, table_caption)
+from report_common import (AS2, GIF_EX1_AVO12, GIF_EX1_ORCA12, REPORT_DIR, caption, exercise_title, figure,
+                           heading, new_document, para, save, table, table_caption)
 
 EX1 = AS2 / "Ex1_2Cl_phenol"
 FIG = EX1 / "ex1_figures"
@@ -119,16 +119,18 @@ def conformer_note():
     e_c, g_c, _ = vals(EX1 / "B3LYP_gas" / "ex1_optfreq_B3LYP_gas.out")
     if imag_t:
         return ""
-    return (f" The other conformer, with the O–H pointing away from Cl, was optimised as a check at the same "
-            f"level (B3LYP/def2-TZVP, gas phase): it is also a minimum but lies {(e_t - e_c) * KCAL:.1f} kcal "
-            f"mol^{{-1}} higher in energy ({(g_t - g_c) * KCAL:.1f} kcal mol^{{-1}} in Gibbs free energy at "
-            "298.15 K), which is the intramolecular O–H···Cl interaction. The cis conformer used here is "
-            "therefore the relevant ground-state structure.")
+    return (f" This conformer was chosen because it is {(e_t - e_c) * KCAL:.1f} kcal mol^{{-1}} "
+            f"({(g_t - g_c) * KCAL:.1f} kcal mol^{{-1}} in G at 298 K) below the trans conformer, which is also a "
+            "minimum (B3LYP/def2-TZVP, gas phase).")
 
 
-def fig_or_note(doc, name, width, cap):
+def fig_or_note(doc, name, width, cap, trim=False):
     path = FIG / name
     if path.exists():
+        if trim:   # PyVista 渲染的图四周白边很大，裁掉后另存一份再放进报告
+            out = FIG / (path.stem + "_trimmed.png")
+            _trim_white(path).save(out)
+            path = out
         figure(doc, path, width, cap)
     else:
         para(doc, f"[MISSING FIGURE {name}]", bold=True)
@@ -147,10 +149,10 @@ def main():
     para(doc, "ORCA 5.0.2, spin-unrestricted Kohn–Sham, def2-TZVP basis; geometry optimisation followed by an "
               "analytic frequency calculation: ! UKS <PBE | B3LYP> def2-TZVP def2/J TightSCF TightOpt Opt Freq, "
               "with RIJCOSX for B3LYP and CPCM(Water) for the two solvated runs.")
-    para(doc, "In the supplied structure the hydroxyl hydrogen was perpendicular to the ring. It was rotated into the "
-              "ring plane on the Cl side (cis conformer, intramolecular O–H···Cl contact) before optimisation; all "
-              "other atoms were left as given. All four optimised structures have 33 real frequencies and no "
-              "imaginary mode, i.e. they are minima." + conformer_note())
+    para(doc, "In the supplied structure the hydroxyl hydrogen was perpendicular to the ring. Before optimisation "
+              "it was rotated into the ring plane on the Cl side (cis conformer, intramolecular O–H···Cl contact); "
+              "all other atoms were left as given. All four optimised structures have 33 real frequencies and no "
+              "imaginary mode, so they are minima." + conformer_note())
 
     # ---------------------------------------------------------------- a) 电荷
     heading(doc, "a) Mulliken and Löwdin atomic charges")
@@ -226,8 +228,10 @@ def main():
               "part changes a little through the low-frequency modes. The HOMO–LUMO gap is "
               f"{gap['B3LYP_gas'] - gap['PBE_gas']:.1f} eV larger with the hybrid functional "
               f"({gap['B3LYP_gas']:.2f} vs {gap['PBE_gas']:.2f} eV in the gas phase), while water changes it by "
-              f"only {abs(gap['PBE_water'] - gap['PBE_gas']):.2f} eV (PBE) and "
-              f"{abs(gap['B3LYP_water'] - gap['B3LYP_gas']):.2f} eV (B3LYP).")
+              + (f"only {abs(gap['PBE_water'] - gap['PBE_gas']):.2f} eV with both functionals."
+                 if f"{abs(gap['PBE_water'] - gap['PBE_gas']):.2f}" == f"{abs(gap['B3LYP_water'] - gap['B3LYP_gas']):.2f}"
+                 else f"only {abs(gap['PBE_water'] - gap['PBE_gas']):.2f} eV (PBE) and "
+                      f"{abs(gap['B3LYP_water'] - gap['B3LYP_gas']):.2f} eV (B3LYP)."))
 
     # ---------------------------------------------------------------- 12 号模式（两种编号都给）
     heading(doc, "Normal mode 12")
@@ -240,10 +244,10 @@ def main():
 
     f12, i12 = mode(12)
     f17, i17 = mode(17)
-    para(doc, "“Normal mode number 12” is ambiguous, because the two common numbering schemes differ. "
-              "ORCA numbers all 3N modes from 0, so modes 0–5 are the translations and rotations and mode 12 is "
-              "the seventh vibration. Avogadro and Chemcraft list only the 33 real vibrations, starting at 1, so "
-              "their twelfth entry is ORCA's mode 17. Both are given here.")
+    para(doc, "ORCA numbers all 3N modes from 0, so modes 0–5 are translations and rotations and mode 12 is the "
+              "seventh vibration. Avogadro and Chemcraft list only the 33 vibrations, starting from 1, so their "
+              "twelfth entry is ORCA mode 17. Since the numbering in the question could mean either, both modes "
+              "are shown.")
     rows = [["", "ORCA mode 12", "ORCA mode 17"],
             ["Position in the list", "12th of all modes (7th vibration)", "17th of all modes (12th vibration)"],
             ["Frequency (cm^{-1})"] + [f"{f12:.1f}", f"{f17:.1f}"],
@@ -253,15 +257,19 @@ def main():
              " / ".join(f"{R[m]['freqs'][17][1]:.1f}" for m in METHODS)]]
     table_caption(doc, "Table 4. The two modes that “mode 12” can refer to, B3LYP/def2-TZVP gas phase.")
     table(doc, rows, [5.6, 4.6, 4.6])
-    fig_or_note(doc, "ex1_fig_mode12_displacements_B3LYP_gas.png", 7.0,
-                f"Figure 2. ORCA mode 12 (the 7th vibration), {f12:.1f} cm^{{-1}}, IR intensity "
-                f"{i12:.1f} km mol^{{-1}}: in-plane deformation of the ring coupled to C–O–H bending, with the "
-                "hydroxyl hydrogen moving most. Arrows: atomic displacements. Animation: "
-                "ex1_mode12_animation_B3LYP_gas.gif.")
-    fig_or_note(doc, "ex1_fig_mode17_displacements_B3LYP_gas.png", 7.0,
-                f"Figure 3. ORCA mode 17, i.e. the 12th vibration as listed by Avogadro, {f17:.1f} cm^{{-1}}, "
-                f"IR intensity {i17:.1f} km mol^{{-1}}: out-of-plane bending of the ring C–H bonds. Animation: "
-                "ex1_mode17_animation_B3LYP_gas.gif.")
+    fig_or_note(doc, "ex1_fig_mode12_displacements_B3LYP_gas.png", 4.6,
+                f"Figure 2a. ORCA mode 12 (7th vibration), {f12:.1f} cm^{{-1}}, IR intensity {i12:.1f} km "
+                "mol^{-1}: in-plane ring deformation coupled to C–O–H bending; the hydroxyl H moves most. "
+                "Arrows show the atomic displacements.", trim=True)
+    fig_or_note(doc, "ex1_mode12_filmstrip_B3LYP_gas.png", 14.0,
+                "Figure 2b. ORCA mode 12 at four points of one vibrational period T. "
+                "The animation is sent with this report as " + GIF_EX1_ORCA12 + ".")
+    fig_or_note(doc, "ex1_fig_mode17_displacements_B3LYP_gas.png", 6.5,
+                f"Figure 3. ORCA mode 17 (12th vibration in the Avogadro list), {f17:.1f} cm^{{-1}}, IR intensity "
+                f"{i17:.1f} km mol^{{-1}}: out-of-plane bending of the ring C–H bonds. The animation is sent as "
+                + GIF_EX1_AVO12 + ".", trim=True)
+    para(doc, "The frames of both modes were generated with orca_pltvib and rendered with Python (PyVista), since the "
+              "movie export of Avogadro does not work.")
 
     # ---------------------------------------------------------------- HOMO / LUMO
     heading(doc, "HOMO and LUMO (B3LYP/def2-TZVP, gas phase)")
@@ -285,22 +293,16 @@ def main():
     figure(doc, path, 10.5,
            "Figure 5. Electron density isosurface (0.001 a.u.) coloured by the electrostatic potential: red = "
            "negative, blue = positive. "
-           + ("Plotted with Avogadro 2 from the ORCA wavefunction (Molden file). The isosurface itself is the "
-              "true B3LYP density; the colours are the potential of Avogadro's built-in point-charge model (EEM), "
-              "which is the only electrostatic potential Avogadro offers."
+           + ("Plotted with Avogadro 2 from the ORCA wavefunction (Molden file). The surface is the B3LYP "
+              "density; the colours come from Avogadro's point-charge (EEM) potential."
               if is_avo else "Density from ORCA (%plots), potential from orca_vpot, rendered with PyVista."))
-    para(doc, f"On the 0.001 a.u. density surface the potential computed from the wavefunction itself (ORCA "
-              f"orca_vpot) ranges from {esp_lo:.3f} to +{esp_hi:.3f} a.u. The most negative region is the oxygen "
-              "lone pair on the side away from Cl, and the π face of the ring is also negative. The most positive "
-              "region is the hydroxyl hydrogen, which points towards Cl (intramolecular O–H···Cl contact); the ring "
-              "hydrogens are moderately positive.")
-    if is_avo:
-        para(doc, "Note on the figure: Avogadro places point charges on the nuclei and evaluates their potential on "
-                  "the surface. This reproduces the negative region at oxygen and the positive hydrogens, but it "
-                  "cannot reproduce the negative potential above and below the aromatic ring, because that comes "
-                  "from the π electron distribution and not from any set of atom-centred charges. The numbers "
-                  "quoted above are therefore taken from orca_vpot, which evaluates the potential from the "
-                  "wavefunction.")
+    para(doc, f"On the 0.001 a.u. density surface the potential calculated from the wavefunction with orca_vpot "
+              f"ranges from {esp_lo:.3f} to +{esp_hi:.3f} a.u. The most negative region is the oxygen lone pair on "
+              "the side away from Cl, and the π face of the ring is also negative. The most positive region is the "
+              "hydroxyl hydrogen, which points towards Cl (intramolecular O–H···Cl contact); the ring hydrogens are "
+              "moderately positive."
+              + (" Because Avogadro's colouring uses atom-centred point charges, it misses the negative π region "
+                 "above and below the ring, so the values above are taken from orca_vpot." if is_avo else ""))
 
     save(doc, REPORT_DIR / "HW2_Ex1_ground_state_2-chlorophenol.docx")
 

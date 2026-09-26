@@ -25,8 +25,7 @@ ORDER = [
 STUDENT = [("Full Name", "Zhang Xubo"),
            ("Student Number", "A0359670R"),
            ("E-mail", "zhangxubo@u.nus.edu"),
-           ("Date", datetime.date.today().strftime("%-d %B %Y") if sys.platform != "win32"
-            else datetime.date.today().strftime("%d %B %Y").lstrip("0")),
+           ("Date", "27 September 2026"),
            ("Signature", "")]
 
 

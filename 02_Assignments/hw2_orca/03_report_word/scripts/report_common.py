@@ -21,6 +21,11 @@ AS2 = REPORT_DIR.parent                          # as2/
 TEMPLATE = SCRIPTS / "hw1_style_template.docx"
 HW1_REPORT = AS2.parent / "as1" / "CM5235_HW1_Zhang_Xubo.docx"
 
+# 动画放不进 PDF，和报告一起用邮件发给老师；文件名在报告里引用，复制到 as2/04_email_attachments/
+GIF_EX1_ORCA12 = "HW2_ZhangXubo_Ex1_mode12_ORCA-numbering.gif"
+GIF_EX1_AVO12 = "HW2_ZhangXubo_Ex1_mode12_Avogadro-numbering.gif"
+GIF_EX6 = "HW2_ZhangXubo_Ex6_water_MD_XTB_Avogadro.gif"
+
 TABLE_PT = 8.5
 CAPTION_PT = 9
 
